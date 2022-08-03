@@ -1,0 +1,64 @@
+{
+  "name": "abi-types",
+  "license": "WAGMIT",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wagmi-dev/abi-types.git"
+  },
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "tsc src/index.ts --outDir dist --declaration --emitDeclarationOnly",
+    "changeset:release": "pnpm build && changeset publish",
+    "changeset:version": "changeset version && pnpm install --lockfile-only",
+    "lint": "eslint . --cache",
+    "lint:fix": "pnpm lint --fix",
+    "lint:format": "prettier --write",
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "npx simple-git-hooks",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.4.4",
+    "@changesets/cli": "^2.22.0",
+    "@types/eslint": "^8.4.3",
+    "@types/node": "17.0.21",
+    "@types/prettier": "^2.6.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
+    "c8": "^7.12.0",
+    "eslint": "8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "lint-staged": "^12.4.1",
+    "prettier": "^2.6.2",
+    "simple-git-hooks": "^2.8.0",
+    "typescript": "^4.6.4",
+    "vitest": "^0.18.1"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "pnpm lint:fix"
+    ],
+    "*.{json,md,mdx,yml}": [
+      "pnpm lint:format"
+    ]
+  },
+  "packageManager": "pnpm@7.5.0",
+  "engines": {
+    "node": ">=16",
+    "pnpm": ">=7"
+  }
+}
