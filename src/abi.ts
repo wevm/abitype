@@ -1,20 +1,30 @@
-export type Address = `0x${string}`
+type SolAddress = 'address'
+type SolBool = 'bool'
+type SolBytes = `bytes${number | ''}`
+type SolFunction = 'function'
+type SolString = 'string'
+type SolTuple = 'tuple'
+type SolInt = `${'u' | ''}int${number | ''}`
+type SolFixed = `${'u' | ''}fixed${number}x${number}` | `${'u' | ''}fixed`
 
 /**
  * Solidity ABI spec elementary types
  * https://docs.soliditylang.org/en/v0.8.15/abi-spec.html#types
  */
 export type AbiType =
-  | 'address'
-  | 'bool'
-  | `bytes${number | ''}`
-  | 'function'
-  | 'string'
-  | 'tuple'
-  | `${'u' | ''}int${number | ''}`
-  | `${'u' | ''}fixed${number}x${number}`
-  | `${'u' | ''}fixed`
-// TODO: Memory sizes and dynamic array types
+  | SolAddress
+  | SolBool
+  | SolBytes
+  | SolFunction
+  | SolString
+  | SolTuple
+  | SolInt
+  | SolFixed
+
+/**
+ * Ethereum address prefixed with `0x`
+ */
+export type Address = `0x${string}`
 
 /**
  * Converts {@see AbiType} to corresponding TypeScript primitive type.
@@ -22,23 +32,23 @@ export type AbiType =
  * Note: Does not include tuple conversion. Use {@see AbiParameterTypeToPrimitiveType} to also convert tuples.
  */
 export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
-  TAbiType extends 'address'
+  TAbiType extends SolAddress
     ? Address
-    : TAbiType extends 'bool'
+    : TAbiType extends SolBool
     ? boolean
-    : TAbiType extends `bytes${number | ''}`
+    : TAbiType extends SolBytes
     ? string
-    : TAbiType extends 'function'
+    : TAbiType extends SolFunction
     ? `${Address}${string}`
-    : TAbiType extends 'string'
+    : TAbiType extends SolString
     ? string
-    : TAbiType extends `${'u' | ''}int${number | ''}`
+    : TAbiType extends SolInt
     ? number
-    : TAbiType extends `${'u' | ''}fixed${number}x${number}`
-    ? number
-    : TAbiType extends `${'u' | ''}fixed`
+    : TAbiType extends SolFixed
     ? number
     : unknown
+
+type InternalType = AbiType | `contract ${string}` | `struct ${string}`
 
 /**
  * Abi parameter
@@ -46,11 +56,12 @@ export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
 export type AbiParameter = {
   type: AbiType
   name: string
-  internalType: AbiType | `struct ${string}`
+  /** Representation used by Solidity compiler */
+  internalType: InternalType
 } & (
-  | { type: Exclude<AbiType, 'tuple'> }
+  | { type: Exclude<AbiType, SolTuple> }
   | {
-      type: Extract<AbiType, 'tuple'>
+      type: Extract<AbiType, SolTuple>
       components: readonly AbiParameter[]
     }
 )
@@ -60,7 +71,7 @@ export type AbiParameter = {
  */
 export type AbiParameterTypeToPrimitiveType<
   TAbiParameter extends AbiParameter,
-> = TAbiParameter extends { type: 'tuple' }
+> = TAbiParameter extends { type: SolTuple }
   ? {
       [Component in (TAbiParameter & {
         components: readonly AbiParameter[]
@@ -133,6 +144,11 @@ export type Abi<TAbiParameter extends AbiParameter = AbiParameter> = readonly (
   | AbiEvent<TAbiParameter>
   | AbiError<TAbiParameter>
 )[]
+
+/**
+ * Checks if type is abi
+ */
+export type IsAbi<T> = T extends Abi ? true : false
 
 /**
  * Extracts all {@see AbiFunction} from abi
