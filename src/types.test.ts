@@ -1,7 +1,13 @@
 import { test } from 'vitest'
 
 import { expectType } from '../test'
-import { Equal, LengthOfString, MultiplesOf8To256, Range } from './types'
+import {
+  Equal,
+  LengthOfString,
+  MultiplesOf8To256,
+  Range,
+  Replace,
+} from './types'
 
 test('Equal', () => {
   expectType<Equal<'foo', 'foo'>>(true)
@@ -32,4 +38,9 @@ test('Range', () => {
   expectType<Range<1, 0>>([])
   // @ts-expect-error Only positive ranges work
   expectType<Range<-2, 0>>([-2, -1, 0])
+})
+
+test('Replace', () => {
+  expectType<Replace<'foo', 'f', 'b'>>('boo')
+  expectType<Replace<'foo bar', 'bar', 'baz'>>('foo baz')
 })

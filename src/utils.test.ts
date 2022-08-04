@@ -42,7 +42,7 @@ test('AbiTypeToPrimitiveType', () => {
   expectType<AbiTypeToPrimitiveType<'ufixed128x18'>>(1)
 
   expectType<AbiTypeToPrimitiveType<'address[]'>>([address])
-  expectType<AbiTypeToPrimitiveType<'int[4]'>>([1])
+  expectType<AbiTypeToPrimitiveType<'int[]'>>([1])
 })
 
 describe('AbiParameterToPrimitiveType', () => {

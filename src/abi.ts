@@ -11,20 +11,16 @@ export type SolFixed =
   | `${'u' | ''}fixed`
   | `${'u' | ''}fixed${MultiplesOf8To256}x${Range<1, 80>[number]}`
 
-/**
- * Creating range for fixed-length arrays so type isn't too complex for TypeScript compiler
- * Ideally range is unnecessary and fixed-length can be any number greater than zero
- */
-type FixedArrayRange = Range<1, 16>[number]
-// TODO: Missing `tuple[]` and `tuple[M]` - too complex for compiler
-export type SolArray<T extends FixedArrayRange = FixedArrayRange> = `${
+// TODO: Missing fixed array (e.g `string[M]`) - too complex for compiler
+export type SolArray = `${
   | SolAddress
   | SolBool
   | SolBytes
   | SolFunction
   | SolString
+  | SolTuple
   | SolInt
-  | SolFixed}[${T | ''}]`
+  | SolFixed}[]`
 
 /**
  * Solidity types

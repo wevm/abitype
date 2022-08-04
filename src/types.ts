@@ -1,8 +1,8 @@
 /**
  * Test whether two values are equal.
  *
- * @param X - Value
- * @param Y - Value to compare to {@link X}
+ * @param Value1 - Value
+ * @param Value2 - Value to compare to {@link Value1}
  * @returns Boolean for whether values are equal
  *
  * @example
@@ -12,9 +12,9 @@
  * type Result = Equal<'foo', 'foo'>
  * ```
  */
-export type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends <
-  T,
->() => T extends Y ? 1 : 2
+export type Equal<Value1, Value2> = (<T>() => T extends Value1
+  ? 1
+  : 2) extends <T>() => T extends Value2 ? 1 : 2
   ? true
   : false
 
@@ -71,6 +71,32 @@ export type Range<
   : _Res extends []
   ? Range<Start, Stop, [], [..._Padding, 0]>
   : Range<Start, Stop, [..._Res, _Current], _Padding>
+
+/**
+ * Replaces value in string with provided value.
+ *
+ * @param TString - String to replace value in
+ * @param From - Substring of {@link TString} to replace with {@link To}
+ * @param To - String to replace {@link From}
+ * @returns Array with inclusive range from {@link Start} to {@link Stop}
+ *
+ * @example
+ *
+ * ```ts
+ * // Returns foobaz
+ * type Result = Replace<'foobar', 'bar', 'baz'>
+ *```
+ */
+// From [Type Challenges #116](https://github.com/type-challenges/type-challenges/issues/12825)
+export type Replace<
+  TString extends string,
+  From extends string,
+  To extends string,
+> = From extends ''
+  ? TString
+  : TString extends `${infer H}${From}${infer R}`
+  ? `${H}${To}${R}`
+  : TString
 
 /**
  * Positive multiples of eight from eight to 256

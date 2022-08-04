@@ -5,17 +5,19 @@ TypeScript definitions for Ethereum ABIs. It provides autocompletion and type ch
 ## Todo
 
 - [ ] Add test case for list of `AbiFunction`s (e.g. `readContracts`)
-- [ ] Export all types
-- [ ] Utilities for `AbiEvent`
-
-- [ ] Handle function overrides (make non-shared params optional?)
-- [ ] Update README, contributing guide, issue templates, etc.
+- [ ] Utilities for `AbiEvent`, `AbiError`
+- [ ] Add docs to README.md
 
 ## Open questions
 
-- [ ] Should we inject payable value into function parameters?
 - [ ] Should we allow configuration of a "BigNumberish" type? So folks can pass in `ethers.BigNumber`, `BigInt`, etc.
+- [ ] How to handle function overrides? Make non-shared params optional?
+- [ ] Should we inject payable value into function parameters?
 
 ## Usage
 
-Must either declare/cast abi to `Abi` or use const assertion
+- Must either declare/cast abi to `Abi` or use const assertion
+
+## Caveats
+
+- Fixed arrays not supported (e.g. `string[M]`)
