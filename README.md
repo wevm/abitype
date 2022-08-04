@@ -4,7 +4,6 @@ TypeScript definitions for Ethereum ABIs. It provides autocompletion and type ch
 
 ## Todo
 
-- [ ] Organize code into different files
 - [ ] Handle function overrides (make non-shared params optional?)
 - [ ] Add test for tuple return type from function
 - [ ] Add test case for list of `AbiFunction`s (e.g. `readContracts`)
@@ -19,5 +18,3 @@ TypeScript definitions for Ethereum ABIs. It provides autocompletion and type ch
 
 - [ ] Should we inject payable value into function parameters?
 - [ ] Should we allow configuration of a "BigNumberish" type? So folks can pass in `ethers.BigNumber`, `BigInt`, etc.
-
-https://docs.soliditylang.org/en/v0.8.15/abi-spec.html#types

@@ -5,14 +5,17 @@ export type {
   AbiFunction,
   AbiParameter,
   AbiParameterType,
-  AbiParameterTypeToPrimitiveType,
-  AbiParametersToPrimitiveTypes,
   AbiStateMutability,
   AbiType,
-  AbiTypeToPrimitiveType,
   Address,
+} from './abi'
+
+export type {
+  AbiParameterTypeToPrimitiveType,
+  AbiParametersToPrimitiveTypes,
+  AbiTypeToPrimitiveType,
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
   ExtractAbiFunctionParameters,
   ExtractAbiFunctions,
-} from './abi'
+} from './utils'
