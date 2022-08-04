@@ -1,19 +1,33 @@
-import { InclusiveRange, MultiplesOf8To256 } from './types'
+import { MultiplesOf8To256, Range } from './types'
 
 export type SolAddress = 'address'
 export type SolBool = 'bool'
-export type SolBytes = `bytes${InclusiveRange<1, 32>[number] | ''}`
+export type SolBytes = `bytes${Range<1, 32>[number] | ''}`
 export type SolFunction = 'function'
 export type SolString = 'string'
 export type SolTuple = 'tuple'
 export type SolInt = `${'u' | ''}int${MultiplesOf8To256 | ''}`
 export type SolFixed =
-  | `${'u' | ''}fixed${MultiplesOf8To256}x${InclusiveRange<1, 80>[number]}`
   | `${'u' | ''}fixed`
+  | `${'u' | ''}fixed${MultiplesOf8To256}x${Range<1, 80>[number]}`
 
 /**
- * Solidity ABI spec elementary types
- * https://docs.soliditylang.org/en/v0.8.15/abi-spec.html#types
+ * Creating range for fixed-length arrays so type isn't too complex for TypeScript compiler
+ * Ideally range is unnecessary and fixed-length can be any number greater than zero
+ */
+type FixedArrayRange = Range<1, 16>[number]
+// TODO: Missing `tuple[]` and `tuple[M]` - too complex for compiler
+export type SolArray<T extends FixedArrayRange = FixedArrayRange> = `${
+  | SolAddress
+  | SolBool
+  | SolBytes
+  | SolFunction
+  | SolString
+  | SolInt
+  | SolFixed}[${T | ''}]`
+
+/**
+ * Solidity types
  */
 export type AbiType =
   | SolAddress
@@ -24,6 +38,7 @@ export type AbiType =
   | SolTuple
   | SolInt
   | SolFixed
+  | SolArray
 
 /**
  * Ethereum address prefixed with `0x`
@@ -42,7 +57,7 @@ export type AbiParameter = {
   type: AbiType
   name: string
   /** Representation used by Solidity compiler */
-  internalType: AbiInternalType
+  internalType?: AbiInternalType
 } & (
   | { type: Exclude<AbiType, SolTuple> }
   | {
@@ -57,7 +72,6 @@ export type AbiStateMutability = 'pure' | 'view' | 'nonpayable' | 'payable'
 
 /**
  * Abi function
- * https://docs.soliditylang.org/en/v0.8.15/abi-spec.html#json
  */
 export type AbiFunction<TAbiParameter extends AbiParameter = AbiParameter> = {
   /**
@@ -82,13 +96,12 @@ export type AbiFunction<TAbiParameter extends AbiParameter = AbiParameter> = {
       type: 'constructor'
       inputs: readonly TAbiParameter[]
     }
-  | { type: 'fallback' }
+  | { type: 'fallback'; inputs?: [] }
   | { type: 'receive'; stateMutability: 'payable' }
 )
 
 /**
  * Abi event
- * https://docs.soliditylang.org/en/v0.8.15/abi-spec.html#json
  */
 export type AbiEvent<TAbiParameter extends AbiParameter = AbiParameter> = {
   type: 'event'
@@ -99,7 +112,6 @@ export type AbiEvent<TAbiParameter extends AbiParameter = AbiParameter> = {
 
 /**
  * Abi error
- * https://docs.soliditylang.org/en/v0.8.15/abi-spec.html#json
  */
 export type AbiError<TAbiParameter extends AbiParameter = AbiParameter> = {
   type: 'error'

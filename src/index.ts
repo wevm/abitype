@@ -11,7 +11,7 @@ export type {
 } from './abi'
 
 export type {
-  AbiParameterTypeToPrimitiveType,
+  AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
   AbiTypeToPrimitiveType,
   ExtractAbiFunction,
