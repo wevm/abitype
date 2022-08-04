@@ -9,7 +9,7 @@
  *
  * ```ts
  * // Returns true
- * type Foo = Equal<'foo', 'foo'>
+ * type Result = Equal<'foo', 'foo'>
  * ```
  */
 export type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends <
@@ -28,7 +28,7 @@ export type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends <
  *
  * ```ts
  * // Returns 3
- * type Foo = LengthOfString<'baz'>
+ * type Result = LengthOfString<'baz'>
  * ```
  */
 // From [Type Challenges #651](https://github.com/type-challenges/type-challenges/issues/11438)
@@ -50,7 +50,7 @@ export type LengthOfString<
  *
  * ```ts
  * // Returns [1, 2, 3]
- * type Foo = Range<1, 3>
+ * type Result = Range<1, 3>
  *```
  */
 // From [Type Challenges #734](https://github.com/type-challenges/type-challenges/issues/11625)

@@ -1,11 +1,12 @@
 name: Bug Report
 description: File a bug/issue
-title: '[bug] <title>'
+title: 'bug: <title>'
 body:
   - type: markdown
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report! The more info you provide, the more we can help you. If you are a [Sponsor](https://github.com/sponsors/tmm?metadata_campaign=gh_issue), your issues are prioritized.
+
   - type: checkboxes
     attributes:
       label: Is there an existing issue for this?
@@ -17,7 +18,15 @@ body:
   - type: input
     attributes:
       label: Package Version
-      description: What version of wagmi are you using?
+      description: What version of abitype are you using?
+      placeholder: 1.0.0
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: TypeScript Version
+      description: What version of TypeScript are you using?
       placeholder: 1.0.0
     validations:
       required: true

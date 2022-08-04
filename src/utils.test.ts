@@ -220,12 +220,70 @@ describe('ExtractAbiFunctions', () => {
   })
 })
 
-describe('utilities', () => {
-  test('AbiParametersToPrimitiveTypes', () => {
-    // No args
-    expectType<AbiParametersToPrimitiveTypes<[]>>(undefined)
+describe('ExtractAbiFunctionNames', () => {
+  it('extracts names', () => {
+    test('ExtractAbiFunctionNames', () => {
+      expectType<ExtractAbiFunctionNames<typeof wagmiMintExampleAbi>>('symbol')
+    })
+  })
 
-    // Single arg
+  it('no names', () => {
+    expectType<ExtractAbiFunctionNames<[]>>(undefined as never)
+  })
+})
+
+describe('ExtractAbiFunction', () => {
+  it('extracts function', () => {
+    expectType<ExtractAbiFunction<typeof wagmiMintExampleAbi, 'tokenURI'>>({
+      inputs: [
+        {
+          internalType: 'uint256',
+          name: 'tokenId',
+          type: 'uint256',
+        },
+      ],
+      name: 'tokenURI',
+      outputs: [
+        {
+          internalType: 'string',
+          name: '',
+          type: 'string',
+        },
+      ],
+      stateMutability: 'pure',
+      type: 'function',
+    })
+  })
+
+  it.todo('extract function with override')
+})
+
+describe('ExtractAbiFunctionParameters', () => {
+  it('extracts function', () => {
+    expectType<
+      ExtractAbiFunctionParameters<
+        typeof wagmiMintExampleAbi,
+        'tokenURI',
+        'inputs'
+      >
+    >([
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ])
+  })
+
+  it.todo('extract function with override')
+})
+
+describe('AbiParametersToPrimitiveTypes', () => {
+  it('No parameters', () => {
+    expectType<AbiParametersToPrimitiveTypes<[]>>(undefined)
+  })
+
+  it('Single parameter', () => {
     expectType<
       AbiParametersToPrimitiveTypes<
         [
@@ -237,8 +295,9 @@ describe('utilities', () => {
         ]
       >
     >(1)
+  })
 
-    // Multiple args
+  it('Multiple parameters', () => {
     expectType<
       AbiParametersToPrimitiveTypes<
         [
@@ -252,54 +311,13 @@ describe('utilities', () => {
             name: 'tokenId'
             type: 'uint256'
           },
+          {
+            internalType: 'string'
+            name: 'trait'
+            type: 'string'
+          },
         ]
       >
-    >([address, 1])
-  })
-
-  describe('functions', () => {
-    test.todo('ExtractAbiFunctions')
-
-    test('ExtractAbiFunctionNames', () => {
-      expectType<ExtractAbiFunctionNames<typeof wagmiMintExampleAbi>>('symbol')
-    })
-
-    test('ExtractAbiFunction', () => {
-      expectType<ExtractAbiFunction<typeof wagmiMintExampleAbi, 'tokenURI'>>({
-        inputs: [
-          {
-            internalType: 'uint256',
-            name: 'tokenId',
-            type: 'uint256',
-          },
-        ],
-        name: 'tokenURI',
-        outputs: [
-          {
-            internalType: 'string',
-            name: '',
-            type: 'string',
-          },
-        ],
-        stateMutability: 'pure',
-        type: 'function',
-      })
-    })
-
-    test('ExtractAbiFunctionParameters', () => {
-      expectType<
-        ExtractAbiFunctionParameters<
-          typeof wagmiMintExampleAbi,
-          'tokenURI',
-          'inputs'
-        >
-      >([
-        {
-          internalType: 'uint256',
-          name: 'tokenId',
-          type: 'uint256',
-        },
-      ])
-    })
+    >([address, 1, 'foo'])
   })
 })

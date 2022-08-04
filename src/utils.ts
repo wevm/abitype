@@ -6,7 +6,6 @@ import {
   AbiType,
   Address,
   SolAddress,
-  SolArray,
   SolBool,
   SolBytes,
   SolFixed,
@@ -25,7 +24,7 @@ import {
  * @returns TypeScript primitive type
  */
 export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
-  TAbiType extends SolArray
+  TAbiType extends `${any}[${any | ''}]` // TODO: Match against SolArray
     ? any[] // TODO: Parse type from array
     : TAbiType extends SolAddress
     ? Address
@@ -48,6 +47,17 @@ export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
  *
  * @param TAbiParameter - {@link AbiParameter} to convert to TypeScript representation.
  * @returns TypeScript primitive type
+ *
+ * @example
+ *
+ * ```ts
+ * // Returns string
+ * type Result = AbiParameterToPrimitiveType<{
+ *   internalType: 'string'
+ *   name: 'name'
+ *   type: 'string'
+ * }>
+ * ```
  */
 export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
   TAbiParameter extends { type: SolTuple }
@@ -63,6 +73,13 @@ export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
  *
  * @param TAbi - {@link Abi} to check.
  * @returns Boolean for whether {@link TAbi} is {@link Abi}.
+ *
+ * @example
+ *
+ * ```ts
+ * // Returns true
+ * type Result = IsAbi<typeof erc20Abi>
+ * ```
  */
 export type IsAbi<TAbi> = TAbi extends Abi ? true : false
 
@@ -85,6 +102,13 @@ export type ExtractAbiFunctions<
  *
  * @param TAbi - {@link Abi} to extract function names from.
  * @returns Union of function names
+ *
+ * @example
+ *
+ * ```ts
+ * // Returns 'tokenURI' | 'symbol' | 'totalSupply' | ...
+ * type Result = ExtractAbiFunctionNames<typeof erc20Abi>
+ * ```
  */
 export type ExtractAbiFunctionNames<
   TAbi extends Abi,
@@ -96,7 +120,15 @@ export type ExtractAbiFunctionNames<
  *
  * @param TAbi - {@link Abi} to extract {@link AbiFunction} from.
  * @param TFunctionName - String name of function to extract from {@link Abi}
- * @returns {@link AbiFunction}
+ * @returns Matching {@link AbiFunction}
+ *
+ * @example
+ *
+ * ```ts
+ * // Returns
+ * // { type: 'function', name: 'tokenURI', stateMutability: 'pure', inputs: [...], outputs: [...] }
+ * type Result = ExtractAbiFunction<typeof erc20Abi, 'tokenURI'>
+ * ```
  */
 export type ExtractAbiFunction<
   TAbi extends Abi,
@@ -110,6 +142,14 @@ export type ExtractAbiFunction<
  * @param TFunctionName - String name of function
  * @param TAbiParameterType - {@link AbiParameterType} to extract parameters
  * @returns Array of {@link AbiParameter}
+ *
+ * @example
+ *
+ * ```ts
+ * // Returns
+ * // { internalType: 'uint256', name: 'tokenId', type: 'uint256' }
+ * type Result = ExtractAbiFunctionParameters<typeof erc20Abi, 'tokenURI', 'inputs'>
+ * ```
  */
 export type ExtractAbiFunctionParameters<
   TAbi extends Abi,

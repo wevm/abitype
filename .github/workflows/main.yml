@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18]
+        node-version: [16]
         pnpm-version: [7]
     steps:
       - uses: actions/checkout@v3
@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18]
+        node-version: [16]
         pnpm-version: [7]
     steps:
       - uses: actions/checkout@v3
@@ -68,8 +68,6 @@ jobs:
           key: modules-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Lint code
         run: pnpm lint
-      - name: Check types
-        run: pnpm typecheck
 
   build:
     name: Build
@@ -77,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18]
+        node-version: [16]
         pnpm-version: [7]
     steps:
       - uses: actions/checkout@v3
@@ -103,9 +101,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # TODO: Switch back to Node 16 once Vitest is patched
-        # https://github.com/vitest-dev/vitest/issues/1191
-        node-version: [18]
+        node-version: [16]
         pnpm-version: [7]
     steps:
       - uses: actions/checkout@v3
@@ -123,4 +119,4 @@ jobs:
           path: node_modules
           key: modules-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Test
-        run: pnpm test:run
+        run: pnpm test

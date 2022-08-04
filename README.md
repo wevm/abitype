@@ -4,13 +4,11 @@ TypeScript definitions for Ethereum ABIs. It provides autocompletion and type ch
 
 ## Todo
 
-- [ ] test utils
-- [ ] add @example to utils
-- [ ] Add test for tuple return type from function
-
 - [ ] Add test case for list of `AbiFunction`s (e.g. `readContracts`)
-- [ ] Handle function overrides (make non-shared params optional?)
+- [ ] Export all types
 - [ ] Utilities for `AbiEvent`
+
+- [ ] Handle function overrides (make non-shared params optional?)
 - [ ] Update README, contributing guide, issue templates, etc.
 
 ## Open questions

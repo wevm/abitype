@@ -3,11 +3,21 @@ export type {
   AbiError,
   AbiEvent,
   AbiFunction,
+  AbiInternalType,
   AbiParameter,
   AbiParameterType,
   AbiStateMutability,
   AbiType,
   Address,
+  SolAddress,
+  SolArray,
+  SolBool,
+  SolBytes,
+  SolFixed,
+  SolFunction,
+  SolInt,
+  SolString,
+  SolTuple,
 } from './abi'
 
 export type {
@@ -18,4 +28,5 @@ export type {
   ExtractAbiFunctionNames,
   ExtractAbiFunctionParameters,
   ExtractAbiFunctions,
+  IsAbi,
 } from './utils'
