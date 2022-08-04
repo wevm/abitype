@@ -82,11 +82,7 @@ describe('Sol*', () => {
 
   it('array', () => {
     expectType<SolArray>('address[]')
-    expectType<SolArray>('address[4]')
     expectType<SolArray>('string[]')
-    expectType<SolArray>('int8[16]')
-    // @ts-expect-error Past limit on size of fixed-length array
-    expectType<SolArray>('string[17]')
   })
 })
 

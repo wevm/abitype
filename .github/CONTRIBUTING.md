@@ -101,7 +101,7 @@ pnpm typecheck
 
 ## Writing documentation
 
-Documentation lives in the README.md file. If you think something is unclear or could be explained better, you are welcome to open a pull request.
+Documentation lives in the README.md file and in code using [TSDoc](https://tsdoc.org). If you think something is unclear or could be explained better, you are welcome to open a pull request.
 
 <div align="right">
   <a href="#basic-guide">&uarr; back to top</a></b>

@@ -6,6 +6,7 @@ import {
   AbiType,
   Address,
   SolAddress,
+  SolArray,
   SolBool,
   SolBytes,
   SolFixed,
@@ -14,6 +15,10 @@ import {
   SolString,
   SolTuple,
 } from './abi'
+import { Replace } from './types'
+
+export type SolArrayToPrimitiveType<TSolArray extends SolArray> =
+  AbiTypeToPrimitiveType<Replace<TSolArray, '[]', ''>>[]
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
@@ -24,8 +29,8 @@ import {
  * @returns TypeScript primitive type
  */
 export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
-  TAbiType extends `${any}[${any | ''}]` // TODO: Match against SolArray
-    ? any[] // TODO: Parse type from array
+  TAbiType extends `${any}[]`
+    ? any[] // SolArrayToPrimitiveType<TAbiType>
     : TAbiType extends SolAddress
     ? Address
     : TAbiType extends SolBool
