@@ -11,7 +11,13 @@ export type SolFixed =
   | `${'u' | ''}fixed`
   | `${'u' | ''}fixed${MultiplesOf8To256}x${Range<1, 80>[number]}`
 
-// TODO: Missing fixed array (e.g `string[M]`) - too complex for compiler
+/**
+ * To make the dev experience (e.g. autocomplete/type checking speed) almost instant,
+ * the following caveats are in place for array types:
+ *
+ * * Missing fixed arrays (e.g `string[M]`)
+ * *
+ */
 export type SolArray = `${
   | SolAddress
   | SolBool
@@ -22,23 +28,17 @@ export type SolArray = `${
   | SolInt
   | SolFixed}[]`
 
-/**
- * Solidity types
- */
 export type AbiType =
   | SolAddress
-  | SolBool
-  | SolBytes
-  | SolFunction
   | SolString
-  | SolTuple
+  | SolBool
+  | SolFunction
+  | SolBytes
   | SolInt
   | SolFixed
+  | SolTuple
   | SolArray
 
-/**
- * Ethereum address prefixed with `0x`
- */
 export type Address = `0x${string}`
 
 export type AbiInternalType =
@@ -46,9 +46,6 @@ export type AbiInternalType =
   | `contract ${string}`
   | `struct ${string}`
 
-/**
- * Abi parameter
- */
 export type AbiParameter = {
   type: AbiType
   name: string
@@ -57,7 +54,7 @@ export type AbiParameter = {
 } & (
   | { type: Exclude<AbiType, SolTuple> }
   | {
-      type: Extract<AbiType, SolTuple>
+      type: `${SolTuple}` | `${SolTuple}[]`
       components: readonly AbiParameter[]
     }
 )
@@ -66,9 +63,6 @@ export type AbiParameterType = 'inputs' | 'outputs'
 
 export type AbiStateMutability = 'pure' | 'view' | 'nonpayable' | 'payable'
 
-/**
- * Abi function
- */
 export type AbiFunction<TAbiParameter extends AbiParameter = AbiParameter> = {
   /**
    * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
@@ -96,9 +90,6 @@ export type AbiFunction<TAbiParameter extends AbiParameter = AbiParameter> = {
   | { type: 'receive'; stateMutability: 'payable' }
 )
 
-/**
- * Abi event
- */
 export type AbiEvent<TAbiParameter extends AbiParameter = AbiParameter> = {
   type: 'event'
   anonymous?: boolean
@@ -106,9 +97,6 @@ export type AbiEvent<TAbiParameter extends AbiParameter = AbiParameter> = {
   name: string
 }
 
-/**
- * Abi error
- */
 export type AbiError<TAbiParameter extends AbiParameter = AbiParameter> = {
   type: 'error'
   inputs: readonly TAbiParameter[]

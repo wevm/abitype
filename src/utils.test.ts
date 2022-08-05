@@ -21,6 +21,7 @@ test('AbiTypeToPrimitiveType', () => {
   expectType<AbiTypeToPrimitiveType<'bytes1'>>('foo')
   expectType<AbiTypeToPrimitiveType<'bytes24'>>('foo')
   expectType<AbiTypeToPrimitiveType<'bytes32'>>('foo')
+  expectType<AbiTypeToPrimitiveType<'bytes'>>([1])
 
   expectType<AbiTypeToPrimitiveType<'function'>>(`${address}foo`)
   expectType<AbiTypeToPrimitiveType<'string'>>('foo')
@@ -29,20 +30,21 @@ test('AbiTypeToPrimitiveType', () => {
   expectType<AbiTypeToPrimitiveType<'int8'>>(1)
   expectType<AbiTypeToPrimitiveType<'int32'>>(1)
   expectType<AbiTypeToPrimitiveType<'int256'>>(1)
+  expectType<AbiTypeToPrimitiveType<'int'>>(BigInt(1))
   expectType<AbiTypeToPrimitiveType<'uint'>>(1)
   expectType<AbiTypeToPrimitiveType<'uint8'>>(1)
   expectType<AbiTypeToPrimitiveType<'uint32'>>(1)
   expectType<AbiTypeToPrimitiveType<'uint256'>>(1)
+  expectType<AbiTypeToPrimitiveType<'uint'>>(BigInt(1))
 
   expectType<AbiTypeToPrimitiveType<'fixed'>>(1)
   expectType<AbiTypeToPrimitiveType<'fixed8x1'>>(1)
   expectType<AbiTypeToPrimitiveType<'fixed128x18'>>(1)
+  expectType<AbiTypeToPrimitiveType<'fixed'>>(BigInt(1))
   expectType<AbiTypeToPrimitiveType<'ufixed'>>(1)
   expectType<AbiTypeToPrimitiveType<'ufixed8x1'>>(1)
   expectType<AbiTypeToPrimitiveType<'ufixed128x18'>>(1)
-
-  expectType<AbiTypeToPrimitiveType<'address[]'>>([address])
-  expectType<AbiTypeToPrimitiveType<'int[]'>>([1])
+  expectType<AbiTypeToPrimitiveType<'ufixed'>>(BigInt(1))
 })
 
 describe('AbiParameterToPrimitiveType', () => {
@@ -155,7 +157,7 @@ describe('AbiParameterToPrimitiveType', () => {
     >(123)
   })
 
-  it('array', () => {
+  it('string[]', () => {
     expectType<
       AbiParameterToPrimitiveType<{
         internalType: 'string[]'
@@ -163,6 +165,39 @@ describe('AbiParameterToPrimitiveType', () => {
         type: 'string[]'
       }>
     >(['foo', 'bar', 'baz'])
+  })
+
+  it('tuple[]', () => {
+    expectType<
+      AbiParameterToPrimitiveType<{
+        name: 's'
+        type: 'tuple'
+        components: [
+          {
+            name: 'a'
+            type: 'uint256'
+          },
+          {
+            name: 'b'
+            type: 'uint256[]'
+          },
+          {
+            name: 'c'
+            type: 'tuple[]'
+            components: [
+              {
+                name: 'x'
+                type: 'uint256'
+              },
+              {
+                name: 'y'
+                type: 'uint256'
+              },
+            ]
+          },
+        ]
+      }>
+    >({ a: 1, b: [2], c: [{ x: 1, y: 1 }] })
   })
 })
 
@@ -255,7 +290,35 @@ describe('ExtractAbiFunction', () => {
     })
   })
 
-  it.todo('extract function with override')
+  it('extract function with override', () => {
+    type Result = ExtractAbiFunction<
+      typeof wagmiMintExampleAbi,
+      'safeTransferFrom'
+    >
+    expectType<Result>({
+      inputs: [
+        { internalType: 'address', name: 'from', type: 'address' },
+        { internalType: 'address', name: 'to', type: 'address' },
+        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      ],
+      name: 'safeTransferFrom',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    })
+    expectType<Result>({
+      inputs: [
+        { internalType: 'address', name: 'from', type: 'address' },
+        { internalType: 'address', name: 'to', type: 'address' },
+        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+        { internalType: 'bytes', name: '_data', type: 'bytes' },
+      ],
+      name: 'safeTransferFrom',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    })
+  })
 })
 
 describe('ExtractAbiFunctionParameters', () => {
@@ -275,7 +338,24 @@ describe('ExtractAbiFunctionParameters', () => {
     ])
   })
 
-  it.todo('extract function with override')
+  it('extract function with override', () => {
+    type Result = ExtractAbiFunctionParameters<
+      typeof wagmiMintExampleAbi,
+      'safeTransferFrom',
+      'inputs'
+    >
+    expectType<Result>([
+      { internalType: 'address', name: 'from', type: 'address' },
+      { internalType: 'address', name: 'to', type: 'address' },
+      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+    ])
+    expectType<Result>([
+      { internalType: 'address', name: 'from', type: 'address' },
+      { internalType: 'address', name: 'to', type: 'address' },
+      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      { internalType: 'bytes', name: '_data', type: 'bytes' },
+    ])
+  })
 })
 
 describe('AbiParametersToPrimitiveTypes', () => {
@@ -319,5 +399,60 @@ describe('AbiParametersToPrimitiveTypes', () => {
         ]
       >
     >([address, 1, 'foo'])
+  })
+
+  it('Wild collection of parameters', () => {
+    expectType<
+      AbiParametersToPrimitiveTypes<
+        [
+          {
+            name: 's'
+            type: 'tuple'
+            components: [
+              {
+                name: 'a'
+                type: 'uint256'
+              },
+              {
+                name: 'b'
+                type: 'uint256[]'
+              },
+              {
+                name: 'c'
+                type: 'tuple[]'
+                components: [
+                  {
+                    name: 'x'
+                    type: 'uint256'
+                  },
+                  {
+                    name: 'y'
+                    type: 'uint256'
+                  },
+                ]
+              },
+            ]
+          },
+          {
+            name: 't'
+            type: 'tuple'
+            components: [
+              {
+                name: 'x'
+                type: 'uint256'
+              },
+              {
+                name: 'y'
+                type: 'uint256'
+              },
+            ]
+          },
+          {
+            name: 'a'
+            type: 'uint256'
+          },
+        ]
+      >
+    >([{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1, y: 1 }, 1])
   })
 })

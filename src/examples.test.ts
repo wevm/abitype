@@ -291,6 +291,26 @@ describe('writeContract', () => {
         }),
       )
     })
+
+    it('function with overrides', () => {
+      expectType<void>(
+        writeContract({
+          address,
+          contractInterface: wagmiMintExampleAbi,
+          functionName: 'safeTransferFrom',
+          args: [address, address, 123],
+        }),
+      )
+
+      expectType<void>(
+        writeContract({
+          address,
+          contractInterface: wagmiMintExampleAbi,
+          functionName: 'safeTransferFrom',
+          args: [address, address, 123, 'foo'],
+        }),
+      )
+    })
   })
 })
 

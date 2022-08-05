@@ -71,9 +71,13 @@ describe('Sol*', () => {
     expectType<SolFixed>('fixed')
     expectType<SolFixed>('fixed8x1')
     expectType<SolFixed>('fixed128x18')
+    expectType<SolFixed>('fixed168x10')
+
     expectType<SolFixed>('ufixed')
     expectType<SolFixed>('ufixed8x1')
-    expectType<SolFixed>('ufixed128x18')
+    expectType<SolFixed>('ufixed128x1')
+    expectType<SolFixed>('ufixed168x10')
+
     // @ts-expect-error M is not multiple of 8
     expectType<SolFixed>('ufixed6x18')
     // @ts-expect-error N is not between 1 and 80

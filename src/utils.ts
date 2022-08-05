@@ -6,7 +6,6 @@ import {
   AbiType,
   Address,
   SolAddress,
-  SolArray,
   SolBool,
   SolBytes,
   SolFixed,
@@ -16,9 +15,6 @@ import {
   SolTuple,
 } from './abi'
 import { Replace } from './types'
-
-export type SolArrayToPrimitiveType<TSolArray extends SolArray> =
-  AbiTypeToPrimitiveType<Replace<TSolArray, '[]', ''>>[]
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
@@ -30,21 +26,21 @@ export type SolArrayToPrimitiveType<TSolArray extends SolArray> =
  */
 export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
   TAbiType extends `${any}[]`
-    ? any[] // SolArrayToPrimitiveType<TAbiType>
+    ? AbiTypeToPrimitiveType<Replace<TAbiType, '[]', ''>>[]
     : TAbiType extends SolAddress
     ? Address
-    : TAbiType extends SolBool
-    ? boolean
-    : TAbiType extends SolBytes
-    ? string
-    : TAbiType extends SolFunction
-    ? `${Address}${string}`
     : TAbiType extends SolString
     ? string
+    : TAbiType extends SolBool
+    ? boolean
+    : TAbiType extends SolFunction
+    ? `${Address}${string}`
+    : TAbiType extends SolBytes
+    ? string | ArrayLike<number>
     : TAbiType extends SolInt
-    ? number
+    ? bigint | number
     : TAbiType extends SolFixed
-    ? number
+    ? bigint | number
     : unknown
 
 /**
@@ -66,11 +62,17 @@ export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
  */
 export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
   TAbiParameter extends { type: SolTuple }
-    ? {
-        [Component in (TAbiParameter & {
-          components: readonly AbiParameter[]
-        })['components'][number] as Component['name']]: AbiParameterToPrimitiveType<Component>
-      }
+    ? TAbiParameter['type'] extends `${any}[]`
+      ? {
+          [Component in (TAbiParameter & {
+            components: readonly AbiParameter[]
+          })['components'][number] as Component['name']]: AbiParameterToPrimitiveType<Component>
+        }[]
+      : {
+          [Component in (TAbiParameter & {
+            components: readonly AbiParameter[]
+          })['components'][number] as Component['name']]: AbiParameterToPrimitiveType<Component>
+        }
     : AbiTypeToPrimitiveType<TAbiParameter['type']>
 
 /**

@@ -1,3 +1,60 @@
+export const nestedTupleArrayAbi = [
+  {
+    name: 'f',
+    type: 'function',
+    stateMutability: 'payable',
+    inputs: [
+      {
+        name: 's',
+        type: 'tuple',
+        components: [
+          {
+            name: 'a',
+            type: 'uint256',
+          },
+          {
+            name: 'b',
+            type: 'uint256[]',
+          },
+          {
+            name: 'c',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'x',
+                type: 'uint256',
+              },
+              {
+                name: 'y',
+                type: 'uint256',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        name: 't',
+        type: 'tuple',
+        components: [
+          {
+            name: 'x',
+            type: 'uint256',
+          },
+          {
+            name: 'y',
+            type: 'uint256',
+          },
+        ],
+      },
+      {
+        name: 'a',
+        type: 'uint256',
+      },
+    ],
+    outputs: [],
+  },
+] as const
+
 /**
  * WagmiMintExample
  * https://etherscan.io/address/0xaf0326d92b97df1221759476b072abfd8084f9be
