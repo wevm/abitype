@@ -8,13 +8,13 @@ import {
   SolAddress,
   SolBool,
   SolBytes,
-  SolFixed,
+  SolFixedArrayLookup,
   SolFunction,
   SolInt,
   SolString,
   SolTuple,
 } from './abi'
-import { MaybeArray, Replace } from './types'
+import { MaybeArray, Tuple } from './types'
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
@@ -25,8 +25,8 @@ import { MaybeArray, Replace } from './types'
  * @returns TypeScript primitive type
  */
 export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
-  TAbiType extends `${any}[]`
-    ? AbiTypeToPrimitiveType<Replace<TAbiType, '[]', ''>>[]
+  TAbiType extends `${infer T}[]`
+    ? AbiTypeToPrimitiveType<T extends AbiType ? T : any>[]
     : TAbiType extends SolAddress
     ? Address
     : TAbiType extends SolString
@@ -39,8 +39,13 @@ export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
     ? string | ArrayLike<number>
     : TAbiType extends SolInt
     ? bigint | number
-    : TAbiType extends SolFixed
-    ? bigint | number
+    : TAbiType extends `${infer T}[${infer M}]`
+    ? M extends keyof SolFixedArrayLookup
+      ? Tuple<
+          AbiTypeToPrimitiveType<T extends AbiType ? T : any>,
+          SolFixedArrayLookup[M]
+        >
+      : AbiTypeToPrimitiveType<T extends AbiType ? T : any>[]
     : unknown
 
 /**

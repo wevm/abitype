@@ -7,6 +7,7 @@ import {
   MultiplesOf8To256,
   Range,
   Replace,
+  Tuple,
 } from './types'
 
 test('LengthOfString', () => {
@@ -43,4 +44,9 @@ test('Range', () => {
 test('Replace', () => {
   expectType<Replace<'foo', 'f', 'b'>>('boo')
   expectType<Replace<'foo bar', 'bar', 'baz'>>('foo baz')
+})
+
+test('Tuple', () => {
+  expectType<Tuple<string, 2>>(['foo', 'bar'])
+  expectType<Tuple<string | number, 2>>(['foo', 1])
 })

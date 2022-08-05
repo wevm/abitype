@@ -13,7 +13,6 @@ export type {
   SolArray,
   SolBool,
   SolBytes,
-  SolFixed,
   SolFunction,
   SolInt,
   SolString,

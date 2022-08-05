@@ -17,7 +17,6 @@ import {
   SolArray,
   SolBool,
   SolBytes,
-  SolFixed,
   SolFunction,
   SolInt,
   SolString,
@@ -67,26 +66,13 @@ describe('Sol*', () => {
     expectType<SolInt>('int6')
   })
 
-  it('fixed', () => {
-    expectType<SolFixed>('fixed')
-    expectType<SolFixed>('fixed8x1')
-    expectType<SolFixed>('fixed128x18')
-    expectType<SolFixed>('fixed168x10')
-
-    expectType<SolFixed>('ufixed')
-    expectType<SolFixed>('ufixed8x1')
-    expectType<SolFixed>('ufixed128x1')
-    expectType<SolFixed>('ufixed168x10')
-
-    // @ts-expect-error M is not multiple of 8
-    expectType<SolFixed>('ufixed6x18')
-    // @ts-expect-error N is not between 1 and 80
-    expectType<SolFixed>('ufixed8x100')
-  })
-
   it('array', () => {
     expectType<SolArray>('address[]')
     expectType<SolArray>('string[]')
+    expectType<SolArray>('address[4]')
+    expectType<SolArray>('string[4]')
+    // @ts-expect-error Out of fixed array range
+    expectType<SolArray>('string[100]')
   })
 })
 
@@ -117,13 +103,6 @@ test('AbiType', () => {
   expectType<AbiType>('uint8')
   expectType<AbiType>('uint32')
   expectType<AbiType>('uint256')
-
-  expectType<AbiType>('fixed')
-  expectType<AbiType>('fixed8x1')
-  expectType<AbiType>('fixed128x18')
-  expectType<AbiType>('ufixed')
-  expectType<AbiType>('ufixed8x1')
-  expectType<AbiType>('ufixed128x18')
 })
 
 test('AbiInternalType', () => {

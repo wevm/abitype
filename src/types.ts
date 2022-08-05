@@ -98,6 +98,30 @@ export type Replace<
   : TString
 
 /**
+ * Create tuple of {@link T} type with {@link N} size
+ *
+ * @param T - Type of tuple
+ * @param N - Size of tuple
+ * @returns Tuple of {@link T} type with {@link N} size
+ *
+ * @example
+ *
+ * ```ts
+ * // Returns [string, string]
+ * type Result = Tuple<string, 2>
+ * ```
+ */
+// https://github.com/Microsoft/TypeScript/issues/26223#issuecomment-674500430
+export type Tuple<T, N extends number> = N extends N
+  ? number extends N
+    ? T[]
+    : _TupleOf<T, N, []>
+  : never
+type _TupleOf<T, N extends number, R extends unknown[]> = R['length'] extends N
+  ? R
+  : _TupleOf<T, N, [T, ...R]>
+
+/**
  * Positive multiples of eight from eight to 256
  */
 export type MultiplesOf8To256 =

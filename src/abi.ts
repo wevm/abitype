@@ -7,26 +7,25 @@ export type SolFunction = 'function'
 export type SolString = 'string'
 export type SolTuple = 'tuple'
 export type SolInt = `${'u' | ''}int${MultiplesOf8To256 | ''}`
-export type SolFixed =
-  | `${'u' | ''}fixed`
-  | `${'u' | ''}fixed${MultiplesOf8To256}x${Range<1, 80>[number]}`
+// No need to support "fixed" until Solidity does
+// https://github.com/ethereum/solidity/issues/409
+// export type SolFixed =
+//   | `${'u' | ''}fixed`
+//   | `${'u' | ''}fixed${MultiplesOf8To256}x${Range<1, 20>[number]}`
 
-/**
- * To make the dev experience (e.g. autocomplete/type checking speed) almost instant,
- * the following caveats are in place for array types:
- *
- * * Missing fixed arrays (e.g `string[M]`)
- * *
- */
-export type SolArray = `${
-  | SolAddress
-  | SolBool
-  | SolBytes
-  | SolFunction
-  | SolString
-  | SolTuple
-  | SolInt
-  | SolFixed}[]`
+export type SolFixedArrayRange = Range<2, 10>[number]
+export type SolFixedArrayLookup = {
+  [Prop in SolFixedArrayRange as `${Prop}`]: Prop
+}
+export type SolArray =
+  | `${
+      | SolAddress
+      | SolBool
+      | SolBytes
+      | SolFunction
+      | SolString
+      | SolTuple
+      | SolInt}[${'' | SolFixedArrayRange}]`
 
 export type AbiType =
   | SolAddress
@@ -35,7 +34,6 @@ export type AbiType =
   | SolFunction
   | SolBytes
   | SolInt
-  | SolFixed
   | SolTuple
   | SolArray
 

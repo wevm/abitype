@@ -1,6 +1,14 @@
 import { describe, it, test } from 'vitest'
 
-import { address, expectType, wagmiMintExampleAbi } from '../test'
+import {
+  address,
+  ensRegistryWithFallbackAbi,
+  expectType,
+  nestedTupleArrayAbi,
+  nounsAuctionHouseProxyAbi,
+  wagmiMintExampleAbi,
+  writingEditionsFactoryAbi,
+} from '../test'
 import { Abi } from './abi'
 import {
   AbiParameterToPrimitiveType,
@@ -37,14 +45,8 @@ test('AbiTypeToPrimitiveType', () => {
   expectType<AbiTypeToPrimitiveType<'uint256'>>(1)
   expectType<AbiTypeToPrimitiveType<'uint'>>(BigInt(1))
 
-  expectType<AbiTypeToPrimitiveType<'fixed'>>(1)
-  expectType<AbiTypeToPrimitiveType<'fixed8x1'>>(1)
-  expectType<AbiTypeToPrimitiveType<'fixed128x18'>>(1)
-  expectType<AbiTypeToPrimitiveType<'fixed'>>(BigInt(1))
-  expectType<AbiTypeToPrimitiveType<'ufixed'>>(1)
-  expectType<AbiTypeToPrimitiveType<'ufixed8x1'>>(1)
-  expectType<AbiTypeToPrimitiveType<'ufixed128x18'>>(1)
-  expectType<AbiTypeToPrimitiveType<'ufixed'>>(BigInt(1))
+  expectType<AbiTypeToPrimitiveType<'string[]'>>(['foo'])
+  expectType<AbiTypeToPrimitiveType<'string[2]'>>(['foo', 'foo'])
 })
 
 describe('AbiParameterToPrimitiveType', () => {
@@ -147,16 +149,6 @@ describe('AbiParameterToPrimitiveType', () => {
     >(123)
   })
 
-  it('fixed', () => {
-    expectType<
-      AbiParameterToPrimitiveType<{
-        internalType: 'fixed128x18'
-        name: ''
-        type: 'fixed128x18'
-      }>
-    >(123)
-  })
-
   it('string[]', () => {
     expectType<
       AbiParameterToPrimitiveType<{
@@ -165,6 +157,15 @@ describe('AbiParameterToPrimitiveType', () => {
         type: 'string[]'
       }>
     >(['foo', 'bar', 'baz'])
+  })
+
+  it('string[4]', () => {
+    type Result = AbiParameterToPrimitiveType<{
+      internalType: 'string[3]'
+      name: ''
+      type: 'string[3]'
+    }>
+    expectType<Result>(['foo', 'bar', 'baz'])
   })
 
   it('tuple[]', () => {
@@ -183,6 +184,27 @@ describe('AbiParameterToPrimitiveType', () => {
       ]
     }>
     expectType<Result>([{ x: 1, y: 1 }])
+  })
+
+  it('tuple[2]', () => {
+    type Result = AbiParameterToPrimitiveType<{
+      name: 'c'
+      type: 'tuple[2]'
+      components: [
+        {
+          name: 'x'
+          type: 'uint256'
+        },
+        {
+          name: 'y'
+          type: 'uint256'
+        },
+      ]
+    }>
+    expectType<Result>([
+      { x: 1, y: 1 },
+      { x: 1, y: 1 },
+    ])
   })
 
   it('Nested tuple', () => {
@@ -221,7 +243,11 @@ describe('AbiParameterToPrimitiveType', () => {
 
 describe('IsAbi', () => {
   it('const assertion', () => {
+    expectType<IsAbi<typeof nestedTupleArrayAbi>>(true)
     expectType<IsAbi<typeof wagmiMintExampleAbi>>(true)
+    expectType<IsAbi<typeof writingEditionsFactoryAbi>>(true)
+    expectType<IsAbi<typeof ensRegistryWithFallbackAbi>>(true)
+    expectType<IsAbi<typeof nounsAuctionHouseProxyAbi>>(true)
   })
 
   it('declared as Abi type', () => {
@@ -469,8 +495,30 @@ describe('AbiParametersToPrimitiveTypes', () => {
             name: 'a'
             type: 'uint256'
           },
+          {
+            name: 't'
+            type: 'tuple[2]'
+            components: [
+              {
+                name: 'x'
+                type: 'uint256'
+              },
+              {
+                name: 'y'
+                type: 'uint256'
+              },
+            ]
+          },
         ]
       >
-    >([{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1, y: 1 }, 1])
+    >([
+      { a: 1, b: [2], c: [{ x: 1, y: 1 }] },
+      { x: 1, y: 1 },
+      1,
+      [
+        { x: 1, y: 1 },
+        { x: 1, y: 1 },
+      ],
+    ])
   })
 })

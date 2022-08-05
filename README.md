@@ -36,6 +36,12 @@ If you find abitype useful, please consider supporting development. Thank you ðŸ
 
 If you're interested in contributing, please read the [contributing docs](/.github/CONTRIBUTING.md) **before submitting a pull request**.
 
+## Authors
+
+- awkweb.eth ([@awkweb](https://twitter.com/awkweb)) â€“ [Mirror](https://mirror.xyz)
+
+Thanks to indreams.eth ([@strollinghome](https://twitter.com/strollinghome)) for answering Solidity questions!
+
 ## License
 
 [WAGMIT](/LICENSE) License
