@@ -2,22 +2,22 @@ import { test } from 'vitest'
 
 import { expectType } from '../test'
 import {
-  Equal,
   LengthOfString,
+  MaybeArray,
   MultiplesOf8To256,
   Range,
   Replace,
 } from './types'
 
-test('Equal', () => {
-  expectType<Equal<'foo', 'foo'>>(true)
-  expectType<Equal<'foo', 'bar'>>(false)
-})
-
 test('LengthOfString', () => {
   expectType<LengthOfString<''>>(0)
   expectType<LengthOfString<'foo'>>(3)
   expectType<LengthOfString<'0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'>>(42)
+})
+
+test('MaybeArray', () => {
+  expectType<MaybeArray<'tuple[]', 'bar'>>(['bar'])
+  expectType<MaybeArray<'tuple', 'bar'>>('bar')
 })
 
 test('MultiplesOf8To256', () => {

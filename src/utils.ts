@@ -14,7 +14,7 @@ import {
   SolString,
   SolTuple,
 } from './abi'
-import { Replace } from './types'
+import { MaybeArray, Replace } from './types'
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
@@ -61,18 +61,15 @@ export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
  * ```
  */
 export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
-  TAbiParameter extends { type: SolTuple }
-    ? TAbiParameter['type'] extends `${any}[]`
-      ? {
-          [Component in (TAbiParameter & {
-            components: readonly AbiParameter[]
-          })['components'][number] as Component['name']]: AbiParameterToPrimitiveType<Component>
-        }[]
-      : {
+  TAbiParameter['type'] extends `${SolTuple}${'' | '[]'}`
+    ? MaybeArray<
+        TAbiParameter['type'],
+        {
           [Component in (TAbiParameter & {
             components: readonly AbiParameter[]
           })['components'][number] as Component['name']]: AbiParameterToPrimitiveType<Component>
         }
+      >
     : AbiTypeToPrimitiveType<TAbiParameter['type']>
 
 /**

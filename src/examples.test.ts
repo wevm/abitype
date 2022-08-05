@@ -4,6 +4,7 @@ import {
   address,
   ensRegistryWithFallbackAbi,
   expectType,
+  nestedTupleArrayAbi,
   nounsAuctionHouseProxyAbi,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
@@ -275,6 +276,17 @@ describe('writeContract', () => {
           address,
           contractInterface,
           functionName: 'foo',
+        }),
+      )
+    })
+
+    it('tuple[]', () => {
+      expectType<void>(
+        writeContract({
+          address,
+          contractInterface: nestedTupleArrayAbi,
+          functionName: 'f',
+          args: [{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1, y: 1 }, 1],
         }),
       )
     })

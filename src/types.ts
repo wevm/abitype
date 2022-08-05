@@ -1,24 +1,4 @@
 /**
- * Test whether two values are equal.
- *
- * @param Value1 - Value
- * @param Value2 - Value to compare to {@link Value1}
- * @returns Boolean for whether values are equal
- *
- * @example
- *
- * ```ts
- * // Returns true
- * type Result = Equal<'foo', 'foo'>
- * ```
- */
-export type Equal<Value1, Value2> = (<T>() => T extends Value1
-  ? 1
-  : 2) extends <T>() => T extends Value2 ? 1 : 2
-  ? true
-  : false
-
-/**
  * Calculate length of template string (supports several hundred characters).
  *
  * @param TString - String to calculate length
@@ -38,6 +18,25 @@ export type LengthOfString<
 > = TString extends `${string}${infer Rest}`
   ? LengthOfString<Rest, [..._Res, 1]>
   : _Res['length']
+
+/**
+ * Converts value to array if type ends in `[]`
+ *
+ * @param TString - String to check
+ * @param Value - Value to turn into array or return
+ * @returns Either {@link Value} or {@link Value} as an array
+ *
+ * @example
+ *
+ * ```ts
+ * // Returns { name: string }[]
+ * type Result = Equal<'tuple[]', { name: string }}>
+ * ```
+ */
+export type MaybeArray<
+  TString extends string,
+  Value,
+> = TString extends `${any}[]` ? Value[] : Value
 
 /**
  * Creates range between two positive numbers using [tail recursion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html#tail-recursion-elimination-on-conditional-types).

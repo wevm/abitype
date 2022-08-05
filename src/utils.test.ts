@@ -168,6 +168,24 @@ describe('AbiParameterToPrimitiveType', () => {
   })
 
   it('tuple[]', () => {
+    type Result = AbiParameterToPrimitiveType<{
+      name: 'c'
+      type: 'tuple[]'
+      components: [
+        {
+          name: 'x'
+          type: 'uint256'
+        },
+        {
+          name: 'y'
+          type: 'uint256'
+        },
+      ]
+    }>
+    expectType<Result>([{ x: 1, y: 1 }])
+  })
+
+  it('Nested tuple', () => {
     expectType<
       AbiParameterToPrimitiveType<{
         name: 's'
