@@ -40,7 +40,9 @@ If you're interested in contributing, please read the [contributing docs](/.gith
 
 - awkweb.eth ([@awkweb](https://twitter.com/awkweb)) – [Mirror](https://mirror.xyz)
 
-Thanks to indreams.eth ([@strollinghome](https://twitter.com/strollinghome)) for answering Solidity questions!
+## Thanks
+
+- indreams.eth ([@strollinghome](https://twitter.com/strollinghome)) for answering Solidity questions!
 
 ## License
 

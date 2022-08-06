@@ -5,7 +5,7 @@ import {
   ensRegistryWithFallbackAbi,
   expectType,
   nestedTupleArrayAbi,
-  nounsAuctionHouseProxyAbi,
+  nounsAuctionHouseAbi,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
 } from '../test'
@@ -13,6 +13,8 @@ import {
 import { Abi, Address } from './abi'
 import {
   AbiParametersToPrimitiveTypes,
+  ExtractAbiEventNames,
+  ExtractAbiEventParameters,
   ExtractAbiFunctionNames,
   ExtractAbiFunctionParameters,
 } from './utils'
@@ -157,9 +159,9 @@ describe('writeContract', () => {
       expectType<void>(
         writeContract({
           address,
-          contractInterface: nounsAuctionHouseProxyAbi,
-          functionName: 'changeAdmin',
-          args: address,
+          contractInterface: nounsAuctionHouseAbi,
+          functionName: 'createBid',
+          args: 123,
         }),
       )
     })
@@ -213,19 +215,8 @@ describe('writeContract', () => {
       expectType<void>(
         writeContract({
           address,
-          contractInterface: nounsAuctionHouseProxyAbi,
-          functionName: 'upgradeToAndCall',
-          args: [address, 'foo'],
-        }),
-      )
-    })
-
-    it('Address', () => {
-      expectType<Address>(
-        writeContract({
-          address,
-          contractInterface: nounsAuctionHouseProxyAbi,
-          functionName: 'implementation',
+          contractInterface: nounsAuctionHouseAbi,
+          functionName: 'pause',
         }),
       )
     })
@@ -327,3 +318,33 @@ describe('writeContract', () => {
 })
 
 describe.todo('readContracts')
+
+describe('watchContractEvent', () => {
+  function watchContractEvent<
+    TAbi extends Abi,
+    TEventName extends ExtractAbiEventNames<TAbi>,
+    TArgs extends AbiParametersToPrimitiveTypes<
+      ExtractAbiEventParameters<TAbi, TEventName>
+    >,
+  >(_config: {
+    address: Address
+    contractInterface: TAbi
+    eventName: TEventName
+    listener(args: TArgs): void
+  }) {
+    return
+  }
+
+  describe('args', () => {
+    it('zero', () => {
+      watchContractEvent({
+        address,
+        contractInterface: wagmiMintExampleAbi,
+        eventName: 'Transfer',
+        listener(args) {
+          expectType<readonly [Address, Address, number | bigint]>(args)
+        },
+      })
+    })
+  })
+})

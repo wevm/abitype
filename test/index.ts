@@ -12,7 +12,7 @@ export const address = '0x0000000000000000000000000000000000000000'
 export {
   ensRegistryWithFallbackAbi,
   nestedTupleArrayAbi,
-  nounsAuctionHouseProxyAbi,
+  nounsAuctionHouseAbi,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
 } from './abis'

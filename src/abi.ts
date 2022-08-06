@@ -41,8 +41,10 @@ export type Address = `0x${string}`
 
 export type AbiInternalType =
   | AbiType
+  | `address ${string}`
   | `contract ${string}`
   | `struct ${string}`
+  | string
 
 export type AbiParameter = {
   type: AbiType

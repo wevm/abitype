@@ -108,6 +108,7 @@ test('AbiType', () => {
 test('AbiInternalType', () => {
   expectType<AbiInternalType>('address')
   expectType<AbiInternalType>('bytes32')
+  expectType<AbiInternalType>('address payable')
   expectType<AbiInternalType>('contract ENS')
   expectType<AbiInternalType>('struct IWritingEditions.WritingEdition')
 })

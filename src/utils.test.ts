@@ -5,7 +5,7 @@ import {
   ensRegistryWithFallbackAbi,
   expectType,
   nestedTupleArrayAbi,
-  nounsAuctionHouseProxyAbi,
+  nounsAuctionHouseAbi,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
 } from '../test'
@@ -14,6 +14,8 @@ import {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
   AbiTypeToPrimitiveType,
+  ExtractAbiEventNames,
+  ExtractAbiEvents,
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
   ExtractAbiFunctionParameters,
@@ -247,7 +249,7 @@ describe('IsAbi', () => {
     expectType<IsAbi<typeof wagmiMintExampleAbi>>(true)
     expectType<IsAbi<typeof writingEditionsFactoryAbi>>(true)
     expectType<IsAbi<typeof ensRegistryWithFallbackAbi>>(true)
-    expectType<IsAbi<typeof nounsAuctionHouseProxyAbi>>(true)
+    expectType<IsAbi<typeof nounsAuctionHouseAbi>>(true)
   })
 
   it('declared as Abi type', () => {
@@ -520,5 +522,35 @@ describe('AbiParametersToPrimitiveTypes', () => {
         { x: 1, y: 1 },
       ],
     ])
+  })
+})
+
+describe('ExtractAbiEvents', () => {
+  it('extracts events', () => {
+    const abiEvent = {
+      type: 'event',
+      anonymous: false,
+      inputs: [{ name: 'a', type: 'uint256' }],
+      name: 'foo',
+    } as const
+    expectType<ExtractAbiEvents<[typeof abiEvent]>>(abiEvent)
+  })
+
+  it('no events', () => {
+    expectType<ExtractAbiEvents<[]>>(undefined as never)
+  })
+})
+
+describe('ExtractAbiEventNames', () => {
+  it('extracts names', () => {
+    test('ExtractAbiEventNames', () => {
+      expectType<ExtractAbiEventNames<typeof wagmiMintExampleAbi>>(
+        'ApprovalForAll',
+      )
+    })
+  })
+
+  it('no names', () => {
+    expectType<ExtractAbiEventNames<[]>>(undefined as never)
   })
 })
