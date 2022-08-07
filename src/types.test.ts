@@ -1,25 +1,7 @@
 import { test } from 'vitest'
 
 import { expectType } from '../test'
-import {
-  LengthOfString,
-  MaybeArray,
-  MultiplesOf8To256,
-  Range,
-  Replace,
-  Tuple,
-} from './types'
-
-test('LengthOfString', () => {
-  expectType<LengthOfString<''>>(0)
-  expectType<LengthOfString<'foo'>>(3)
-  expectType<LengthOfString<'0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'>>(42)
-})
-
-test('MaybeArray', () => {
-  expectType<MaybeArray<'tuple[]', 'bar'>>(['bar'])
-  expectType<MaybeArray<'tuple', 'bar'>>('bar')
-})
+import { MultiplesOf8To256, Range, Tuple } from './types'
 
 test('MultiplesOf8To256', () => {
   expectType<MultiplesOf8To256>(8)
@@ -39,11 +21,6 @@ test('Range', () => {
   expectType<Range<1, 0>>([])
   // @ts-expect-error Only positive ranges work
   expectType<Range<-2, 0>>([-2, -1, 0])
-})
-
-test('Replace', () => {
-  expectType<Replace<'foo', 'f', 'b'>>('boo')
-  expectType<Replace<'foo bar', 'bar', 'baz'>>('foo baz')
 })
 
 test('Tuple', () => {

@@ -15,7 +15,7 @@ import {
   SolString,
   SolTuple,
 } from './abi'
-import { MaybeArray, Tuple } from './types'
+import { Tuple } from './types'
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
@@ -63,33 +63,27 @@ export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
     ? M extends keyof SolFixedArrayLookup
       ? Tuple<
           AbiParameterToPrimitiveType<
-            {
-              [Property in keyof Omit<
-                TAbiParameter,
-                'type'
-              >]: TAbiParameter[Property]
-            } & { type: T extends AbiType ? T : any }
+            _StripArrayTypeFromAbiParameter<T, TAbiParameter>
           >,
           SolFixedArrayLookup[M]
         >
       : AbiParameterToPrimitiveType<
-          {
-            [Property in keyof Omit<
-              TAbiParameter,
-              'type'
-            >]: TAbiParameter[Property]
-          } & { type: T extends AbiType ? T : any }
+          _StripArrayTypeFromAbiParameter<T, TAbiParameter>
         >[]
     : TAbiParameter['type'] extends `${SolTuple}${'' | '[]'}`
-    ? MaybeArray<
-        TAbiParameter['type'],
-        {
-          [Component in (TAbiParameter & {
-            components: readonly AbiParameter[]
-          })['components'][number] as Component['name']]: AbiParameterToPrimitiveType<Component>
-        }
-      >
+    ? {
+        [Component in (TAbiParameter & {
+          components: readonly AbiParameter[]
+        })['components'][number] as Component['name']]: AbiParameterToPrimitiveType<Component>
+      }
     : AbiTypeToPrimitiveType<TAbiParameter['type']>
+
+type _StripArrayTypeFromAbiParameter<
+  TType extends string | AbiType,
+  TAbiParameter extends AbiParameter,
+> = {
+  [Property in keyof Omit<TAbiParameter, 'type'>]: TAbiParameter[Property]
+} & { type: TType extends AbiType ? TType : any }
 
 /**
  * Converts array of {@link AbiParameter} to corresponding TypeScript primitive types.

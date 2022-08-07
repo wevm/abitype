@@ -25,36 +25,38 @@ describe('readContract', () => {
     TFunctionName extends TAbi extends Abi
       ? ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>
       : string,
-    TInputs extends TAbi extends Abi
+    TArgs extends TAbi extends Abi
       ? AbiParametersToPrimitiveTypes<
           ExtractAbiFunctionParameters<TAbi, TFunctionName, 'inputs'>
         >
       : any[],
-    TOutputs extends TAbi extends Abi
+    TResponse extends TAbi extends Abi
       ? AbiParametersToPrimitiveTypes<
           ExtractAbiFunctionParameters<TAbi, TFunctionName, 'outputs'>
         >
-      : any[],
-    TArgs extends TInputs extends any[]
-      ? { args?: any }
-      : TInputs['length'] extends 0
-      ? { args?: never }
-      : TInputs['length'] extends 1
-      ? { args: TInputs[0] }
-      : { args: TInputs },
-    TResponse extends TOutputs['length'] extends 0
-      ? void
-      : TOutputs['length'] extends 1
-      ? TOutputs[0]
-      : TOutputs,
+      : any,
   >(
     _config: {
       address: Address
       contractInterface: TAbi
       functionName: TFunctionName
-    } & TArgs,
-  ): TResponse {
-    return {} as TResponse
+    } & (TArgs extends any[]
+      ? { args?: any }
+      : TArgs['length'] extends 0
+      ? { args?: never }
+      : TArgs['length'] extends 1
+      ? { args: TArgs[0] }
+      : { args: TArgs }),
+  ): TResponse['length'] extends 0
+    ? void
+    : TResponse['length'] extends 1
+    ? TResponse[0]
+    : TResponse {
+    return {} as TResponse['length'] extends 0
+      ? void
+      : TResponse['length'] extends 1
+      ? TResponse[0]
+      : TResponse
   }
 
   describe('args', () => {
@@ -114,7 +116,7 @@ describe('readContract', () => {
     })
 
     it('number', () => {
-      expectType<number>(
+      expectType<number | bigint>(
         readContract({
           address,
           contractInterface: wagmiMintExampleAbi,
@@ -127,7 +129,7 @@ describe('readContract', () => {
 
   describe('behavior', () => {
     it('write function not allowed', () => {
-      expectType<string>(
+      expectType<any>(
         readContract({
           address,
           contractInterface: wagmiMintExampleAbi,
@@ -164,36 +166,38 @@ describe('writeContract', () => {
     TFunctionName extends TAbi extends Abi
       ? ExtractAbiFunctionNames<TAbi, 'payable' | 'nonpayable'>
       : string,
-    TInputs extends TAbi extends Abi
+    TArgs extends TAbi extends Abi
       ? AbiParametersToPrimitiveTypes<
           ExtractAbiFunctionParameters<TAbi, TFunctionName, 'inputs'>
         >
       : any[],
-    TOutputs extends TAbi extends Abi
+    TResponse extends TAbi extends Abi
       ? AbiParametersToPrimitiveTypes<
           ExtractAbiFunctionParameters<TAbi, TFunctionName, 'outputs'>
         >
-      : any[],
-    TArgs extends TInputs extends any[]
-      ? { args?: any }
-      : TInputs['length'] extends 0
-      ? { args?: never }
-      : TInputs['length'] extends 1
-      ? { args: TInputs[0] }
-      : { args: TInputs },
-    TResponse extends TOutputs['length'] extends 0
-      ? void
-      : TOutputs['length'] extends 1
-      ? TOutputs[0]
-      : TOutputs,
+      : any,
   >(
     _config: {
       address: Address
       contractInterface: TAbi
       functionName: TFunctionName
-    } & TArgs,
-  ): TResponse {
-    return {} as TResponse
+    } & (TArgs extends any[]
+      ? { args?: any }
+      : TArgs['length'] extends 0
+      ? { args?: never }
+      : TArgs['length'] extends 1
+      ? { args: TArgs[0] }
+      : { args: TArgs }),
+  ): TResponse['length'] extends 0
+    ? void
+    : TResponse['length'] extends 1
+    ? TResponse[0]
+    : TResponse {
+    return {} as TResponse['length'] extends 0
+      ? void
+      : TResponse['length'] extends 1
+      ? TResponse[0]
+      : TResponse
   }
 
   describe('args', () => {
@@ -274,7 +278,7 @@ describe('writeContract', () => {
     })
 
     it('bytes32', () => {
-      expectType<string>(
+      expectType<string | ArrayLike<number>>(
         writeContract({
           address,
           contractInterface: ensRegistryWithFallbackAbi,
@@ -310,8 +314,8 @@ describe('writeContract', () => {
         },
       ] as const
       type Output = {
-        name: 'Test'
-        symbol: '$TEST'
+        name: string
+        symbol: string
         fundingRecipient: Address
       }
       expectType<Output>(

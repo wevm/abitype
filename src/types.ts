@@ -1,38 +1,4 @@
 /**
- * Calculate length of template string (supports several hundred characters).
- *
- * @param TString - String to calculate length
- * @returns Length of string
- *
- * @example
- * type Result = LengthOfString<'baz'>
- * 3
- */
-// From [Type Challenges #651](https://github.com/type-challenges/type-challenges/issues/11438)
-export type LengthOfString<
-  TString extends string,
-  _Res extends 1[] = [],
-> = TString extends `${string}${infer Rest}`
-  ? LengthOfString<Rest, [..._Res, 1]>
-  : _Res['length']
-
-/**
- * Converts value to array if type ends in `[]`
- *
- * @param TString - String to check
- * @param Value - Value to turn into array or return
- * @returns Either {@link Value} or {@link Value} as an array
- *
- * @example
- * type Result = Equal<'tuple[]', { name: string }}>
- * { name: string }[]
- */
-export type MaybeArray<
-  TString extends string,
-  Value,
-> = TString extends `${any}[]` ? Value[] : Value
-
-/**
  * Creates range between two positive numbers using [tail recursion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html#tail-recursion-elimination-on-conditional-types).
  *
  * @param Start - Number to start range
@@ -61,29 +27,6 @@ export type Range<
   : _Res extends []
   ? Range<Start, Stop, [], [..._Padding, 0]>
   : Range<Start, Stop, [..._Res, _Current], _Padding>
-
-/**
- * Replaces value in string with provided value.
- *
- * @param TString - String to replace value in
- * @param From - Substring of {@link TString} to replace with {@link To}
- * @param To - String to replace {@link From}
- * @returns Array with inclusive range from {@link Start} to {@link Stop}
- *
- * @example
- * type Result = Replace<'foobar', 'bar', 'baz'>
- * 'foobaz'
- */
-// From [Type Challenges #116](https://github.com/type-challenges/type-challenges/issues/12825)
-export type Replace<
-  TString extends string,
-  From extends string,
-  To extends string,
-> = From extends ''
-  ? TString
-  : TString extends `${infer H}${From}${infer R}`
-  ? `${H}${To}${R}`
-  : TString
 
 /**
  * Create tuple of {@link T} type with {@link N} size
