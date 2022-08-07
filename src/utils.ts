@@ -6,6 +6,7 @@ import {
   AbiType,
   Address,
   SolAddress,
+  SolArray,
   SolBool,
   SolBytes,
   SolFixedArrayLookup,
@@ -19,15 +20,13 @@ import { MaybeArray, Tuple } from './types'
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
  *
- * Note: Does not include tuple conversion. Use {@link AbiParameterToPrimitiveType} to also convert tuples.
+ * Note: Does not include full array or tuple conversion. Use {@link AbiParameterToPrimitiveType} to also convert arrays and tuples.
  *
  * @param TAbiType - {@link AbiType} to convert to TypeScript representation.
  * @returns TypeScript primitive type
  */
 export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
-  TAbiType extends `${infer T}[]`
-    ? AbiTypeToPrimitiveType<T extends AbiType ? T : any>[]
-    : TAbiType extends SolAddress
+  TAbiType extends SolAddress
     ? Address
     : TAbiType extends SolString
     ? string
@@ -39,13 +38,10 @@ export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
     ? string | ArrayLike<number>
     : TAbiType extends SolInt
     ? bigint | number
-    : TAbiType extends `${infer T}[${infer M}]`
-    ? M extends keyof SolFixedArrayLookup
-      ? Tuple<
-          AbiTypeToPrimitiveType<T extends AbiType ? T : any>,
-          SolFixedArrayLookup[M]
-        >
-      : AbiTypeToPrimitiveType<T extends AbiType ? T : any>[]
+    : TAbiType extends SolTuple
+    ? Record<string, unknown>
+    : TAbiType extends SolArray
+    ? unknown[]
     : unknown
 
 /**
@@ -60,11 +56,31 @@ export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
  *   name: 'name'
  *   type: 'string'
  * }>
- *
  * string
  */
 export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
-  TAbiParameter['type'] extends `${SolTuple}${'' | '[]'}`
+  TAbiParameter['type'] extends `${infer T}[${infer M}]`
+    ? M extends keyof SolFixedArrayLookup
+      ? Tuple<
+          AbiParameterToPrimitiveType<
+            {
+              [Property in keyof Omit<
+                TAbiParameter,
+                'type'
+              >]: TAbiParameter[Property]
+            } & { type: T extends AbiType ? T : any }
+          >,
+          SolFixedArrayLookup[M]
+        >
+      : AbiParameterToPrimitiveType<
+          {
+            [Property in keyof Omit<
+              TAbiParameter,
+              'type'
+            >]: TAbiParameter[Property]
+          } & { type: T extends AbiType ? T : any }
+        >[]
+    : TAbiParameter['type'] extends `${SolTuple}${'' | '[]'}`
     ? MaybeArray<
         TAbiParameter['type'],
         {

@@ -13,7 +13,7 @@ export type SolInt = `${'u' | ''}int${MultiplesOf8To256 | ''}`
 //   | `${'u' | ''}fixed`
 //   | `${'u' | ''}fixed${MultiplesOf8To256}x${Range<1, 20>[number]}`
 
-export type SolFixedArrayRange = Range<2, 10>[number]
+export type SolFixedArrayRange = Range<1, 10>[number]
 export type SolFixedArrayLookup = {
   [Prop in SolFixedArrayRange as `${Prop}`]: Prop
 }
