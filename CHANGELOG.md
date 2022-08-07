@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.4
+
+### Patch Changes
+
+- [`dd77b0c`](https://github.com/wagmi-dev/abitype/commit/dd77b0c84d9326c252a6f2929fca8a675e48383a) Thanks [@tmm](https://github.com/tmm)! - Deeply nested types
+
 ## 0.0.3
 
 ### Patch Changes
