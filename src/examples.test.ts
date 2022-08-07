@@ -21,22 +21,40 @@ import {
 
 describe('readContract', () => {
   function readContract<
-    TAbi extends Abi,
-    TFunctionName extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
-    TArgs extends AbiParametersToPrimitiveTypes<
-      ExtractAbiFunctionParameters<TAbi, TFunctionName, 'inputs'>
-    >,
-    TResponse extends AbiParametersToPrimitiveTypes<
-      ExtractAbiFunctionParameters<TAbi, TFunctionName, 'outputs'>
-    >,
+    TAbi,
+    TFunctionName extends TAbi extends Abi
+      ? ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>
+      : string,
+    TInputs extends TAbi extends Abi
+      ? AbiParametersToPrimitiveTypes<
+          ExtractAbiFunctionParameters<TAbi, TFunctionName, 'inputs'>
+        >
+      : any[],
+    TOutputs extends TAbi extends Abi
+      ? AbiParametersToPrimitiveTypes<
+          ExtractAbiFunctionParameters<TAbi, TFunctionName, 'outputs'>
+        >
+      : any[],
+    TArgs extends TInputs extends any[]
+      ? { args?: any }
+      : TInputs['length'] extends 0
+      ? { args?: never }
+      : TInputs['length'] extends 1
+      ? { args: TInputs[0] }
+      : { args: TInputs },
+    TResponse extends TOutputs['length'] extends 0
+      ? void
+      : TOutputs['length'] extends 1
+      ? TOutputs[0]
+      : TOutputs,
   >(
     _config: {
       address: Address
       contractInterface: TAbi
       functionName: TFunctionName
-    } & (TArgs extends undefined ? { args?: never } : { args: TArgs }),
-  ): TResponse extends undefined ? void : TResponse {
-    return {} as TResponse extends undefined ? void : TResponse
+    } & TArgs,
+  ): TResponse {
+    return {} as TResponse
   }
 
   describe('args', () => {
@@ -118,30 +136,64 @@ describe('readContract', () => {
         }),
       )
     })
+
+    it('works without const assertion', () => {
+      const contractInterface = [
+        {
+          name: 'foo',
+          type: 'function',
+          stateMutability: 'view',
+          inputs: [],
+          outputs: [{ type: 'string', name: '', internalType: 'string' }],
+        },
+      ]
+      expectType<any>(
+        readContract({
+          address,
+          contractInterface,
+          functionName: 'foo',
+        }),
+      )
+    })
   })
 })
 
 describe('writeContract', () => {
   function writeContract<
-    TAbi extends Abi,
-    TFunctionName extends ExtractAbiFunctionNames<
-      TAbi,
-      'payable' | 'nonpayable'
-    >,
-    TArgs extends AbiParametersToPrimitiveTypes<
-      ExtractAbiFunctionParameters<TAbi, TFunctionName, 'inputs'>
-    >,
-    TResponse extends AbiParametersToPrimitiveTypes<
-      ExtractAbiFunctionParameters<TAbi, TFunctionName, 'outputs'>
-    >,
+    TAbi,
+    TFunctionName extends TAbi extends Abi
+      ? ExtractAbiFunctionNames<TAbi, 'payable' | 'nonpayable'>
+      : string,
+    TInputs extends TAbi extends Abi
+      ? AbiParametersToPrimitiveTypes<
+          ExtractAbiFunctionParameters<TAbi, TFunctionName, 'inputs'>
+        >
+      : any[],
+    TOutputs extends TAbi extends Abi
+      ? AbiParametersToPrimitiveTypes<
+          ExtractAbiFunctionParameters<TAbi, TFunctionName, 'outputs'>
+        >
+      : any[],
+    TArgs extends TInputs extends any[]
+      ? { args?: any }
+      : TInputs['length'] extends 0
+      ? { args?: never }
+      : TInputs['length'] extends 1
+      ? { args: TInputs[0] }
+      : { args: TInputs },
+    TResponse extends TOutputs['length'] extends 0
+      ? void
+      : TOutputs['length'] extends 1
+      ? TOutputs[0]
+      : TOutputs,
   >(
     _config: {
       address: Address
       contractInterface: TAbi
       functionName: TFunctionName
-    } & (TArgs extends undefined ? { args?: never } : { args: TArgs }),
-  ): TResponse extends undefined ? void : TResponse {
-    return {} as TResponse extends undefined ? void : TResponse
+    } & TArgs,
+  ): TResponse {
+    return {} as TResponse
   }
 
   describe('args', () => {
@@ -314,6 +366,25 @@ describe('writeContract', () => {
         }),
       )
     })
+
+    it('works without const assertion', () => {
+      const contractInterface = [
+        {
+          name: 'foo',
+          type: 'function',
+          stateMutability: 'payable',
+          inputs: [],
+          outputs: [{ type: 'string', name: '', internalType: 'string' }],
+        },
+      ]
+      expectType<any>(
+        writeContract({
+          address,
+          contractInterface,
+          functionName: 'foo',
+        }),
+      )
+    })
   })
 })
 
@@ -321,28 +392,92 @@ describe.todo('readContracts')
 
 describe('watchContractEvent', () => {
   function watchContractEvent<
-    TAbi extends Abi,
-    TEventName extends ExtractAbiEventNames<TAbi>,
-    TArgs extends AbiParametersToPrimitiveTypes<
-      ExtractAbiEventParameters<TAbi, TEventName>
-    >,
+    TAbi,
+    TEventName extends TAbi extends Abi ? ExtractAbiEventNames<TAbi> : string,
+    TInputs extends TAbi extends Abi
+      ? AbiParametersToPrimitiveTypes<
+          ExtractAbiEventParameters<TAbi, TEventName>
+        >
+      : any[],
+    TArgs extends TInputs extends readonly any[] ? TInputs : [TInputs],
   >(_config: {
     address: Address
     contractInterface: TAbi
     eventName: TEventName
-    listener(args: TArgs): void
+    listener(...args: TArgs): void
   }) {
     return
   }
 
   describe('args', () => {
     it('zero', () => {
+      const contractInterface = [
+        {
+          name: 'Foo',
+          type: 'event',
+          inputs: [],
+          anonymous: false,
+        },
+      ] as const
+      watchContractEvent({
+        address,
+        contractInterface,
+        eventName: 'Foo',
+        // @ts-expect-error no args allowed
+        listener(_arg) {
+          expectType<boolean>(true)
+        },
+      })
+    })
+
+    it('one', () => {
+      watchContractEvent({
+        address,
+        contractInterface: writingEditionsFactoryAbi,
+        eventName: 'FactoryGuardSet',
+        listener(guard) {
+          expectType<boolean>(guard)
+        },
+      })
+    })
+
+    it('two or more', () => {
       watchContractEvent({
         address,
         contractInterface: wagmiMintExampleAbi,
         eventName: 'Transfer',
-        listener(args) {
-          expectType<readonly [Address, Address, number | bigint]>(args)
+        listener(from, to, tokenId) {
+          expectType<Address>(from)
+          expectType<Address>(to)
+          expectType<number | bigint>(tokenId)
+        },
+      })
+    })
+  })
+
+  describe('behavior', () => {
+    it('works without const assertion', () => {
+      const contractInterface = [
+        {
+          name: 'Foo',
+          type: 'event',
+          inputs: [
+            {
+              indexed: true,
+              internalType: 'string',
+              name: 'name',
+              type: 'string',
+            },
+          ],
+          anonymous: false,
+        },
+      ]
+      watchContractEvent({
+        address,
+        contractInterface,
+        eventName: 'Foo',
+        listener(name) {
+          expectType<any>(name)
         },
       })
     })

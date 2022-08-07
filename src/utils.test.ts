@@ -243,6 +243,127 @@ describe('AbiParameterToPrimitiveType', () => {
   })
 })
 
+describe('AbiParametersToPrimitiveTypes', () => {
+  it('No parameters', () => {
+    expectType<AbiParametersToPrimitiveTypes<[]>>([])
+  })
+
+  it('Single parameter', () => {
+    expectType<
+      AbiParametersToPrimitiveTypes<
+        [
+          {
+            internalType: 'uint256'
+            name: 'tokenId'
+            type: 'uint256'
+          },
+        ]
+      >
+    >([1])
+  })
+
+  it('Multiple parameters', () => {
+    expectType<
+      AbiParametersToPrimitiveTypes<
+        [
+          {
+            internalType: 'address'
+            name: 'to'
+            type: 'address'
+          },
+          {
+            internalType: 'uint256'
+            name: 'tokenId'
+            type: 'uint256'
+          },
+          {
+            internalType: 'string'
+            name: 'trait'
+            type: 'string'
+          },
+        ]
+      >
+    >([address, 1, 'foo'])
+  })
+
+  it('Wild collection of parameters', () => {
+    expectType<
+      AbiParametersToPrimitiveTypes<
+        [
+          {
+            name: 's'
+            type: 'tuple'
+            components: [
+              {
+                name: 'a'
+                type: 'uint256'
+              },
+              {
+                name: 'b'
+                type: 'uint256[]'
+              },
+              {
+                name: 'c'
+                type: 'tuple[]'
+                components: [
+                  {
+                    name: 'x'
+                    type: 'uint256'
+                  },
+                  {
+                    name: 'y'
+                    type: 'uint256'
+                  },
+                ]
+              },
+            ]
+          },
+          {
+            name: 't'
+            type: 'tuple'
+            components: [
+              {
+                name: 'x'
+                type: 'uint256'
+              },
+              {
+                name: 'y'
+                type: 'uint256'
+              },
+            ]
+          },
+          {
+            name: 'a'
+            type: 'uint256'
+          },
+          {
+            name: 't'
+            type: 'tuple[2]'
+            components: [
+              {
+                name: 'x'
+                type: 'uint256'
+              },
+              {
+                name: 'y'
+                type: 'uint256'
+              },
+            ]
+          },
+        ]
+      >
+    >([
+      { a: 1, b: [2], c: [{ x: 1, y: 1 }] },
+      { x: 1, y: 1 },
+      1,
+      [
+        { x: 1, y: 1 },
+        { x: 1, y: 1 },
+      ],
+    ])
+  })
+})
+
 describe('IsAbi', () => {
   it('const assertion', () => {
     expectType<IsAbi<typeof nestedTupleArrayAbi>>(true)
@@ -400,127 +521,6 @@ describe('ExtractAbiFunctionParameters', () => {
       { internalType: 'address', name: 'to', type: 'address' },
       { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
       { internalType: 'bytes', name: '_data', type: 'bytes' },
-    ])
-  })
-})
-
-describe('AbiParametersToPrimitiveTypes', () => {
-  it('No parameters', () => {
-    expectType<AbiParametersToPrimitiveTypes<[]>>(undefined)
-  })
-
-  it('Single parameter', () => {
-    expectType<
-      AbiParametersToPrimitiveTypes<
-        [
-          {
-            internalType: 'uint256'
-            name: 'tokenId'
-            type: 'uint256'
-          },
-        ]
-      >
-    >(1)
-  })
-
-  it('Multiple parameters', () => {
-    expectType<
-      AbiParametersToPrimitiveTypes<
-        [
-          {
-            internalType: 'address'
-            name: 'to'
-            type: 'address'
-          },
-          {
-            internalType: 'uint256'
-            name: 'tokenId'
-            type: 'uint256'
-          },
-          {
-            internalType: 'string'
-            name: 'trait'
-            type: 'string'
-          },
-        ]
-      >
-    >([address, 1, 'foo'])
-  })
-
-  it('Wild collection of parameters', () => {
-    expectType<
-      AbiParametersToPrimitiveTypes<
-        [
-          {
-            name: 's'
-            type: 'tuple'
-            components: [
-              {
-                name: 'a'
-                type: 'uint256'
-              },
-              {
-                name: 'b'
-                type: 'uint256[]'
-              },
-              {
-                name: 'c'
-                type: 'tuple[]'
-                components: [
-                  {
-                    name: 'x'
-                    type: 'uint256'
-                  },
-                  {
-                    name: 'y'
-                    type: 'uint256'
-                  },
-                ]
-              },
-            ]
-          },
-          {
-            name: 't'
-            type: 'tuple'
-            components: [
-              {
-                name: 'x'
-                type: 'uint256'
-              },
-              {
-                name: 'y'
-                type: 'uint256'
-              },
-            ]
-          },
-          {
-            name: 'a'
-            type: 'uint256'
-          },
-          {
-            name: 't'
-            type: 'tuple[2]'
-            components: [
-              {
-                name: 'x'
-                type: 'uint256'
-              },
-              {
-                name: 'y'
-                type: 'uint256'
-              },
-            ]
-          },
-        ]
-      >
-    >([
-      { a: 1, b: [2], c: [{ x: 1, y: 1 }] },
-      { x: 1, y: 1 },
-      1,
-      [
-        { x: 1, y: 1 },
-        { x: 1, y: 1 },
-      ],
     ])
   })
 })

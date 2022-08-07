@@ -43,8 +43,8 @@ export type AbiInternalType =
   | AbiType
   | `address ${string}`
   | `contract ${string}`
+  | `enum ${string}`
   | `struct ${string}`
-  | string
 
 export type AbiParameter = {
   type: AbiType
@@ -69,6 +69,11 @@ export type AbiFunction<TAbiParameter extends AbiParameter = AbiParameter> = {
    * https://github.com/ethereum/solidity/issues/992
    */
   constant?: boolean
+  /**
+   * @deprecated Vyper used to provide gas estimates
+   * https://github.com/vyperlang/vyper/issues/2151
+   */
+  gas?: number
   /**
    * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
    * https://github.com/ethereum/solidity/issues/992

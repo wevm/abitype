@@ -5,11 +5,8 @@
  * @returns Length of string
  *
  * @example
- *
- * ```ts
- * // Returns 3
  * type Result = LengthOfString<'baz'>
- * ```
+ * 3
  */
 // From [Type Challenges #651](https://github.com/type-challenges/type-challenges/issues/11438)
 export type LengthOfString<
@@ -27,11 +24,8 @@ export type LengthOfString<
  * @returns Either {@link Value} or {@link Value} as an array
  *
  * @example
- *
- * ```ts
- * // Returns { name: string }[]
  * type Result = Equal<'tuple[]', { name: string }}>
- * ```
+ * { name: string }[]
  */
 export type MaybeArray<
   TString extends string,
@@ -46,11 +40,8 @@ export type MaybeArray<
  * @returns Array with inclusive range from {@link Start} to {@link Stop}
  *
  * @example
- *
- * ```ts
- * // Returns [1, 2, 3]
  * type Result = Range<1, 3>
- *```
+ * [1, 2, 3]
  */
 // From [Type Challenges #734](https://github.com/type-challenges/type-challenges/issues/11625)
 export type Range<
@@ -80,11 +71,8 @@ export type Range<
  * @returns Array with inclusive range from {@link Start} to {@link Stop}
  *
  * @example
- *
- * ```ts
- * // Returns foobaz
  * type Result = Replace<'foobar', 'bar', 'baz'>
- *```
+ * 'foobaz'
  */
 // From [Type Challenges #116](https://github.com/type-challenges/type-challenges/issues/12825)
 export type Replace<
@@ -105,11 +93,8 @@ export type Replace<
  * @returns Tuple of {@link T} type with {@link N} size
  *
  * @example
- *
- * ```ts
- * // Returns [string, string]
  * type Result = Tuple<string, 2>
- * ```
+ * [string, string]
  */
 // https://github.com/Microsoft/TypeScript/issues/26223#issuecomment-674500430
 export type Tuple<T, N extends number> = N extends N

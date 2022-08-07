@@ -83,17 +83,11 @@ export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
  */
 export type AbiParametersToPrimitiveTypes<
   TAbiParameters extends readonly AbiParameter[],
-> = TAbiParameters['length'] extends 0
-  ? undefined
-  : TAbiParameters['length'] extends 1
-  ? AbiParameterToPrimitiveType<TAbiParameters[0]>
-  : {
-      // SHOUTOUT(@tvler): For finding a better way to map tuples
-      // https://github.com/microsoft/TypeScript/issues/27351
-      [K in keyof TAbiParameters]: AbiParameterToPrimitiveType<
-        TAbiParameters[K]
-      >
-    }
+> = {
+  // SHOUTOUT(@tvler): For finding a better way to map tuples
+  // https://github.com/microsoft/TypeScript/issues/27351
+  [K in keyof TAbiParameters]: AbiParameterToPrimitiveType<TAbiParameters[K]>
+}
 
 /**
  * Checks if type is {@link Abi}
