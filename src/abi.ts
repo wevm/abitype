@@ -1,43 +1,51 @@
 import { MultiplesOf8To256, Range } from './types'
 
-export type SolAddress = 'address'
-export type SolBool = 'bool'
-export type SolBytes = `bytes${Range<1, 32>[number] | ''}`
-export type SolFunction = 'function'
-export type SolString = 'string'
-export type SolTuple = 'tuple'
-export type SolInt = `${'u' | ''}int${MultiplesOf8To256 | ''}`
+export type Address = `0x${string}`
+
+//////////////////////////////////////////////////
+
+// Solidity Types
+
+export type SolidityAddress = 'address'
+export type SolidityBool = 'bool'
+export type SolidityBytes = `bytes${Range<1, 32>[number] | ''}`
+export type SolidityFunction = 'function'
+export type SolidityString = 'string'
+export type SolidityTuple = 'tuple'
+export type SolidityInt = `${'u' | ''}int${MultiplesOf8To256 | ''}`
 // No need to support "fixed" until Solidity does
 // https://github.com/ethereum/solidity/issues/409
-// export type SolFixed =
+// export type SolidityFixed =
 //   | `${'u' | ''}fixed`
 //   | `${'u' | ''}fixed${MultiplesOf8To256}x${Range<1, 20>[number]}`
 
-export type SolFixedArrayRange = Range<1, 10>[number]
-export type SolFixedArrayLookup = {
-  [Prop in SolFixedArrayRange as `${Prop}`]: Prop
+export type SolidityFixedArrayRange = Range<1, 10>[number]
+export type SolidityFixedArraySizeLookup = {
+  [Prop in SolidityFixedArrayRange as `${Prop}`]: Prop
 }
-export type SolArray =
+export type SolidityArray =
   | `${
-      | SolAddress
-      | SolBool
-      | SolBytes
-      | SolFunction
-      | SolString
-      | SolTuple
-      | SolInt}[${'' | SolFixedArrayRange}]`
+      | SolidityAddress
+      | SolidityBool
+      | SolidityBytes
+      | SolidityFunction
+      | SolidityString
+      | SolidityTuple
+      | SolidityInt}[${'' | SolidityFixedArrayRange}]`
+
+//////////////////////////////////////////////////
+
+// Abi Types
 
 export type AbiType =
-  | SolAddress
-  | SolString
-  | SolBool
-  | SolFunction
-  | SolBytes
-  | SolInt
-  | SolTuple
-  | SolArray
-
-export type Address = `0x${string}`
+  | SolidityAddress
+  | SolidityString
+  | SolidityBool
+  | SolidityFunction
+  | SolidityBytes
+  | SolidityInt
+  | SolidityTuple
+  | SolidityArray
 
 export type AbiInternalType =
   | AbiType
@@ -52,9 +60,9 @@ export type AbiParameter = {
   /** Representation used by Solidity compiler */
   internalType?: AbiInternalType
 } & (
-  | { type: Exclude<AbiType, SolTuple> }
+  | { type: Exclude<AbiType, SolidityTuple> }
   | {
-      type: `${SolTuple}` | `${SolTuple}[]`
+      type: `${SolidityTuple}` | `${SolidityTuple}[]`
       components: readonly AbiParameter[]
     }
 )
@@ -63,7 +71,7 @@ export type AbiParameterType = 'inputs' | 'outputs'
 
 export type AbiStateMutability = 'pure' | 'view' | 'nonpayable' | 'payable'
 
-export type AbiFunction<TAbiParameter extends AbiParameter = AbiParameter> = {
+export type AbiFunction = {
   /**
    * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
    * https://github.com/ethereum/solidity/issues/992
@@ -83,28 +91,28 @@ export type AbiFunction<TAbiParameter extends AbiParameter = AbiParameter> = {
 } & (
   | {
       type: 'function'
-      inputs: readonly TAbiParameter[]
+      inputs: readonly AbiParameter[]
       name: string
-      outputs: readonly TAbiParameter[]
+      outputs: readonly AbiParameter[]
     }
   | {
       type: 'constructor'
-      inputs: readonly TAbiParameter[]
+      inputs: readonly AbiParameter[]
     }
   | { type: 'fallback'; inputs?: [] }
   | { type: 'receive'; stateMutability: 'payable' }
 )
 
-export type AbiEvent<TAbiParameter extends AbiParameter = AbiParameter> = {
+export type AbiEvent = {
   type: 'event'
   anonymous?: boolean
-  inputs: readonly (TAbiParameter & { indexed?: boolean })[]
+  inputs: readonly (AbiParameter & { indexed?: boolean })[]
   name: string
 }
 
-export type AbiError<TAbiParameter extends AbiParameter = AbiParameter> = {
+export type AbiError = {
   type: 'error'
-  inputs: readonly TAbiParameter[]
+  inputs: readonly AbiParameter[]
   name: string
 }
 
@@ -112,8 +120,4 @@ export type AbiError<TAbiParameter extends AbiParameter = AbiParameter> = {
  * Abi
  * https://docs.soliditylang.org/en/v0.8.15/abi-spec.html#json
  */
-export type Abi<TAbiParameter extends AbiParameter = AbiParameter> = readonly (
-  | AbiFunction<TAbiParameter>
-  | AbiEvent<TAbiParameter>
-  | AbiError<TAbiParameter>
-)[]
+export type Abi = readonly (AbiFunction | AbiEvent | AbiError)[]

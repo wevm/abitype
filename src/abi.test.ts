@@ -13,66 +13,66 @@ import {
   AbiStateMutability,
   AbiType,
   Address,
-  SolAddress,
-  SolArray,
-  SolBool,
-  SolBytes,
-  SolFunction,
-  SolInt,
-  SolString,
-  SolTuple,
+  SolidityAddress,
+  SolidityArray,
+  SolidityBool,
+  SolidityBytes,
+  SolidityFunction,
+  SolidityInt,
+  SolidityString,
+  SolidityTuple,
 } from './abi'
 
 describe('Sol*', () => {
   it('address', () => {
-    expectType<SolAddress>('address')
+    expectType<SolidityAddress>('address')
   })
 
   it('bool', () => {
-    expectType<SolBool>('bool')
+    expectType<SolidityBool>('bool')
   })
 
   it('bytes', () => {
-    expectType<SolBytes>('bytes')
-    expectType<SolBytes>('bytes1')
-    expectType<SolBytes>('bytes24')
-    expectType<SolBytes>('bytes32')
+    expectType<SolidityBytes>('bytes')
+    expectType<SolidityBytes>('bytes1')
+    expectType<SolidityBytes>('bytes24')
+    expectType<SolidityBytes>('bytes32')
     // @ts-expect-error Greater than 32
-    expectType<SolBytes>('bytes36')
+    expectType<SolidityBytes>('bytes36')
   })
 
   it('function', () => {
-    expectType<SolFunction>('function')
+    expectType<SolidityFunction>('function')
   })
 
   it('string', () => {
-    expectType<SolString>('string')
+    expectType<SolidityString>('string')
   })
 
   it('tuple', () => {
-    expectType<SolTuple>('tuple')
+    expectType<SolidityTuple>('tuple')
   })
 
   it('int', () => {
-    expectType<SolInt>('int')
-    expectType<SolInt>('int8')
-    expectType<SolInt>('int32')
-    expectType<SolInt>('int256')
-    expectType<SolInt>('uint')
-    expectType<SolInt>('uint8')
-    expectType<SolInt>('uint32')
-    expectType<SolInt>('uint256')
+    expectType<SolidityInt>('int')
+    expectType<SolidityInt>('int8')
+    expectType<SolidityInt>('int32')
+    expectType<SolidityInt>('int256')
+    expectType<SolidityInt>('uint')
+    expectType<SolidityInt>('uint8')
+    expectType<SolidityInt>('uint32')
+    expectType<SolidityInt>('uint256')
     // @ts-expect-error Not multiple of 8
-    expectType<SolInt>('int6')
+    expectType<SolidityInt>('int6')
   })
 
   it('array', () => {
-    expectType<SolArray>('address[]')
-    expectType<SolArray>('string[]')
-    expectType<SolArray>('address[4]')
-    expectType<SolArray>('string[4]')
+    expectType<SolidityArray>('address[]')
+    expectType<SolidityArray>('string[]')
+    expectType<SolidityArray>('address[4]')
+    expectType<SolidityArray>('string[4]')
     // @ts-expect-error Out of fixed array range
-    expectType<SolArray>('string[100]')
+    expectType<SolidityArray>('string[100]')
   })
 })
 

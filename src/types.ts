@@ -13,41 +13,43 @@
 export type Range<
   Start extends number,
   Stop extends number,
-  _Res extends number[] = [],
-  _Padding extends 0[] = [],
-  _Current extends number = [..._Padding, ..._Res]['length'] & number,
-> = _Current extends Stop
-  ? _Current extends Start
-    ? [_Current]
-    : _Res extends []
+  Result extends number[] = [],
+  Padding extends 0[] = [],
+  Current extends number = [...Padding, ...Result]['length'] & number,
+> = Current extends Stop
+  ? Current extends Start
+    ? [Current]
+    : Result extends []
     ? []
-    : [..._Res, _Current]
-  : _Current extends Start
-  ? Range<Start, Stop, [_Current], _Padding>
-  : _Res extends []
-  ? Range<Start, Stop, [], [..._Padding, 0]>
-  : Range<Start, Stop, [..._Res, _Current], _Padding>
+    : [...Result, Current]
+  : Current extends Start
+  ? Range<Start, Stop, [Current], Padding>
+  : Result extends []
+  ? Range<Start, Stop, [], [...Padding, 0]>
+  : Range<Start, Stop, [...Result, Current], Padding>
 
 /**
- * Create tuple of {@link T} type with {@link N} size
+ * Create tuple of {@link TType} type with {@link TSize} size
  *
- * @param T - Type of tuple
- * @param N - Size of tuple
- * @returns Tuple of {@link T} type with {@link N} size
+ * @param TType - Type of tuple
+ * @param TSize - Size of tuple
+ * @returns Tuple of {@link TType} type with {@link TSize} size
  *
  * @example
  * type Result = Tuple<string, 2>
  * [string, string]
  */
 // https://github.com/Microsoft/TypeScript/issues/26223#issuecomment-674500430
-export type Tuple<T, N extends number> = N extends N
-  ? number extends N
-    ? T[]
-    : _TupleOf<T, N, []>
+export type Tuple<TType, TSize extends number> = TSize extends TSize
+  ? number extends TSize
+    ? TType[]
+    : _TupleOf<TType, TSize, []>
   : never
-type _TupleOf<T, N extends number, R extends unknown[]> = R['length'] extends N
-  ? R
-  : _TupleOf<T, N, [T, ...R]>
+type _TupleOf<
+  TNumber,
+  TSize extends number,
+  R extends unknown[],
+> = R['length'] extends TSize ? R : _TupleOf<TNumber, TSize, [TNumber, ...R]>
 
 /**
  * Positive multiples of eight from eight to 256

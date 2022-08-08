@@ -5,42 +5,42 @@ import {
   AbiStateMutability,
   AbiType,
   Address,
-  SolAddress,
-  SolArray,
-  SolBool,
-  SolBytes,
-  SolFixedArrayLookup,
-  SolFunction,
-  SolInt,
-  SolString,
-  SolTuple,
+  SolidityAddress,
+  SolidityArray,
+  SolidityBool,
+  SolidityBytes,
+  SolidityFixedArraySizeLookup,
+  SolidityFunction,
+  SolidityInt,
+  SolidityString,
+  SolidityTuple,
 } from './abi'
 import { Tuple } from './types'
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
  *
- * Note: Does not include full array or tuple conversion. Use {@link AbiParameterToPrimitiveType} to also convert arrays and tuples.
+ * Does not include full array or tuple conversion. Use {@link AbiParameterToPrimitiveType} to fully convert arrays and tuples.
  *
  * @param TAbiType - {@link AbiType} to convert to TypeScript representation.
  * @returns TypeScript primitive type
  */
 export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
-  TAbiType extends SolAddress
+  TAbiType extends SolidityAddress
     ? Address
-    : TAbiType extends SolString
+    : TAbiType extends SolidityString
     ? string
-    : TAbiType extends SolBool
+    : TAbiType extends SolidityBool
     ? boolean
-    : TAbiType extends SolFunction
+    : TAbiType extends SolidityFunction
     ? `${Address}${string}`
-    : TAbiType extends SolBytes
+    : TAbiType extends SolidityBytes
     ? string | ArrayLike<number>
-    : TAbiType extends SolInt
+    : TAbiType extends SolidityInt
     ? bigint | number
-    : TAbiType extends SolTuple
+    : TAbiType extends SolidityTuple
     ? Record<string, unknown>
-    : TAbiType extends SolArray
+    : TAbiType extends SolidityArray
     ? unknown[]
     : unknown
 
@@ -49,38 +49,30 @@ export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
  *
  * @param TAbiParameter - {@link AbiParameter} to convert to TypeScript representation.
  * @returns TypeScript primitive type
- *
- * @example
- * type Result = AbiParameterToPrimitiveType<{
- *   internalType: 'string'
- *   name: 'name'
- *   type: 'string'
- * }>
- * string
  */
 export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
-  TAbiParameter['type'] extends `${infer T}[${infer M}]`
-    ? M extends keyof SolFixedArrayLookup
+  TAbiParameter['type'] extends `${infer Type}[${infer Size}]`
+    ? Size extends keyof SolidityFixedArraySizeLookup
       ? Tuple<
           AbiParameterToPrimitiveType<
-            _StripArrayTypeFromAbiParameter<T, TAbiParameter>
+            ChangeAbiParameterType<TAbiParameter, Type>
           >,
-          SolFixedArrayLookup[M]
+          SolidityFixedArraySizeLookup[Size]
         >
       : AbiParameterToPrimitiveType<
-          _StripArrayTypeFromAbiParameter<T, TAbiParameter>
+          ChangeAbiParameterType<TAbiParameter, Type>
         >[]
-    : TAbiParameter['type'] extends `${SolTuple}${'' | '[]'}`
+    : TAbiParameter['type'] extends `${SolidityTuple}${'' | '[]'}`
     ? {
         [Component in (TAbiParameter & {
-          components: readonly AbiParameter[]
+          components: AbiParameter[]
         })['components'][number] as Component['name']]: AbiParameterToPrimitiveType<Component>
       }
     : AbiTypeToPrimitiveType<TAbiParameter['type']>
 
-type _StripArrayTypeFromAbiParameter<
-  TType extends string | AbiType,
+type ChangeAbiParameterType<
   TAbiParameter extends AbiParameter,
+  TType extends AbiType | string,
 > = {
   [Property in keyof Omit<TAbiParameter, 'type'>]: TAbiParameter[Property]
 } & { type: TType extends AbiType ? TType : any }
@@ -104,13 +96,12 @@ export type AbiParametersToPrimitiveTypes<
  *
  * @param TAbi - {@link Abi} to check.
  * @returns Boolean for whether {@link TAbi} is {@link Abi}.
- *
- * @example
- * type Result = IsAbi<typeof erc20Abi>
- *
- * true
  */
 export type IsAbi<TAbi> = TAbi extends Abi ? true : false
+
+//////////////////////////////////////////////////
+
+// Abi Functions
 
 /**
  * Extracts all {@link AbiFunction} types from {@link Abi}
@@ -133,11 +124,6 @@ export type ExtractAbiFunctions<
  * @param TAbi - {@link Abi} to extract function names from.
  * @param TAbiStateMutibility - {@link AbiStateMutability} to filter by.
  * @returns Union of function names
- *
- * @example
- * type Result = ExtractAbiFunctionNames<typeof erc20Abi>
- *
- * 'balanceOf' | 'decimals' | 'name' | 'symbol' | 'totalSupply'
  */
 export type ExtractAbiFunctionNames<
   TAbi extends Abi,
@@ -150,25 +136,6 @@ export type ExtractAbiFunctionNames<
  * @param TAbi - {@link Abi} to extract {@link AbiFunction} from.
  * @param TFunctionName - String name of function to extract from {@link Abi}
  * @returns Matching {@link AbiFunction}
- *
- * @example
- * type Result = ExtractAbiFunction<typeof erc20Abi, 'tokenURI'>
- *
- * {
- *   type: 'function',
- *   name: 'tokenURI',
- *   stateMutability: 'pure',
- *   inputs: [{
- *     internalType: 'uint256',
- *     name: 'tokenId',
- *     type: 'uint256',
- *   }],
- *   outputs: [{
- *     internalType: 'string',
- *     name: '',
- *     type: 'string'
- *   }],
- * }
  */
 export type ExtractAbiFunction<
   TAbi extends Abi,
@@ -182,15 +149,6 @@ export type ExtractAbiFunction<
  * @param TFunctionName - String name of function
  * @param TAbiParameterType - {@link AbiParameterType} to extract parameters
  * @returns Array of {@link AbiParameter}
- *
- * @example
- * type Result = ExtractAbiFunctionParameters<typeof erc20Abi, 'tokenURI', 'inputs'>
- *
- * [{
- *   internalType: 'uint256',
- *   name: 'tokenId',
- *   type: 'uint256',
- * }]
  */
 export type ExtractAbiFunctionParameters<
   TAbi extends Abi,
@@ -198,11 +156,15 @@ export type ExtractAbiFunctionParameters<
   TAbiParameterType extends AbiParameterType,
 > = ExtractAbiFunction<TAbi, TFunctionName>[TAbiParameterType]
 
+//////////////////////////////////////////////////
+
+// Abi Events
+
 /**
  * Extracts all {@link AbiEvent} types from {@link Abi}
  *
- * @param TAbi - {@link Abi} to extract functions from.
- * @returns Boolean for whether {@link TAbi} is {@link Abi}.
+ * @param TAbi - {@link Abi} to extract events from.
+ * @returns All {@link AbiEvent} types from {@link Abi}.
  */
 export type ExtractAbiEvents<TAbi extends Abi> = Extract<
   TAbi[number],
@@ -214,11 +176,6 @@ export type ExtractAbiEvents<TAbi extends Abi> = Extract<
  *
  * @param TAbi - {@link Abi} to extract event names from.
  * @returns Union of event names
- *
- * @example
- * type Result = ExtractAbiEventNames<typeof erc20Abi>
- *
- * 'approval' | 'transfer'
  */
 export type ExtractAbiEventNames<TAbi extends Abi> =
   ExtractAbiEvents<TAbi>['name']
@@ -229,25 +186,6 @@ export type ExtractAbiEventNames<TAbi extends Abi> =
  * @param TAbi - {@link Abi} to extract {@link AbiEvent} from.
  * @param TEventName - String name of event to extract from {@link Abi}
  * @returns Matching {@link AbiEvent}
- *
- * @example
- * type Result = ExtractAbiEvent<typeof erc20Abi, 'transfer'>
- *
- * {
- *   type: 'event',
- *   name: 'Transfer',
- *   anonymous: false,
- *   inputs: [
- *     { indexed: true, internalType: 'address', name: 'from', type: 'address' },
- *     { indexed: true, internalType: 'address', name: 'to', type: 'address' },
- *     {
- *       indexed: false,
- *       internalType: 'uint256',
- *       name: 'value',
- *       type: 'uint256',
- *     },
- *   ],
- * }
  */
 export type ExtractAbiEvent<
   TAbi extends Abi,
@@ -260,22 +198,56 @@ export type ExtractAbiEvent<
  * @param TAbi - {@link Abi} to extract {@link AbiParameter}s from.
  * @param TEventName - String name of event
  * @returns Array of {@link AbiParameter}
- *
- * @example
- * type Result = ExtractAbiFunctionParameters<typeof erc20Abi, 'transfer'>
- *
- * [
- *   { indexed: true, internalType: 'address', name: 'from', type: 'address' },
- *   { indexed: true, internalType: 'address', name: 'to', type: 'address' },
- *   {
- *     indexed: false,
- *     internalType: 'uint256',
- *     name: 'value',
- *     type: 'uint256',
- *   },
- * ]
  */
 export type ExtractAbiEventParameters<
   TAbi extends Abi,
   TEventName extends ExtractAbiEventNames<TAbi>,
 > = ExtractAbiEvent<TAbi, TEventName>['inputs']
+
+//////////////////////////////////////////////////
+
+// Abi Errors
+
+/**
+ * Extracts all {@link AbiError} types from {@link Abi}
+ *
+ * @param TAbi - {@link Abi} to extract errors from.
+ * @returns All {@link AbiError} types from {@link Abi}.
+ */
+export type ExtractAbiErrors<TAbi extends Abi> = Extract<
+  TAbi[number],
+  { type: 'error' }
+>
+
+/**
+ * @description Extracts all {@link AbiError} names from {@link Abi}
+ *
+ * @param TAbi - {@link Abi} to extract error names from.
+ * @returns Union of error names
+ */
+export type ExtractAbiErrorNames<TAbi extends Abi> =
+  ExtractAbiErrors<TAbi>['name']
+
+/**
+ * Extracts {@link AbiError} with name from {@link Abi}
+ *
+ * @param TAbi - {@link Abi} to extract {@link AbiError} from.
+ * @param TErrorName - String name of error to extract from {@link Abi}
+ * @returns Matching {@link AbiError}
+ */
+export type ExtractAbiError<
+  TAbi extends Abi,
+  TErrorName extends ExtractAbiErrorNames<TAbi>,
+> = Extract<ExtractAbiErrors<TAbi>, { name: TErrorName }>
+
+/**
+ * Extracts {@link AbiParameter} types for error name from {@link Abi}.
+ *
+ * @param TAbi - {@link Abi} to extract {@link AbiParameter}s from.
+ * @param TErrorName - String name of error
+ * @returns Array of {@link AbiParameter}
+ */
+export type ExtractAbiErrorParameters<
+  TAbi extends Abi,
+  TErrorName extends ExtractAbiErrorNames<TAbi>,
+> = ExtractAbiError<TAbi, TErrorName>['inputs']
