@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in contributing to abitype! Please take a moment to review this document **before submitting a pull request.**
+Thanks for your interest in contributing to AbiType! Please take a moment to review this document **before submitting a pull request.**
 
 If you want to contribute, but aren't sure where to start, you can create a [new discussion](https://github.com/wagmi-dev/abitype/discussions).
 
@@ -55,7 +55,7 @@ gh repo clone wagmi-dev/abitype
 
 ## Installing Node.js and pnpm
 
-abitype uses [pnpm](https://pnpm.io) as its package manager. You need to install **Node.js v16 or higher** and **pnpm v7 or higher**.
+AbiType uses [pnpm](https://pnpm.io) as its package manager. You need to install **Node.js v16 or higher** and **pnpm v7 or higher**.
 
 You can run the following commands in your terminal to check your local Node.js and npm versions:
 
@@ -89,7 +89,7 @@ After the install completes, [git hooks](https://github.com/toplenboren/simple-g
 
 ## Running tests
 
-Since abitype is a type-only library, tests are run by checking types with the following:
+Since AbiType is a type-only library, tests are run by checking types with the following:
 
 ```bash
 pnpm typecheck
@@ -125,7 +125,7 @@ When you submit a pull request, GitHub will automatically lint, build, and test 
 ---
 
 <div align="center">
-  ✅ Now you're ready to contribute to abitype! Follow the next steps if you need more advanced instructions.
+  ✅ Now you're ready to contribute to AbiType! Follow the next steps if you need more advanced instructions.
 </div>
 
 ---

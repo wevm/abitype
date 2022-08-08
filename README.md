@@ -1,9 +1,9 @@
-# ABIType
+# AbiType
 
 [![npm](https://img.shields.io/npm/v/abitype.svg?colorA=21262d&colorB=161b22&style=flat)](https://www.npmjs.com/package/abitype)
 [![Downloads per month](https://img.shields.io/npm/dm/abitype?colorA=21262d&colorB=161b22&style=flat)](https://www.npmjs.com/package/abitype)
 
-Strict TypeScript types for Ethereum ABIs. It provides utilities and type checking for ABI properties and values, covering the entire [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html).
+Strict TypeScript types for Ethereum ABIs. AbiType provides utilities and type defintions for ABI properties and values, covering the entire [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html).
 
 ```ts
 import { ExtractAbiFunctions } from 'abitype'
@@ -13,6 +13,8 @@ const erc721Abi = [...] as const
 type Functions = ExtractAbiFunctions<typeof erc721Abi, 'view'>
 ```
 
+Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions or variables. No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
+
 ## Installation
 
 ```bash
@@ -21,7 +23,7 @@ npm install abitype
 
 ## Usage
 
-Since ABIs can contain deeply nested arrays, objects, and other types, you must assert ABIs to constants using [`const` assertions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions). This allows TypeScript to take the most specific types for expressions and avoid type widening (e.g. no going from "hello" to string).
+Since ABIs can contain deeply nested arrays, objects, and other types, you must assert your ABIs to constants using [`const` assertions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions). This allows TypeScript to take the most specific types for expressions and avoid type widening (e.g. no going from "hello" to string).
 
 ```ts
 const erc721Abi = [...] as const
@@ -299,7 +301,7 @@ import { AbiType } from 'abitype'
 
 ## Support
 
-If you find abitype useful, please consider supporting development. Thank you 🙏
+If you find AbiType useful, please consider supporting development. Thank you 🙏
 
 - [GitHub Sponsors](https://github.com/sponsors/wagmi-dev?metadata_campaign=gh_readme_support)
 - [Gitcoin Grant](https://gitcoin.co/grants/4493/wagmi-react-hooks-library-for-ethereum)

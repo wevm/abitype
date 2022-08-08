@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report! The more info you provide, the more we can help you. If you are a [Sponsor](https://github.com/sponsors/tmm?metadata_campaign=gh_issue), your issues are prioritized.
+        Thanks for taking the time to fill out this bug report! The more info you provide, the more we can help you. If you are a [Sponsor](https://github.com/sponsors/wagmi-dev?metadata_campaign=gh_issue), your issues are prioritized.
 
   - type: checkboxes
     attributes:
@@ -18,7 +18,7 @@ body:
   - type: input
     attributes:
       label: Package Version
-      description: What version of abitype are you using?
+      description: What version of AbiType are you using?
       placeholder: 1.0.0
     validations:
       required: true
@@ -54,7 +54,7 @@ body:
 
   - type: input
     attributes:
-      label: Link to Minimal Reproducible Example (CodeSandbox, StackBlitz, etc.)
+      label: Link to Minimal Reproducible Example ([TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgSQM4EEBGw4F84BmUEIcA5AIbYwCeYApmQFBO0NwBK9qArgDbwAvCgzYAPAG0AugD4gA), CodeSandbox, etc.)
       description: |
         This makes investigating issues and helping you out significantly easier! For most issues, you will likely get asked to provide one so why not add one now :)
       placeholder: https://codesandbox.io
