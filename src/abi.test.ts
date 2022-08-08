@@ -23,7 +23,7 @@ import {
   SolidityTuple,
 } from './abi'
 
-describe('Sol*', () => {
+describe('Solidity*', () => {
   it('address', () => {
     expectType<SolidityAddress>('address')
   })

@@ -14,7 +14,13 @@ import {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
   AbiTypeToPrimitiveType,
+  ExtractAbiError,
+  ExtractAbiErrorNames,
+  ExtractAbiErrorParameters,
+  ExtractAbiErrors,
+  ExtractAbiEvent,
   ExtractAbiEventNames,
+  ExtractAbiEventParameters,
   ExtractAbiEvents,
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
@@ -446,152 +452,282 @@ describe('IsAbi', () => {
   })
 })
 
-describe('ExtractAbiFunctions', () => {
-  it('extracts function', () => {
-    const abiFunction = {
-      type: 'function',
-      stateMutability: 'view',
-      inputs: [{ name: 'a', type: 'uint256' }],
-      name: 'foo',
-      outputs: [],
-    } as const
-    expectType<ExtractAbiFunctions<[typeof abiFunction]>>(abiFunction)
-  })
+describe('Abi Functions', () => {
+  describe('ExtractAbiFunctions', () => {
+    it('extracts function', () => {
+      const abiFunction = {
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'a', type: 'uint256' }],
+        name: 'foo',
+        outputs: [],
+      } as const
+      expectType<ExtractAbiFunctions<[typeof abiFunction]>>(abiFunction)
+    })
 
-  it('no functions', () => {
-    expectType<ExtractAbiFunctions<[]>>(undefined as never)
-  })
-})
-
-describe('ExtractAbiFunctionNames', () => {
-  it('extracts names', () => {
-    test('ExtractAbiFunctionNames', () => {
-      expectType<ExtractAbiFunctionNames<typeof wagmiMintExampleAbi>>('symbol')
+    it('no functions', () => {
+      expectType<ExtractAbiFunctions<[]>>(undefined as never)
     })
   })
 
-  it('no names', () => {
-    expectType<ExtractAbiFunctionNames<[]>>(undefined as never)
-  })
-})
+  describe('ExtractAbiFunctionNames', () => {
+    it('extracts names', () => {
+      test('ExtractAbiFunctionNames', () => {
+        expectType<ExtractAbiFunctionNames<typeof wagmiMintExampleAbi>>(
+          'symbol',
+        )
+      })
+    })
 
-describe('ExtractAbiFunction', () => {
-  it('extracts function', () => {
-    expectType<ExtractAbiFunction<typeof wagmiMintExampleAbi, 'tokenURI'>>({
-      inputs: [
+    it('no names', () => {
+      expectType<ExtractAbiFunctionNames<[]>>(undefined as never)
+    })
+  })
+
+  describe('ExtractAbiFunction', () => {
+    it('extracts function', () => {
+      expectType<ExtractAbiFunction<typeof wagmiMintExampleAbi, 'tokenURI'>>({
+        inputs: [
+          {
+            internalType: 'uint256',
+            name: 'tokenId',
+            type: 'uint256',
+          },
+        ],
+        name: 'tokenURI',
+        outputs: [
+          {
+            internalType: 'string',
+            name: '',
+            type: 'string',
+          },
+        ],
+        stateMutability: 'pure',
+        type: 'function',
+      })
+    })
+
+    it('extract function with override', () => {
+      type Result = ExtractAbiFunction<
+        typeof wagmiMintExampleAbi,
+        'safeTransferFrom'
+      >
+      expectType<Result>({
+        inputs: [
+          { internalType: 'address', name: 'from', type: 'address' },
+          { internalType: 'address', name: 'to', type: 'address' },
+          { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+        ],
+        name: 'safeTransferFrom',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+      })
+      expectType<Result>({
+        inputs: [
+          { internalType: 'address', name: 'from', type: 'address' },
+          { internalType: 'address', name: 'to', type: 'address' },
+          { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+          { internalType: 'bytes', name: '_data', type: 'bytes' },
+        ],
+        name: 'safeTransferFrom',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+      })
+    })
+  })
+
+  describe('ExtractAbiFunctionParameters', () => {
+    it('extracts function', () => {
+      expectType<
+        ExtractAbiFunctionParameters<
+          typeof wagmiMintExampleAbi,
+          'tokenURI',
+          'inputs'
+        >
+      >([
         {
           internalType: 'uint256',
           name: 'tokenId',
           type: 'uint256',
         },
-      ],
-      name: 'tokenURI',
-      outputs: [
-        {
-          internalType: 'string',
-          name: '',
-          type: 'string',
-        },
-      ],
-      stateMutability: 'pure',
-      type: 'function',
+      ])
     })
-  })
 
-  it('extract function with override', () => {
-    type Result = ExtractAbiFunction<
-      typeof wagmiMintExampleAbi,
-      'safeTransferFrom'
-    >
-    expectType<Result>({
-      inputs: [
+    it('extract function with override', () => {
+      type Result = ExtractAbiFunctionParameters<
+        typeof wagmiMintExampleAbi,
+        'safeTransferFrom',
+        'inputs'
+      >
+      expectType<Result>([
         { internalType: 'address', name: 'from', type: 'address' },
         { internalType: 'address', name: 'to', type: 'address' },
         { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
-      ],
-      name: 'safeTransferFrom',
-      outputs: [],
-      stateMutability: 'nonpayable',
-      type: 'function',
-    })
-    expectType<Result>({
-      inputs: [
+      ])
+      expectType<Result>([
         { internalType: 'address', name: 'from', type: 'address' },
         { internalType: 'address', name: 'to', type: 'address' },
         { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
         { internalType: 'bytes', name: '_data', type: 'bytes' },
-      ],
-      name: 'safeTransferFrom',
-      outputs: [],
-      stateMutability: 'nonpayable',
-      type: 'function',
+      ])
     })
   })
 })
 
-describe('ExtractAbiFunctionParameters', () => {
-  it('extracts function', () => {
-    expectType<
-      ExtractAbiFunctionParameters<
-        typeof wagmiMintExampleAbi,
-        'tokenURI',
-        'inputs'
-      >
-    >([
-      {
-        internalType: 'uint256',
-        name: 'tokenId',
-        type: 'uint256',
-      },
-    ])
-  })
+describe('Abi Events', () => {
+  describe('ExtractAbiEvents', () => {
+    it('extracts events', () => {
+      const abiEvent = {
+        type: 'event',
+        anonymous: false,
+        inputs: [{ name: 'a', type: 'uint256' }],
+        name: 'foo',
+      } as const
+      expectType<ExtractAbiEvents<[typeof abiEvent]>>(abiEvent)
+    })
 
-  it('extract function with override', () => {
-    type Result = ExtractAbiFunctionParameters<
-      typeof wagmiMintExampleAbi,
-      'safeTransferFrom',
-      'inputs'
-    >
-    expectType<Result>([
-      { internalType: 'address', name: 'from', type: 'address' },
-      { internalType: 'address', name: 'to', type: 'address' },
-      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
-    ])
-    expectType<Result>([
-      { internalType: 'address', name: 'from', type: 'address' },
-      { internalType: 'address', name: 'to', type: 'address' },
-      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
-      { internalType: 'bytes', name: '_data', type: 'bytes' },
-    ])
-  })
-})
-
-describe('ExtractAbiEvents', () => {
-  it('extracts events', () => {
-    const abiEvent = {
-      type: 'event',
-      anonymous: false,
-      inputs: [{ name: 'a', type: 'uint256' }],
-      name: 'foo',
-    } as const
-    expectType<ExtractAbiEvents<[typeof abiEvent]>>(abiEvent)
-  })
-
-  it('no events', () => {
-    expectType<ExtractAbiEvents<[]>>(undefined as never)
-  })
-})
-
-describe('ExtractAbiEventNames', () => {
-  it('extracts names', () => {
-    test('ExtractAbiEventNames', () => {
-      expectType<ExtractAbiEventNames<typeof wagmiMintExampleAbi>>(
-        'ApprovalForAll',
-      )
+    it('no events', () => {
+      expectType<ExtractAbiEvents<[]>>(undefined as never)
     })
   })
 
-  it('no names', () => {
-    expectType<ExtractAbiEventNames<[]>>(undefined as never)
+  describe('ExtractAbiEventNames', () => {
+    it('extracts names', () => {
+      test('ExtractAbiEventNames', () => {
+        expectType<ExtractAbiEventNames<typeof wagmiMintExampleAbi>>(
+          'ApprovalForAll',
+        )
+      })
+    })
+
+    it('no names', () => {
+      expectType<ExtractAbiEventNames<[]>>(undefined as never)
+    })
+  })
+
+  describe('ExtractAbiEvent', () => {
+    it('extracts event', () => {
+      expectType<ExtractAbiEvent<typeof wagmiMintExampleAbi, 'Transfer'>>({
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: 'address',
+            name: 'from',
+            type: 'address',
+          },
+          {
+            indexed: true,
+            internalType: 'address',
+            name: 'to',
+            type: 'address',
+          },
+          {
+            indexed: true,
+            internalType: 'uint256',
+            name: 'tokenId',
+            type: 'uint256',
+          },
+        ],
+        name: 'Transfer',
+        type: 'event',
+      })
+    })
+  })
+
+  describe('ExtractAbiEventParameters', () => {
+    it('extracts event', () => {
+      expectType<
+        ExtractAbiEventParameters<typeof wagmiMintExampleAbi, 'Transfer'>
+      >([
+        {
+          indexed: true,
+          internalType: 'address',
+          name: 'from',
+          type: 'address',
+        },
+        {
+          indexed: true,
+          internalType: 'address',
+          name: 'to',
+          type: 'address',
+        },
+        {
+          indexed: true,
+          internalType: 'uint256',
+          name: 'tokenId',
+          type: 'uint256',
+        },
+      ])
+    })
+  })
+})
+
+describe('Abi Errors', () => {
+  describe('ExtractAbiErrors', () => {
+    it('extracts errors', () => {
+      const abiError = {
+        type: 'error',
+        inputs: [{ name: 'a', type: 'uint256' }],
+        name: 'foo',
+      } as const
+      expectType<ExtractAbiErrors<[typeof abiError]>>(abiError)
+    })
+
+    it('no events', () => {
+      expectType<ExtractAbiErrors<[]>>(undefined as never)
+    })
+  })
+
+  describe('ExtractAbiErrorNames', () => {
+    it('extracts names', () => {
+      test('ExtractAbiErrorNames', () => {
+        expectType<
+          ExtractAbiErrorNames<
+            [
+              {
+                type: 'error'
+                inputs: [{ name: 'a'; type: 'uint256' }]
+                name: 'foo'
+              },
+            ]
+          >
+        >('foo')
+      })
+    })
+
+    it('no names', () => {
+      expectType<ExtractAbiErrorNames<[]>>(undefined as never)
+    })
+  })
+
+  describe('ExtractAbiError', () => {
+    it('extracts error', () => {
+      const abiError = {
+        type: 'error',
+        inputs: [{ name: 'a', type: 'uint256' }],
+        name: 'foo',
+      } as const
+      expectType<ExtractAbiError<[typeof abiError], 'foo'>>(abiError)
+    })
+  })
+
+  describe('ExtractAbiErrorParameters', () => {
+    it('extracts error', () => {
+      expectType<
+        ExtractAbiErrorParameters<
+          [
+            {
+              type: 'error'
+              inputs: [{ name: 'a'; type: 'uint256' }]
+              name: 'foo'
+            },
+          ],
+          'foo'
+        >
+      >([{ name: 'a', type: 'uint256' }])
+    })
   })
 })

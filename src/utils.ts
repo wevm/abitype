@@ -28,12 +28,12 @@ import { Tuple } from './types'
 export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
   TAbiType extends SolidityAddress
     ? Address
+    : TAbiType extends SolidityFunction
+    ? `${Address}${string}`
     : TAbiType extends SolidityString
     ? string
     : TAbiType extends SolidityBool
     ? boolean
-    : TAbiType extends SolidityFunction
-    ? `${Address}${string}`
     : TAbiType extends SolidityBytes
     ? string | ArrayLike<number>
     : TAbiType extends SolidityInt
@@ -99,7 +99,7 @@ export type AbiParametersToPrimitiveTypes<
  */
 export type IsAbi<TAbi> = TAbi extends Abi ? true : false
 
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Abi Functions
 
@@ -156,7 +156,7 @@ export type ExtractAbiFunctionParameters<
   TAbiParameterType extends AbiParameterType,
 > = ExtractAbiFunction<TAbi, TFunctionName>[TAbiParameterType]
 
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Abi Events
 
@@ -204,7 +204,7 @@ export type ExtractAbiEventParameters<
   TEventName extends ExtractAbiEventNames<TAbi>,
 > = ExtractAbiEvent<TAbi, TEventName>['inputs']
 
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Abi Errors
 
