@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.6
+
+### Patch Changes
+
+- [`e683f81`](https://github.com/wagmi-dev/abitype/commit/e683f81605e1bab2201085c1e51ac67ce4223115) Thanks [@tmm](https://github.com/tmm)! - Update TSDoc for utils
+
 ## 0.0.5
 
 ### Patch Changes
