@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.6
+
+### Patch Changes
+
+- [`53df894`](https://github.com/wagmi-dev/abitype/commit/53df89478bf2212e1ddcdef6a28be03f2e66cbd0) Thanks [@tmm](https://github.com/tmm)! - Update TSDoc for utils
+
 ## 0.0.5
 
 ### Patch Changes
