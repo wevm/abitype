@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.5
+
+### Patch Changes
+
+- [`bc0e632`](https://github.com/wagmi-dev/abitype/commit/bc0e632cfac306170e221a9509a42b8937fe6426) Thanks [@tmm](https://github.com/tmm)! - Release candidate supporting functions, errors, and events.
+
 ## 0.0.4
 
 ### Patch Changes
