@@ -1,11 +1,20 @@
 {
   "name": "abitype",
+  "description": "Strict TypeScript types for Ethereum ABIs ",
   "license": "WAGMIT",
   "version": "0.0.6",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wagmi-dev/abi-types.git"
+    "url": "https://github.com/wagmi-dev/abitype.git"
   },
+  "author": "awkweb.eth",
+  "ethereum": "wagmi-dev.eth",
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/wagmi-dev"
+    }
+  ],
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "files": [
@@ -58,5 +67,12 @@
   "engines": {
     "node": ">=16",
     "pnpm": ">=7"
-  }
+  },
+  "keywords": [
+    "abi",
+    "eth",
+    "ethereum",
+    "typescript",
+    "web3"
+  ]
 }

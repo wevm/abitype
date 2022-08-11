@@ -86,8 +86,9 @@ type ChangeAbiParameterType<
 export type AbiParametersToPrimitiveTypes<
   TAbiParameters extends readonly AbiParameter[],
 > = {
-  // SHOUTOUT(@tvler): For finding a better way to map tuples
-  // https://github.com/microsoft/TypeScript/issues/27351
+  // TODO: Convert to named tuple so parameter names show up in autocomplete
+  // e.g. [foo: string, bar: string]
+  // https://github.com/microsoft/TypeScript/issues/44939
   [K in keyof TAbiParameters]: AbiParameterToPrimitiveType<TAbiParameters[K]>
 }
 

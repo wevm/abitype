@@ -95,19 +95,18 @@ describe('readContract', () => {
     })
 
     it('works without const assertion', () => {
-      const contractInterface = [
-        {
-          name: 'foo',
-          type: 'function',
-          stateMutability: 'view',
-          inputs: [],
-          outputs: [{ type: 'string', name: '', internalType: 'string' }],
-        },
-      ]
       expectType<any>(
         readContract({
           address,
-          contractInterface,
+          contractInterface: [
+            {
+              name: 'foo',
+              type: 'function',
+              stateMutability: 'view',
+              inputs: [{ type: 'string', name: '', internalType: 'string' }],
+              outputs: [{ type: 'string', name: '', internalType: 'string' }],
+            },
+          ],
           functionName: 'foo',
         }),
       )
@@ -288,19 +287,18 @@ describe('writeContract', () => {
     })
 
     it('works without const assertion', () => {
-      const contractInterface = [
-        {
-          name: 'foo',
-          type: 'function',
-          stateMutability: 'payable',
-          inputs: [],
-          outputs: [{ type: 'string', name: '', internalType: 'string' }],
-        },
-      ]
       expectType<any>(
         writeContract({
           address,
-          contractInterface,
+          contractInterface: [
+            {
+              name: 'foo',
+              type: 'function',
+              stateMutability: 'payable',
+              inputs: [],
+              outputs: [{ type: 'string', name: '', internalType: 'string' }],
+            },
+          ],
           functionName: 'foo',
         }),
       )
@@ -359,24 +357,23 @@ describe('watchContractEvent', () => {
 
   describe('behavior', () => {
     it('works without const assertion', () => {
-      const contractInterface = [
-        {
-          name: 'Foo',
-          type: 'event',
-          inputs: [
-            {
-              indexed: true,
-              internalType: 'string',
-              name: 'name',
-              type: 'string',
-            },
-          ],
-          anonymous: false,
-        },
-      ]
       watchContractEvent({
         address,
-        contractInterface,
+        contractInterface: [
+          {
+            name: 'Foo',
+            type: 'event',
+            inputs: [
+              {
+                indexed: true,
+                internalType: 'string',
+                name: 'name',
+                type: 'string',
+              },
+            ],
+            anonymous: false,
+          },
+        ],
         eventName: 'Foo',
         listener(name) {
           expectType<any>(name)
