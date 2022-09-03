@@ -105,16 +105,6 @@ import { ExtractAbiErrorNames } from 'abitype'
 type Result = ExtractAbiErrorNames<typeof erc721Abi>
 ```
 
-### ExtractAbiErrorParameters
-
-Extracts `AbiParameter` types for error name from `Abi`
-
-```ts
-import { ExtractAbiErrorParameters } from 'abitype'
-
-type Result = ExtractAbiErrorParameters<typeof erc721Abi, 'SomeError'>
-```
-
 ### ExtractAbiErrors
 
 Extracts all `AbiError` types from `Abi`
@@ -145,16 +135,6 @@ import { ExtractAbiEventNames } from 'abitype'
 type Result = ExtractAbiEventNames<typeof erc721Abi>
 ```
 
-### ExtractAbiEventParameters
-
-Extracts `AbiParameter` types for event name from `Abi`
-
-```ts
-import { ExtractAbiEventParameters } from 'abitype'
-
-type Result = ExtractAbiEventParameters<typeof erc721Abi, 'Transfer'>
-```
-
 ### ExtractAbiEvents
 
 Extracts all `AbiEvent` types from `Abi`
@@ -183,20 +163,6 @@ Extracts all `AbiFunction` names from `Abi`
 import { ExtractAbiFunctionNames } from 'abitype'
 
 type Result = ExtractAbiFunctionNames<typeof erc721Abi>
-```
-
-### ExtractAbiFunctionParameters
-
-Extracts `AbiParameter` types for function name from `Abi`
-
-```ts
-import { ExtractAbiFunctionParameters } from 'abitype'
-
-type Result = ExtractAbiFunctionParameters<
-  typeof erc721Abi,
-  'balanceOf',
-  'inputs'
->
 ```
 
 ### ExtractAbiFunctions

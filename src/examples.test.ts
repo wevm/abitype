@@ -1,21 +1,25 @@
-import { describe, it } from 'vitest'
-
 import {
   address,
   ensRegistryWithFallbackAbi,
   expectType,
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
+  test,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
 } from '../test'
 
 import { Address } from './abi'
-import { readContract, watchContractEvent, writeContract } from './examples'
+import {
+  readContract,
+  readContracts,
+  watchContractEvent,
+  writeContract,
+} from './examples'
 
-describe('readContract', () => {
-  describe('args', () => {
-    it('zero', () => {
+test('readContract', () => {
+  test('args', () => {
+    test('zero', () => {
       expectType<string>(
         readContract({
           address,
@@ -25,7 +29,7 @@ describe('readContract', () => {
       )
     })
 
-    it('one', () => {
+    test('one', () => {
       expectType<string>(
         readContract({
           address,
@@ -36,7 +40,7 @@ describe('readContract', () => {
       )
     })
 
-    it('two or more', () => {
+    test('two or more', () => {
       expectType<Address>(
         readContract({
           address,
@@ -48,8 +52,8 @@ describe('readContract', () => {
     })
   })
 
-  describe('return types', () => {
-    it('string', () => {
+  test('return types', () => {
+    test('string', () => {
       expectType<string>(
         readContract({
           address,
@@ -59,7 +63,7 @@ describe('readContract', () => {
       )
     })
 
-    it('Address', () => {
+    test('Address', () => {
       expectType<Address>(
         readContract({
           address,
@@ -70,7 +74,7 @@ describe('readContract', () => {
       )
     })
 
-    it('number', () => {
+    test('number', () => {
       expectType<number | bigint>(
         readContract({
           address,
@@ -82,8 +86,8 @@ describe('readContract', () => {
     })
   })
 
-  describe('behavior', () => {
-    it('write function not allowed', () => {
+  test('behavior', () => {
+    test('write function not allowed', () => {
       expectType<any>(
         readContract({
           address,
@@ -94,7 +98,7 @@ describe('readContract', () => {
       )
     })
 
-    it('works without const assertion', () => {
+    test('works without const assertion', () => {
       expectType<any>(
         readContract({
           address,
@@ -103,20 +107,21 @@ describe('readContract', () => {
               name: 'foo',
               type: 'function',
               stateMutability: 'view',
-              inputs: [{ type: 'string', name: '', internalType: 'string' }],
-              outputs: [{ type: 'string', name: '', internalType: 'string' }],
+              inputs: [{ type: 'string', name: '' }],
+              outputs: [{ type: 'string', name: '' }],
             },
           ],
           functionName: 'foo',
+          args: ['bar'],
         }),
       )
     })
   })
 })
 
-describe('writeContract', () => {
-  describe('args', () => {
-    it('zero', () => {
+test('writeContract', () => {
+  test('args', () => {
+    test('zero', () => {
       expectType<void>(
         writeContract({
           address,
@@ -126,7 +131,7 @@ describe('writeContract', () => {
       )
     })
 
-    it('one', () => {
+    test('one', () => {
       expectType<void>(
         writeContract({
           address,
@@ -137,7 +142,7 @@ describe('writeContract', () => {
       )
     })
 
-    it('two or more', () => {
+    test('two or more', () => {
       expectType<void>(
         writeContract({
           address,
@@ -157,7 +162,7 @@ describe('writeContract', () => {
       )
     })
 
-    it('tuple', () => {
+    test('tuple', () => {
       expectType<Address>(
         writeContract({
           address,
@@ -181,8 +186,8 @@ describe('writeContract', () => {
     })
   })
 
-  describe('return types', () => {
-    it('void', () => {
+  test('return types', () => {
+    test('void', () => {
       expectType<void>(
         writeContract({
           address,
@@ -192,7 +197,7 @@ describe('writeContract', () => {
       )
     })
 
-    it('bytes32', () => {
+    test('bytes32', () => {
       expectType<string | ArrayLike<number>>(
         writeContract({
           address,
@@ -203,7 +208,7 @@ describe('writeContract', () => {
       )
     })
 
-    it('tuple', () => {
+    test('tuple', () => {
       const contractInterface = [
         {
           type: 'function',
@@ -213,15 +218,10 @@ describe('writeContract', () => {
           outputs: [
             {
               components: [
-                { internalType: 'string', name: 'name', type: 'string' },
-                { internalType: 'string', name: 'symbol', type: 'string' },
-                {
-                  internalType: 'address',
-                  name: 'fundingRecipient',
-                  type: 'address',
-                },
+                { name: 'name', type: 'string' },
+                { name: 'symbol', type: 'string' },
+                { name: 'fundingRecipient', type: 'address' },
               ],
-              internalType: 'struct Foo',
               name: 'foo',
               type: 'tuple',
             },
@@ -242,7 +242,7 @@ describe('writeContract', () => {
       )
     })
 
-    it('tuple[]', () => {
+    test('tuple[]', () => {
       expectType<void>(
         writeContract({
           address,
@@ -254,8 +254,8 @@ describe('writeContract', () => {
     })
   })
 
-  describe('behavior', () => {
-    it('read function not allowed', () => {
+  test('behavior', () => {
+    test('read function not allowed', () => {
       expectType<void>(
         writeContract({
           address,
@@ -266,7 +266,7 @@ describe('writeContract', () => {
       )
     })
 
-    it('function with overrides', () => {
+    test('function with overrides', () => {
       expectType<void>(
         writeContract({
           address,
@@ -286,7 +286,7 @@ describe('writeContract', () => {
       )
     })
 
-    it('works without const assertion', () => {
+    test('works without const assertion', () => {
       expectType<any>(
         writeContract({
           address,
@@ -296,7 +296,7 @@ describe('writeContract', () => {
               type: 'function',
               stateMutability: 'payable',
               inputs: [],
-              outputs: [{ type: 'string', name: '', internalType: 'string' }],
+              outputs: [{ type: 'string', name: '' }],
             },
           ],
           functionName: 'foo',
@@ -306,11 +306,51 @@ describe('writeContract', () => {
   })
 })
 
-describe.todo('readContracts')
+test('readContracts', () => {
+  readContracts({
+    contracts: [
+      {
+        contractInterface: [
+          {
+            inputs: [{ name: 'owner', type: 'address' }],
+            name: 'balanceOf',
+            outputs: [{ name: '', type: 'uint256' }],
+            stateMutability: 'view',
+            type: 'function',
+          },
+          {
+            inputs: [{ name: 'tokenId', type: 'uint256' }],
+            name: 'tokenURI',
+            outputs: [{ name: '', type: 'uint256' }],
+            stateMutability: 'view',
+            type: 'function',
+          },
+        ],
+        functionName: 'string',
+      } as const,
+      // {
+      //   contractInterface: [
+      //     {
+      //       inputs: [
+      //         { name: 'tokenId', type: 'address' },
+      //         { name: 'value', type: 'uint256' },
+      //       ],
+      //       name: 'boo',
+      //       outputs: [{ name: '', type: 'uint256' }],
+      //       stateMutability: 'view',
+      //       type: 'function',
+      //     },
+      //   ],
+      //   functionName: 'boo',
+      //   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e', 123],
+      // },
+    ],
+  })
+})
 
-describe('watchContractEvent', () => {
-  describe('args', () => {
-    it('zero', () => {
+test('watchContractEvent', () => {
+  test('args', () => {
+    test('zero', () => {
       const contractInterface = [
         {
           name: 'Foo',
@@ -330,7 +370,7 @@ describe('watchContractEvent', () => {
       })
     })
 
-    it('one', () => {
+    test('one', () => {
       watchContractEvent({
         address,
         contractInterface: writingEditionsFactoryAbi,
@@ -341,7 +381,7 @@ describe('watchContractEvent', () => {
       })
     })
 
-    it('two or more', () => {
+    test('two or more', () => {
       watchContractEvent({
         address,
         contractInterface: wagmiMintExampleAbi,
@@ -355,8 +395,8 @@ describe('watchContractEvent', () => {
     })
   })
 
-  describe('behavior', () => {
-    it('works without const assertion', () => {
+  test('behavior', () => {
+    test('works without const assertion', () => {
       watchContractEvent({
         address,
         contractInterface: [
@@ -366,7 +406,6 @@ describe('watchContractEvent', () => {
             inputs: [
               {
                 indexed: true,
-                internalType: 'string',
                 name: 'name',
                 type: 'string',
               },
@@ -376,7 +415,7 @@ describe('watchContractEvent', () => {
         ],
         eventName: 'Foo',
         listener(name) {
-          expectType<any>(name)
+          expectType<string>(name)
         },
       })
     })

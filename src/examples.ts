@@ -1,21 +1,19 @@
 import { Abi, Address } from './abi'
 import {
-  AbiParametersToPrimitiveTypes,
+  Contract,
   ExtractAbiEventNames,
-  ExtractAbiEventParameters,
   ExtractAbiFunctionNames,
-  ExtractAbiFunctionParameters,
 } from './utils'
 
 export function readContract<
   TAbi extends Abi,
-  TFunctionName extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
-  TArgs extends AbiParametersToPrimitiveTypes<
-    ExtractAbiFunctionParameters<TAbi, TFunctionName, 'inputs'>
-  >,
-  TResponse extends AbiParametersToPrimitiveTypes<
-    ExtractAbiFunctionParameters<TAbi, TFunctionName, 'outputs'>
-  >,
+  TFunctionName extends ExtractAbiFunctionNames<TAbi, 'view' | 'pure'>,
+  TContract extends {
+    functions: { [k: string]: (...args: any) => any }
+  } = Contract<TAbi>,
+  TFunction extends (
+    ...args: any
+  ) => any = TContract['functions'][TFunctionName],
 >(
   _config: {
     /** Contract address */
@@ -23,37 +21,29 @@ export function readContract<
     /** Contract ABI */
     contractInterface: TAbi
     /** Function to invoke on the contract */
-    functionName: TFunctionName
-  } & (TArgs['length'] extends 0
+    functionName: [TFunctionName] extends [never] ? string : TFunctionName
+  } & (Parameters<TFunction>['length'] extends 0
     ? {
-        // Add optional `args` param if not able to infer `TArgs`
-        // e.g. not using const assertion for `contractInterface`
-        // Otherwise remove from config object
-        args?: [TArgs] extends [never] ? any | undefined : never
+        args?: [Parameters<TFunction>] extends [never] ? any | undefined : never
       }
-    : {
-        /** Arguments to pass contract method */
-        args: TArgs['length'] extends 1 ? TArgs[0] : TArgs
-      }),
-): TResponse['length'] extends 0
-  ? [TResponse] extends [never]
-    ? any
-    : void
-  : TResponse['length'] extends 1
-  ? TResponse[0]
-  : TResponse {
+    : Parameters<TFunction> extends unknown[][]
+    ? { args?: never }
+    : Parameters<TFunction>['length'] extends 1
+    ? { args: Parameters<TFunction>[0] }
+    : { args: Parameters<TFunction> }),
+): ReturnType<TFunction> {
   return {} as any
 }
 
 export function writeContract<
   TAbi extends Abi,
   TFunctionName extends ExtractAbiFunctionNames<TAbi, 'payable' | 'nonpayable'>,
-  TArgs extends AbiParametersToPrimitiveTypes<
-    ExtractAbiFunctionParameters<TAbi, TFunctionName, 'inputs'>
-  >,
-  TResponse extends AbiParametersToPrimitiveTypes<
-    ExtractAbiFunctionParameters<TAbi, TFunctionName, 'outputs'>
-  >,
+  TContract extends {
+    functions: { [k: string]: (...args: any) => any }
+  } = Contract<TAbi>,
+  TFunction extends (
+    ...args: any
+  ) => any = TContract['functions'][TFunctionName],
 >(
   _config: {
     /** Contract address */
@@ -61,45 +51,80 @@ export function writeContract<
     /** Contract ABI */
     contractInterface: TAbi
     /** Function to invoke on the contract */
-    functionName: TFunctionName
-  } & (TArgs['length'] extends 0
+    functionName: [TFunctionName] extends [never] ? string : TFunctionName
+  } & (Parameters<TFunction>['length'] extends 0
     ? {
-        // Add optional `args` param if not able to infer `TArgs`
-        // e.g. not using const assertion for `contractInterface`
-        // Otherwise remove from config object
-        args?: [TArgs] extends [never] ? any | undefined : never
+        args?: [Parameters<TFunction>] extends [never] ? any | undefined : never
       }
+    : Parameters<TFunction> extends unknown[][]
+    ? { args?: never }
+    : Parameters<TFunction>['length'] extends 1
+    ? { args: Parameters<TFunction>[0] }
     : {
-        /** Arguments to pass contract method */
-        args: TArgs['length'] extends 1 ? TArgs[0] : TArgs
+        args: Parameters<TFunction>
       }),
-): TResponse['length'] extends 0
-  ? [TResponse] extends [never]
-    ? any
-    : void
-  : TResponse['length'] extends 1
-  ? TResponse[0]
-  : TResponse {
+): ReturnType<TFunction> {
   return {} as any
 }
 
 export function watchContractEvent<
   TAbi extends Abi,
   TEventName extends ExtractAbiEventNames<TAbi>,
-  TArgs extends AbiParametersToPrimitiveTypes<
-    ExtractAbiEventParameters<TAbi, TEventName>
-  >,
+  TContract extends {
+    events: { [k: string]: (...args: any) => any }
+  } = Contract<TAbi>,
 >(_config: {
   address: Address
   contractInterface: TAbi
   eventName: TEventName
-  listener(
-    ...args: [TArgs] extends [never]
-      ? any[]
-      : TArgs extends readonly any[]
-      ? TArgs
-      : never
-  ): void
+  listener: TContract['events'][TEventName]
 }) {
   return
+}
+
+type GetOptions<T> = T extends {
+  contractInterface: Abi
+  functionName: infer TFunctionName
+}
+  ? UseQueryOptionsForUseQueries<T['contractInterface'], TFunctionName>
+  : never
+
+type UseQueryOptionsForUseQueries<
+  TAbi extends Abi,
+  TFunctionName extends ExtractAbiFunctionNames<
+    TAbi,
+    'pure' | 'view'
+  > = ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
+> = {
+  contractInterface: TAbi
+  functionName: TFunctionName
+}
+
+type QueriesOptions<
+  T extends readonly any[],
+  Result extends any[] = [],
+  Depth extends ReadonlyArray<number> = [],
+> = T extends []
+  ? []
+  : T extends readonly [infer Head]
+  ? [...Result, GetOptions<Head>]
+  : T extends readonly [infer Head, ...infer Tail]
+  ? QueriesOptions<
+      readonly [...Tail],
+      [...Result, GetOptions<Head>],
+      [...Depth, 1]
+    >
+  : readonly unknown[] extends T
+  ? T
+  : // If T is *some* array but we couldn't assign unknown[] to it, then it must hold some known/homogenous type!
+  // use this to infer the param types in the case of Array.map() argument
+  T extends UseQueryOptionsForUseQueries<infer TAbi, infer TFunctionName>[]
+  ? UseQueryOptionsForUseQueries<TAbi, TFunctionName>[]
+  : // Fallback
+    'fallback'[]
+
+export function readContracts<TContracts extends readonly any[]>(_config: {
+  contracts: readonly [...QueriesOptions<TContracts>]
+}) {
+  return {} as any
 }

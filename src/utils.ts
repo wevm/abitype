@@ -1,7 +1,6 @@
 import {
   Abi,
   AbiParameter,
-  AbiParameterType,
   AbiStateMutability,
   AbiType,
   Address,
@@ -25,6 +24,8 @@ import { Tuple } from './types'
  * @param TAbiType - {@link AbiType} to convert to TypeScript representation
  * @returns TypeScript primitive type
  */
+// TODO: Clean this up with a map
+// https://twitter.com/SeaRyanC/status/1538971176357113858
 export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
   TAbiType extends SolidityAddress
     ? Address
@@ -55,14 +56,14 @@ export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
     ? Size extends keyof SolidityFixedArraySizeLookup
       ? Tuple<
           AbiParameterToPrimitiveType<
-            ChangeAbiParameterType<TAbiParameter, Type>
+            ConvertAbiParameterType<TAbiParameter, Type>
           >,
           SolidityFixedArraySizeLookup[Size]
         >
       : AbiParameterToPrimitiveType<
-          ChangeAbiParameterType<TAbiParameter, Type>
+          ConvertAbiParameterType<TAbiParameter, Type>
         >[]
-    : TAbiParameter['type'] extends `${SolidityTuple}${'' | '[]'}`
+    : TAbiParameter['type'] extends SolidityTuple
     ? {
         [Component in (TAbiParameter & {
           components: AbiParameter[]
@@ -70,7 +71,7 @@ export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
       }
     : AbiTypeToPrimitiveType<TAbiParameter['type']>
 
-type ChangeAbiParameterType<
+type ConvertAbiParameterType<
   TAbiParameter extends AbiParameter,
   TType extends AbiType | string,
 > = {
@@ -86,7 +87,7 @@ type ChangeAbiParameterType<
 export type AbiParametersToPrimitiveTypes<
   TAbiParameters extends readonly AbiParameter[],
 > = {
-  // TODO: Convert to named tuple so parameter names show up in autocomplete
+  // TODO: Convert to labeled tuple so parameter names show up in autocomplete
   // e.g. [foo: string, bar: string]
   // https://github.com/microsoft/TypeScript/issues/44939
   [K in keyof TAbiParameters]: AbiParameterToPrimitiveType<TAbiParameters[K]>
@@ -143,20 +144,6 @@ export type ExtractAbiFunction<
   TFunctionName extends ExtractAbiFunctionNames<TAbi>,
 > = Extract<ExtractAbiFunctions<TAbi>, { name: TFunctionName }>
 
-/**
- * Extracts {@link AbiParameter} types for function name from {@link Abi}.
- *
- * @param TAbi - {@link Abi} to extract {@link AbiParameter}s from
- * @param TFunctionName - String name of function
- * @param TAbiParameterType - {@link AbiParameterType} to extract parameters
- * @returns Array of {@link AbiParameter}
- */
-export type ExtractAbiFunctionParameters<
-  TAbi extends Abi,
-  TFunctionName extends ExtractAbiFunctionNames<TAbi>,
-  TAbiParameterType extends AbiParameterType,
-> = ExtractAbiFunction<TAbi, TFunctionName>[TAbiParameterType]
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Abi Events
@@ -192,18 +179,6 @@ export type ExtractAbiEvent<
   TAbi extends Abi,
   TEventName extends ExtractAbiEventNames<TAbi>,
 > = Extract<ExtractAbiEvents<TAbi>, { name: TEventName }>
-
-/**
- * Extracts {@link AbiParameter} types for event name from {@link Abi}.
- *
- * @param TAbi - {@link Abi} to extract {@link AbiParameter}s from
- * @param TEventName - String name of event
- * @returns Array of {@link AbiParameter}
- */
-export type ExtractAbiEventParameters<
-  TAbi extends Abi,
-  TEventName extends ExtractAbiEventNames<TAbi>,
-> = ExtractAbiEvent<TAbi, TEventName>['inputs']
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -241,14 +216,35 @@ export type ExtractAbiError<
   TErrorName extends ExtractAbiErrorNames<TAbi>,
 > = Extract<ExtractAbiErrors<TAbi>, { name: TErrorName }>
 
-/**
- * Extracts {@link AbiParameter} types for error name from {@link Abi}.
- *
- * @param TAbi - {@link Abi} to extract {@link AbiParameter}s from
- * @param TErrorName - String name of error
- * @returns Array of {@link AbiParameter}
- */
-export type ExtractAbiErrorParameters<
-  TAbi extends Abi,
-  TErrorName extends ExtractAbiErrorNames<TAbi>,
-> = ExtractAbiError<TAbi, TErrorName>['inputs']
+export type Contract<TAbi extends Abi> = {
+  events: {
+    [K in TAbi[number] as K extends { name: infer TName; type: 'event' }
+      ? TName
+      : never]: K extends { name: string; type: 'event' }
+      ? (
+          ...args: AbiParametersToPrimitiveTypes<
+            K['inputs']
+          > extends readonly any[]
+            ? AbiParametersToPrimitiveTypes<K['inputs']>
+            : never
+        ) => void
+      : never
+  }
+  functions: {
+    [K in TAbi[number] as K extends { name: infer TName; type: 'function' }
+      ? TName
+      : never]: K extends { name: string; type: 'function' }
+      ? (
+          ...args: AbiParametersToPrimitiveTypes<
+            K['inputs']
+          > extends readonly any[]
+            ? AbiParametersToPrimitiveTypes<K['inputs']>
+            : never
+        ) => AbiParametersToPrimitiveTypes<K['outputs']>['length'] extends 0
+          ? void
+          : AbiParametersToPrimitiveTypes<K['outputs']>['length'] extends 1
+          ? AbiParametersToPrimitiveTypes<K['outputs']>[0]
+          : AbiParametersToPrimitiveTypes<K['outputs']>
+      : never
+  }
+}

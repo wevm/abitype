@@ -1,6 +1,4 @@
-import { test } from 'vitest'
-
-import { expectType } from '../test'
+import { expectType, test } from '../test'
 import { MultiplesOf8To256, Range, Tuple } from './types'
 
 test('MultiplesOf8To256', () => {
