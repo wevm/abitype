@@ -259,14 +259,31 @@ export type Contract<TAbi extends readonly unknown[]> = TAbi extends Abi
           ? (
               ...args: AbiParametersToPrimitiveTypes<
                 K['inputs']
-              > extends readonly any[]
-                ? AbiParametersToPrimitiveTypes<K['inputs']>
+              > extends infer Inputs
+                ? Inputs extends readonly any[]
+                  ? Inputs
+                  : never
                 : never
-            ) => AbiParametersToPrimitiveTypes<K['outputs']>['length'] extends 0
-              ? void
-              : AbiParametersToPrimitiveTypes<K['outputs']>['length'] extends 1
-              ? AbiParametersToPrimitiveTypes<K['outputs']>[0]
-              : AbiParametersToPrimitiveTypes<K['outputs']>
+            ) => AbiParametersToPrimitiveTypes<
+              K['outputs']
+            > extends infer Outputs extends readonly any[]
+              ? Outputs['length'] extends 0
+                ? void
+                : Outputs['length'] extends 1
+                ? Outputs[0]
+                : // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                Outputs extends readonly [infer _Head, ...infer _Tail]
+                ? Outputs
+                : /**
+                   * TODO: Infer non-constant array types
+                   * Expected: [{ type: 'string', name: 'foo' }] => string, actual: string[]
+                   * Expected: [{ type: 'string[]', name: 'foo' }] => string[], actual: string[][]
+                   * Expected: [{ type: 'string[]', name: 'foo' }, { type: 'uint256', name: 'bar' }] => (string[] | number | bigint)[], actual: (number | bigint | unknown[])[]
+                   *
+                   * Until then, we'll just return `any` for non-constant array types
+                   */
+                  any
+              : never
           : never
       }
     }

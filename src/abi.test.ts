@@ -61,21 +61,24 @@ test('Solidity Types', () => {
   expectType<SolidityArray>('address[]')
   expectType<SolidityArray>('uint256[]')
   expectType<SolidityArray>('string[]')
-  expectType<SolidityArray>('address[4]')
-  expectType<SolidityArray>('uint256[4]')
-  expectType<SolidityArray>('string[4]')
+  expectType<SolidityArray>('address[5]')
+  expectType<SolidityArray>('uint256[5]')
+  expectType<SolidityArray>('string[5]')
   // @ts-expect-error Out of fixed array range
   expectType<SolidityArray>('string[100]')
 
   expectType<Solidity2DArray>('address[][]')
   expectType<Solidity2DArray>('uint256[][]')
   expectType<Solidity2DArray>('string[][]')
-  expectType<Solidity2DArray>('address[4][]')
-  expectType<Solidity2DArray>('uint256[4][]')
-  expectType<Solidity2DArray>('string[4][]')
-  expectType<Solidity2DArray>('address[][4]')
+  expectType<Solidity2DArray>('address[5][]')
+  expectType<Solidity2DArray>('uint256[5][]')
+  expectType<Solidity2DArray>('string[5][]')
+  expectType<Solidity2DArray>('address[][3]')
+
   // @ts-expect-error Out of fixed array range
   expectType<Solidity2DArray>('string[100][]')
+  // @ts-expect-error Out of fixed array range
+  expectType<Solidity2DArray>('string[][100]')
 })
 
 test('AbiType', () => {

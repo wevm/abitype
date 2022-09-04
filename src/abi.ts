@@ -19,25 +19,27 @@ export type SolidityInt = `${'u' | ''}int${MultiplesOf8To256 | ''}`
 //   | `${'u' | ''}fixed`
 //   | `${'u' | ''}fixed${MultiplesOf8To256}x${Range<1, 20>[number]}`
 
-export type SolidityFixedArrayRange = Range<1, 5>[number]
+declare global {
+  type FixedArrayLowerBound = 1
+  type FixedArrayUpperBound = 6
+
+  type Fixed2DArrayLowerBound = 1
+  type Fixed2DArrayUpperBound = 3
+}
+export type SolidityFixedArrayRange = Range<
+  FixedArrayLowerBound,
+  FixedArrayUpperBound
+>[number]
 export type SolidityFixedArraySizeLookup = {
   [Prop in SolidityFixedArrayRange as `${Prop}`]: Prop
 }
-export type SolidityFixed2DArrayRange = Range<1, 5>[number]
+export type SolidityFixed2DArrayRange = Range<
+  Fixed2DArrayLowerBound,
+  Fixed2DArrayUpperBound
+>[number]
 export type SolidityFixed2DArraySizeLookup = {
   [Prop in SolidityFixed2DArrayRange as `${Prop}`]: Prop
 }
-export type SolidityArray =
-  | `${
-      | SolidityAddress
-      | SolidityBool
-      | SolidityBytes
-      | SolidityFunction
-      | SolidityString
-      | SolidityTuple
-      | SolidityInt}[${'' | SolidityFixedArrayRange}]`
-export type Solidity2DArray =
-  | `${SolidityArray}[${'' | SolidityFixed2DArrayRange}]`
 
 type SolidityArrayWithoutTuple =
   | `${
@@ -46,10 +48,21 @@ type SolidityArrayWithoutTuple =
       | SolidityBytes
       | SolidityFunction
       | SolidityString
-      | SolidityTuple
       | SolidityInt}[${'' | SolidityFixedArrayRange}]`
-type Solidity2DArrayWithoutTuple =
-  | `${SolidityArrayWithoutTuple}[${'' | SolidityFixed2DArrayRange}]`
+type Solidity2DArrayWithoutTuple = `${SolidityArrayWithoutTuple}[${
+  | ''
+  | SolidityFixed2DArrayRange}]`
+
+type SolidityArrayWithTuple =
+  | `${SolidityTuple}[${'' | SolidityFixedArrayRange}]`
+type Solidity2DArrayWithTuple = `${SolidityArrayWithTuple}[${
+  | ''
+  | SolidityFixed2DArrayRange}]`
+
+export type SolidityArray = SolidityArrayWithTuple | SolidityArrayWithoutTuple
+export type Solidity2DArray =
+  | Solidity2DArrayWithTuple
+  | Solidity2DArrayWithoutTuple
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -86,12 +99,7 @@ export type AbiParameter = {
         | Solidity2DArrayWithoutTuple
     }
   | {
-      type:
-        | SolidityTuple
-        | `${SolidityTuple}[${'' | SolidityFixedArrayRange}]`
-        | `${SolidityTuple}[${'' | SolidityFixedArrayRange}][${
-            | ''
-            | SolidityFixed2DArrayRange}]`
+      type: SolidityTuple | SolidityArrayWithTuple | Solidity2DArrayWithTuple
       components: readonly AbiParameter[]
     }
 )

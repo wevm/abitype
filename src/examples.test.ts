@@ -121,6 +121,14 @@ test('readContract', () => {
       })
       expectType<any>(result1)
       expectType<any>(result2)
+
+      readContract({
+        address,
+        contractInterface,
+        functionName: 'foo',
+        // @ts-expect-error Args must be array
+        args: address,
+      })
     })
 
     test('declared as Abi type', () => {
@@ -153,6 +161,14 @@ test('readContract', () => {
       })
       expectType<any>(result1)
       expectType<any>(result2)
+
+      readContract({
+        address,
+        contractInterface,
+        functionName: 'foo',
+        // @ts-expect-error Args must be array
+        args: address,
+      })
     })
 
     test('defined inline', () => {
@@ -198,8 +214,8 @@ test('readContract', () => {
         functionName: 'bar',
         args: [address],
       })
-      expectType<Address[] | string[]>(result1)
-      expectType<Address[] | string[]>(result2)
+      expectType<Address | string>(result1)
+      expectType<Address | string>(result2)
     })
   })
 })
@@ -243,51 +259,48 @@ test('writeContract', () => {
     })
 
     test('tuple', () => {
-      expectType<Address>(
-        writeContract({
-          address,
-          contractInterface: writingEditionsFactoryAbi,
-          functionName: 'create',
-          args: [
-            {
-              name: 'Test',
-              symbol: '$TEST',
-              description: 'Foo bar baz',
-              imageURI: 'ipfs://hash',
-              contentURI: 'arweave://digest',
-              price: 0.1,
-              limit: 100,
-              fundingRecipient: address,
-              renderer: address,
-              nonce: 123,
-              fee: 0,
-            },
-          ],
-        }),
-      )
+      const result = writeContract({
+        address,
+        contractInterface: writingEditionsFactoryAbi,
+        functionName: 'create',
+        args: [
+          {
+            name: 'Test',
+            symbol: '$TEST',
+            description: 'Foo bar baz',
+            imageURI: 'ipfs://hash',
+            contentURI: 'arweave://digest',
+            price: 0.1,
+            limit: 100,
+            fundingRecipient: address,
+            renderer: address,
+            nonce: 123,
+            fee: 0,
+          },
+        ],
+      })
+      expectType<Address>(result)
     })
   })
 
   test('return types', () => {
     test('void', () => {
-      expectType<void>(
-        writeContract({
-          address,
-          contractInterface: nounsAuctionHouseAbi,
-          functionName: 'pause',
-        }),
-      )
+      const result = writeContract({
+        address,
+        contractInterface: nounsAuctionHouseAbi,
+        functionName: 'pause',
+      })
+      expectType<void>(result)
     })
 
     test('bytes32', () => {
-      expectType<string | ArrayLike<number>>(
-        writeContract({
-          address,
-          contractInterface: ensRegistryWithFallbackAbi,
-          functionName: 'setSubnodeOwner',
-          args: ['foo', 'bar', address],
-        }),
-      )
+      const result = writeContract({
+        address,
+        contractInterface: ensRegistryWithFallbackAbi,
+        functionName: 'setSubnodeOwner',
+        args: ['foo', 'bar', address],
+      })
+      expectType<string | ArrayLike<number>>(result)
     })
 
     test('tuple', () => {
@@ -315,57 +328,52 @@ test('writeContract', () => {
         symbol: string
         fundingRecipient: Address
       }
-      expectType<Output>(
-        writeContract({
-          address,
-          contractInterface,
-          functionName: 'foo',
-        }),
-      )
+      const result = writeContract({
+        address,
+        contractInterface,
+        functionName: 'foo',
+      })
+      expectType<Output>(result)
     })
 
     test('tuple[]', () => {
-      expectType<void>(
-        writeContract({
-          address,
-          contractInterface: nestedTupleArrayAbi,
-          functionName: 'f',
-          args: [{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1, y: 1 }, 1],
-        }),
-      )
+      const result = writeContract({
+        address,
+        contractInterface: nestedTupleArrayAbi,
+        functionName: 'f',
+        args: [{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1, y: 1 }, 1],
+      })
+      expectType<void>(result)
     })
   })
 
   test('behavior', () => {
     test('read function not allowed', () => {
-      expectType<void>(
-        writeContract({
-          address,
-          contractInterface: wagmiMintExampleAbi,
-          // @ts-expect-error Trying to use read function
-          functionName: 'symbol',
-        }),
-      )
+      const result = writeContract({
+        address,
+        contractInterface: wagmiMintExampleAbi,
+        // @ts-expect-error Trying to use read function
+        functionName: 'symbol',
+      })
+      expectType<void>(result)
     })
 
     test('function with overrides', () => {
-      expectType<void>(
-        writeContract({
-          address,
-          contractInterface: wagmiMintExampleAbi,
-          functionName: 'safeTransferFrom',
-          args: [address, address, 123],
-        }),
-      )
+      const result1 = writeContract({
+        address,
+        contractInterface: wagmiMintExampleAbi,
+        functionName: 'safeTransferFrom',
+        args: [address, address, 123],
+      })
+      expectType<void>(result1)
 
-      expectType<void>(
-        writeContract({
-          address,
-          contractInterface: wagmiMintExampleAbi,
-          functionName: 'safeTransferFrom',
-          args: [address, address, 123, 'foo'],
-        }),
-      )
+      const result2 = writeContract({
+        address,
+        contractInterface: wagmiMintExampleAbi,
+        functionName: 'safeTransferFrom',
+        args: [address, address, 123, 'foo'],
+      })
+      expectType<void>(result2)
     })
 
     test('works without const assertion', () => {
@@ -374,17 +382,85 @@ test('writeContract', () => {
           name: 'foo',
           type: 'function',
           stateMutability: 'payable',
-          inputs: [],
+          inputs: [{ type: 'string', name: '' }],
           outputs: [{ type: 'string', name: '' }],
         },
       ]
-      expectType<any>(
-        writeContract({
-          address,
-          contractInterface,
-          functionName: 'foo',
-        }),
-      )
+      const result = writeContract({
+        address,
+        contractInterface,
+        functionName: 'foo',
+        args: ['bar'],
+      })
+      expectType<any>(result)
+
+      writeContract({
+        address,
+        contractInterface,
+        functionName: 'foo',
+        // @ts-expect-error Args must be array
+        args: 'bar',
+      })
+    })
+
+    test('declared as Abi type', () => {
+      const contractInterface: Abi = [
+        {
+          name: 'foo',
+          type: 'function',
+          stateMutability: 'payable',
+          inputs: [{ type: 'string', name: '' }],
+          outputs: [{ type: 'string', name: '' }],
+        },
+      ]
+      const result = writeContract({
+        address,
+        contractInterface,
+        functionName: 'foo',
+      })
+      expectType<any>(result)
+
+      writeContract({
+        address,
+        contractInterface,
+        functionName: 'foo',
+        // @ts-expect-error Args must be array
+        args: 'bar',
+      })
+    })
+
+    test('defined inline', () => {
+      const result = writeContract({
+        address,
+        contractInterface: [
+          {
+            name: 'foo',
+            type: 'function',
+            stateMutability: 'payable',
+            inputs: [{ type: 'string', name: '' }],
+            outputs: [{ type: 'string', name: '' }],
+          },
+        ],
+        functionName: 'foo',
+        args: ['bar'],
+      })
+      expectType<any>(result)
+
+      writeContract({
+        address,
+        contractInterface: [
+          {
+            name: 'foo',
+            type: 'function',
+            stateMutability: 'payable',
+            inputs: [{ type: 'string', name: '' }],
+            outputs: [{ type: 'string', name: '' }],
+          },
+        ],
+        functionName: 'foo',
+        // @ts-expect-error Args must be array
+        args: 'bar',
+      })
     })
   })
 })
