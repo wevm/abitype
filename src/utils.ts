@@ -4,6 +4,7 @@ import {
   AbiStateMutability,
   AbiType,
   Address,
+  Solidity2DArray,
   SolidityAddress,
   SolidityArray,
   SolidityBool,
@@ -43,6 +44,8 @@ export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
     ? Record<string, unknown>
     : TAbiType extends SolidityArray
     ? unknown[]
+    : TAbiType extends Solidity2DArray
+    ? unknown[][]
     : unknown
 
 /**
@@ -60,6 +63,17 @@ export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
           >,
           SolidityFixedArraySizeLookup[Size]
         >
+      : Size extends `${infer Size1}][${infer Size2}`
+      ? Size2 extends keyof SolidityFixedArraySizeLookup
+        ? Tuple<
+            AbiParameterToPrimitiveType<
+              ConvertAbiParameterType<TAbiParameter, `${Type}[${Size1}]`>
+            >,
+            SolidityFixedArraySizeLookup[Size2]
+          >
+        : AbiParameterToPrimitiveType<
+            ConvertAbiParameterType<TAbiParameter, `${Type}[${Size1}]`>
+          >[]
       : AbiParameterToPrimitiveType<
           ConvertAbiParameterType<TAbiParameter, Type>
         >[]
@@ -216,6 +230,12 @@ export type ExtractAbiError<
   TErrorName extends ExtractAbiErrorNames<TAbi>,
 > = Extract<ExtractAbiErrors<TAbi>, { name: TErrorName }>
 
+/**
+ * Generates object containing {@link AbiFunction} and {@link AbiEvent} signatures.
+ *
+ * @param TAbi - {@link Abi} to generate signatures from
+ * @returns Object containing {@link AbiFunction} and {@link AbiEvent} signatures
+ */
 export type Contract<TAbi extends Abi> = {
   events: {
     [K in TAbi[number] as K extends { name: infer TName; type: 'event' }

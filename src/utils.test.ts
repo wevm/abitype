@@ -26,211 +26,307 @@ import {
 } from './utils'
 
 test('AbiTypeToPrimitiveType', () => {
-  expectType<AbiTypeToPrimitiveType<'address'>>(address)
+  test('address', () => {
+    expectType<AbiTypeToPrimitiveType<'address'>>(address)
+  })
 
-  expectType<AbiTypeToPrimitiveType<'bool'>>(true)
-  expectType<AbiTypeToPrimitiveType<'bool'>>(false)
+  test('bool', () => {
+    expectType<AbiTypeToPrimitiveType<'bool'>>(true)
+    expectType<AbiTypeToPrimitiveType<'bool'>>(false)
+  })
 
-  expectType<AbiTypeToPrimitiveType<'bytes'>>('foo')
-  expectType<AbiTypeToPrimitiveType<'bytes1'>>('foo')
-  expectType<AbiTypeToPrimitiveType<'bytes24'>>('foo')
-  expectType<AbiTypeToPrimitiveType<'bytes32'>>('foo')
-  expectType<AbiTypeToPrimitiveType<'bytes'>>([1])
+  test('bytes', () => {
+    expectType<AbiTypeToPrimitiveType<'bytes'>>('foo')
+    expectType<AbiTypeToPrimitiveType<'bytes1'>>('foo')
+    expectType<AbiTypeToPrimitiveType<'bytes24'>>('foo')
+    expectType<AbiTypeToPrimitiveType<'bytes32'>>('foo')
+    expectType<AbiTypeToPrimitiveType<'bytes'>>([1])
+  })
 
-  expectType<AbiTypeToPrimitiveType<'function'>>(`${address}foo`)
+  test('function', () => {
+    expectType<AbiTypeToPrimitiveType<'function'>>(`${address}foo`)
+  })
 
-  expectType<AbiTypeToPrimitiveType<'string'>>('foo')
+  test('string', () => {
+    expectType<AbiTypeToPrimitiveType<'string'>>('foo')
+  })
 
-  expectType<AbiTypeToPrimitiveType<'int'>>(1)
-  expectType<AbiTypeToPrimitiveType<'int8'>>(1)
-  expectType<AbiTypeToPrimitiveType<'int32'>>(1)
-  expectType<AbiTypeToPrimitiveType<'int256'>>(1)
-  expectType<AbiTypeToPrimitiveType<'int256'>>(1n)
-  expectType<AbiTypeToPrimitiveType<'int'>>(BigInt(1))
-  expectType<AbiTypeToPrimitiveType<'uint'>>(1)
-  expectType<AbiTypeToPrimitiveType<'uint8'>>(1)
-  expectType<AbiTypeToPrimitiveType<'uint32'>>(1)
-  expectType<AbiTypeToPrimitiveType<'uint256'>>(1)
-  expectType<AbiTypeToPrimitiveType<'uint256'>>(1n)
-  expectType<AbiTypeToPrimitiveType<'uint'>>(BigInt(1))
+  test('number', () => {
+    expectType<AbiTypeToPrimitiveType<'int'>>(1)
+    expectType<AbiTypeToPrimitiveType<'int8'>>(1)
+    expectType<AbiTypeToPrimitiveType<'int32'>>(1)
+    expectType<AbiTypeToPrimitiveType<'int256'>>(1)
+    expectType<AbiTypeToPrimitiveType<'int256'>>(1n)
+    expectType<AbiTypeToPrimitiveType<'int'>>(BigInt(1))
+    expectType<AbiTypeToPrimitiveType<'uint'>>(1)
+    expectType<AbiTypeToPrimitiveType<'uint8'>>(1)
+    expectType<AbiTypeToPrimitiveType<'uint32'>>(1)
+    expectType<AbiTypeToPrimitiveType<'uint256'>>(1)
+    expectType<AbiTypeToPrimitiveType<'uint256'>>(1n)
+    expectType<AbiTypeToPrimitiveType<'uint'>>(BigInt(1))
+  })
 
-  expectType<AbiTypeToPrimitiveType<'string[]'>>(['foo'])
-  expectType<AbiTypeToPrimitiveType<'string[1]'>>(['foo', 'foo'])
+  test('tuple', () => {
+    expectType<AbiTypeToPrimitiveType<'tuple'>>({ foo: 'bar' })
+  })
 
-  expectType<AbiTypeToPrimitiveType<'tuple'>>({ foo: 'bar' })
+  test('array', () => {
+    expectType<AbiTypeToPrimitiveType<'string[]'>>(['foo'])
+    expectType<AbiTypeToPrimitiveType<'string[1]'>>(['foo', 'foo'])
+  })
+
+  test('2d array', () => {
+    expectType<AbiTypeToPrimitiveType<'string[][]'>>([['foo']])
+    expectType<AbiTypeToPrimitiveType<'string[1][]'>>([['foo', 'foo']])
+  })
 })
 
 test('AbiParameterToPrimitiveType', () => {
-  type AddressResult = AbiParameterToPrimitiveType<{
-    name: 'owner'
-    type: 'address'
-  }>
-  expectType<AddressResult>(address)
-  // @ts-expect-error missing "0x" prefix
-  expectType<AddressResult>('foo')
-
-  type BoolResult = AbiParameterToPrimitiveType<{ name: ''; type: 'bool' }>
-  expectType<BoolResult>(true)
-  expectType<BoolResult>(false)
-
-  type BytesResult = AbiParameterToPrimitiveType<{
-    name: 'data'
-    type: 'bytes'
-  }>
-  expectType<BytesResult>('foo')
-  expectType<BytesResult>([0, 1])
-
-  type FunctionResult = AbiParameterToPrimitiveType<{
-    name: ''
-    type: 'function'
-  }>
-  expectType<FunctionResult>(`${address}foo`)
-
-  type StringResult = AbiParameterToPrimitiveType<{
-    internalType: 'string'
-    name: ''
-    type: 'string'
-  }>
-  expectType<StringResult>('foo')
-  expectType<StringResult>(address)
-
-  type TupleResult = AbiParameterToPrimitiveType<{
-    components: [
-      { name: 'name'; type: 'string' },
-      { name: 'symbol'; type: 'string' },
-      { name: 'description'; type: 'string' },
-      { name: 'imageURI'; type: 'string' },
-      { name: 'contentURI'; type: 'string' },
-      { name: 'price'; type: 'uint256' },
-      { name: 'limit'; type: 'uint256' },
-      { name: 'fundingRecipient'; type: 'address' },
-      { name: 'renderer'; type: 'address' },
-      { name: 'nonce'; type: 'uint256' },
-      { name: 'fee'; type: 'uint16' },
-    ]
-    internalType: 'struct IWritingEditions.WritingEdition'
-    name: 'edition'
-    type: 'tuple'
-  }>
-  expectType<TupleResult>({
-    name: 'Test',
-    symbol: '$TEST',
-    description: 'Foo bar baz',
-    imageURI: 'ipfs://hash',
-    contentURI: 'arweave://digest',
-    price: 0.1,
-    limit: 100,
-    fundingRecipient: address,
-    renderer: address,
-    nonce: 123,
-    fee: 0,
-  })
-  // @ts-expect-error missing keys
-  expectType<TupleResult>({
-    name: 'Test',
-    symbol: '$TEST',
-    description: 'Foo bar baz',
-    imageURI: 'ipfs://hash',
-  })
-  expectType<TupleResult>({
-    name: 'Test',
-    symbol: '$TEST',
-    description: 'Foo bar baz',
-    imageURI: 'ipfs://hash',
-    contentURI: 'arweave://digest',
-    // @ts-expect-error invalid value
-    price: '0.1',
-    limit: 100,
-    fundingRecipient: address,
-    renderer: address,
-    nonce: 123,
-    fee: 0,
+  test('address', () => {
+    type Result = AbiParameterToPrimitiveType<{
+      name: 'owner'
+      type: 'address'
+    }>
+    expectType<Result>(address)
+    // @ts-expect-error missing "0x" prefix
+    expectType<Result>('foo')
   })
 
-  type NumberResult = AbiParameterToPrimitiveType<{
-    name: 'tokenId'
-    type: 'uint256'
-  }>
-  expectType<NumberResult>(123)
-  expectType<NumberResult>(123n)
-  expectType<NumberResult>(BigInt(123))
-  // @ts-expect-error string value
-  expectType<NumberResult>('123')
+  test('bool', () => {
+    type Result = AbiParameterToPrimitiveType<{ name: ''; type: 'bool' }>
+    expectType<Result>(true)
+    expectType<Result>(false)
+  })
 
-  type DynamicArrayResult = AbiParameterToPrimitiveType<{
-    name: ''
-    type: 'string[]'
-  }>
-  expectType<DynamicArrayResult>(['foo', 'bar', 'baz'])
+  test('bool', () => {
+    type Result = AbiParameterToPrimitiveType<{
+      name: 'data'
+      type: 'bytes'
+    }>
+    expectType<Result>('foo')
+    expectType<Result>([0, 1])
+  })
 
-  type FixedArrayResult = AbiParameterToPrimitiveType<{
-    internalType: 'string[3]'
-    name: ''
-    type: 'string[3]'
-  }>
-  expectType<FixedArrayResult>(['foo', 'bar', 'baz'])
-  // @ts-expect-error too few elements in fixed array
-  expectType<FixedArrayResult>(['foo', 'bar'])
+  test('function', () => {
+    type FunctionResult = AbiParameterToPrimitiveType<{
+      name: ''
+      type: 'function'
+    }>
+    expectType<FunctionResult>(`${address}foo`)
+  })
 
-  type DynamicTupleArrayResult = AbiParameterToPrimitiveType<{
-    name: 'c'
-    type: 'tuple[]'
-    components: [
-      {
-        name: 'x'
-        type: 'uint256'
-      },
-      {
-        name: 'y'
-        type: 'uint256'
-      },
-    ]
-  }>
-  expectType<DynamicTupleArrayResult>([{ x: 1, y: 1 }])
+  test('string', () => {
+    type Result = AbiParameterToPrimitiveType<{
+      internalType: 'string'
+      name: ''
+      type: 'string'
+    }>
+    expectType<Result>('foo')
+    expectType<Result>(address)
+  })
 
-  type FixedTupleArrayResult = AbiParameterToPrimitiveType<{
-    name: 'c'
-    type: 'tuple[2]'
-    components: [
-      {
-        name: 'x'
-        type: 'uint256'
-      },
-      {
-        name: 'y'
-        type: 'uint256'
-      },
-    ]
-  }>
-  expectType<FixedTupleArrayResult>([
-    { x: 1, y: 1 },
-    { x: 1, y: 1 },
-  ])
+  test('tuple', () => {
+    type Result = AbiParameterToPrimitiveType<{
+      components: [
+        { name: 'name'; type: 'string' },
+        { name: 'symbol'; type: 'string' },
+        { name: 'description'; type: 'string' },
+        { name: 'imageURI'; type: 'string' },
+        { name: 'contentURI'; type: 'string' },
+        { name: 'price'; type: 'uint256' },
+        { name: 'limit'; type: 'uint256' },
+        { name: 'fundingRecipient'; type: 'address' },
+        { name: 'renderer'; type: 'address' },
+        { name: 'nonce'; type: 'uint256' },
+        { name: 'fee'; type: 'uint16' },
+      ]
+      internalType: 'struct IWritingEditions.WritingEdition'
+      name: 'edition'
+      type: 'tuple'
+    }>
+    expectType<Result>({
+      name: 'Test',
+      symbol: '$TEST',
+      description: 'Foo bar baz',
+      imageURI: 'ipfs://hash',
+      contentURI: 'arweave://digest',
+      price: 0.1,
+      limit: 100,
+      fundingRecipient: address,
+      renderer: address,
+      nonce: 123,
+      fee: 0,
+    })
+    // @ts-expect-error missing keys
+    expectType<Result>({
+      name: 'Test',
+      symbol: '$TEST',
+      description: 'Foo bar baz',
+      imageURI: 'ipfs://hash',
+    })
+    expectType<Result>({
+      name: 'Test',
+      symbol: '$TEST',
+      description: 'Foo bar baz',
+      imageURI: 'ipfs://hash',
+      contentURI: 'arweave://digest',
+      // @ts-expect-error invalid value
+      price: '0.1',
+      limit: 100,
+      fundingRecipient: address,
+      renderer: address,
+      nonce: 123,
+      fee: 0,
+    })
 
-  type NestedTupleResult = AbiParameterToPrimitiveType<{
-    name: 's'
-    type: 'tuple'
-    components: [
-      { name: 'a'; type: 'uint256' },
-      { name: 'b'; type: 'uint256[2]' },
-      {
+    type NestedTupleResult = AbiParameterToPrimitiveType<{
+      name: 's'
+      type: 'tuple'
+      components: [
+        { name: 'a'; type: 'uint256' },
+        { name: 'b'; type: 'uint256[2]' },
+        {
+          name: 'c'
+          type: 'tuple[]'
+          components: [
+            { name: 'x'; type: 'uint256' },
+            {
+              name: 'y'
+              type: 'tuple'
+              components: [{ name: 'a'; type: 'string' }]
+            },
+          ]
+        },
+      ]
+    }>
+    expectType<NestedTupleResult>({
+      a: 1,
+      b: [2, 3],
+      c: [{ x: 1, y: { a: 'foo' } }],
+    })
+  })
+
+  test('number', () => {
+    type Result = AbiParameterToPrimitiveType<{
+      name: 'tokenId'
+      type: 'uint256'
+    }>
+    expectType<Result>(123)
+    expectType<Result>(123n)
+    expectType<Result>(BigInt(123))
+    // @ts-expect-error string value
+    expectType<Result>('123')
+  })
+
+  test('array', () => {
+    test('dynamic', () => {
+      type Result = AbiParameterToPrimitiveType<{
+        name: ''
+        type: 'string[]'
+      }>
+      expectType<Result>(['foo', 'bar', 'baz'])
+    })
+
+    test('fixed', () => {
+      type Result = AbiParameterToPrimitiveType<{
+        internalType: 'string[3]'
+        name: ''
+        type: 'string[3]'
+      }>
+      expectType<Result>(['foo', 'bar', 'baz'])
+      // @ts-expect-error too few elements in fixed array
+      expectType<Result>(['foo', 'bar'])
+    })
+
+    test('dynamic with tuple', () => {
+      type DynamicTupleArrayResult = AbiParameterToPrimitiveType<{
         name: 'c'
         type: 'tuple[]'
         components: [
-          { name: 'x'; type: 'uint256' },
+          {
+            name: 'x'
+            type: 'uint256'
+          },
           {
             name: 'y'
-            type: 'tuple'
-            components: [{ name: 'a'; type: 'string' }]
+            type: 'uint256'
           },
         ]
-      },
-    ]
-  }>
-  expectType<NestedTupleResult>({
-    a: 1,
-    b: [2, 3],
-    c: [{ x: 1, y: { a: 'foo' } }],
+      }>
+      expectType<DynamicTupleArrayResult>([{ x: 1, y: 1 }])
+    })
+
+    test('fixed with tuple', () => {
+      type FixedTupleArrayResult = AbiParameterToPrimitiveType<{
+        name: 'c'
+        type: 'tuple[2]'
+        components: [
+          {
+            name: 'x'
+            type: 'uint256'
+          },
+          {
+            name: 'y'
+            type: 'uint256'
+          },
+        ]
+      }>
+      expectType<FixedTupleArrayResult>([
+        { x: 1, y: 1 },
+        { x: 1, y: 1 },
+      ])
+    })
+  })
+
+  test('2d array', () => {
+    test('dynamic', () => {
+      type Result = AbiParameterToPrimitiveType<{
+        name: ''
+        type: 'string[][]'
+      }>
+      expectType<Result>([['foo'], ['bar'], ['baz']])
+    })
+
+    test('fixed', () => {
+      expectType<
+        AbiParameterToPrimitiveType<{
+          name: ''
+          type: 'string[][3]'
+        }>
+      >([['foo'], ['bar'], ['baz']])
+
+      expectType<
+        AbiParameterToPrimitiveType<{
+          name: ''
+          type: 'string[3][]'
+        }>
+      >([
+        ['foo', 'bar', 'baz'],
+        ['foo', 'bar', 'baz'],
+      ])
+
+      expectType<
+        AbiParameterToPrimitiveType<{
+          name: ''
+          type: 'string[3][3]'
+        }>
+      >([
+        ['foo', 'bar', 'baz'],
+        ['foo', 'bar', 'baz'],
+        ['foo', 'bar', 'baz'],
+      ])
+
+      expectType<
+        AbiParameterToPrimitiveType<{
+          name: ''
+          type: 'string[3][3]'
+        }>
+        // @ts-expect-error not enough values in tuple
+      >([
+        ['foo', 'bar', 'baz'],
+        ['foo', 'bar', 'baz'],
+      ])
+    })
   })
 })
 

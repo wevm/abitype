@@ -10,6 +10,7 @@ import {
   AbiStateMutability,
   AbiType,
   Address,
+  Solidity2DArray,
   SolidityAddress,
   SolidityArray,
   SolidityBool,
@@ -65,6 +66,16 @@ test('Solidity Types', () => {
   expectType<SolidityArray>('string[4]')
   // @ts-expect-error Out of fixed array range
   expectType<SolidityArray>('string[100]')
+
+  expectType<Solidity2DArray>('address[][]')
+  expectType<Solidity2DArray>('uint256[][]')
+  expectType<Solidity2DArray>('string[][]')
+  expectType<Solidity2DArray>('address[4][]')
+  expectType<Solidity2DArray>('uint256[4][]')
+  expectType<Solidity2DArray>('string[4][]')
+  expectType<Solidity2DArray>('address[][4]')
+  // @ts-expect-error Out of fixed array range
+  expectType<Solidity2DArray>('string[100][]')
 })
 
 test('AbiType', () => {

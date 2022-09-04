@@ -19,7 +19,7 @@ export type SolidityInt = `${'u' | ''}int${MultiplesOf8To256 | ''}`
 //   | `${'u' | ''}fixed`
 //   | `${'u' | ''}fixed${MultiplesOf8To256}x${Range<1, 20>[number]}`
 
-export type SolidityFixedArrayRange = Range<1, 10>[number]
+export type SolidityFixedArrayRange = Range<1, 5>[number]
 export type SolidityFixedArraySizeLookup = {
   [Prop in SolidityFixedArrayRange as `${Prop}`]: Prop
 }
@@ -32,6 +32,8 @@ export type SolidityArray =
       | SolidityString
       | SolidityTuple
       | SolidityInt}[${'' | SolidityFixedArrayRange}]`
+export type Solidity2DArray =
+  | `${SolidityArray}[${'' | SolidityFixedArrayRange}]`
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,6 +48,7 @@ export type AbiType =
   | SolidityInt
   | SolidityTuple
   | SolidityArray
+  | Solidity2DArray
 
 export type AbiInternalType =
   | AbiType

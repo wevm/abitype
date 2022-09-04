@@ -24,7 +24,7 @@ test('readContract', () => {
         readContract({
           address,
           contractInterface: wagmiMintExampleAbi,
-          functionName: 'symbol',
+          functionName: 'name',
         }),
       )
     })
