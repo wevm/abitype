@@ -5,9 +5,15 @@ import {
   ExtractAbiFunctionNames,
 } from './utils'
 
+type IsNever<T> = [T] extends [never] ? true : false
+type NotEqual<T, U> = [T] extends [U] ? false : true
+type Or<T, U> = T extends true ? true : U extends true ? true : false
+
 export function readContract<
-  TAbi extends Abi,
-  TFunctionName extends ExtractAbiFunctionNames<TAbi, 'view' | 'pure'>,
+  TAbi extends Abi | readonly unknown[],
+  TFunctionName extends TAbi extends Abi
+    ? ExtractAbiFunctionNames<TAbi, 'view' | 'pure'>
+    : string,
   TContract extends {
     functions: { [k: string]: (...args: any) => any }
   } = Contract<TAbi>,
@@ -22,22 +28,30 @@ export function readContract<
     contractInterface: TAbi
     /** Function to invoke on the contract */
     functionName: [TFunctionName] extends [never] ? string : TFunctionName
-  } & (Parameters<TFunction>['length'] extends 0
+  } & (Or<IsNever<Parameters<TFunction>>, NotEqual<TAbi, Abi>> extends true
     ? {
-        args?: [Parameters<TFunction>] extends [never] ? any | undefined : never
+        /**
+         * Arguments to pass contract method
+         *
+         * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link contractInterface} for better type inference.
+         */
+        args?: any[]
       }
-    : Parameters<TFunction> extends unknown[][]
+    : Parameters<TFunction>['length'] extends 0
     ? { args?: never }
-    : Parameters<TFunction>['length'] extends 1
-    ? { args: Parameters<TFunction>[0] }
-    : { args: Parameters<TFunction> }),
+    : {
+        /** Arguments to pass contract method */
+        args: Parameters<TFunction>
+      }),
 ): ReturnType<TFunction> {
   return {} as any
 }
 
 export function writeContract<
-  TAbi extends Abi,
-  TFunctionName extends ExtractAbiFunctionNames<TAbi, 'payable' | 'nonpayable'>,
+  TAbi extends Abi | readonly unknown[],
+  TFunctionName extends TAbi extends Abi
+    ? ExtractAbiFunctionNames<TAbi, 'payable' | 'nonpayable'>
+    : string,
   TContract extends {
     functions: { [k: string]: (...args: any) => any }
   } = Contract<TAbi>,
@@ -52,15 +66,19 @@ export function writeContract<
     contractInterface: TAbi
     /** Function to invoke on the contract */
     functionName: [TFunctionName] extends [never] ? string : TFunctionName
-  } & (Parameters<TFunction>['length'] extends 0
+  } & (Or<IsNever<Parameters<TFunction>>, NotEqual<TAbi, Abi>> extends true
     ? {
-        args?: [Parameters<TFunction>] extends [never] ? any | undefined : never
+        /**
+         * Arguments to pass contract method
+         *
+         * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link contractInterface} for better type inference.
+         */
+        args?: any[]
       }
-    : Parameters<TFunction> extends unknown[][]
+    : Parameters<TFunction>['length'] extends 0
     ? { args?: never }
-    : Parameters<TFunction>['length'] extends 1
-    ? { args: Parameters<TFunction>[0] }
     : {
+        /** Arguments to pass contract method */
         args: Parameters<TFunction>
       }),
 ): ReturnType<TFunction> {

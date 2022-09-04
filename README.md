@@ -43,7 +43,6 @@ Converts `AbiParameter` to corresponding TypeScript primitive type.
 import { AbiParameterToPrimitiveType } from 'abitype'
 
 type Result = AbiParameterToPrimitiveType<{
-  internalType: 'address'
   name: 'owner'
   type: 'address'
 }>
@@ -59,12 +58,10 @@ import { AbiParametersToPrimitiveTypes } from 'abitype'
 type Result = AbiParametersToPrimitiveTypes<
   [
     {
-      internalType: 'address'
       name: 'to'
       type: 'address'
     },
     {
-      internalType: 'uint256'
       name: 'tokenId'
       type: 'uint256'
     },

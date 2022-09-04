@@ -13,6 +13,7 @@ import {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
   AbiTypeToPrimitiveType,
+  Contract,
   ExtractAbiError,
   ExtractAbiErrorNames,
   ExtractAbiErrors,
@@ -117,7 +118,6 @@ test('AbiParameterToPrimitiveType', () => {
 
   test('string', () => {
     type Result = AbiParameterToPrimitiveType<{
-      internalType: 'string'
       name: ''
       type: 'string'
     }>
@@ -229,7 +229,6 @@ test('AbiParameterToPrimitiveType', () => {
 
     test('fixed', () => {
       type Result = AbiParameterToPrimitiveType<{
-        internalType: 'string[3]'
         name: ''
         type: 'string[3]'
       }>
@@ -239,7 +238,7 @@ test('AbiParameterToPrimitiveType', () => {
     })
 
     test('dynamic with tuple', () => {
-      type DynamicTupleArrayResult = AbiParameterToPrimitiveType<{
+      type Result = AbiParameterToPrimitiveType<{
         name: 'c'
         type: 'tuple[]'
         components: [
@@ -253,11 +252,11 @@ test('AbiParameterToPrimitiveType', () => {
           },
         ]
       }>
-      expectType<DynamicTupleArrayResult>([{ x: 1, y: 1 }])
+      expectType<Result>([{ x: 1, y: 1 }])
     })
 
     test('fixed with tuple', () => {
-      type FixedTupleArrayResult = AbiParameterToPrimitiveType<{
+      type Result = AbiParameterToPrimitiveType<{
         name: 'c'
         type: 'tuple[2]'
         components: [
@@ -271,7 +270,7 @@ test('AbiParameterToPrimitiveType', () => {
           },
         ]
       }>
-      expectType<FixedTupleArrayResult>([
+      expectType<Result>([
         { x: 1, y: 1 },
         { x: 1, y: 1 },
       ])
@@ -331,110 +330,199 @@ test('AbiParameterToPrimitiveType', () => {
 })
 
 test('AbiParametersToPrimitiveTypes', () => {
-  type NoParametersResult = AbiParametersToPrimitiveTypes<[]>
-  expectType<NoParametersResult>([])
+  test('no parameters', () => {
+    type Result = AbiParametersToPrimitiveTypes<[]>
+    expectType<Result>([])
+  })
 
-  type SingleParameterResult = AbiParametersToPrimitiveTypes<
-    [
-      {
-        internalType: 'uint256'
-        name: 'tokenId'
-        type: 'uint256'
-      },
-    ]
-  >
-  expectType<SingleParameterResult>([1])
+  test('single parameter', () => {
+    type Result = AbiParametersToPrimitiveTypes<
+      [
+        {
+          name: 'tokenId'
+          type: 'uint256[2]'
+        },
+      ]
+    >
+    expectType<Result>([[1, 1]])
+  })
 
-  type MultipleParametersResult = AbiParametersToPrimitiveTypes<
-    [
-      { name: 'to'; type: 'address' },
-      { name: 'tokenId'; type: 'uint256' },
-      { name: 'trait'; type: 'string' },
-    ]
-  >
-  expectType<MultipleParametersResult>([address, 1, 'foo'])
+  test('multiple parameters', () => {
+    type Result = AbiParametersToPrimitiveTypes<
+      [
+        { name: 'to'; type: 'address' },
+        { name: 'tokenId'; type: 'uint256' },
+        { name: 'trait'; type: 'string[]' },
+      ]
+    >
+    expectType<Result>([address, 1, ['foo']])
+  })
 
-  type WildCollectionResult = AbiParametersToPrimitiveTypes<
-    [
-      {
-        name: 's'
-        type: 'tuple'
-        components: [
-          { name: 'a'; type: 'uint256' },
-          { name: 'b'; type: 'uint256[]' },
-          {
-            name: 'c'
-            type: 'tuple[]'
-            components: [
-              { name: 'x'; type: 'uint256' },
-              { name: 'y'; type: 'uint256' },
-            ]
-          },
-        ]
-      },
-      {
-        name: 't'
-        type: 'tuple'
-        components: [
-          { name: 'x'; type: 'uint256' },
-          { name: 'y'; type: 'uint256' },
-        ]
-      },
-      { name: 'a'; type: 'uint256' },
-      {
-        name: 't'
-        type: 'tuple[2]'
-        components: [
-          { name: 'x'; type: 'uint256' },
-          { name: 'y'; type: 'uint256' },
-        ]
-      },
-    ]
-  >
-  expectType<WildCollectionResult>([
-    { a: 1, b: [2], c: [{ x: 1, y: 1 }] },
-    { x: 1, y: 1 },
-    1,
-    [
+  test('deeply nested parameters', () => {
+    type Result = AbiParametersToPrimitiveTypes<
+      [
+        {
+          name: 's'
+          type: 'tuple'
+          components: [
+            { name: 'a'; type: 'uint256' },
+            { name: 'b'; type: 'uint256[]' },
+            {
+              name: 'c'
+              type: 'tuple[]'
+              components: [
+                { name: 'x'; type: 'uint256' },
+                { name: 'y'; type: 'uint256' },
+              ]
+            },
+          ]
+        },
+        {
+          name: 't'
+          type: 'tuple'
+          components: [
+            { name: 'x'; type: 'uint256' },
+            { name: 'y'; type: 'uint256' },
+          ]
+        },
+        { name: 'a'; type: 'uint256' },
+        {
+          name: 't'
+          type: 'tuple[2]'
+          components: [
+            { name: 'x'; type: 'uint256' },
+            { name: 'y'; type: 'uint256' },
+          ]
+        },
+      ]
+    >
+    expectType<Result>([
+      { a: 1, b: [2], c: [{ x: 1, y: 1 }] },
       { x: 1, y: 1 },
-      { x: 1, y: 1 },
-    ],
-  ])
+      1,
+      [
+        { x: 1, y: 1 },
+        { x: 1, y: 1 },
+      ],
+    ])
+  })
+})
+
+test('Contract', () => {
+  test('const assertion', () => {
+    const abi = [
+      {
+        name: 'foo',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [],
+      },
+      {
+        name: 'bar',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'a', type: 'uint256[]' }],
+        outputs: [{ name: 'b', type: 'uint256' }],
+      },
+      { name: 'Foo', type: 'event', inputs: [] },
+      { name: 'Bar', type: 'event', inputs: [{ name: 'a', type: 'uint256' }] },
+    ] as const
+    type Result = Contract<typeof abi>
+    expectType<Result>({
+      events: {
+        Foo: () => {
+          return
+        },
+        Bar: (_a: number | bigint) => {
+          return
+        },
+      },
+      functions: {
+        foo: () => {
+          return
+        },
+        bar: (_a: (number | bigint)[]) => {
+          return 1 as number | bigint
+        },
+      },
+    })
+  })
+
+  test('declared as Abi type', () => {
+    const abi: Abi = [
+      {
+        name: 'foo',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [],
+      },
+      {
+        name: 'bar',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'a', type: 'uint256' }],
+        outputs: [{ name: 'b', type: 'uint256' }],
+      },
+      { name: 'Foo', type: 'event', inputs: [] },
+      { name: 'Bar', type: 'event', inputs: [{ name: 'a', type: 'uint256' }] },
+    ]
+    type Result = Contract<typeof abi>
+    expectType<Result>({
+      events: {
+        Foo: () => {
+          return
+        },
+      },
+      functions: {
+        foo: () => {
+          return [[]] as unknown[][]
+        },
+      },
+    })
+  })
 })
 
 test('IsAbi', () => {
-  expectType<IsAbi<typeof nestedTupleArrayAbi>>(true)
-  expectType<IsAbi<typeof wagmiMintExampleAbi>>(true)
-  expectType<IsAbi<typeof writingEditionsFactoryAbi>>(true)
-  expectType<IsAbi<typeof ensRegistryWithFallbackAbi>>(true)
-  expectType<IsAbi<typeof nounsAuctionHouseAbi>>(true)
+  test('const assertion', () => {
+    expectType<IsAbi<typeof nestedTupleArrayAbi>>(true)
+    expectType<IsAbi<typeof wagmiMintExampleAbi>>(true)
+    expectType<IsAbi<typeof writingEditionsFactoryAbi>>(true)
+    expectType<IsAbi<typeof ensRegistryWithFallbackAbi>>(true)
+    expectType<IsAbi<typeof nounsAuctionHouseAbi>>(true)
+  })
 
-  const declaredAsAbiAbi: Abi = [
-    {
-      type: 'function',
-      stateMutability: 'view',
-      inputs: [{ name: 'a', type: 'uint256' }],
-      name: 'foo',
-      outputs: [],
-    },
-  ]
-  type DeclaredAsAbiResult = IsAbi<typeof declaredAsAbiAbi>
-  expectType<DeclaredAsAbiResult>(true)
+  test('declared as Abi type', () => {
+    const abi: Abi = [
+      {
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'a', type: 'uint256' }],
+        name: 'foo',
+        outputs: [],
+      },
+    ]
+    type Result = IsAbi<typeof abi>
+    expectType<Result>(true)
+  })
 
-  const noConstAssertionAbi = [
-    {
-      type: 'function',
-      stateMutability: 'view',
-      inputs: [{ name: 'a', type: 'uint256' }],
-      name: 'foo',
-      outputs: [],
-    },
-  ]
-  type NoConstAssertionResult = IsAbi<typeof noConstAssertionAbi>
-  expectType<NoConstAssertionResult>(false)
+  test('no const assertion', () => {
+    const abi = [
+      {
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'a', type: 'uint256' }],
+        name: 'foo',
+        outputs: [],
+      },
+    ]
+    type Result = IsAbi<typeof abi>
+    expectType<Result>(false)
 
-  type InvalidAbiResult = IsAbi<'foo'>
-  expectType<InvalidAbiResult>(false)
+    type InvalidAbiResult = IsAbi<'foo'>
+    expectType<InvalidAbiResult>(false)
+  })
 })
 
 test('Function', () => {
@@ -456,52 +544,56 @@ test('Function', () => {
   })
 
   test('ExtractAbiFunction', () => {
-    expectType<ExtractAbiFunction<typeof wagmiMintExampleAbi, 'tokenURI'>>({
-      inputs: [
-        {
-          internalType: 'uint256',
-          name: 'tokenId',
-          type: 'uint256',
-        },
-      ],
-      name: 'tokenURI',
-      outputs: [
-        {
-          internalType: 'string',
-          name: '',
-          type: 'string',
-        },
-      ],
-      stateMutability: 'pure',
-      type: 'function',
+    test('default', () => {
+      expectType<ExtractAbiFunction<typeof wagmiMintExampleAbi, 'tokenURI'>>({
+        inputs: [
+          {
+            internalType: 'uint256',
+            name: 'tokenId',
+            type: 'uint256',
+          },
+        ],
+        name: 'tokenURI',
+        outputs: [
+          {
+            internalType: 'string',
+            name: '',
+            type: 'string',
+          },
+        ],
+        stateMutability: 'pure',
+        type: 'function',
+      })
     })
 
-    type FunctionWithOverrideResult = ExtractAbiFunction<
-      typeof wagmiMintExampleAbi,
-      'safeTransferFrom'
-    >
-    expectType<FunctionWithOverrideResult>({
-      inputs: [
-        { internalType: 'address', name: 'from', type: 'address' },
-        { internalType: 'address', name: 'to', type: 'address' },
-        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
-      ],
-      name: 'safeTransferFrom',
-      outputs: [],
-      stateMutability: 'nonpayable',
-      type: 'function',
-    })
-    expectType<FunctionWithOverrideResult>({
-      inputs: [
-        { internalType: 'address', name: 'from', type: 'address' },
-        { internalType: 'address', name: 'to', type: 'address' },
-        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
-        { internalType: 'bytes', name: '_data', type: 'bytes' },
-      ],
-      name: 'safeTransferFrom',
-      outputs: [],
-      stateMutability: 'nonpayable',
-      type: 'function',
+    test('with overrides', () => {
+      type Result = ExtractAbiFunction<
+        typeof wagmiMintExampleAbi,
+        'safeTransferFrom'
+      >
+      expectType<Result>({
+        inputs: [
+          { internalType: 'address', name: 'from', type: 'address' },
+          { internalType: 'address', name: 'to', type: 'address' },
+          { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+        ],
+        name: 'safeTransferFrom',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+      })
+      expectType<Result>({
+        inputs: [
+          { internalType: 'address', name: 'from', type: 'address' },
+          { internalType: 'address', name: 'to', type: 'address' },
+          { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+          { internalType: 'bytes', name: '_data', type: 'bytes' },
+        ],
+        name: 'safeTransferFrom',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+      })
     })
   })
 })

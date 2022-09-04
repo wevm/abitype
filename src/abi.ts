@@ -23,6 +23,10 @@ export type SolidityFixedArrayRange = Range<1, 5>[number]
 export type SolidityFixedArraySizeLookup = {
   [Prop in SolidityFixedArrayRange as `${Prop}`]: Prop
 }
+export type SolidityFixed2DArrayRange = Range<1, 5>[number]
+export type SolidityFixed2DArraySizeLookup = {
+  [Prop in SolidityFixed2DArrayRange as `${Prop}`]: Prop
+}
 export type SolidityArray =
   | `${
       | SolidityAddress
@@ -33,7 +37,19 @@ export type SolidityArray =
       | SolidityTuple
       | SolidityInt}[${'' | SolidityFixedArrayRange}]`
 export type Solidity2DArray =
-  | `${SolidityArray}[${'' | SolidityFixedArrayRange}]`
+  | `${SolidityArray}[${'' | SolidityFixed2DArrayRange}]`
+
+type SolidityArrayWithoutTuple =
+  | `${
+      | SolidityAddress
+      | SolidityBool
+      | SolidityBytes
+      | SolidityFunction
+      | SolidityString
+      | SolidityTuple
+      | SolidityInt}[${'' | SolidityFixedArrayRange}]`
+type Solidity2DArrayWithoutTuple =
+  | `${SolidityArrayWithoutTuple}[${'' | SolidityFixed2DArrayRange}]`
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -63,9 +79,19 @@ export type AbiParameter = {
   /** Representation used by Solidity compiler */
   internalType?: AbiInternalType
 } & (
-  | { type: Exclude<AbiType, SolidityTuple> }
   | {
-      type: `${SolidityTuple}` | `${SolidityTuple}[]`
+      type:
+        | Exclude<AbiType, SolidityTuple | SolidityArray | Solidity2DArray>
+        | SolidityArrayWithoutTuple
+        | Solidity2DArrayWithoutTuple
+    }
+  | {
+      type:
+        | SolidityTuple
+        | `${SolidityTuple}[${'' | SolidityFixedArrayRange}]`
+        | `${SolidityTuple}[${'' | SolidityFixedArrayRange}][${
+            | ''
+            | SolidityFixed2DArrayRange}]`
       components: readonly AbiParameter[]
     }
 )

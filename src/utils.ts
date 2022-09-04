@@ -9,6 +9,7 @@ import {
   SolidityArray,
   SolidityBool,
   SolidityBytes,
+  SolidityFixed2DArraySizeLookup,
   SolidityFixedArraySizeLookup,
   SolidityFunction,
   SolidityInt,
@@ -64,12 +65,12 @@ export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
           SolidityFixedArraySizeLookup[Size]
         >
       : Size extends `${infer Size1}][${infer Size2}`
-      ? Size2 extends keyof SolidityFixedArraySizeLookup
+      ? Size2 extends keyof SolidityFixed2DArraySizeLookup
         ? Tuple<
             AbiParameterToPrimitiveType<
               ConvertAbiParameterType<TAbiParameter, `${Type}[${Size1}]`>
             >,
-            SolidityFixedArraySizeLookup[Size2]
+            SolidityFixed2DArraySizeLookup[Size2]
           >
         : AbiParameterToPrimitiveType<
             ConvertAbiParameterType<TAbiParameter, `${Type}[${Size1}]`>
@@ -236,35 +237,44 @@ export type ExtractAbiError<
  * @param TAbi - {@link Abi} to generate signatures from
  * @returns Object containing {@link AbiFunction} and {@link AbiEvent} signatures
  */
-export type Contract<TAbi extends Abi> = {
-  events: {
-    [K in TAbi[number] as K extends { name: infer TName; type: 'event' }
-      ? TName
-      : never]: K extends { name: string; type: 'event' }
-      ? (
-          ...args: AbiParametersToPrimitiveTypes<
-            K['inputs']
-          > extends readonly any[]
-            ? AbiParametersToPrimitiveTypes<K['inputs']>
-            : never
-        ) => void
-      : never
-  }
-  functions: {
-    [K in TAbi[number] as K extends { name: infer TName; type: 'function' }
-      ? TName
-      : never]: K extends { name: string; type: 'function' }
-      ? (
-          ...args: AbiParametersToPrimitiveTypes<
-            K['inputs']
-          > extends readonly any[]
-            ? AbiParametersToPrimitiveTypes<K['inputs']>
-            : never
-        ) => AbiParametersToPrimitiveTypes<K['outputs']>['length'] extends 0
-          ? void
-          : AbiParametersToPrimitiveTypes<K['outputs']>['length'] extends 1
-          ? AbiParametersToPrimitiveTypes<K['outputs']>[0]
-          : AbiParametersToPrimitiveTypes<K['outputs']>
-      : never
-  }
-}
+export type Contract<TAbi extends readonly unknown[]> = TAbi extends Abi
+  ? {
+      events: {
+        [K in TAbi[number] as K extends { name: infer TName; type: 'event' }
+          ? TName
+          : never]: K extends { name: string; type: 'event' }
+          ? (
+              ...args: AbiParametersToPrimitiveTypes<
+                K['inputs']
+              > extends readonly any[]
+                ? AbiParametersToPrimitiveTypes<K['inputs']>
+                : never
+            ) => void
+          : never
+      }
+      functions: {
+        [K in TAbi[number] as K extends { name: infer TName; type: 'function' }
+          ? TName
+          : never]: K extends { name: string; type: 'function' }
+          ? (
+              ...args: AbiParametersToPrimitiveTypes<
+                K['inputs']
+              > extends readonly any[]
+                ? AbiParametersToPrimitiveTypes<K['inputs']>
+                : never
+            ) => AbiParametersToPrimitiveTypes<K['outputs']>['length'] extends 0
+              ? void
+              : AbiParametersToPrimitiveTypes<K['outputs']>['length'] extends 1
+              ? AbiParametersToPrimitiveTypes<K['outputs']>[0]
+              : AbiParametersToPrimitiveTypes<K['outputs']>
+          : never
+      }
+    }
+  : {
+      events: {
+        [key: string]: (...args: any | any[]) => void
+      }
+      functions: {
+        [key: string]: (...args: any | any[]) => any
+      }
+    }
