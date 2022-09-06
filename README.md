@@ -280,7 +280,9 @@ ABI canonical [types](https://docs.soliditylang.org/en/latest/abi-spec.html#json
 import { AbiType } from 'abitype'
 ```
 
-### Solidity
+### Solidity types
+
+[Solidity types](https://docs.soliditylang.org/en/latest/abi-spec.html#types) as template strings
 
 ```ts
 import {
@@ -294,6 +296,25 @@ import {
   SolidityString,
   SolidityTuple,
 } from 'abitype'
+```
+
+## Configuration
+
+AbiType tries to strike a balance between type exhaustiveness and speed with sensible defaults. In some cases, you might want to tune your configuration (e.g. fixed array length). To do this, the following configuration options are available:
+
+```ts
+type FixedArrayLowerBound = 1
+type FixedArrayUpperBound = 5
+type Fixed2DArrayLowerBound = 1
+type Fixed2DArrayUpperBound = 5
+```
+
+To change a configuration option, use a module declaration:
+
+```ts
+declare module 'abitype/dist/config.d' {
+  type FixedArrayUpperBound = 10
+}
 ```
 
 ## Support

@@ -1,4 +1,5 @@
 import { Range } from './types'
+import './config'
 
 export type Address = `0x${string}`
 
@@ -31,14 +32,6 @@ export type SolidityInt = `${'u' | ''}int${MBits}`
 // export type SolidityFixed =
 //   | `${'u' | ''}fixed`
 //   | `${'u' | ''}fixed${MBits}x${Range<1, 20>[number]}`
-
-declare global {
-  type FixedArrayLowerBound = 1
-  type FixedArrayUpperBound = 5
-
-  type Fixed2DArrayLowerBound = 1
-  type Fixed2DArrayUpperBound = 5
-}
 
 export type SolidityFixedArrayRange = Range<
   FixedArrayLowerBound,
