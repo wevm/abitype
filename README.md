@@ -188,6 +188,24 @@ import { IsAbi } from 'abitype'
 type Result = IsAbi<typeof erc721Abi>
 ```
 
+### AbiEventSignature
+
+Converts `AbiEvent` into TypeScript function signature.
+
+```ts
+type Result = AbiEventSignature<ExtractAbiEvent<typeof erc721Abi, 'Transfer'>>
+```
+
+### AbiFunctionSignature
+
+Converts `AbiEvent` into TypeScript function signature.
+
+```ts
+type Result = AbiFunctionSignature<
+  ExtractAbiFunction<typeof erc721Abi, 'balanceOf'>
+>
+```
+
 ## Types
 
 ### Abi
@@ -260,6 +278,22 @@ ABI canonical [types](https://docs.soliditylang.org/en/latest/abi-spec.html#json
 
 ```ts
 import { AbiType } from 'abitype'
+```
+
+### Solidity
+
+```ts
+import {
+  Solidity2DArray,
+  SolidityAddress,
+  SolidityArray,
+  SolidityBool,
+  SolidityBytes,
+  SolidityFunction,
+  SolidityInt,
+  SolidityString,
+  SolidityTuple,
+} from 'abitype'
 ```
 
 ## Support
