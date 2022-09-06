@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.8
+
+### Patch Changes
+
+- [`dabf83d`](https://github.com/wagmi-dev/abitype/commit/dabf83d169a5bb8d86dad4b6afbae14c50f20c8d) Thanks [@tmm](https://github.com/tmm)! - Expose configuration options
+
 ## 0.0.7
 
 ### Patch Changes
