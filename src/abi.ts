@@ -1,31 +1,45 @@
-import { MultiplesOf8To256, Range } from './types'
+import { Range } from './types'
 
 export type Address = `0x${string}`
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
 // Solidity Types
+
+// prettier-ignore
+type MBits =
+  | ''  | 8   | 16  | 24  | 32  | 40  | 48  | 56  | 64  | 72
+  | 80  | 88  | 96  | 104 | 112 | 120 | 128 | 136 | 144 | 152
+  | 160 | 168 | 176 | 184 | 192 | 200 | 208 | 216 | 224 | 232
+  | 240 | 248 | 256
+
+// prettier-ignore
+type MBytes =
+  | '' | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9
+  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19
+  | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29
+  | 30 | 31 | 32
 
 export type SolidityAddress = 'address'
 export type SolidityBool = 'bool'
-export type SolidityBytes = `bytes${Range<1, 32>[number] | ''}`
+export type SolidityBytes = `bytes${MBytes}`
 export type SolidityFunction = 'function'
 export type SolidityString = 'string'
 export type SolidityTuple = 'tuple'
-export type SolidityInt = `${'u' | ''}int${MultiplesOf8To256 | ''}`
+export type SolidityInt = `${'u' | ''}int${MBits}`
 // No need to support "fixed" until Solidity does
 // https://github.com/ethereum/solidity/issues/409
 // export type SolidityFixed =
 //   | `${'u' | ''}fixed`
-//   | `${'u' | ''}fixed${MultiplesOf8To256}x${Range<1, 20>[number]}`
+//   | `${'u' | ''}fixed${MBits}x${Range<1, 20>[number]}`
 
 declare global {
   type FixedArrayLowerBound = 1
-  type FixedArrayUpperBound = 6
+  type FixedArrayUpperBound = 5
 
   type Fixed2DArrayLowerBound = 1
-  type Fixed2DArrayUpperBound = 3
+  type Fixed2DArrayUpperBound = 5
 }
+
 export type SolidityFixedArrayRange = Range<
   FixedArrayLowerBound,
   FixedArrayUpperBound
@@ -41,6 +55,7 @@ export type SolidityFixed2DArraySizeLookup = {
   [Prop in SolidityFixed2DArrayRange as `${Prop}`]: Prop
 }
 
+// Creating array types with and without tuples for using in `AbiParameter` narrowing
 type SolidityArrayWithoutTuple =
   | `${
       | SolidityAddress
@@ -48,16 +63,15 @@ type SolidityArrayWithoutTuple =
       | SolidityBytes
       | SolidityFunction
       | SolidityString
-      | SolidityInt}[${'' | SolidityFixedArrayRange}]`
+      | SolidityInt}[${SolidityFixedArrayRange | ''}]`
 type Solidity2DArrayWithoutTuple = `${SolidityArrayWithoutTuple}[${
-  | ''
-  | SolidityFixed2DArrayRange}]`
-
+  | SolidityFixed2DArrayRange
+  | ''}]`
 type SolidityArrayWithTuple =
-  | `${SolidityTuple}[${'' | SolidityFixedArrayRange}]`
+  | `${SolidityTuple}[${SolidityFixedArrayRange | ''}]`
 type Solidity2DArrayWithTuple = `${SolidityArrayWithTuple}[${
-  | ''
-  | SolidityFixed2DArrayRange}]`
+  | SolidityFixed2DArrayRange
+  | ''}]`
 
 export type SolidityArray = SolidityArrayWithTuple | SolidityArrayWithoutTuple
 export type Solidity2DArray =
@@ -65,19 +79,18 @@ export type Solidity2DArray =
   | Solidity2DArrayWithoutTuple
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
 // Abi Types
 
 export type AbiType =
-  | SolidityAddress
-  | SolidityString
-  | SolidityBool
-  | SolidityFunction
-  | SolidityBytes
-  | SolidityInt
-  | SolidityTuple
-  | SolidityArray
   | Solidity2DArray
+  | SolidityArray
+  | SolidityAddress
+  | SolidityBool
+  | SolidityBytes
+  | SolidityFunction
+  | SolidityInt
+  | SolidityString
+  | SolidityTuple
 
 export type AbiInternalType =
   | AbiType
@@ -152,7 +165,7 @@ export type AbiError = {
 }
 
 /**
- * Abi
+ * Contract ABI Specification
  * https://docs.soliditylang.org/en/v0.8.15/abi-spec.html#json
  */
 export type Abi = readonly (AbiFunction | AbiEvent | AbiError)[]

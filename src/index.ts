@@ -8,10 +8,13 @@ export type {
   AbiStateMutability,
   AbiType,
   Address,
+  Solidity2DArray,
   SolidityAddress,
   SolidityArray,
   SolidityBool,
   SolidityBytes,
+  SolidityFixed2DArrayRange,
+  SolidityFixed2DArraySizeLookup,
   SolidityFixedArrayRange,
   SolidityFixedArraySizeLookup,
   SolidityFunction,
@@ -21,10 +24,11 @@ export type {
 } from './abi'
 
 export type {
+  AbiEventSignature,
+  AbiFunctionSignature,
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
   AbiTypeToPrimitiveType,
-  Contract,
   ExtractAbiError,
   ExtractAbiErrorNames,
   ExtractAbiErrors,

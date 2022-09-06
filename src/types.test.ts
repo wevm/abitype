@@ -1,15 +1,5 @@
 import { expectType, test } from '../test'
-import { MultiplesOf8To256, Range, Tuple } from './types'
-
-test('MultiplesOf8To256', () => {
-  expectType<MultiplesOf8To256>(8)
-  expectType<MultiplesOf8To256>(16)
-  expectType<MultiplesOf8To256>(256)
-  // @ts-expect-error 264 is greater than 256
-  expectType<MultiplesOf8To256>(264)
-  // @ts-expect-error Zero is not multiple of eight
-  expectType<MultiplesOf8To256>(0)
-})
+import { Range, Tuple } from './types'
 
 test('Range', () => {
   expectType<Range<0, 2>>([0, 1, 2])

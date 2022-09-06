@@ -1,5 +1,7 @@
 import {
   Abi,
+  AbiEvent,
+  AbiFunction,
   AbiParameter,
   AbiStateMutability,
   AbiType,
@@ -26,28 +28,30 @@ import { Tuple } from './types'
  * @param TAbiType - {@link AbiType} to convert to TypeScript representation
  * @returns TypeScript primitive type
  */
-// TODO: Clean this up with a map
-// https://twitter.com/SeaRyanC/status/1538971176357113858
 export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
-  TAbiType extends SolidityAddress
-    ? Address
-    : TAbiType extends SolidityFunction
-    ? `${Address}${string}`
-    : TAbiType extends SolidityString
-    ? string
-    : TAbiType extends SolidityBool
-    ? boolean
-    : TAbiType extends SolidityBytes
-    ? string | ArrayLike<number>
-    : TAbiType extends SolidityInt
-    ? bigint | number
-    : TAbiType extends SolidityTuple
-    ? Record<string, unknown>
-    : TAbiType extends SolidityArray
-    ? unknown[]
-    : TAbiType extends Solidity2DArray
-    ? unknown[][]
-    : unknown
+  PrimitiveTypeLookup[TAbiType]
+
+// Using a map to look up types faster
+// s/o https://twitter.com/SeaRyanC/status/1538971176357113858
+type PrimitiveTypeLookup = {
+  [_ in SolidityAddress]: Address
+} & {
+  [_ in SolidityBool]: boolean
+} & {
+  [_ in SolidityBytes]: string | ArrayLike<number>
+} & {
+  [_ in SolidityFunction]: `${Address}${string}`
+} & {
+  [_ in SolidityInt]: number | bigint
+} & {
+  [_ in SolidityString]: string
+} & {
+  [_ in SolidityTuple]: Record<string, unknown>
+} & {
+  [_ in SolidityArray]: unknown[]
+} & {
+  [_ in Solidity2DArray]: unknown[][]
+}
 
 /**
  * Converts {@link AbiParameter} to corresponding TypeScript primitive type.
@@ -56,11 +60,16 @@ export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
  * @returns TypeScript primitive type
  */
 export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
-  TAbiParameter['type'] extends `${infer Type}[${infer Size}]`
+  TAbiParameter['type'] extends Exclude<
+    AbiType,
+    SolidityTuple | SolidityArray | Solidity2DArray
+  >
+    ? AbiTypeToPrimitiveType<TAbiParameter['type']>
+    : TAbiParameter['type'] extends `${infer Type}[${infer Size}]`
     ? Size extends keyof SolidityFixedArraySizeLookup
       ? Tuple<
           AbiParameterToPrimitiveType<
-            ConvertAbiParameterType<TAbiParameter, Type>
+            _ConvertAbiParameterType<TAbiParameter, Type>
           >,
           SolidityFixedArraySizeLookup[Size]
         >
@@ -68,15 +77,15 @@ export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
       ? Size2 extends keyof SolidityFixed2DArraySizeLookup
         ? Tuple<
             AbiParameterToPrimitiveType<
-              ConvertAbiParameterType<TAbiParameter, `${Type}[${Size1}]`>
+              _ConvertAbiParameterType<TAbiParameter, `${Type}[${Size1}]`>
             >,
             SolidityFixed2DArraySizeLookup[Size2]
           >
         : AbiParameterToPrimitiveType<
-            ConvertAbiParameterType<TAbiParameter, `${Type}[${Size1}]`>
+            _ConvertAbiParameterType<TAbiParameter, `${Type}[${Size1}]`>
           >[]
       : AbiParameterToPrimitiveType<
-          ConvertAbiParameterType<TAbiParameter, Type>
+          _ConvertAbiParameterType<TAbiParameter, Type>
         >[]
     : TAbiParameter['type'] extends SolidityTuple
     ? {
@@ -84,9 +93,9 @@ export type AbiParameterToPrimitiveType<TAbiParameter extends AbiParameter> =
           components: AbiParameter[]
         })['components'][number] as Component['name']]: AbiParameterToPrimitiveType<Component>
       }
-    : AbiTypeToPrimitiveType<TAbiParameter['type']>
+    : never
 
-type ConvertAbiParameterType<
+type _ConvertAbiParameterType<
   TAbiParameter extends AbiParameter,
   TType extends AbiType | string,
 > = {
@@ -117,7 +126,6 @@ export type AbiParametersToPrimitiveTypes<
 export type IsAbi<TAbi> = TAbi extends Abi ? true : false
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
 // Abi Functions
 
 /**
@@ -159,8 +167,44 @@ export type ExtractAbiFunction<
   TFunctionName extends ExtractAbiFunctionNames<TAbi>,
 > = Extract<ExtractAbiFunctions<TAbi>, { name: TFunctionName }>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Converts {@link AbiFunction} into TypeScript function signature.
+ *
+ * @param TAbiFunction - {@link AbiFunction} to convert
+ * @returns Function signature
+ */
+export type AbiFunctionSignature<
+  TAbiFunction extends AbiFunction & { type: 'function' },
+> = (
+  ...args: AbiParametersToPrimitiveTypes<
+    TAbiFunction['inputs']
+  > extends infer Inputs
+    ? Inputs extends readonly any[]
+      ? Inputs
+      : never
+    : never
+) => AbiParametersToPrimitiveTypes<
+  TAbiFunction['outputs']
+> extends infer Outputs extends readonly any[]
+  ? Outputs['length'] extends 0
+    ? void
+    : Outputs['length'] extends 1
+    ? Outputs[0]
+    : // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Outputs extends readonly [...infer _]
+    ? Outputs
+    : /**
+       * TODO: Infer non-constant array types
+       * Expected: [{ type: 'string', name: 'foo' }] => string, actual: string[]
+       * Expected: [{ type: 'string[]', name: 'foo' }] => string[], actual: string[][]
+       * Expected: [{ type: 'string[]', name: 'foo' }, { type: 'uint256', name: 'bar' }] => (string[] | number | bigint)[], actual: (number | bigint | unknown[])[]
+       *
+       * Until then, we'll just return `any` for non-constant array types
+       */
+      any
+  : never
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // Abi Events
 
 /**
@@ -195,8 +239,23 @@ export type ExtractAbiEvent<
   TEventName extends ExtractAbiEventNames<TAbi>,
 > = Extract<ExtractAbiEvents<TAbi>, { name: TEventName }>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Converts {@link AbiEvent} into TypeScript function signature.
+ *
+ * @param AbiEvent - {@link AbiEvent} to convert
+ * @returns Function signature
+ */
+export type AbiEventSignature<TAbiEvent extends AbiEvent> = (
+  ...args: AbiParametersToPrimitiveTypes<
+    TAbiEvent['inputs']
+  > extends infer Inputs
+    ? Inputs extends readonly any[]
+      ? Inputs
+      : never
+    : never
+) => void
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // Abi Errors
 
 /**
@@ -230,68 +289,3 @@ export type ExtractAbiError<
   TAbi extends Abi,
   TErrorName extends ExtractAbiErrorNames<TAbi>,
 > = Extract<ExtractAbiErrors<TAbi>, { name: TErrorName }>
-
-/**
- * Generates object containing {@link AbiFunction} and {@link AbiEvent} signatures.
- *
- * @param TAbi - {@link Abi} to generate signatures from
- * @returns Object containing {@link AbiFunction} and {@link AbiEvent} signatures
- */
-export type Contract<TAbi extends readonly unknown[]> = TAbi extends Abi
-  ? {
-      events: {
-        [K in TAbi[number] as K extends { name: infer TName; type: 'event' }
-          ? TName
-          : never]: K extends { name: string; type: 'event' }
-          ? (
-              ...args: AbiParametersToPrimitiveTypes<
-                K['inputs']
-              > extends readonly any[]
-                ? AbiParametersToPrimitiveTypes<K['inputs']>
-                : never
-            ) => void
-          : never
-      }
-      functions: {
-        [K in TAbi[number] as K extends { name: infer TName; type: 'function' }
-          ? TName
-          : never]: K extends { name: string; type: 'function' }
-          ? (
-              ...args: AbiParametersToPrimitiveTypes<
-                K['inputs']
-              > extends infer Inputs
-                ? Inputs extends readonly any[]
-                  ? Inputs
-                  : never
-                : never
-            ) => AbiParametersToPrimitiveTypes<
-              K['outputs']
-            > extends infer Outputs extends readonly any[]
-              ? Outputs['length'] extends 0
-                ? void
-                : Outputs['length'] extends 1
-                ? Outputs[0]
-                : // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                Outputs extends readonly [infer _Head, ...infer _Tail]
-                ? Outputs
-                : /**
-                   * TODO: Infer non-constant array types
-                   * Expected: [{ type: 'string', name: 'foo' }] => string, actual: string[]
-                   * Expected: [{ type: 'string[]', name: 'foo' }] => string[], actual: string[][]
-                   * Expected: [{ type: 'string[]', name: 'foo' }, { type: 'uint256', name: 'bar' }] => (string[] | number | bigint)[], actual: (number | bigint | unknown[])[]
-                   *
-                   * Until then, we'll just return `any` for non-constant array types
-                   */
-                  any
-              : never
-          : never
-      }
-    }
-  : {
-      events: {
-        [key: string]: (...args: any | any[]) => void
-      }
-      functions: {
-        [key: string]: (...args: any | any[]) => any
-      }
-    }

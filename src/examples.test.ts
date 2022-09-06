@@ -10,19 +10,14 @@ import {
 } from '../test'
 
 import { Abi, Address } from './abi'
-import {
-  readContract,
-  readContracts,
-  watchContractEvent,
-  writeContract,
-} from './examples'
+import { readContract, watchContractEvent, writeContract } from './examples'
 
 test('readContract', () => {
   test('args', () => {
     test('zero', () => {
       const result = readContract({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         functionName: 'name',
       })
       expectType<string>(result)
@@ -31,7 +26,7 @@ test('readContract', () => {
     test('one', () => {
       const result = readContract({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         functionName: 'tokenURI',
         args: [123],
       })
@@ -41,7 +36,7 @@ test('readContract', () => {
     test('two or more', () => {
       const result = readContract({
         address,
-        contractInterface: writingEditionsFactoryAbi,
+        abi: writingEditionsFactoryAbi,
         functionName: 'predictDeterministicAddress',
         args: [address, 'foo'],
       })
@@ -53,7 +48,7 @@ test('readContract', () => {
     test('string', () => {
       const result = readContract({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         functionName: 'symbol',
       })
       expectType<string>(result)
@@ -62,7 +57,7 @@ test('readContract', () => {
     test('Address', () => {
       const result = readContract({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         functionName: 'ownerOf',
         args: [123],
       })
@@ -72,7 +67,7 @@ test('readContract', () => {
     test('number', () => {
       const result = readContract({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         functionName: 'balanceOf',
         args: [address],
       })
@@ -84,7 +79,7 @@ test('readContract', () => {
     test('write function not allowed', () => {
       const result = readContract({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         // @ts-expect-error Trying to use non-read function
         functionName: 'approve',
       })
@@ -110,29 +105,21 @@ test('readContract', () => {
       ]
       const result1 = readContract({
         address,
-        contractInterface,
+        abi: contractInterface,
         functionName: 'foo',
       })
       const result2 = readContract({
         address,
-        contractInterface,
+        abi: contractInterface,
         functionName: 'bar',
         args: [address],
       })
       expectType<any>(result1)
       expectType<any>(result2)
-
-      readContract({
-        address,
-        contractInterface,
-        functionName: 'foo',
-        // @ts-expect-error Args must be array
-        args: address,
-      })
     })
 
     test('declared as Abi type', () => {
-      const contractInterface: Abi = [
+      const contractInterface = [
         {
           name: 'foo',
           type: 'function',
@@ -150,31 +137,23 @@ test('readContract', () => {
       ]
       const result1 = readContract({
         address,
-        contractInterface,
+        abi: contractInterface,
         functionName: 'foo',
       })
       const result2 = readContract({
         address,
-        contractInterface,
+        abi: contractInterface,
         functionName: 'bar',
         args: [address],
       })
       expectType<any>(result1)
       expectType<any>(result2)
-
-      readContract({
-        address,
-        contractInterface,
-        functionName: 'foo',
-        // @ts-expect-error Args must be array
-        args: address,
-      })
     })
 
     test('defined inline', () => {
       const result1 = readContract({
         address,
-        contractInterface: [
+        abi: [
           {
             name: 'foo',
             type: 'function',
@@ -195,7 +174,7 @@ test('readContract', () => {
       })
       const result2 = readContract({
         address,
-        contractInterface: [
+        abi: [
           {
             name: 'foo',
             type: 'function',
@@ -214,8 +193,8 @@ test('readContract', () => {
         functionName: 'bar',
         args: [address],
       })
-      expectType<Address | string>(result1)
-      expectType<Address | string>(result2)
+      expectType<any>(result1)
+      expectType<any>(result2)
     })
   })
 })
@@ -225,7 +204,7 @@ test('writeContract', () => {
     test('zero', () => {
       const result = writeContract({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         functionName: 'mint',
       })
       expectType<void>(result)
@@ -234,7 +213,7 @@ test('writeContract', () => {
     test('one', () => {
       const result = writeContract({
         address,
-        contractInterface: nounsAuctionHouseAbi,
+        abi: nounsAuctionHouseAbi,
         functionName: 'createBid',
         args: [123],
       })
@@ -244,13 +223,13 @@ test('writeContract', () => {
     test('two or more', () => {
       const result1 = writeContract({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         functionName: 'approve',
         args: [address, 123],
       })
       const result2 = writeContract({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         functionName: 'transferFrom',
         args: [address, address, 123],
       })
@@ -261,7 +240,7 @@ test('writeContract', () => {
     test('tuple', () => {
       const result = writeContract({
         address,
-        contractInterface: writingEditionsFactoryAbi,
+        abi: writingEditionsFactoryAbi,
         functionName: 'create',
         args: [
           {
@@ -287,7 +266,7 @@ test('writeContract', () => {
     test('void', () => {
       const result = writeContract({
         address,
-        contractInterface: nounsAuctionHouseAbi,
+        abi: nounsAuctionHouseAbi,
         functionName: 'pause',
       })
       expectType<void>(result)
@@ -296,7 +275,7 @@ test('writeContract', () => {
     test('bytes32', () => {
       const result = writeContract({
         address,
-        contractInterface: ensRegistryWithFallbackAbi,
+        abi: ensRegistryWithFallbackAbi,
         functionName: 'setSubnodeOwner',
         args: ['foo', 'bar', address],
       })
@@ -330,7 +309,7 @@ test('writeContract', () => {
       }
       const result = writeContract({
         address,
-        contractInterface,
+        abi: contractInterface,
         functionName: 'foo',
       })
       expectType<Output>(result)
@@ -339,7 +318,7 @@ test('writeContract', () => {
     test('tuple[]', () => {
       const result = writeContract({
         address,
-        contractInterface: nestedTupleArrayAbi,
+        abi: nestedTupleArrayAbi,
         functionName: 'f',
         args: [{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1, y: 1 }, 1],
       })
@@ -351,7 +330,7 @@ test('writeContract', () => {
     test('read function not allowed', () => {
       const result = writeContract({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         // @ts-expect-error Trying to use read function
         functionName: 'symbol',
       })
@@ -361,7 +340,7 @@ test('writeContract', () => {
     test('function with overrides', () => {
       const result1 = writeContract({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         functionName: 'safeTransferFrom',
         args: [address, address, 123],
       })
@@ -369,7 +348,7 @@ test('writeContract', () => {
 
       const result2 = writeContract({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         functionName: 'safeTransferFrom',
         args: [address, address, 123, 'foo'],
       })
@@ -388,19 +367,11 @@ test('writeContract', () => {
       ]
       const result = writeContract({
         address,
-        contractInterface,
+        abi: contractInterface,
         functionName: 'foo',
         args: ['bar'],
       })
       expectType<any>(result)
-
-      writeContract({
-        address,
-        contractInterface,
-        functionName: 'foo',
-        // @ts-expect-error Args must be array
-        args: 'bar',
-      })
     })
 
     test('declared as Abi type', () => {
@@ -415,24 +386,16 @@ test('writeContract', () => {
       ]
       const result = writeContract({
         address,
-        contractInterface,
+        abi: contractInterface,
         functionName: 'foo',
       })
       expectType<any>(result)
-
-      writeContract({
-        address,
-        contractInterface,
-        functionName: 'foo',
-        // @ts-expect-error Args must be array
-        args: 'bar',
-      })
     })
 
     test('defined inline', () => {
       const result = writeContract({
         address,
-        contractInterface: [
+        abi: [
           {
             name: 'foo',
             type: 'function',
@@ -445,65 +408,7 @@ test('writeContract', () => {
         args: ['bar'],
       })
       expectType<any>(result)
-
-      writeContract({
-        address,
-        contractInterface: [
-          {
-            name: 'foo',
-            type: 'function',
-            stateMutability: 'payable',
-            inputs: [{ type: 'string', name: '' }],
-            outputs: [{ type: 'string', name: '' }],
-          },
-        ],
-        functionName: 'foo',
-        // @ts-expect-error Args must be array
-        args: 'bar',
-      })
     })
-  })
-})
-
-test('readContracts', () => {
-  readContracts({
-    contracts: [
-      {
-        contractInterface: [
-          {
-            inputs: [{ name: 'owner', type: 'address' }],
-            name: 'balanceOf',
-            outputs: [{ name: '', type: 'uint256' }],
-            stateMutability: 'view',
-            type: 'function',
-          },
-          {
-            inputs: [{ name: 'tokenId', type: 'uint256' }],
-            name: 'tokenURI',
-            outputs: [{ name: '', type: 'uint256' }],
-            stateMutability: 'view',
-            type: 'function',
-          },
-        ],
-        functionName: 'string',
-      } as const,
-      // {
-      //   contractInterface: [
-      //     {
-      //       inputs: [
-      //         { name: 'tokenId', type: 'address' },
-      //         { name: 'value', type: 'uint256' },
-      //       ],
-      //       name: 'boo',
-      //       outputs: [{ name: '', type: 'uint256' }],
-      //       stateMutability: 'view',
-      //       type: 'function',
-      //     },
-      //   ],
-      //   functionName: 'boo',
-      //   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e', 123],
-      // },
-    ],
   })
 })
 
@@ -520,11 +425,11 @@ test('watchContractEvent', () => {
       ] as const
       watchContractEvent({
         address,
-        contractInterface,
+        abi: contractInterface,
         eventName: 'Foo',
         // @ts-expect-error no args allowed
         listener(_arg) {
-          expectType<boolean>(true)
+          return
         },
       })
     })
@@ -532,7 +437,7 @@ test('watchContractEvent', () => {
     test('one', () => {
       watchContractEvent({
         address,
-        contractInterface: writingEditionsFactoryAbi,
+        abi: writingEditionsFactoryAbi,
         eventName: 'FactoryGuardSet',
         listener(guard) {
           expectType<boolean>(guard)
@@ -543,7 +448,7 @@ test('watchContractEvent', () => {
     test('two or more', () => {
       watchContractEvent({
         address,
-        contractInterface: wagmiMintExampleAbi,
+        abi: wagmiMintExampleAbi,
         eventName: 'Transfer',
         listener(from, to, tokenId) {
           expectType<Address>(from)
@@ -558,7 +463,7 @@ test('watchContractEvent', () => {
     test('works without const assertion', () => {
       watchContractEvent({
         address,
-        contractInterface: [
+        abi: [
           {
             name: 'Foo',
             type: 'event',
@@ -574,7 +479,7 @@ test('watchContractEvent', () => {
         ],
         eventName: 'Foo',
         listener(name) {
-          expectType<string>(name)
+          expectType<any>(name)
         },
       })
     })
