@@ -312,7 +312,7 @@ type Fixed2DArrayUpperBound = 5
 To change a configuration option, use a module declaration:
 
 ```ts
-declare module 'abitype/dist/config.d' {
+declare module 'abitype/dist/abi' {
   type FixedArrayUpperBound = 10
 }
 ```
