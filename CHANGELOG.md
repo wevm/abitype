@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.7
+
+### Patch Changes
+
+- [`f4e77e7`](https://github.com/wagmi-dev/abitype/commit/f4e77e70dcc8b71141716a8847ef654008c2e36c) Thanks [@tmm](https://github.com/tmm)! - Add support for 2D arrays
+
 ## 0.0.6
 
 ### Patch Changes
