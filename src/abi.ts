@@ -166,6 +166,6 @@ export type AbiError = {
 
 /**
  * Contract ABI Specification
- * https://docs.soliditylang.org/en/v0.8.15/abi-spec.html#json
+ * https://docs.soliditylang.org/en/latest/abi-spec.html#json
  */
 export type Abi = readonly (AbiFunction | AbiEvent | AbiError)[]

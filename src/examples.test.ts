@@ -10,7 +10,12 @@ import {
 } from '../test'
 
 import { Abi, Address } from './abi'
-import { readContract, watchContractEvent, writeContract } from './examples'
+import {
+  readContract,
+  readContracts,
+  watchContractEvent,
+  writeContract,
+} from './examples'
 
 test('readContract', () => {
   test('args', () => {
@@ -87,7 +92,7 @@ test('readContract', () => {
     })
 
     test('without const assertion', () => {
-      const contractInterface = [
+      const abi = [
         {
           name: 'foo',
           type: 'function',
@@ -105,12 +110,12 @@ test('readContract', () => {
       ]
       const result1 = readContract({
         address,
-        abi: contractInterface,
+        abi: abi,
         functionName: 'foo',
       })
       const result2 = readContract({
         address,
-        abi: contractInterface,
+        abi: abi,
         functionName: 'bar',
         args: [address],
       })
@@ -119,7 +124,7 @@ test('readContract', () => {
     })
 
     test('declared as Abi type', () => {
-      const contractInterface = [
+      const abi: Abi = [
         {
           name: 'foo',
           type: 'function',
@@ -137,12 +142,12 @@ test('readContract', () => {
       ]
       const result1 = readContract({
         address,
-        abi: contractInterface,
+        abi: abi,
         functionName: 'foo',
       })
       const result2 = readContract({
         address,
-        abi: contractInterface,
+        abi: abi,
         functionName: 'bar',
         args: [address],
       })
@@ -482,6 +487,110 @@ test('watchContractEvent', () => {
           expectType<any>(name)
         },
       })
+    })
+  })
+})
+
+test('readContracts', () => {
+  test('args', () => {
+    test('zero', () => {
+      const result = readContracts([
+        {
+          address,
+          abi: wagmiMintExampleAbi,
+          functionName: 'name' as const,
+        },
+        {
+          address,
+          abi: nounsAuctionHouseAbi,
+          functionName: 'auction' as const,
+        },
+      ])
+      expectType<
+        [
+          string,
+          readonly [
+            number | bigint,
+            number | bigint,
+            number | bigint,
+            number | bigint,
+            Address,
+            boolean,
+          ],
+        ]
+      >(result)
+    })
+
+    test('one', () => {
+      const result = readContracts([
+        {
+          address,
+          abi: wagmiMintExampleAbi,
+          functionName: 'balanceOf' as const,
+          args: [address],
+        },
+        {
+          address,
+          abi: wagmiMintExampleAbi,
+          functionName: 'ownerOf' as const,
+          args: [123],
+        },
+      ])
+      expectType<[number | bigint, Address]>(result)
+    })
+
+    test('two or more', () => {
+      const result = readContracts([
+        {
+          address,
+          abi: nestedTupleArrayAbi,
+          functionName: 'v' as const,
+          args: [
+            [
+              { a: 1, b: [2] },
+              { a: 1, b: [2] },
+            ],
+            { x: 5, y: 6 },
+            7,
+          ],
+        },
+        {
+          address,
+          abi: writingEditionsFactoryAbi,
+          functionName: 'getSalt' as const,
+          args: [
+            address,
+            {
+              name: 'Test',
+              symbol: '$TEST',
+              description: 'Foo bar baz',
+              imageURI: 'ipfs://hash',
+              contentURI: 'arweave://digest',
+              price: 0.1,
+              limit: 100,
+              fundingRecipient: address,
+              renderer: address,
+              nonce: 123,
+              fee: 0,
+            },
+          ],
+        },
+      ])
+      expectType<[void, string | ArrayLike<number>]>(result)
+    })
+  })
+
+  test('behavior', () => {
+    test('write function not allowed', () => {
+      const result = readContracts([
+        {
+          address,
+          abi: wagmiMintExampleAbi,
+          // @ts-expect-error Trying to use non-read function
+          functionName: 'approve',
+        },
+      ])
+      expectType<any>(result)
     })
   })
 })
