@@ -4,15 +4,8 @@
     "source.fixAll.eslint": true
   },
   "eslint.options": {
-    "extensions": [".js", ".json", ".md", ".mdx", ".ts", ".tsx"]
+    "extensions": [".js", ".json", ".md", ".ts"]
   },
-  "eslint.validate": [
-    "javascript",
-    "json",
-    "markdown",
-    "mdx",
-    "typescript",
-    "typescriptreact"
-  ],
+  "eslint.validate": ["javascript", "json", "markdown", "typescript"],
   "eslint.packageManager": "pnpm"
 }

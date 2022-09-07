@@ -346,6 +346,7 @@ test('AbiParametersToPrimitiveTypes', () => {
       ]
     >
     expectType<Result>([[1, 1]])
+    //          ^?
   })
 
   test('multiple parameters', () => {

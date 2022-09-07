@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/abitype.svg?colorA=21262d&colorB=161b22&style=flat)](https://www.npmjs.com/package/abitype)
 [![Downloads per month](https://img.shields.io/npm/dm/abitype?colorA=21262d&colorB=161b22&style=flat)](https://www.npmjs.com/package/abitype)
 
-Strict TypeScript types for Ethereum ABIs. AbiType provides utilities and type defintions for ABI properties and values, covering the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html).
+Strict TypeScript types for Ethereum ABIs. AbiType provides utilities and type definitions for ABI properties and values, covering the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html).
 
 ```ts
 import { ExtractAbiFunctions } from 'abitype'
