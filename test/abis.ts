@@ -53,6 +53,46 @@ export const nestedTupleArrayAbi = [
     ],
     outputs: [],
   },
+  {
+    name: 'v',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [
+      {
+        name: 's',
+        type: 'tuple[2]',
+        components: [
+          {
+            name: 'a',
+            type: 'uint256',
+          },
+          {
+            name: 'b',
+            type: 'uint256[]',
+          },
+        ],
+      },
+      {
+        name: 't',
+        type: 'tuple',
+        components: [
+          {
+            name: 'x',
+            type: 'uint256',
+          },
+          {
+            name: 'y',
+            type: 'uint256',
+          },
+        ],
+      },
+      {
+        name: 'a',
+        type: 'uint256',
+      },
+    ],
+    outputs: [],
+  },
 ] as const
 
 /**

@@ -3,14 +3,14 @@
 [![npm](https://img.shields.io/npm/v/abitype.svg?colorA=21262d&colorB=161b22&style=flat)](https://www.npmjs.com/package/abitype)
 [![Downloads per month](https://img.shields.io/npm/dm/abitype?colorA=21262d&colorB=161b22&style=flat)](https://www.npmjs.com/package/abitype)
 
-Strict TypeScript types for Ethereum ABIs. AbiType provides utilities and type defintions for ABI properties and values, covering the entire [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html).
+Strict TypeScript types for Ethereum ABIs. AbiType provides utilities and type defintions for ABI properties and values, covering the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html).
 
 ```ts
 import { ExtractAbiFunctions } from 'abitype'
 
 const erc721Abi = [...] as const
 
-type Functions = ExtractAbiFunctions<typeof erc721Abi, 'view'>
+type Result = ExtractAbiFunctions<typeof erc721Abi, 'payable'>
 ```
 
 Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions or variables. No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
@@ -317,6 +317,9 @@ declare module 'abitype/dist/abi' {
 }
 ```
 
+> **Warning**
+> When configuring these options, there are trade-offs. For example, increasing the upper bound on fixed-length arrays (like to `50+`) will make your types more exhaustive, but will also slow down the compiler for type checking, autocomplete, etc.
+
 ## Support
 
 If you find AbiType useful, please consider supporting development. Thank you 🙏
@@ -332,10 +335,6 @@ If you're interested in contributing, please read the [contributing docs](/.gith
 ## Authors
 
 - awkweb.eth ([@awkweb](https://twitter.com/awkweb)) – [Mirror](https://mirror.xyz)
-
-## Thanks
-
-- indreams.eth ([@strollinghome](https://twitter.com/strollinghome)) for answering Solidity questions!
 
 ## License
 
