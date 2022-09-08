@@ -16,7 +16,10 @@ export interface Config {
 }
 
 export interface DefaultConfig {
+  /** Maximum depth for nested array types (e.g. string[][]) */
   ArrayMaxDepth: 2
+  /** Lower bound for fixed array length */
   FixedArrayLengthLowerBound: 1
+  /** Upper bound for fixed array length */
   FixedArrayLengthUpperBound: 5
 }

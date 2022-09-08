@@ -15,7 +15,6 @@ export type {
   SolidityBool,
   SolidityBytes,
   SolidityFixedArrayRange,
-  SolidityFixedArraySizeLookup,
   SolidityFunction,
   SolidityInt,
   SolidityString,

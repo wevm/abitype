@@ -11,7 +11,6 @@ import {
   SolidityBool,
   SolidityBytes,
   SolidityFixedArrayRange,
-  SolidityFixedArraySizeLookup,
   SolidityFunction,
   SolidityInt,
   SolidityString,
@@ -70,21 +69,21 @@ export type AbiParameterToPrimitiveType<
       })['components'][number] as Component['name']]: AbiParameterToPrimitiveType<Component>
     }
   : TAbiParameter['type'] extends `${infer Head}[${
-      | ''
-      | `${SolidityFixedArrayRange}`}]`
-  ? TAbiParameter['type'] extends `${Head}[${infer Size}]`
-    ? Size extends keyof SolidityFixedArraySizeLookup
+      | SolidityFixedArrayRange
+      | ''}]`
+  ? TAbiParameter['type'] extends `${Head}[${infer Size extends number | ''}]`
+    ? Size extends number
       ? Tuple<
           AbiParameterToPrimitiveType<
             _ConvertAbiParameterType<TAbiParameter, Head>
           >,
-          SolidityFixedArraySizeLookup[Size]
+          Size
         >
       : AbiParameterToPrimitiveType<
           _ConvertAbiParameterType<TAbiParameter, Head>
         >[]
     : never
-  : never
+  : unknown
 
 type _ConvertAbiParameterType<
   TAbiParameter extends AbiParameter | { name: string; type: unknown },

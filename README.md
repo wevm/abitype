@@ -286,7 +286,6 @@ import { AbiType } from 'abitype'
 
 ```ts
 import {
-  Solidity2DArray,
   SolidityAddress,
   SolidityArray,
   SolidityBool,
@@ -302,9 +301,9 @@ import {
 
 AbiType tries to strike a balance between type exhaustiveness and speed with sensible defaults. In some cases, you might want to tune your configuration (e.g. fixed array length). To do this, the following configuration options are available:
 
+- **`ArrayMaxDepth`** — Maximum depth for nested array types (e.g. `string[][]`). Defaults to `2`.
 - **`FixedArrayLengthLowerBound`** — Lower bound for fixed array length. Defaults to `1`.
 - **`FixedArrayLengthUpperBound`** — Upper bound for fixed array length. Defaults to `5`.
-- **`ArrayMaxDepth`** — Maximum depth for nested array types (e.g. `string[][]`). Defaults to `2`.
 
 Configuration options are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). First, create a declaration file (e.g. `abitype.d.ts`) in your project source and then extend the `Config` interface:
 
@@ -317,7 +316,7 @@ declare module 'abitype' {
 ```
 
 > **Warning**
-> When configuring these options, there are trade-offs. For example, increasing the upper bound on fixed-length arrays (like to `20+`) will make your types more exhaustive, but will also slow down the compiler for type checking, autocomplete, etc.
+> When configuring these options, there are trade-offs. For example, increasing the upper bound on fixed-length arrays will make your types more exhaustive, but will also slow down the compiler for type checking, autocomplete, etc.
 
 ## Support
 

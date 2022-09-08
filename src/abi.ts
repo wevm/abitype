@@ -44,9 +44,6 @@ export type SolidityFixedArrayRange = Range<
   FixedArrayLowerBound,
   FixedArrayUpperBound
 >[number]
-export type SolidityFixedArraySizeLookup = {
-  [Prop in SolidityFixedArrayRange as `${Prop}`]: Prop
-}
 
 type MAXIMUM_DEPTH = Config['ArrayMaxDepth'] extends number
   ? Config['ArrayMaxDepth']
