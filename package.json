@@ -2,7 +2,7 @@
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs ",
   "license": "WAGMIT",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "repository": {
     "type": "git",
     "url": "https://github.com/wagmi-dev/abitype.git"

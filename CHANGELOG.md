@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.9
+
+### Patch Changes
+
+- [`f573be2`](https://github.com/wagmi-dev/abitype/commit/f573be2f5cc826e9977ce21f2f9600c9cc8cf014) Thanks [@tmm](https://github.com/tmm)! - Export Solidity array subtypes
+
 ## 0.0.8
 
 ### Patch Changes
