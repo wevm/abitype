@@ -32,6 +32,9 @@
     "test": "pnpm typecheck",
     "typecheck": "tsc --noEmit"
   },
+  "peerDependencies": {
+    "typescript": ">=4.7.4"
+  },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.4",
     "@changesets/cli": "^2.22.0",
@@ -49,7 +52,7 @@
     "lint-staged": "^12.4.1",
     "prettier": "^2.6.2",
     "simple-git-hooks": "^2.8.0",
-    "typescript": "^4.6.4"
+    "typescript": "^4.7.4"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"

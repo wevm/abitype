@@ -660,4 +660,23 @@ test('signTypedData', () => {
       contents: 'Hello, Foo!',
     },
   })
+
+  signTypedData({
+    types,
+    value: {
+      first: 'Tom',
+      // @ts-expect-error wrong type
+      last: 123,
+    },
+  })
+
+  signTypedData({
+    types,
+    // @ts-expect-error missing `name` property
+    value: {
+      wallet: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+      favoriteColors: ['gray', 'forest green', 'orange'],
+      age: 29,
+    },
+  })
 })
