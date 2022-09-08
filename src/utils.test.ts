@@ -234,7 +234,7 @@ test('AbiParameterToPrimitiveType', () => {
         type: 'string[3]'
       }>
       expectType<Result>(['foo', 'bar', 'baz'])
-      // @ts-expect-error too few elements in fixed array
+      // @ts-expect-error not enough items
       expectType<Result>(['foo', 'bar'])
     })
 
@@ -321,7 +321,7 @@ test('AbiParameterToPrimitiveType', () => {
           name: ''
           type: 'string[3][3]'
         }>
-        // @ts-expect-error not enough values in tuple
+        // @ts-expect-error not enough items
       >([
         ['foo', 'bar', 'baz'],
         ['foo', 'bar', 'baz'],

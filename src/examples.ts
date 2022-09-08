@@ -2,8 +2,6 @@ import {
   Abi,
   AbiType,
   Address,
-  Solidity2DArray,
-  Solidity2DArrayWithoutTuple,
   SolidityArray,
   SolidityArrayWithoutTuple,
   SolidityTuple,
@@ -118,9 +116,13 @@ type WatchContractEventConfig<
   TEventName = string,
   TSignature extends (...args: any) => any = (...args: any) => any,
 > = {
+  /** Contract address */
   address: Address
+  /** Contract ABI */
   abi: TAbi
+  /** Event to listen for */
   eventName: TEventName
+  /** Callback when event is emitted */
   listener: IsNever<Parameters<TSignature>> extends true
     ? (...args: any) => void
     : TSignature
@@ -227,9 +229,8 @@ type Schema<
       name: string
       type:
         | keyof TTypes
-        | Exclude<AbiType, SolidityTuple | SolidityArray | Solidity2DArray>
+        | Exclude<AbiType, SolidityTuple | SolidityArray>
         | SolidityArrayWithoutTuple
-        | Solidity2DArrayWithoutTuple
     }[]
   >,
 > = {
@@ -247,9 +248,8 @@ export function signTypedData<
       name: string
       type:
         | keyof TTypes
-        | Exclude<AbiType, SolidityTuple | SolidityArray | Solidity2DArray>
+        | Exclude<AbiType, SolidityTuple | SolidityArray>
         | SolidityArrayWithoutTuple
-        | Solidity2DArrayWithoutTuple
     }[]
   >,
   TValues extends Schema<TTypes>,
