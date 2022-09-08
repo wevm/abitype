@@ -1,3 +1,4 @@
+import { Config, DefaultConfig } from './config'
 import { Range } from './types'
 
 export type Address = `0x${string}`
@@ -32,13 +33,12 @@ export type SolidityInt = `${'u' | ''}int${MBits}`
 //   | `${'u' | ''}fixed`
 //   | `${'u' | ''}fixed${MBits}x${Range<1, 20>[number]}`
 
-declare global {
-  type FixedArrayLowerBound = 1
-  type FixedArrayUpperBound = 5
-
-  type Fixed2DArrayLowerBound = 1
-  type Fixed2DArrayUpperBound = 5
-}
+type FixedArrayLowerBound = Config['FixedArrayLengthLowerBound'] extends number
+  ? Config['FixedArrayLengthLowerBound']
+  : DefaultConfig['FixedArrayLengthLowerBound']
+type FixedArrayUpperBound = Config['FixedArrayLengthUpperBound'] extends number
+  ? Config['FixedArrayLengthUpperBound']
+  : DefaultConfig['FixedArrayLengthUpperBound']
 
 export type SolidityFixedArrayRange = Range<
   FixedArrayLowerBound,
@@ -47,42 +47,34 @@ export type SolidityFixedArrayRange = Range<
 export type SolidityFixedArraySizeLookup = {
   [Prop in SolidityFixedArrayRange as `${Prop}`]: Prop
 }
-export type SolidityFixed2DArrayRange = Range<
-  Fixed2DArrayLowerBound,
-  Fixed2DArrayUpperBound
->[number]
-export type SolidityFixed2DArraySizeLookup = {
-  [Prop in SolidityFixed2DArrayRange as `${Prop}`]: Prop
-}
 
-// Creating array types with and without tuples for using in `AbiParameter` narrowing
-export type SolidityArrayWithoutTuple =
-  | `${
-      | SolidityAddress
-      | SolidityBool
-      | SolidityBytes
-      | SolidityFunction
-      | SolidityString
-      | SolidityInt}[${SolidityFixedArrayRange | ''}]`
-export type Solidity2DArrayWithoutTuple = `${SolidityArrayWithoutTuple}[${
-  | SolidityFixed2DArrayRange
-  | ''}]`
-export type SolidityArrayWithTuple =
-  | `${SolidityTuple}[${SolidityFixedArrayRange | ''}]`
-export type Solidity2DArrayWithTuple = `${SolidityArrayWithTuple}[${
-  | SolidityFixed2DArrayRange
-  | ''}]`
+type MAXIMUM_DEPTH = Config['ArrayMaxDepth'] extends number
+  ? Config['ArrayMaxDepth']
+  : DefaultConfig['ArrayMaxDepth']
+type BuildArrayTypes<
+  T extends string,
+  Depth extends ReadonlyArray<number> = [],
+> = Depth['length'] extends MAXIMUM_DEPTH
+  ? T
+  : T extends `${any}[${SolidityFixedArrayRange | ''}]`
+  ? BuildArrayTypes<T | `${T}[${SolidityFixedArrayRange | ''}]`, [...Depth, 1]>
+  : BuildArrayTypes<`${T}[${SolidityFixedArrayRange | ''}]`, [...Depth, 1]>
 
-export type SolidityArray = SolidityArrayWithTuple | SolidityArrayWithoutTuple
-export type Solidity2DArray =
-  | Solidity2DArrayWithTuple
-  | Solidity2DArrayWithoutTuple
+export type SolidityArrayWithoutTuple = BuildArrayTypes<
+  | SolidityAddress
+  | SolidityBool
+  | SolidityBytes
+  | SolidityFunction
+  | SolidityInt
+  | SolidityString
+>
+export type SolidityArrayWithTuple = BuildArrayTypes<SolidityTuple>
+export type SolidityArray = SolidityArrayWithoutTuple | SolidityArrayWithTuple
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Abi Types
 
 export type AbiType =
-  | Solidity2DArray
   | SolidityArray
   | SolidityAddress
   | SolidityBool
@@ -107,12 +99,11 @@ export type AbiParameter = {
 } & (
   | {
       type:
-        | Exclude<AbiType, SolidityTuple | SolidityArray | Solidity2DArray>
+        | Exclude<AbiType, SolidityTuple | SolidityArray>
         | SolidityArrayWithoutTuple
-        | Solidity2DArrayWithoutTuple
     }
   | {
-      type: SolidityTuple | SolidityArrayWithTuple | Solidity2DArrayWithTuple
+      type: SolidityTuple | SolidityArrayWithTuple
       components: readonly AbiParameter[]
     }
 )

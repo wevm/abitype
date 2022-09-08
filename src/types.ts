@@ -9,7 +9,7 @@
  * type Result = Range<1, 3>
  * [1, 2, 3]
  */
-// From [Type Challenges #734](https://github.com/type-challenges/type-challenges/issues/11625)
+// From [Type Challenges](https://github.com/type-challenges/type-challenges/issues/11625)
 export type Range<
   Start extends number,
   Stop extends number,

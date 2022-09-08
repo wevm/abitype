@@ -8,17 +8,12 @@ export type {
   AbiStateMutability,
   AbiType,
   Address,
-  Solidity2DArray,
-  Solidity2DArrayWithoutTuple,
-  Solidity2DArrayWithTuple,
   SolidityAddress,
   SolidityArray,
   SolidityArrayWithoutTuple,
   SolidityArrayWithTuple,
   SolidityBool,
   SolidityBytes,
-  SolidityFixed2DArrayRange,
-  SolidityFixed2DArraySizeLookup,
   SolidityFixedArrayRange,
   SolidityFixedArraySizeLookup,
   SolidityFunction,
@@ -26,6 +21,8 @@ export type {
   SolidityString,
   SolidityTuple,
 } from './abi'
+
+export type { Config, DefaultConfig } from './config'
 
 export type {
   AbiEventSignature,

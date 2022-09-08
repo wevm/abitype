@@ -6,12 +6,11 @@ import {
   AbiStateMutability,
   AbiType,
   Address,
-  Solidity2DArray,
   SolidityAddress,
   SolidityArray,
   SolidityBool,
   SolidityBytes,
-  SolidityFixed2DArraySizeLookup,
+  SolidityFixedArrayRange,
   SolidityFixedArraySizeLookup,
   SolidityFunction,
   SolidityInt,
@@ -49,8 +48,6 @@ type PrimitiveTypeLookup = {
   [_ in SolidityTuple]: Record<string, unknown>
 } & {
   [_ in SolidityArray]: unknown[]
-} & {
-  [_ in Solidity2DArray]: unknown[][]
 }
 
 /**
@@ -63,37 +60,30 @@ export type AbiParameterToPrimitiveType<
   TAbiParameter extends AbiParameter | { name: string; type: unknown },
 > = TAbiParameter['type'] extends Exclude<
   AbiType,
-  SolidityTuple | SolidityArray | Solidity2DArray
+  SolidityTuple | SolidityArray
 >
   ? AbiTypeToPrimitiveType<TAbiParameter['type']>
-  : TAbiParameter['type'] extends `${infer Type}[${infer Size}]`
-  ? Size extends keyof SolidityFixedArraySizeLookup
-    ? Tuple<
-        AbiParameterToPrimitiveType<
-          _ConvertAbiParameterType<TAbiParameter, Type>
-        >,
-        SolidityFixedArraySizeLookup[Size]
-      >
-    : Size extends `${infer Size1}][${infer Size2}`
-    ? Size2 extends keyof SolidityFixed2DArraySizeLookup
-      ? Tuple<
-          AbiParameterToPrimitiveType<
-            _ConvertAbiParameterType<TAbiParameter, `${Type}[${Size1}]`>
-          >,
-          SolidityFixed2DArraySizeLookup[Size2]
-        >
-      : AbiParameterToPrimitiveType<
-          _ConvertAbiParameterType<TAbiParameter, `${Type}[${Size1}]`>
-        >[]
-    : AbiParameterToPrimitiveType<
-        _ConvertAbiParameterType<TAbiParameter, Type>
-      >[]
   : TAbiParameter['type'] extends SolidityTuple
   ? {
       [Component in (TAbiParameter & {
         components: AbiParameter[]
       })['components'][number] as Component['name']]: AbiParameterToPrimitiveType<Component>
     }
+  : TAbiParameter['type'] extends `${infer Head}[${
+      | ''
+      | `${SolidityFixedArrayRange}`}]`
+  ? TAbiParameter['type'] extends `${Head}[${infer Size}]`
+    ? Size extends keyof SolidityFixedArraySizeLookup
+      ? Tuple<
+          AbiParameterToPrimitiveType<
+            _ConvertAbiParameterType<TAbiParameter, Head>
+          >,
+          SolidityFixedArraySizeLookup[Size]
+        >
+      : AbiParameterToPrimitiveType<
+          _ConvertAbiParameterType<TAbiParameter, Head>
+        >[]
+    : never
   : never
 
 type _ConvertAbiParameterType<
@@ -101,7 +91,7 @@ type _ConvertAbiParameterType<
   TType extends AbiType | string,
 > = {
   [Property in keyof Omit<TAbiParameter, 'type'>]: TAbiParameter[Property]
-} & { type: TType extends AbiType ? TType : any }
+} & { type: TType }
 
 /**
  * Converts array of {@link AbiParameter} to corresponding TypeScript primitive types.
