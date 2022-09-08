@@ -56,7 +56,7 @@ export type SolidityFixed2DArraySizeLookup = {
 }
 
 // Creating array types with and without tuples for using in `AbiParameter` narrowing
-type SolidityArrayWithoutTuple =
+export type SolidityArrayWithoutTuple =
   | `${
       | SolidityAddress
       | SolidityBool
@@ -64,12 +64,12 @@ type SolidityArrayWithoutTuple =
       | SolidityFunction
       | SolidityString
       | SolidityInt}[${SolidityFixedArrayRange | ''}]`
-type Solidity2DArrayWithoutTuple = `${SolidityArrayWithoutTuple}[${
+export type Solidity2DArrayWithoutTuple = `${SolidityArrayWithoutTuple}[${
   | SolidityFixed2DArrayRange
   | ''}]`
-type SolidityArrayWithTuple =
+export type SolidityArrayWithTuple =
   | `${SolidityTuple}[${SolidityFixedArrayRange | ''}]`
-type Solidity2DArrayWithTuple = `${SolidityArrayWithTuple}[${
+export type Solidity2DArrayWithTuple = `${SolidityArrayWithTuple}[${
   | SolidityFixed2DArrayRange
   | ''}]`
 
