@@ -13,6 +13,7 @@ import { Abi, Address } from './abi'
 import {
   readContract,
   readContracts,
+  signTypedData,
   watchContractEvent,
   writeContract,
 } from './examples'
@@ -592,5 +593,71 @@ test('readContracts', () => {
       ])
       expectType<any>(result)
     })
+  })
+})
+
+test('signTypedData', () => {
+  const types = {
+    Person: [
+      { name: 'name', type: 'Name' },
+      { name: 'wallet', type: 'address' },
+      { name: 'favoriteColors', type: 'string[3]' },
+      { name: 'age', type: 'uint8' },
+    ],
+    Mail: [
+      { name: 'from', type: 'Person' },
+      { name: 'to', type: 'Person' },
+      { name: 'contents', type: 'string' },
+    ],
+    Name: [
+      { name: 'first', type: 'string' },
+      { name: 'last', type: 'string' },
+    ],
+  } as const
+
+  signTypedData({
+    types,
+    value: {
+      first: 'Tom',
+      last: 'Meagher',
+    },
+  })
+
+  signTypedData({
+    types,
+    value: {
+      name: {
+        first: 'Tom',
+        last: 'Meagher',
+      },
+      wallet: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+      favoriteColors: ['gray', 'forest green', 'orange'],
+      age: 29,
+    },
+  })
+
+  signTypedData({
+    types,
+    value: {
+      from: {
+        name: {
+          first: 'Tom',
+          last: 'Meagher',
+        },
+        wallet: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+        favoriteColors: ['gray', 'forest green', 'orange'],
+        age: 29,
+      },
+      to: {
+        name: {
+          first: 'Foo',
+          last: 'Bar',
+        },
+        wallet: '0xd2135CfB216b74109775236E36d4b433F1DF507B',
+        favoriteColors: ['purple', 'red', 'blue'],
+        age: 69,
+      },
+      contents: 'Hello, Foo!',
+    },
   })
 })
