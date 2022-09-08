@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.10
+
+### Patch Changes
+
+- [#13](https://github.com/wagmi-dev/abitype/pull/13) [`1cd25fb`](https://github.com/wagmi-dev/abitype/commit/1cd25fb265d5d67e0bfdd3d93b54230cb4e18960) Thanks [@tmm](https://github.com/tmm)! - Add support for arbitrary nested array depth
+
 ## 0.0.9
 
 ### Patch Changes
