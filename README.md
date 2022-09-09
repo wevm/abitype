@@ -214,7 +214,7 @@ type Result = AbiFunctionSignature<
 
 Converts `TypedData` to corresponding TypeScript primitive type.
 
-````ts
+```ts
 import { TypedDataToPrimitiveTypes } from 'abitype'
 
 type Result = TypedDataToPrimitiveTypes<{
@@ -238,7 +238,7 @@ Type matching the [Contract ABI Specification](https://docs.soliditylang.org/en/
 
 ```ts
 import { Abi } from 'abitype'
-````
+```
 
 ### AbiError
 
