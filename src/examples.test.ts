@@ -597,49 +597,36 @@ test('readContracts', () => {
 })
 
 test('signTypedData', () => {
-  const types = {
-    Person: [
-      { name: 'name', type: 'Name' },
-      { name: 'wallet', type: 'address' },
-      { name: 'favoriteColors', type: 'string[3]' },
-      { name: 'age', type: 'uint8' },
-    ],
-    Mail: [
-      { name: 'from', type: 'Person' },
-      { name: 'to', type: 'Person' },
-      { name: 'contents', type: 'string' },
-    ],
-    Name: [
-      { name: 'first', type: 'string' },
-      { name: 'last', type: 'string' },
-    ],
-  } as const
+  test('basic', () => {
+    const types = {
+      Person: [
+        { name: 'name', type: 'Name' },
+        { name: 'wallet', type: 'address' },
+        { name: 'favoriteColors', type: 'string[3]' },
+        { name: 'age', type: 'uint8' },
+      ],
+      Mail: [
+        { name: 'from', type: 'Person' },
+        { name: 'to', type: 'Person' },
+        { name: 'contents', type: 'string' },
+      ],
+      Name: [
+        { name: 'first', type: 'string' },
+        { name: 'last', type: 'string' },
+      ],
+    } as const
 
-  signTypedData({
-    types,
-    value: {
-      first: 'Tom',
-      last: 'Meagher',
-    },
-  })
-
-  signTypedData({
-    types,
-    value: {
-      name: {
+    signTypedData({
+      types,
+      value: {
         first: 'Tom',
         last: 'Meagher',
       },
-      wallet: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
-      favoriteColors: ['gray', 'forest green', 'orange'],
-      age: 29,
-    },
-  })
+    })
 
-  signTypedData({
-    types,
-    value: {
-      from: {
+    signTypedData({
+      types,
+      value: {
         name: {
           first: 'Tom',
           last: 'Meagher',
@@ -648,35 +635,109 @@ test('signTypedData', () => {
         favoriteColors: ['gray', 'forest green', 'orange'],
         age: 29,
       },
-      to: {
-        name: {
-          first: 'Foo',
-          last: 'Bar',
+    })
+
+    signTypedData({
+      types,
+      value: {
+        from: {
+          name: {
+            first: 'Tom',
+            last: 'Meagher',
+          },
+          wallet: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+          favoriteColors: ['gray', 'forest green', 'orange'],
+          age: 29,
         },
-        wallet: '0xd2135CfB216b74109775236E36d4b433F1DF507B',
-        favoriteColors: ['purple', 'red', 'blue'],
-        age: 69,
+        to: {
+          name: {
+            first: 'Foo',
+            last: 'Bar',
+          },
+          wallet: '0xd2135CfB216b74109775236E36d4b433F1DF507B',
+          favoriteColors: ['purple', 'red', 'blue'],
+          age: 69,
+        },
+        contents: 'Hello, Foo!',
       },
-      contents: 'Hello, Foo!',
-    },
+    })
+
+    signTypedData({
+      types,
+      value: {
+        first: 'Tom',
+        // @ts-expect-error wrong type
+        last: 123,
+      },
+    })
+
+    signTypedData({
+      types,
+      // @ts-expect-error missing `name` property
+      value: {
+        wallet: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+        favoriteColors: ['gray', 'forest green', 'orange'],
+        age: 29,
+      },
+    })
   })
 
-  signTypedData({
-    types,
-    value: {
-      first: 'Tom',
-      // @ts-expect-error wrong type
-      last: 123,
-    },
-  })
+  test('deeply nested structs', () => {
+    const types = {
+      Contributor: [
+        { name: 'name', type: 'string' },
+        { name: 'address', type: 'address' },
+      ],
+      Website: [
+        { name: 'domain', type: 'string' },
+        { name: 'webmaster', type: 'Contributor' },
+      ],
+      Project: [
+        { name: 'name', type: 'string' },
+        { name: 'contributors', type: 'Contributor[2]' },
+        { name: 'website', type: 'Website' },
+      ],
+      Organization: [
+        { name: 'name', type: 'string' },
+        { name: 'projects', type: 'Project[]' },
+      ],
+    } as const
 
-  signTypedData({
-    types,
-    // @ts-expect-error missing `name` property
-    value: {
-      wallet: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
-      favoriteColors: ['gray', 'forest green', 'orange'],
-      age: 29,
-    },
+    signTypedData({
+      types,
+      value: {
+        name: 'John Doe',
+        address: '0x0000000000000000000000000000000000000000',
+      },
+    })
+
+    signTypedData({
+      types,
+      value: {
+        name: 'My Organization',
+        projects: [
+          {
+            name: 'My Project',
+            contributors: [
+              {
+                name: 'John Doe',
+                address: '0x0000000000000000000000000000000000000000',
+              },
+              {
+                name: 'John Doe',
+                address: '0x0000000000000000000000000000000000000000',
+              },
+            ],
+            website: {
+              domain: 'example.com',
+              webmaster: {
+                name: 'John Doe',
+                address: '0x0000000000000000000000000000000000000000',
+              },
+            },
+          },
+        ],
+      },
+    })
   })
 })

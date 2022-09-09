@@ -1,19 +1,12 @@
-import {
-  Abi,
-  AbiType,
-  Address,
-  SolidityArray,
-  SolidityArrayWithoutTuple,
-  SolidityTuple,
-} from './abi'
+import { Abi, Address, TypedData } from './abi'
 import {
   AbiEventSignature,
   AbiFunctionSignature,
-  AbiParameterToPrimitiveType,
   ExtractAbiEvent,
   ExtractAbiEventNames,
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
+  TypedDataToPrimitiveTypes,
 } from './utils'
 
 type IsNever<T> = [T] extends [never] ? true : false
@@ -222,42 +215,14 @@ export function readContracts<T extends unknown[]>(
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // signTypedData
 
-type Schema<
-  TTypes extends Record<
-    string,
-    readonly {
-      name: string
-      type:
-        | keyof TTypes
-        | Exclude<AbiType, SolidityTuple | SolidityArray>
-        | SolidityArrayWithoutTuple
-    }[]
-  >,
-> = {
-  [K in keyof TTypes]: {
-    [K2 in TTypes[K][number] as K2['name']]: K2['type'] extends keyof TTypes
-      ? Schema<Exclude<TTypes, K>>[K2['type']]
-      : AbiParameterToPrimitiveType<K2>
-  }
-}
-
 export function signTypedData<
-  TTypes extends Record<
-    string,
-    readonly {
-      name: string
-      type:
-        | keyof TTypes
-        | Exclude<AbiType, SolidityTuple | SolidityArray>
-        | SolidityArrayWithoutTuple
-    }[]
-  >,
-  TValues extends Schema<TTypes>,
+  TTypedData extends TypedData,
+  Schema extends TypedDataToPrimitiveTypes<TTypedData>,
 >(_config: {
   /** Named list of all type definitions */
-  types: TTypes
+  types: TTypedData
   /** Data to sign */
-  value: TValues[keyof TValues]
+  value: Schema[keyof Schema]
 }) {
   return {} as Address
 }

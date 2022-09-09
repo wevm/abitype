@@ -156,7 +156,26 @@ export type AbiError = {
 }
 
 /**
- * Contract ABI Specification
- * https://docs.soliditylang.org/en/latest/abi-spec.html#json
+ * Contract [ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html#json)
  */
 export type Abi = readonly (AbiFunction | AbiEvent | AbiError)[]
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Typed Data Types
+
+// Subset of `AbiType` that excludes `tuple` and `function`
+export type TypedDataType =
+  | Exclude<AbiType, SolidityArray | SolidityFunction | SolidityTuple>
+  | SolidityArrayWithoutTuple
+
+/**
+ * [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) Typed Data Specification
+ */
+export type TypedData = {
+  [key: string]: readonly {
+    name: string
+    type: TypedDataType | keyof TypedData | `${keyof TypedData}[${string | ''}]`
+  }[]
+} & {
+  [_ in TypedDataType]?: never
+}
