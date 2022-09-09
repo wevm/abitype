@@ -20,3 +20,15 @@ export interface DefaultConfig {
   /** Upper bound for fixed array length */
   FixedArrayLengthUpperBound: 5
 }
+
+export interface ResolvedConfig {
+  ArrayMaxDepth: Config['ArrayMaxDepth'] extends number | false
+    ? Config['ArrayMaxDepth']
+    : DefaultConfig['ArrayMaxDepth']
+  FixedArrayLengthLowerBound: Config['FixedArrayLengthLowerBound'] extends number
+    ? Config['FixedArrayLengthLowerBound']
+    : DefaultConfig['FixedArrayLengthLowerBound']
+  FixedArrayLengthUpperBound: Config['FixedArrayLengthUpperBound'] extends number
+    ? Config['FixedArrayLengthUpperBound']
+    : DefaultConfig['FixedArrayLengthUpperBound']
+}

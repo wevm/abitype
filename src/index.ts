@@ -8,8 +8,6 @@ export type {
   AbiStateMutability,
   AbiType,
   Address,
-  TypedData,
-  TypedDataType,
   SolidityAddress,
   SolidityArray,
   SolidityArrayWithoutTuple,
@@ -22,6 +20,8 @@ export type {
   SolidityInt,
   SolidityString,
   SolidityTuple,
+  TypedData,
+  TypedDataType,
 } from './abi'
 
 export type { Config, DefaultConfig } from './config'
@@ -42,4 +42,5 @@ export type {
   ExtractAbiFunctionNames,
   ExtractAbiFunctions,
   IsAbi,
+  TypedDataToPrimitiveTypes,
 } from './utils'

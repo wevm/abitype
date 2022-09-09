@@ -193,6 +193,8 @@ type Result = IsAbi<typeof erc721Abi>
 Converts `AbiEvent` into TypeScript function signature.
 
 ```ts
+import { AbiEventSignature } from 'abitype'
+
 type Result = AbiEventSignature<ExtractAbiEvent<typeof erc721Abi, 'Transfer'>>
 ```
 
@@ -201,9 +203,31 @@ type Result = AbiEventSignature<ExtractAbiEvent<typeof erc721Abi, 'Transfer'>>
 Converts `AbiEvent` into TypeScript function signature.
 
 ```ts
+import { AbiFunctionSignature } from 'abitype'
+
 type Result = AbiFunctionSignature<
   ExtractAbiFunction<typeof erc721Abi, 'balanceOf'>
 >
+```
+
+### TypedDataToPrimitiveTypes
+
+Converts `TypedData` to corresponding TypeScript primitive type.
+
+````ts
+import { TypedDataToPrimitiveTypes } from 'abitype'
+
+type Result = TypedDataToPrimitiveTypes<{
+  Person: [
+    { name: 'name'; type: 'string' },
+    { name: 'wallet'; type: 'address' },
+  ]
+  Mail: [
+    { name: 'from'; type: 'Person' },
+    { name: 'to'; type: 'Person' },
+    { name: 'contents'; type: 'string' },
+  ]
+}>
 ```
 
 ## Types
@@ -214,7 +238,7 @@ Type matching the [Contract ABI Specification](https://docs.soliditylang.org/en/
 
 ```ts
 import { Abi } from 'abitype'
-```
+````
 
 ### AbiError
 
@@ -297,13 +321,31 @@ import {
 } from 'abitype'
 ```
 
+### TypedDataType
+
+Subset of `AbiType` that excludes `tuple` and `function`
+
+```ts
+import { TypedDataType } from 'abitype'
+```
+
+### TypedData
+
+[EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) Typed Data Specification
+
+```ts
+import { TypedData } from 'abitype'
+```
+
 ## Configuration
 
 AbiType tries to strike a balance between type exhaustiveness and speed with sensible defaults. In some cases, you might want to tune your configuration (e.g. fixed array length). To do this, the following configuration options are available:
 
-- **`ArrayMaxDepth`** — Maximum depth for nested array types (e.g. `string[][]`). Defaults to `2`.
-- **`FixedArrayLengthLowerBound`** — Lower bound for fixed array length. Defaults to `1`.
-- **`FixedArrayLengthUpperBound`** — Upper bound for fixed array length. Defaults to `5`.
+| Option                       | Type              | Default | Description                                                                                              |
+| ---------------------------- | ----------------- | ------- | -------------------------------------------------------------------------------------------------------- |
+| `ArrayMaxDepth`              | `number \| false` | `2`     | Maximum depth for nested array types (e.g. `string[][]`). When `false`, there is no maximum array depth. |
+| `FixedArrayLengthLowerBound` | `number`          | `1`     | Lower bound for fixed array length                                                                       |
+| `FixedArrayLengthUpperBound` | `number`          | `5`     | Upper bound for fixed array length                                                                       |
 
 Configuration options are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). Just extend the `Config` interface either directly in your code or in a `d.ts` file (e.g. `abi.d.ts`):
 

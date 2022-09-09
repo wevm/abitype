@@ -1,4 +1,4 @@
-import { Config, DefaultConfig } from './config'
+import { ResolvedConfig } from './config'
 import { Range } from './types'
 
 export type Address = `0x${string}`
@@ -33,28 +33,20 @@ export type SolidityInt = `${'u' | ''}int${MBits}`
 //   | `${'u' | ''}fixed`
 //   | `${'u' | ''}fixed${MBits}x${Range<1, 20>[number]}`
 
-type FixedArrayLowerBound = Config['FixedArrayLengthLowerBound'] extends number
-  ? Config['FixedArrayLengthLowerBound']
-  : DefaultConfig['FixedArrayLengthLowerBound']
-type FixedArrayUpperBound = Config['FixedArrayLengthUpperBound'] extends number
-  ? Config['FixedArrayLengthUpperBound']
-  : DefaultConfig['FixedArrayLengthUpperBound']
-
 export type SolidityFixedArrayRange = Range<
-  FixedArrayLowerBound,
-  FixedArrayUpperBound
+  ResolvedConfig['FixedArrayLengthLowerBound'],
+  ResolvedConfig['FixedArrayLengthUpperBound']
 >[number]
 export type SolidityFixedArraySizeLookup = {
   [Prop in SolidityFixedArrayRange as `${Prop}`]: Prop
 }
 
-type MAXIMUM_DEPTH = Config['ArrayMaxDepth'] extends number
-  ? Config['ArrayMaxDepth']
-  : DefaultConfig['ArrayMaxDepth']
 type BuildArrayTypes<
   T extends string,
   Depth extends ReadonlyArray<number> = [],
-> = Depth['length'] extends MAXIMUM_DEPTH
+> = ResolvedConfig['ArrayMaxDepth'] extends false
+  ? `${T}[${string}]`
+  : Depth['length'] extends ResolvedConfig['ArrayMaxDepth']
   ? T
   : T extends `${any}[${SolidityFixedArrayRange | ''}]`
   ? BuildArrayTypes<T | `${T}[${SolidityFixedArrayRange | ''}]`, [...Depth, 1]>
