@@ -1,5 +1,13 @@
 # abitype
 
+## 0.0.11
+
+### Patch Changes
+
+- [#17](https://github.com/wagmi-dev/abitype/pull/17) [`7d5976b`](https://github.com/wagmi-dev/abitype/commit/7d5976be1d01dc7f74095d6aa6501b48268e43aa) Thanks [@tmm](https://github.com/tmm)! - Added configuration option for disabling max array depth.
+
+* [#15](https://github.com/wagmi-dev/abitype/pull/15) [`e00b2cd`](https://github.com/wagmi-dev/abitype/commit/e00b2cd92c3a62eb36c5883cb89abe7f80a7bbc1) Thanks [@tmm](https://github.com/tmm)! - Added support for nested structs.
+
 ## 0.0.10
 
 ### Patch Changes
