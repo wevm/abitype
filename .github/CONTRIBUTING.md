@@ -19,7 +19,7 @@ This guide is intended to help you get started with contributing. By following t
 1. [Cloning the repository](#cloning-the-repository)
 2. [Installing Node.js and pnpm](#installing-nodejs-and-pnpm)
 3. [Installing dependencies](#installing-dependencies)
-4. [Running tests](#running-the-test-suite)
+4. [Running tests](#running-tests)
 5. [Writing documentation](#writing-documentation)
 6. [Submitting a pull request](#submitting-a-pull-request)
 
