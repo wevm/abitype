@@ -212,7 +212,7 @@ type Result = AbiFunctionSignature<
 
 ### TypedDataToPrimitiveTypes
 
-Converts `TypedData` to corresponding TypeScript primitive type.
+Converts [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) `TypedData` to corresponding TypeScript primitive type.
 
 ```ts
 import { TypedDataToPrimitiveTypes } from 'abitype'
