@@ -1,15 +1,12 @@
 /**
  * Override `Config` to customize type options
  *
- * ```
- * // create abitype.d.ts in your project source
- * // if it isn't being picked up, check tsconfig compilerOptions.types
+ * @example
  * declare module 'abitype' {
  *   export interface Config {
- *     FixedArrayUpperBound: 6
+ *     FixedArrayLengthUpperBound: 6
  *   }
  * }
- * ```
  */
 export interface Config {
   [key: string]: unknown

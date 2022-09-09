@@ -305,7 +305,7 @@ AbiType tries to strike a balance between type exhaustiveness and speed with sen
 - **`FixedArrayLengthLowerBound`** — Lower bound for fixed array length. Defaults to `1`.
 - **`FixedArrayLengthUpperBound`** — Upper bound for fixed array length. Defaults to `5`.
 
-Configuration options are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). First, create a declaration file (e.g. `abitype.d.ts`) in your project source and then extend the `Config` interface:
+Configuration options are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). Just extend the `Config` interface either directly in your code or in a `d.ts` file (e.g. `abi.d.ts`):
 
 ```ts
 declare module 'abitype' {
