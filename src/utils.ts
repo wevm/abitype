@@ -16,8 +16,9 @@ import {
   SolidityInt,
   SolidityString,
   SolidityTuple,
+  TypedData,
 } from './abi'
-import { Tuple } from './types'
+import { Merge, Tuple } from './types'
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
@@ -75,23 +76,12 @@ export type AbiParameterToPrimitiveType<
   ? TAbiParameter['type'] extends `${Head}[${infer Size}]`
     ? Size extends keyof SolidityFixedArraySizeLookup
       ? Tuple<
-          AbiParameterToPrimitiveType<
-            _ConvertAbiParameterType<TAbiParameter, Head>
-          >,
+          AbiParameterToPrimitiveType<Merge<TAbiParameter, { type: Head }>>,
           SolidityFixedArraySizeLookup[Size]
         >
-      : AbiParameterToPrimitiveType<
-          _ConvertAbiParameterType<TAbiParameter, Head>
-        >[]
+      : AbiParameterToPrimitiveType<Merge<TAbiParameter, { type: Head }>>[]
     : never
   : unknown
-
-type _ConvertAbiParameterType<
-  TAbiParameter extends AbiParameter | { name: string; type: unknown },
-  TType extends AbiType | string,
-> = {
-  [Property in keyof Omit<TAbiParameter, 'type'>]: TAbiParameter[Property]
-} & { type: TType }
 
 /**
  * Converts array of {@link AbiParameter} to corresponding TypeScript primitive types.
@@ -280,3 +270,66 @@ export type ExtractAbiError<
   TAbi extends Abi,
   TErrorName extends ExtractAbiErrorNames<TAbi>,
 > = Extract<ExtractAbiErrors<TAbi>, { name: TErrorName }>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Typed Data
+
+/**
+ * Converts {@link TTypedData} to corresponding TypeScript primitive types.
+ *
+ * @param TTypedData - {@link TypedData} to convert
+ * @returns Union of TypeScript primitive types
+ */
+export type TypedDataToPrimitiveTypes<TTypedData extends TypedData> = {
+  [K in keyof TTypedData]: {
+    [K2 in TTypedData[K][number] as K2['name']]: K2['type'] extends keyof TTypedData
+      ? TypedDataToPrimitiveTypes<Exclude<TTypedData, K>>[K2['type']]
+      : K2['type'] extends `${infer TType extends keyof TTypedData &
+          string}[${infer Tail}]`
+      ? AbiParameterToPrimitiveType<
+          Merge<
+            K2,
+            {
+              type: `tuple[${Tail}]`
+              components: _ConvertObjectsToComponents<
+                TTypedData[TType],
+                TTypedData
+              >
+            }
+          >
+        >
+      : AbiParameterToPrimitiveType<K2>
+  }
+}
+
+type _ConvertObjectsToComponents<
+  TObjects extends readonly { name: string; type: unknown }[],
+  TTypes extends TypedData,
+> = {
+  [K in keyof TObjects]: TObjects[K] extends infer TObject extends {
+    name: string
+    type: unknown
+  }
+    ? TObject['type'] extends keyof TTypes
+      ? Merge<
+          TObject,
+          {
+            type: `tuple`
+            components: _ConvertObjectsToComponents<
+              TTypes[TObject['type']],
+              TTypes
+            >
+          }
+        >
+      : TObject['type'] extends `${infer TType extends keyof TTypes &
+          string}[${infer Tail}]`
+      ? Merge<
+          TObject,
+          {
+            type: `tuple[${Tail}]`
+            components: _ConvertObjectsToComponents<TTypes[TType], TTypes>
+          }
+        >
+      : TObject
+    : never
+}

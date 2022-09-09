@@ -18,6 +18,8 @@ import {
   SolidityInt,
   SolidityString,
   SolidityTuple,
+  TypedData,
+  TypedDataType,
 } from './abi'
 
 test('Address', () => {
@@ -273,4 +275,27 @@ test('Abi', () => {
       outputs: [],
     },
   ])
+})
+
+test('TypedDataType', () => {
+  expectType<TypedDataType>('address')
+  expectType<TypedDataType>('bool')
+  expectType<TypedDataType>('int256')
+  expectType<TypedDataType>('string')
+  expectType<TypedDataType>('uint256')
+
+  // @ts-expect-error tuple not allowed
+  expectType<TypedDataType>('tuple')
+  // @ts-expect-error tuple not allowed
+  expectType<TypedDataType>('tuple[]')
+})
+
+test('TypedData', () => {
+  expectType<TypedData>({
+    Foo: [{ name: 'bar', type: 'string' }],
+  })
+  expectType<TypedData>({
+    // @ts-expect-error Cannot use `AbiType` as `TypedData` key
+    address: [{ name: 'bar', type: 'string' }],
+  })
 })

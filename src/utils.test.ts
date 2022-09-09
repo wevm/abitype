@@ -25,6 +25,7 @@ import {
   ExtractAbiFunctionNames,
   ExtractAbiFunctions,
   IsAbi,
+  TypedDataToPrimitiveTypes,
 } from './utils'
 
 test('AbiTypeToPrimitiveType', () => {
@@ -727,5 +728,86 @@ test('Error', () => {
       name: 'foo',
     } as const
     expectType<ExtractAbiError<[typeof abiError], 'foo'>>(abiError)
+  })
+})
+
+test('TypedDataToPrimitiveTypes', () => {
+  const contributor = {
+    name: 'John Doe',
+    address: '0x0000000000000000000000000000000000000000' as const,
+  }
+  const website = {
+    domain: 'example.com',
+    webmaster: contributor,
+  }
+
+  test('single', () => {
+    const types = {
+      Contributor: [
+        { name: 'name', type: 'string' },
+        { name: 'address', type: 'address' },
+      ],
+    } as const
+    type Result = TypedDataToPrimitiveTypes<typeof types>
+    expectType<Result>({ Contributor: contributor })
+
+    // @ts-expect-error key `Foo` does not exist
+    expectType<Result>({ Foo: contributor })
+    // @ts-expect-error Incorrect data type for `Contributor`
+    expectType<Result>({ Contributor: { foo: 'bar' } })
+  })
+
+  test('nested struct', () => {
+    const types = {
+      Contributor: [
+        { name: 'name', type: 'string' },
+        { name: 'address', type: 'address' },
+      ],
+      Website: [
+        { name: 'domain', type: 'string' },
+        { name: 'webmaster', type: 'Contributor' },
+      ],
+    } as const
+    type Result = TypedDataToPrimitiveTypes<typeof types>
+    expectType<Result>({ Contributor: contributor, Website: website })
+  })
+
+  test('deeply nested structs', () => {
+    const types = {
+      Contributor: [
+        { name: 'name', type: 'string' },
+        { name: 'address', type: 'address' },
+      ],
+      Website: [
+        { name: 'domain', type: 'string' },
+        { name: 'webmaster', type: 'Contributor' },
+      ],
+      Project: [
+        { name: 'name', type: 'string' },
+        { name: 'contributors', type: 'Contributor[2]' },
+        { name: 'website', type: 'Website' },
+      ],
+      Organization: [
+        { name: 'name', type: 'string' },
+        { name: 'projects', type: 'Project[]' },
+        { name: 'website', type: 'Website' },
+      ],
+    } as const
+    type Result = TypedDataToPrimitiveTypes<typeof types>
+    const project: Result['Project'] = {
+      name: 'My Project',
+      contributors: [contributor, contributor],
+      website,
+    }
+    expectType<Result>({
+      Contributor: contributor,
+      Website: website,
+      Project: project,
+      Organization: {
+        name: 'My Organization',
+        projects: [project, project],
+        website,
+      },
+    })
   })
 })

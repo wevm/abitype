@@ -8,6 +8,8 @@ export type {
   AbiStateMutability,
   AbiType,
   Address,
+  TypedData,
+  TypedDataType,
   SolidityAddress,
   SolidityArray,
   SolidityArrayWithoutTuple,
