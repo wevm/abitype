@@ -12,6 +12,9 @@ export interface Config {
   [key: string]: unknown
 }
 
+/**
+ * Default {@link Config} options
+ */
 export interface DefaultConfig {
   /** Maximum depth for nested array types (e.g. string[][]) */
   ArrayMaxDepth: 2
@@ -21,6 +24,14 @@ export interface DefaultConfig {
   FixedArrayLengthUpperBound: 5
 }
 
+/**
+ * Resolve {@link Config} between user defined options and {@link DefaultConfig}
+ *
+ * @example
+ * import { ResolvedConfig } from 'abitype'
+ *
+ * ResolvedConfig['ArrayMaxDepth']
+ */
 export interface ResolvedConfig {
   ArrayMaxDepth: Config['ArrayMaxDepth'] extends number | false
     ? Config['ArrayMaxDepth']

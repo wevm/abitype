@@ -6,6 +6,13 @@ export type Address = `0x${string}`
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Solidity Types
 
+// Could use `Range`, but listed out for zero overhead
+// prettier-ignore
+type MBytes =
+  | '' | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9
+  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19
+  | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29
+  | 30 | 31 | 32
 // prettier-ignore
 type MBits =
   | ''  | 8   | 16  | 24  | 32  | 40  | 48  | 56  | 64  | 72
@@ -13,22 +20,18 @@ type MBits =
   | 160 | 168 | 176 | 184 | 192 | 200 | 208 | 216 | 224 | 232
   | 240 | 248 | 256
 
-// prettier-ignore
-type MBytes =
-  | '' | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9
-  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19
-  | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29
-  | 30 | 31 | 32
-
+// From https://docs.soliditylang.org/en/latest/abi-spec.html#types
 export type SolidityAddress = 'address'
 export type SolidityBool = 'bool'
-export type SolidityBytes = `bytes${MBytes}`
+export type SolidityBytes = `bytes${MBytes}` // `bytes<M>`: binary type of `M` bytes, `0 < M <= 32`
 export type SolidityFunction = 'function'
 export type SolidityString = 'string'
 export type SolidityTuple = 'tuple'
-export type SolidityInt = `${'u' | ''}int${MBits}`
+export type SolidityInt = `${'u' | ''}int${MBits}` // `(u)int<M>`: (un)signed integer type of `M` bits, `0 < M <= 256`, `M % 8 == 0`
 // No need to support "fixed" until Solidity does
 // https://github.com/ethereum/solidity/issues/409
+// `(u)fixed<M>x<N>`: (un)signed fixed-point decimal number of `M` bits, `8 <= M <= 256`, `M % 8 == 0`,
+// and `0 < N <= 80`, which denotes the value `v` as `v / (10 ** N)`
 // export type SolidityFixed =
 //   | `${'u' | ''}fixed`
 //   | `${'u' | ''}fixed${MBits}x${Range<1, 20>[number]}`
@@ -41,7 +44,11 @@ export type SolidityFixedArraySizeLookup = {
   [Prop in SolidityFixedArrayRange as `${Prop}`]: Prop
 }
 
-type BuildArrayTypes<
+/**
+ * Recursively build arrays up to maximum depth
+ * or use a more broad type when maximum depth is switch "off"
+ */
+type _BuildArrayTypes<
   T extends string,
   Depth extends ReadonlyArray<number> = [],
 > = ResolvedConfig['ArrayMaxDepth'] extends false
@@ -49,10 +56,12 @@ type BuildArrayTypes<
   : Depth['length'] extends ResolvedConfig['ArrayMaxDepth']
   ? T
   : T extends `${any}[${SolidityFixedArrayRange | ''}]`
-  ? BuildArrayTypes<T | `${T}[${SolidityFixedArrayRange | ''}]`, [...Depth, 1]>
-  : BuildArrayTypes<`${T}[${SolidityFixedArrayRange | ''}]`, [...Depth, 1]>
+  ? _BuildArrayTypes<T | `${T}[${SolidityFixedArrayRange | ''}]`, [...Depth, 1]>
+  : _BuildArrayTypes<`${T}[${SolidityFixedArrayRange | ''}]`, [...Depth, 1]>
 
-export type SolidityArrayWithoutTuple = BuildArrayTypes<
+// Modeling fixed-length (`<type>[M]`) and dynamic (`<type>[]`) arrays
+// Tuple and non-tuple versions are separated out for narrowing anywhere structs show up
+export type SolidityArrayWithoutTuple = _BuildArrayTypes<
   | SolidityAddress
   | SolidityBool
   | SolidityBytes
@@ -60,7 +69,7 @@ export type SolidityArrayWithoutTuple = BuildArrayTypes<
   | SolidityInt
   | SolidityString
 >
-export type SolidityArrayWithTuple = BuildArrayTypes<SolidityTuple>
+export type SolidityArrayWithTuple = _BuildArrayTypes<SolidityTuple>
 export type SolidityArray = SolidityArrayWithoutTuple | SolidityArrayWithTuple
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,11 +98,7 @@ export type AbiParameter = {
   /** Representation used by Solidity compiler */
   internalType?: AbiInternalType
 } & (
-  | {
-      type:
-        | Exclude<AbiType, SolidityTuple | SolidityArray>
-        | SolidityArrayWithoutTuple
-    }
+  | { type: Exclude<AbiType, SolidityTuple | SolidityArrayWithTuple> }
   | {
       type: SolidityTuple | SolidityArrayWithTuple
       components: readonly AbiParameter[]
@@ -156,18 +161,22 @@ export type Abi = readonly (AbiFunction | AbiEvent | AbiError)[]
 // Typed Data Types
 
 // Subset of `AbiType` that excludes `tuple` and `function`
-export type TypedDataType =
-  | Exclude<AbiType, SolidityArray | SolidityFunction | SolidityTuple>
-  | SolidityArrayWithoutTuple
+export type TypedDataType = Exclude<
+  AbiType,
+  SolidityFunction | SolidityTuple | SolidityArrayWithTuple
+>
+
+export type TypedDataParameter = {
+  name: string
+  type: TypedDataType | keyof TypedData | `${keyof TypedData}[${string | ''}]`
+}
 
 /**
  * [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) Typed Data Specification
  */
 export type TypedData = {
-  [key: string]: readonly {
-    name: string
-    type: TypedDataType | keyof TypedData | `${keyof TypedData}[${string | ''}]`
-  }[]
+  [key: string]: readonly TypedDataParameter[]
 } & {
+  // Disallow `TypedDataType` as key names (e.g. `address`)
   [_ in TypedDataType]?: never
 }

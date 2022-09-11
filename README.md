@@ -1,9 +1,9 @@
-# AbiType
+# ABIType
 
 [![npm](https://img.shields.io/npm/v/abitype.svg?colorA=21262d&colorB=161b22&style=flat)](https://www.npmjs.com/package/abitype)
 [![Downloads per month](https://img.shields.io/npm/dm/abitype?colorA=21262d&colorB=161b22&style=flat)](https://www.npmjs.com/package/abitype)
 
-Strict TypeScript types for Ethereum ABIs. AbiType provides utilities and type definitions for ABI properties and values, covering the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html).
+Strict TypeScript types for Ethereum ABIs. ABIType provides utilities and type definitions for ABI properties and values, covering the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html), as well as [EIP-712](https://eips.ethereum.org/EIPS/eip-712) Typed Data.
 
 ```ts
 import { ExtractAbiFunctions } from 'abitype'
@@ -13,7 +13,7 @@ const erc721Abi = [...] as const
 type Result = ExtractAbiFunctions<typeof erc721Abi, 'payable'>
 ```
 
-Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions or variables. No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
+Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions, variables, or your own types. No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
 
 ## Installation
 
@@ -23,7 +23,7 @@ npm install abitype
 
 ## Usage
 
-Since ABIs can contain deeply nested arrays, objects, and other types, you must assert your ABIs to constants using [`const` assertions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions). This allows TypeScript to take the most specific types for expressions and avoid type widening (e.g. no going from `"hello"` to `string`).
+Since ABIs can contain deeply nested arrays and objects, you must assert your ABIs to constants using [`const` assertions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions). This allows TypeScript to take the most specific types for expressions and avoid type widening (e.g. no going from `"hello"` to `string`).
 
 ```ts
 const erc721Abi = [...] as const
@@ -50,7 +50,7 @@ type Result = AbiParameterToPrimitiveType<{
 
 ### AbiParametersToPrimitiveTypes
 
-Converts array of `AbiParameter` to corresponding TypeScript primitive type.
+Converts array of `AbiParameter` to corresponding TypeScript primitive types.
 
 ```ts
 import { AbiParametersToPrimitiveTypes } from 'abitype'
@@ -80,7 +80,7 @@ type Result = AbiTypeToPrimitiveType<'address'>
 ```
 
 > **Note**
-> Does not include full array or tuple conversion. Use `AbiParameterToPrimitiveType` to fully convert arrays and tuples.
+> Does not include full array or tuple conversion. Use `AbiParameterToPrimitiveType` to fully convert array and tuple types.
 
 ### ExtractAbiError
 
@@ -186,6 +186,26 @@ Checks if type is `Abi`
 import { IsAbi } from 'abitype'
 
 type Result = IsAbi<typeof erc721Abi>
+```
+
+### IsTypedData
+
+Checks if type is `TypedData`
+
+```ts
+import { IsTypedData } from 'abitype'
+
+type Result = IsTypedData<{
+  Person: [
+    { name: 'name'; type: 'string' },
+    { name: 'wallet'; type: 'address' },
+  ]
+  Mail: [
+    { name: 'from'; type: 'Person' },
+    { name: 'to'; type: 'Person' },
+    { name: 'contents'; type: 'string' },
+  ]
+}>
 ```
 
 ### AbiEventSignature
@@ -321,6 +341,14 @@ import {
 } from 'abitype'
 ```
 
+### TypedDataParameter
+
+Entry in `TypedData` type items
+
+```ts
+import { TypedDataParameter } from 'abitype'
+```
+
 ### TypedDataType
 
 Subset of `AbiType` that excludes `tuple` and `function`
@@ -339,7 +367,7 @@ import { TypedData } from 'abitype'
 
 ## Configuration
 
-AbiType tries to strike a balance between type exhaustiveness and speed with sensible defaults. In some cases, you might want to tune your configuration (e.g. fixed array length). To do this, the following configuration options are available:
+ABIType tries to strike a balance between type exhaustiveness and speed with sensible defaults. In some cases, you might want to tune your configuration (e.g. fixed array length). To do this, the following configuration options are available:
 
 | Option                       | Type              | Default | Description                                                                                              |
 | ---------------------------- | ----------------- | ------- | -------------------------------------------------------------------------------------------------------- |
@@ -362,7 +390,7 @@ declare module 'abitype' {
 
 ## Support
 
-If you find AbiType useful, please consider supporting development. Thank you 🙏
+If you find ABIType useful, please consider supporting development. Thank you 🙏
 
 - [GitHub Sponsors](https://github.com/sponsors/wagmi-dev?metadata_campaign=gh_readme_support)
 - [Gitcoin Grant](https://gitcoin.co/grants/4493/wagmi-react-hooks-library-for-ethereum)
