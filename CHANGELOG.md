@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.12
+
+### Patch Changes
+
+- [#18](https://github.com/wagmi-dev/abitype/pull/18) [`995674d`](https://github.com/wagmi-dev/abitype/commit/995674d6cf909124f7dc6f20587807ab349db7e2) Thanks [@tmm](https://github.com/tmm)! - Added support for tuples with unnamed parameters.
+
 ## 0.0.11
 
 ### Patch Changes
