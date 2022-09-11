@@ -17,6 +17,8 @@ import {
   SolidityString,
   SolidityTuple,
   TypedData,
+  TypedDataParameter,
+  TypedDataType,
 } from './abi'
 import { Merge, Tuple } from './types'
 
@@ -31,7 +33,7 @@ import { Merge, Tuple } from './types'
 export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
   PrimitiveTypeLookup[TAbiType]
 
-// Using a map to look up types faster
+// Using a map to look up types is faster, than nested conditional types
 // s/o https://twitter.com/SeaRyanC/status/1538971176357113858
 type PrimitiveTypeLookup = {
   [_ in SolidityAddress]: Address
@@ -59,29 +61,72 @@ type PrimitiveTypeLookup = {
  */
 export type AbiParameterToPrimitiveType<
   TAbiParameter extends AbiParameter | { name: string; type: unknown },
-> = TAbiParameter['type'] extends Exclude<
-  AbiType,
-  SolidityTuple | SolidityArray
->
-  ? AbiTypeToPrimitiveType<TAbiParameter['type']>
-  : TAbiParameter['type'] extends SolidityTuple
-  ? {
-      [Component in (TAbiParameter & {
-        components: AbiParameter[]
-      })['components'][number] as Component['name']]: AbiParameterToPrimitiveType<Component>
-    }
-  : TAbiParameter['type'] extends `${infer Head}[${
-      | ''
-      | `${SolidityFixedArrayRange}`}]`
-  ? TAbiParameter['type'] extends `${Head}[${infer Size}]`
-    ? Size extends keyof SolidityFixedArraySizeLookup
-      ? Tuple<
-          AbiParameterToPrimitiveType<Merge<TAbiParameter, { type: Head }>>,
-          SolidityFixedArraySizeLookup[Size]
-        >
-      : AbiParameterToPrimitiveType<Merge<TAbiParameter, { type: Head }>>[]
-    : never
-  : unknown
+> =
+  // 1. Check to see if type is basic (not tuple or array) and can be looked up immediately.
+  TAbiParameter['type'] extends Exclude<AbiType, SolidityTuple | SolidityArray>
+    ? AbiTypeToPrimitiveType<TAbiParameter['type']>
+    : // 2. Check if type is tuple and covert each component
+    TAbiParameter['type'] extends SolidityTuple
+    ? TAbiParameter extends {
+        components: infer TComponents extends readonly AbiParameter[]
+      }
+      ? _HasUnnamedAbiParameter<TComponents> extends true
+        ? // Has unnamed tuple parameters so return as array
+          {
+            [K in keyof TComponents]: AbiParameterToPrimitiveType<
+              TComponents[K]
+            >
+          }
+        : // All tuple parameters are named so return as object
+          {
+            [Component in TComponents[number] as Component['name']]: AbiParameterToPrimitiveType<Component>
+          }
+      : never
+    : // 3. Check if type is array.
+    /**
+     * First, infer `Head` against a known size type (either fixed-length array value or `""`).
+     *
+     * | Input           | Head         |
+     * | --------------- | ------------ |
+     * | `string[]`      | `string`     |
+     * | `string[][][3]` | `string[][]` |
+     */
+    TAbiParameter['type'] extends `${infer Head}[${
+        | ''
+        | `${SolidityFixedArrayRange}`}]`
+    ? /**
+       * Then, infer in the opposite direction, using the known `Head` to infer the exact `Size` value.
+       *
+       * | Input        | Size |
+       * | ------------ | ---- |
+       * | `${Head}[]`  | `""` |
+       * | `${Head}[3]` | `3`  |
+       */
+      TAbiParameter['type'] extends `${Head}[${infer Size}]`
+      ? // Check if size is within range for fixed-length arrays, if so create a tuple.
+        // Otherwise, create an array. Tuples and arrays are created with `[${Size}]` popped off the end
+        // and passed back into the function to continue reduing down to the basic types found in Step 1.
+        Size extends keyof SolidityFixedArraySizeLookup
+        ? Tuple<
+            AbiParameterToPrimitiveType<Merge<TAbiParameter, { type: Head }>>,
+            SolidityFixedArraySizeLookup[Size]
+          >
+        : AbiParameterToPrimitiveType<Merge<TAbiParameter, { type: Head }>>[]
+      : never
+    : // 4. If type is not basic, tuple, or array, we don't know what the type is.
+      // This can happen when a fixed-length array is out of range (`Size` doesn't exist in `SolidityFixedArraySizeLookup`),
+      // the array has depth greater than `Config['ArrayMaxDepth']`, etc.
+      unknown
+
+type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
+  TAbiParameters extends [
+    infer Head extends AbiParameter,
+    ...infer Tail extends AbiParameter[],
+  ]
+    ? Head['name'] extends ''
+      ? true
+      : _HasUnnamedAbiParameter<Tail>
+    : false
 
 /**
  * Converts array of {@link AbiParameter} to corresponding TypeScript primitive types.
@@ -155,6 +200,9 @@ export type ExtractAbiFunction<
  * @returns Function signature
  */
 export type AbiFunctionSignature<
+  // Evem though this is for generating a function signature,
+  // we don't care about `constructor`, `fallback`, or `receive` functions.
+  // This could change if folks think they are useful.
   TAbiFunction extends AbiFunction & { type: 'function' },
 > = (
   ...args: AbiParametersToPrimitiveTypes<
@@ -275,6 +323,31 @@ export type ExtractAbiError<
 // Typed Data
 
 /**
+ * Checks if type is {@link TypedData}.
+ *
+ * @param TTypedData - {@link TypedData} to check
+ * @returns Boolean for whether {@link TTypedData} is {@link TypedData}
+ */
+export type IsTypedData<TTypedData> = TTypedData extends TypedData
+  ? {
+      [K in keyof TTypedData]: {
+        // Map over typed data values and turn into key-value pairs
+        [K2 in TTypedData[K][number] as K2['type'] extends keyof TTypedData
+          ? never
+          : K2['type'] extends `${keyof TTypedData & string}[${string}]`
+          ? never
+          : K2['type'] extends TypedDataType
+          ? never
+          : K2['name']]: false
+      }
+    } extends {
+      [K in keyof TTypedData]: Record<string, never>
+    }
+    ? true
+    : false
+  : false
+
+/**
  * Converts {@link TTypedData} to corresponding TypeScript primitive types.
  *
  * @param TTypedData - {@link TypedData} to convert
@@ -282,54 +355,64 @@ export type ExtractAbiError<
  */
 export type TypedDataToPrimitiveTypes<TTypedData extends TypedData> = {
   [K in keyof TTypedData]: {
-    [K2 in TTypedData[K][number] as K2['name']]: K2['type'] extends keyof TTypedData
+    // Map over typed data values and turn into key-value pairs
+    [K2 in TTypedData[K][number] as K2['name']]: K2['type'] extends keyof TTypedData // 1. Check if type is struct
       ? TypedDataToPrimitiveTypes<Exclude<TTypedData, K>>[K2['type']]
-      : K2['type'] extends `${infer TType extends keyof TTypedData &
+      : // 2. Check if type is array of structs
+      K2['type'] extends `${infer TType extends keyof TTypedData &
           string}[${infer Tail}]`
       ? AbiParameterToPrimitiveType<
           Merge<
             K2,
             {
               type: `tuple[${Tail}]`
-              components: _ConvertObjectsToComponents<
+              components: _TypedDataParametersToAbiParameters<
                 TTypedData[TType],
                 TTypedData
               >
             }
           >
         >
-      : AbiParameterToPrimitiveType<K2>
+      : // 3. Known type to covert
+        AbiParameterToPrimitiveType<K2>
   }
 }
 
-type _ConvertObjectsToComponents<
-  TObjects extends readonly { name: string; type: unknown }[],
-  TTypes extends TypedData,
+type _TypedDataParametersToAbiParameters<
+  TTypedDataParameters extends readonly TypedDataParameter[],
+  TTypedData extends TypedData,
 > = {
-  [K in keyof TObjects]: TObjects[K] extends infer TObject extends {
+  // Map over typed data parameters and convert into ABI parameters
+  [K in keyof TTypedDataParameters]: TTypedDataParameters[K] extends infer TTypedDataParameter extends {
     name: string
     type: unknown
   }
-    ? TObject['type'] extends keyof TTypes
+    ? // 1. Check if type is struct
+      TTypedDataParameter['type'] extends keyof TTypedData
       ? Merge<
-          TObject,
+          TTypedDataParameter,
           {
             type: `tuple`
-            components: _ConvertObjectsToComponents<
-              TTypes[TObject['type']],
-              TTypes
+            components: _TypedDataParametersToAbiParameters<
+              TTypedData[TTypedDataParameter['type']],
+              TTypedData
             >
           }
         >
-      : TObject['type'] extends `${infer TType extends keyof TTypes &
+      : // 2. Check if type is array of structs
+      TTypedDataParameter['type'] extends `${infer TType extends keyof TTypedData &
           string}[${infer Tail}]`
       ? Merge<
-          TObject,
+          TTypedDataParameter,
           {
             type: `tuple[${Tail}]`
-            components: _ConvertObjectsToComponents<TTypes[TType], TTypes>
+            components: _TypedDataParametersToAbiParameters<
+              TTypedData[TType],
+              TTypedData
+            >
           }
         >
-      : TObject
+      : // 3. Type is already ABI parameter
+        TTypedDataParameter
     : never
 }

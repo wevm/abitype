@@ -25,6 +25,7 @@ import {
   ExtractAbiFunctionNames,
   ExtractAbiFunctions,
   IsAbi,
+  IsTypedData,
   TypedDataToPrimitiveTypes,
 } from './utils'
 
@@ -206,6 +207,38 @@ test('AbiParameterToPrimitiveType', () => {
       b: [2, 3],
       c: [{ x: 1, y: { a: 'foo' } }],
     })
+
+    type WithoutNamedParameterResult = AbiParameterToPrimitiveType<{
+      components: [
+        { name: ''; type: 'string' },
+        { name: 'symbol'; type: 'string' },
+        { name: 'description'; type: 'string' },
+        { name: 'imageURI'; type: 'string' },
+        { name: 'contentURI'; type: 'string' },
+        { name: 'price'; type: 'uint256' },
+        { name: 'limit'; type: 'uint256' },
+        { name: 'fundingRecipient'; type: 'address' },
+        { name: 'renderer'; type: 'address' },
+        { name: 'nonce'; type: 'uint256' },
+        { name: 'fee'; type: 'uint16' },
+      ]
+      internalType: 'struct IWritingEditions.WritingEdition'
+      name: 'edition'
+      type: 'tuple'
+    }>
+    expectType<WithoutNamedParameterResult>([
+      'Test',
+      '$TEST',
+      'Foo bar baz',
+      'ipfs://hash',
+      'arweave://digest',
+      0.1,
+      100,
+      address,
+      address,
+      123,
+      0,
+    ])
   })
 
   test('number', () => {
@@ -810,4 +843,29 @@ test('TypedDataToPrimitiveTypes', () => {
       },
     })
   })
+})
+
+test('IsTypedData', () => {
+  type Result = IsTypedData<{
+    Person: [
+      { name: 'name'; type: 'string' },
+      { name: 'wallet'; type: 'address' },
+    ]
+    Mail: [
+      { name: 'from'; type: 'Person' },
+      { name: 'to'; type: 'Person' },
+      { name: 'contents'; type: 'string' },
+    ]
+  }>
+  expectType<Result>(true)
+
+  type Result2 = IsTypedData<{
+    Person: [{ name: 'name'; type: 'string' }, { name: 'wallet'; type: 'merp' }]
+    Mail: [
+      { name: 'from'; type: 'Person' },
+      { name: 'to'; type: 'Person' },
+      { name: 'contents'; type: 'string' },
+    ]
+  }>
+  expectType<Result2>(false)
 })

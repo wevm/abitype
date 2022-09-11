@@ -21,10 +21,11 @@ export type {
   SolidityString,
   SolidityTuple,
   TypedData,
+  TypedDataParameter,
   TypedDataType,
 } from './abi'
 
-export type { Config, DefaultConfig } from './config'
+export type { Config, DefaultConfig, ResolvedConfig } from './config'
 
 export type {
   AbiEventSignature,
@@ -42,5 +43,6 @@ export type {
   ExtractAbiFunctionNames,
   ExtractAbiFunctions,
   IsAbi,
+  IsTypedData,
   TypedDataToPrimitiveTypes,
 } from './utils'

@@ -1,4 +1,16 @@
 /**
+ * Merges two types into new type
+ *
+ * @param Object1 - Object to merge into
+ * @param Object2 - Object to merge and override keys from {@link Object1}
+ *
+ * @example
+ * type Result = Merge<{ foo: string }, { foo: number; bar: string }>
+ * { foo: number; bar: string }
+ */
+export type Merge<Object1, Object2> = Omit<Object1, keyof Object2> & Object2
+
+/**
  * Creates range between two positive numbers using [tail recursion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html#tail-recursion-elimination-on-conditional-types).
  *
  * @param Start - Number to start range
@@ -50,15 +62,3 @@ type _TupleOf<
   TSize extends number,
   R extends unknown[],
 > = R['length'] extends TSize ? R : _TupleOf<TNumber, TSize, [TNumber, ...R]>
-
-/**
- * Merges two types into new type
- *
- * @param Object1 - Object to merge into
- * @param Object2 - Object to merge and override keys from {@link Object1}
- *
- * @example
- * type Result = Merge<{ foo: string }, { foo: number; bar: string }>
- * { foo: number; bar: string }
- */
-export type Merge<Object1, Object2> = Omit<Object1, keyof Object2> & Object2
