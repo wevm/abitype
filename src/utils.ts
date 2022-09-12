@@ -20,6 +20,7 @@ import {
   TypedDataParameter,
   TypedDataType,
 } from './abi'
+import { ResolvedConfig } from './config'
 import { Merge, Tuple } from './types'
 
 /**
@@ -44,7 +45,7 @@ type PrimitiveTypeLookup = {
 } & {
   [_ in SolidityFunction]: `${Address}${string}`
 } & {
-  [_ in SolidityInt]: number | bigint
+  [_ in SolidityInt]: ResolvedConfig['NumberType']
 } & {
   [_ in SolidityString]: string
 } & {

@@ -217,12 +217,12 @@ export function readContracts<T extends unknown[]>(
 
 export function signTypedData<
   TTypedData extends TypedData,
-  Schema extends TypedDataToPrimitiveTypes<TTypedData>,
+  TSchema extends TypedDataToPrimitiveTypes<TTypedData>,
 >(_config: {
   /** Named list of all type definitions */
   types: TTypedData
   /** Data to sign */
-  value: Schema[keyof Schema]
+  value: TSchema[keyof TSchema]
 }) {
   return {} as Address
 }
