@@ -20,5 +20,7 @@ test('Config', () => {
 
   type IntType = ResolvedConfig['IntType']
   expectType<IntType>(123)
-  expectType<IntType>(123n)
+
+  type BigIntType = ResolvedConfig['BigIntType']
+  expectType<BigIntType>(123n)
 })

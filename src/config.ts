@@ -30,8 +30,10 @@ export interface DefaultConfig {
   AddressType: Address
   /** TypeScript type to use for `bytes` values */
   BytesType: string | ArrayLike<number>
-  /** TypeScript type to use for `int` and `uint` values */
-  IntType: number | bigint
+  /** TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48` */
+  BigIntType: bigint
+  /** TypeScript type to use for `int` and `uint` values, where `M <= 48` */
+  IntType: number
 }
 
 /**
@@ -59,6 +61,9 @@ export interface ResolvedConfig {
   BytesType: IsUnknown<Config['BytesType']> extends true
     ? DefaultConfig['BytesType']
     : Config['BytesType']
+  BigIntType: IsUnknown<Config['BigIntType']> extends true
+    ? DefaultConfig['BigIntType']
+    : Config['BigIntType']
   IntType: IsUnknown<Config['IntType']> extends true
     ? DefaultConfig['IntType']
     : Config['IntType']

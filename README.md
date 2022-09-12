@@ -351,10 +351,11 @@ ABIType tries to strike a balance between type exhaustiveness and speed with sen
 | --------------------- | ----------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------- |
 | `AddressType`         | `any`             | `` `0x${string}` ``           | TypeScript type to use for `address` values.                                                             |
 | `ArrayMaxDepth`       | `number \| false` | `2`                           | Maximum depth for nested array types (e.g. `string[][]`). When `false`, there is no maximum array depth. |
+| `BigIntType`          | `any`             | `bigint`                      | TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48`.                                |
 | `BytesType`           | `any`             | `string \| ArrayLike<number>` | TypeScript type to use for `bytes<M>` values.                                                            |
 | `FixedArrayMinLength` | `number`          | `1`                           | Lower bound for fixed-length arrays                                                                      |
 | `FixedArrayMaxLength` | `number`          | `5`                           | Upper bound for fixed-length arrays                                                                      |
-| `IntType`             | `any`             | `number \| bigint`            | TypeScript type to use for `int<M>` and `uint<M>` values.                                                |
+| `IntType`             | `any`             | `number`                      | TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48`.                               |
 
 Configuration options are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). Just extend the `Config` interface either directly in your code or in a `d.ts` file (e.g. `abi.d.ts`):
 

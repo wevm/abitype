@@ -3,6 +3,7 @@ import {
   AbiParameter,
   AbiStateMutability,
   AbiType,
+  MBits,
   SolidityAddress,
   SolidityArray,
   SolidityBool,
@@ -29,11 +30,11 @@ import { Merge, Tuple } from './types'
  * @returns TypeScript primitive type
  */
 export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
-  PrimitiveTypeLookup[TAbiType]
+  PrimitiveTypeLookup<TAbiType>[TAbiType]
 
 // Using a map to look up types is faster, than nested conditional types
 // s/o https://twitter.com/SeaRyanC/status/1538971176357113858
-type PrimitiveTypeLookup = {
+type PrimitiveTypeLookup<TAbiType extends AbiType> = {
   [_ in SolidityAddress]: ResolvedConfig['AddressType']
 } & {
   [_ in SolidityBool]: boolean
@@ -42,13 +43,27 @@ type PrimitiveTypeLookup = {
 } & {
   [_ in SolidityFunction]: `${ResolvedConfig['AddressType']}${string}`
 } & {
-  [_ in SolidityInt]: ResolvedConfig['IntType']
+  [_ in SolidityInt]: TAbiType extends SolidityInt
+    ? TAbiType extends `${'u' | ''}int${infer TBits extends MBits}`
+      ? BitsTypeLookup[TBits]
+      : never
+    : never
 } & {
   [_ in SolidityString]: string
 } & {
   [_ in SolidityTuple]: Record<string, unknown>
 } & {
   [_ in SolidityArray]: unknown[]
+}
+
+type LessThanOrEqualTo48Bits = 8 | 16 | 24 | 32 | 40 | 48
+type GreaterThan48Bits = Exclude<MBits, LessThanOrEqualTo48Bits | ''>
+type BitsTypeLookup = {
+  [_ in LessThanOrEqualTo48Bits]: ResolvedConfig['IntType']
+} & {
+  [_ in GreaterThan48Bits]: ResolvedConfig['BigIntType']
+} & {
+  ['']: ResolvedConfig['IntType'] | ResolvedConfig['BigIntType']
 }
 
 /**
