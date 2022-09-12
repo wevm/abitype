@@ -43,10 +43,10 @@ type PrimitiveTypeLookup<TAbiType extends AbiType> = {
 } & {
   [_ in SolidityFunction]: `${ResolvedConfig['AddressType']}${string}`
 } & {
-  [_ in SolidityInt]: TAbiType extends SolidityInt
-    ? TAbiType extends `${'u' | ''}int${infer TBits extends MBits}`
+  [_ in SolidityInt]: TAbiType extends `${'u' | ''}int${infer TBits}`
+    ? TBits extends keyof BitsTypeLookup
       ? BitsTypeLookup[TBits]
-      : never
+      : TBits
     : never
 } & {
   [_ in SolidityString]: string
@@ -56,14 +56,15 @@ type PrimitiveTypeLookup<TAbiType extends AbiType> = {
   [_ in SolidityArray]: unknown[]
 }
 
-type LessThanOrEqualTo48Bits = 8 | 16 | 24 | 32 | 40 | 48
-type GreaterThan48Bits = Exclude<MBits, LessThanOrEqualTo48Bits | ''>
+type GreaterThan48Bits = Exclude<MBits, 8 | 16 | 24 | 32 | 40 | 48 | ''>
+type LessThanOrEqualTo48Bits = Exclude<MBits, GreaterThan48Bits | ''>
+type DynamicBits = Exclude<MBits, GreaterThan48Bits | LessThanOrEqualTo48Bits>
 type BitsTypeLookup = {
-  [_ in LessThanOrEqualTo48Bits]: ResolvedConfig['IntType']
+  [_ in `${LessThanOrEqualTo48Bits}`]: ResolvedConfig['IntType']
 } & {
-  [_ in GreaterThan48Bits]: ResolvedConfig['BigIntType']
+  [_ in `${GreaterThan48Bits}`]: ResolvedConfig['BigIntType']
 } & {
-  ['']: ResolvedConfig['IntType'] | ResolvedConfig['BigIntType']
+  [_ in DynamicBits]: ResolvedConfig['IntType'] | ResolvedConfig['BigIntType']
 }
 
 /**

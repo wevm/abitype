@@ -10,11 +10,11 @@ export const nestedTupleArrayAbi = [
         components: [
           {
             name: 'a',
-            type: 'uint256',
+            type: 'uint8',
           },
           {
             name: 'b',
-            type: 'uint256[]',
+            type: 'uint8[]',
           },
           {
             name: 'c',
@@ -22,11 +22,11 @@ export const nestedTupleArrayAbi = [
             components: [
               {
                 name: 'x',
-                type: 'uint256',
+                type: 'uint8',
               },
               {
                 name: 'y',
-                type: 'uint256',
+                type: 'uint8',
               },
             ],
           },
@@ -38,11 +38,11 @@ export const nestedTupleArrayAbi = [
         components: [
           {
             name: 'x',
-            type: 'uint256',
+            type: 'uint',
           },
           {
             name: 'y',
-            type: 'uint256',
+            type: 'uint',
           },
         ],
       },
@@ -79,11 +79,11 @@ export const nestedTupleArrayAbi = [
         components: [
           {
             name: 'a',
-            type: 'uint256',
+            type: 'uint8',
           },
           {
             name: 'b',
-            type: 'uint256[]',
+            type: 'uint8[]',
           },
         ],
       },
@@ -93,11 +93,11 @@ export const nestedTupleArrayAbi = [
         components: [
           {
             name: 'x',
-            type: 'uint256',
+            type: 'uint',
           },
           {
             name: 'y',
-            type: 'uint256',
+            type: 'uint',
           },
         ],
       },
@@ -776,7 +776,7 @@ export const writingEditionsFactoryAbi = [
           { internalType: 'string', name: 'description', type: 'string' },
           { internalType: 'string', name: 'imageURI', type: 'string' },
           { internalType: 'string', name: 'contentURI', type: 'string' },
-          { internalType: 'uint256', name: 'price', type: 'uint256' },
+          { internalType: 'uint256', name: 'price', type: 'uint8' },
           { internalType: 'uint256', name: 'limit', type: 'uint256' },
           {
             internalType: 'address',
@@ -843,7 +843,7 @@ export const writingEditionsFactoryAbi = [
           { internalType: 'string', name: 'description', type: 'string' },
           { internalType: 'string', name: 'imageURI', type: 'string' },
           { internalType: 'string', name: 'contentURI', type: 'string' },
-          { internalType: 'uint256', name: 'price', type: 'uint256' },
+          { internalType: 'uint256', name: 'price', type: 'uint8' },
           { internalType: 'uint256', name: 'limit', type: 'uint256' },
           {
             internalType: 'address',
