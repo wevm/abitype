@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.16
+
+### Patch Changes
+
+- [#25](https://github.com/wagmi-dev/abitype/pull/25) [`8d23291`](https://github.com/wagmi-dev/abitype/commit/8d23291f47f21dc40d5f407f78996856aa95e6c0) Thanks [@tmm](https://github.com/tmm)! - Parse out integer type.
+
 ## 0.0.15
 
 ### Patch Changes
