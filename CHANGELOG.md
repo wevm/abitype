@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.14
+
+### Patch Changes
+
+- [#22](https://github.com/wagmi-dev/abitype/pull/22) [`5307b1e`](https://github.com/wagmi-dev/abitype/commit/5307b1ec88afae6fd3b69a05777e0fc310db3111) Thanks [@tmm](https://github.com/tmm)! - Added `AddressType` and `BytesType` to configuration. Renamed `NumberType` to `IntType`.
+
 ## 0.0.13
 
 ### Patch Changes
