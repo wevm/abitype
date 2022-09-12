@@ -46,7 +46,7 @@ type PrimitiveTypeLookup<TAbiType extends AbiType> = {
   [_ in SolidityInt]: TAbiType extends `${'u' | ''}int${infer TBits}`
     ? TBits extends keyof BitsTypeLookup
       ? BitsTypeLookup[TBits]
-      : TBits
+      : never
     : never
 } & {
   [_ in SolidityString]: string
