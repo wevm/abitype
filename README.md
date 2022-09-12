@@ -208,28 +208,6 @@ type Result = IsTypedData<{
 }>
 ```
 
-### AbiEventSignature
-
-Converts `AbiEvent` into TypeScript function signature.
-
-```ts
-import { AbiEventSignature } from 'abitype'
-
-type Result = AbiEventSignature<ExtractAbiEvent<typeof erc721Abi, 'Transfer'>>
-```
-
-### AbiFunctionSignature
-
-Converts `AbiEvent` into TypeScript function signature.
-
-```ts
-import { AbiFunctionSignature } from 'abitype'
-
-type Result = AbiFunctionSignature<
-  ExtractAbiFunction<typeof erc721Abi, 'balanceOf'>
->
-```
-
 ### TypedDataToPrimitiveTypes
 
 Converts [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) `TypedData` to corresponding TypeScript primitive type.

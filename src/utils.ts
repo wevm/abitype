@@ -1,7 +1,5 @@
 import {
   Abi,
-  AbiEvent,
-  AbiFunction,
   AbiParameter,
   AbiStateMutability,
   AbiType,
@@ -193,46 +191,6 @@ export type ExtractAbiFunction<
   TFunctionName extends ExtractAbiFunctionNames<TAbi>,
 > = Extract<ExtractAbiFunctions<TAbi>, { name: TFunctionName }>
 
-/**
- * Converts {@link AbiFunction} into TypeScript function signature.
- *
- * @param TAbiFunction - {@link AbiFunction} to convert
- * @returns Function signature
- */
-export type AbiFunctionSignature<
-  // Evem though this is for generating a function signature,
-  // we don't care about `constructor`, `fallback`, or `receive` functions.
-  // This could change if folks think they are useful.
-  TAbiFunction extends AbiFunction & { type: 'function' },
-> = (
-  ...args: AbiParametersToPrimitiveTypes<
-    TAbiFunction['inputs']
-  > extends infer Inputs
-    ? Inputs extends readonly any[]
-      ? Inputs
-      : never
-    : never
-) => AbiParametersToPrimitiveTypes<
-  TAbiFunction['outputs']
-> extends infer Outputs extends readonly any[]
-  ? Outputs['length'] extends 0
-    ? void
-    : Outputs['length'] extends 1
-    ? Outputs[0]
-    : // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    Outputs extends readonly [...infer _]
-    ? Outputs
-    : /**
-       * TODO: Infer non-constant array types
-       * Expected: [{ type: 'string', name: 'foo' }] => string, actual: string[]
-       * Expected: [{ type: 'string[]', name: 'foo' }] => string[], actual: string[][]
-       * Expected: [{ type: 'string[]', name: 'foo' }, { type: 'uint256', name: 'bar' }] => (string[] | number | bigint)[], actual: (number | bigint | unknown[])[]
-       *
-       * Until then, we'll just return `any` for non-constant array types
-       */
-      any
-  : never
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Abi Events
 
@@ -267,22 +225,6 @@ export type ExtractAbiEvent<
   TAbi extends Abi,
   TEventName extends ExtractAbiEventNames<TAbi>,
 > = Extract<ExtractAbiEvents<TAbi>, { name: TEventName }>
-
-/**
- * Converts {@link AbiEvent} into TypeScript function signature.
- *
- * @param AbiEvent - {@link AbiEvent} to convert
- * @returns Function signature
- */
-export type AbiEventSignature<TAbiEvent extends AbiEvent> = (
-  ...args: AbiParametersToPrimitiveTypes<
-    TAbiEvent['inputs']
-  > extends infer Inputs
-    ? Inputs extends readonly any[]
-      ? Inputs
-      : never
-    : never
-) => void
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Abi Errors

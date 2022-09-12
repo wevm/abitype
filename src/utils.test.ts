@@ -10,8 +10,6 @@ import {
 } from '../test'
 import { Abi } from './abi'
 import {
-  AbiEventSignature,
-  AbiFunctionSignature,
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
   AbiTypeToPrimitiveType,
@@ -486,84 +484,6 @@ test('IsAbi', () => {
 })
 
 test('Function', () => {
-  test('AbiFunctionSignature', () => {
-    test('zero inputs', () => {
-      const abiFunction = {
-        type: 'function',
-        stateMutability: 'view',
-        inputs: [],
-        name: 'foo',
-        outputs: [],
-      } as const
-      type Result = AbiFunctionSignature<typeof abiFunction>
-      expectType<Result>(() => {
-        return
-      })
-    })
-
-    test('one input', () => {
-      const abiFunction = {
-        type: 'function',
-        stateMutability: 'view',
-        inputs: [{ name: 'a', type: 'uint256' }],
-        name: 'foo',
-        outputs: [],
-      } as const
-      type Result = AbiFunctionSignature<typeof abiFunction>
-      expectType<Result>((_a: number | bigint) => {
-        return
-      })
-    })
-
-    test('multiple inputs', () => {
-      const abiFunction = {
-        type: 'function',
-        stateMutability: 'view',
-        inputs: [
-          { name: 'a', type: 'uint256' },
-          { name: 'b', type: 'string' },
-        ],
-        name: 'foo',
-        outputs: [],
-      } as const
-      type Result = AbiFunctionSignature<typeof abiFunction>
-      expectType<Result>((_a: number | bigint, _b: string) => {
-        return
-      })
-    })
-
-    test('one output', () => {
-      const abiFunction = {
-        type: 'function',
-        stateMutability: 'view',
-        inputs: [{ name: 'a', type: 'uint256' }],
-        name: 'foo',
-        outputs: [{ name: 'b', type: 'string' }],
-      } as const
-      type Result = AbiFunctionSignature<typeof abiFunction>
-      expectType<Result>((_a: number | bigint) => {
-        return 'b'
-      })
-    })
-
-    test('multiple outputs', () => {
-      const abiFunction = {
-        type: 'function',
-        stateMutability: 'view',
-        inputs: [{ name: 'a', type: 'uint256' }],
-        name: 'foo',
-        outputs: [
-          { name: 'b', type: 'uint256' },
-          { name: 'c', type: 'string' },
-        ],
-      } as const
-      type Result = AbiFunctionSignature<typeof abiFunction>
-      expectType<Result>((_a: number | bigint) => {
-        return [123, 'c']
-      })
-    })
-  })
-
   test('ExtractAbiFunctions', () => {
     const abiFunction = {
       type: 'function',
@@ -637,50 +557,6 @@ test('Function', () => {
 })
 
 test('Events', () => {
-  test('AbiEventSignature', () => {
-    test('zero inputs', () => {
-      const abiEvent = {
-        type: 'event',
-        anonymous: false,
-        inputs: [],
-        name: 'foo',
-      } as const
-      type Result = AbiEventSignature<typeof abiEvent>
-      expectType<Result>(() => {
-        return
-      })
-    })
-
-    test('one input', () => {
-      const abiEvent = {
-        type: 'event',
-        anonymous: false,
-        inputs: [{ name: 'a', type: 'uint256' }],
-        name: 'foo',
-      } as const
-      type Result = AbiEventSignature<typeof abiEvent>
-      expectType<Result>((_a: number | bigint) => {
-        return
-      })
-    })
-
-    test('multiple inputs', () => {
-      const abiEvent = {
-        type: 'event',
-        anonymous: false,
-        inputs: [
-          { name: 'a', type: 'uint256' },
-          { name: 'a', type: 'string' },
-        ],
-        name: 'foo',
-      } as const
-      type Result = AbiEventSignature<typeof abiEvent>
-      expectType<Result>((_a: number | bigint, _b: string) => {
-        return
-      })
-    })
-  })
-
   test('ExtractAbiEvents', () => {
     const abiEvent = {
       type: 'event',

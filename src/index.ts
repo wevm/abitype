@@ -28,8 +28,6 @@ export type {
 export type { Config, DefaultConfig, ResolvedConfig } from './config'
 
 export type {
-  AbiEventSignature,
-  AbiFunctionSignature,
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
   AbiTypeToPrimitiveType,

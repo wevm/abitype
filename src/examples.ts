@@ -1,7 +1,6 @@
-import { Abi, Address, TypedData } from './abi'
+import { Abi, AbiEvent, AbiFunction, Address, TypedData } from './abi'
 import {
-  AbiEventSignature,
-  AbiFunctionSignature,
+  AbiParametersToPrimitiveTypes,
   ExtractAbiEvent,
   ExtractAbiEventNames,
   ExtractAbiFunction,
@@ -12,6 +11,16 @@ import {
 type IsNever<T> = [T] extends [never] ? true : false
 type NotEqual<T, U> = [T] extends [U] ? false : true
 type Or<T, U> = T extends true ? true : U extends true ? true : false
+type UnwrapArray<T> = T extends infer _T extends readonly any[]
+  ? _T['length'] extends 0
+    ? void
+    : _T['length'] extends 1
+    ? _T[0]
+    : // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _T extends readonly [...infer _]
+    ? _T
+    : any
+  : never
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // readContract
@@ -19,7 +28,10 @@ type Or<T, U> = T extends true ? true : U extends true ? true : false
 type ReadContractConfig<
   TAbi = unknown,
   TFunctionName = string,
-  TSignature extends (...args: any) => any = (...args: any) => any,
+  TFunction extends AbiFunction & { type: 'function' } = ExtractAbiFunction<
+    TAbi extends Abi ? TAbi : never,
+    TFunctionName extends string ? TFunctionName : never
+  >,
 > = {
   /** Contract address */
   address: Address
@@ -27,33 +39,45 @@ type ReadContractConfig<
   abi: TAbi
   /** Function to invoke on the contract */
   functionName: [TFunctionName] extends [never] ? string : TFunctionName
-} & (Or<IsNever<Parameters<TSignature>>, NotEqual<TAbi, Abi>> extends true
-  ? {
-      /**
-       * Arguments to pass contract method
-       *
-       * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for better type inference.
-       */
-      args?: any[]
-    }
-  : Parameters<TSignature>['length'] extends 0
-  ? { args?: never }
-  : {
-      /** Arguments to pass contract method */
-      args: Parameters<TSignature>
-    })
+} & (AbiParametersToPrimitiveTypes<
+  TFunction['inputs']
+> extends infer TArgs extends readonly any[]
+  ? Or<IsNever<TArgs>, NotEqual<TAbi, Abi>> extends true
+    ? {
+        /**
+         * Arguments to pass contract method
+         *
+         * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for better type inference.
+         */
+        args?: any[]
+      }
+    : TArgs['length'] extends 0
+    ? { args?: never }
+    : {
+        /** Arguments to pass contract method */
+        args: TArgs
+      }
+  : never)
+
+type ReadContractResult<
+  TAbi extends Abi | readonly unknown[],
+  TFunctionName extends string,
+> = TAbi extends Abi
+  ? UnwrapArray<
+      AbiParametersToPrimitiveTypes<
+        ExtractAbiFunction<TAbi, TFunctionName>['outputs']
+      >
+    >
+  : any
 
 export function readContract<
   TAbi extends Abi | readonly unknown[],
   TFunctionName extends TAbi extends Abi
     ? ExtractAbiFunctionNames<TAbi, 'view' | 'pure'>
     : string,
-  TSignature extends TAbi extends Abi
-    ? AbiFunctionSignature<ExtractAbiFunction<TAbi, TFunctionName>>
-    : (...args: any) => any,
 >(
-  _config: ReadContractConfig<TAbi, TFunctionName, TSignature>,
-): ReturnType<TSignature> {
+  _config: ReadContractConfig<TAbi, TFunctionName>,
+): ReadContractResult<TAbi, TFunctionName> {
   return {} as any
 }
 
@@ -63,7 +87,10 @@ export function readContract<
 type WriteContractConfig<
   TAbi = unknown,
   TFunctionName = string,
-  TSignature extends (...args: any) => any = (...args: any) => any,
+  TFunction extends AbiFunction & { type: 'function' } = ExtractAbiFunction<
+    TAbi extends Abi ? TAbi : never,
+    TFunctionName extends string ? TFunctionName : never
+  >,
 > = {
   /** Contract address */
   address: Address
@@ -71,33 +98,45 @@ type WriteContractConfig<
   abi: TAbi
   /** Function to invoke on the contract */
   functionName: [TFunctionName] extends [never] ? string : TFunctionName
-} & (Or<IsNever<Parameters<TSignature>>, NotEqual<TAbi, Abi>> extends true
-  ? {
-      /**
-       * Arguments to pass contract method
-       *
-       * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for better type inference.
-       */
-      args?: any[]
-    }
-  : Parameters<TSignature>['length'] extends 0
-  ? { args?: never }
-  : {
-      /** Arguments to pass contract method */
-      args: Parameters<TSignature>
-    })
+} & (AbiParametersToPrimitiveTypes<
+  TFunction['inputs']
+> extends infer TArgs extends readonly any[]
+  ? Or<IsNever<TArgs>, NotEqual<TAbi, Abi>> extends true
+    ? {
+        /**
+         * Arguments to pass contract method
+         *
+         * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for better type inference.
+         */
+        args?: any[]
+      }
+    : TArgs['length'] extends 0
+    ? { args?: never }
+    : {
+        /** Arguments to pass contract method */
+        args: TArgs
+      }
+  : never)
+
+type WriteContractResult<
+  TAbi extends Abi | readonly unknown[],
+  TFunctionName extends string,
+> = TAbi extends Abi
+  ? UnwrapArray<
+      AbiParametersToPrimitiveTypes<
+        ExtractAbiFunction<TAbi, TFunctionName>['outputs']
+      >
+    >
+  : any
 
 export function writeContract<
   TAbi extends Abi | readonly unknown[],
   TFunctionName extends TAbi extends Abi
     ? ExtractAbiFunctionNames<TAbi, 'payable' | 'nonpayable'>
     : string,
-  TSignature extends TAbi extends Abi
-    ? AbiFunctionSignature<ExtractAbiFunction<TAbi, TFunctionName>>
-    : (...args: any) => any,
 >(
-  _config: WriteContractConfig<TAbi, TFunctionName, TSignature>,
-): ReturnType<TSignature> {
+  _config: WriteContractConfig<TAbi, TFunctionName>,
+): WriteContractResult<TAbi, TFunctionName> {
   return {} as any
 }
 
@@ -107,7 +146,10 @@ export function writeContract<
 type WatchContractEventConfig<
   TAbi = unknown,
   TEventName = string,
-  TSignature extends (...args: any) => any = (...args: any) => any,
+  TEvent extends AbiEvent = ExtractAbiEvent<
+    TAbi extends Abi ? TAbi : Abi,
+    TEventName extends string ? TEventName : never
+  >,
 > = {
   /** Contract address */
   address: Address
@@ -116,18 +158,19 @@ type WatchContractEventConfig<
   /** Event to listen for */
   eventName: TEventName
   /** Callback when event is emitted */
-  listener: IsNever<Parameters<TSignature>> extends true
-    ? (...args: any) => void
-    : TSignature
+  listener: AbiParametersToPrimitiveTypes<
+    TEvent['inputs']
+  > extends infer TArgs extends readonly any[]
+    ? Or<IsNever<TArgs>, NotEqual<TAbi, Abi>> extends true
+      ? (...args: any) => void
+      : (...args: TArgs) => void
+    : never
 }
 
 export function watchContractEvent<
   TAbi extends Abi | readonly unknown[],
   TEventName extends TAbi extends Abi ? ExtractAbiEventNames<TAbi> : string,
-  TSignature extends TAbi extends Abi
-    ? AbiEventSignature<ExtractAbiEvent<TAbi, TEventName>>
-    : (...args: any) => void,
->(_config: WatchContractEventConfig<TAbi, TEventName, TSignature>) {
+>(_config: WatchContractEventConfig<TAbi, TEventName>) {
   return
 }
 
@@ -176,7 +219,7 @@ type GetConfig<T> = T extends {
   ? ReadContractConfig<
       TAbi,
       ExtractAbiFunctionNames<TAbi, 'view' | 'pure'>,
-      AbiFunctionSignature<ExtractAbiFunction<TAbi, TFunctionName>>
+      ExtractAbiFunction<TAbi, TFunctionName>
     >
   : ReadContractConfig
 
@@ -184,8 +227,8 @@ type GetResult<T> = T extends {
   abi: infer TAbi extends Abi
   functionName: infer TFunctionName extends string
 }
-  ? ReturnType<AbiFunctionSignature<ExtractAbiFunction<TAbi, TFunctionName>>>
-  : any
+  ? ReadContractResult<TAbi, TFunctionName>
+  : ReadContractConfig
 
 /**
  * TODO: Not able to infer `args` based on `functionName` without const assertion

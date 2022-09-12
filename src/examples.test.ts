@@ -289,7 +289,7 @@ test('writeContract', () => {
     })
 
     test('tuple', () => {
-      const contractInterface = [
+      const abi = [
         {
           type: 'function',
           name: 'foo',
@@ -315,7 +315,7 @@ test('writeContract', () => {
       }
       const result = writeContract({
         address,
-        abi: contractInterface,
+        abi,
         functionName: 'foo',
       })
       expectType<Output>(result)
@@ -328,7 +328,7 @@ test('writeContract', () => {
         functionName: 'f',
         args: [{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1, y: 1 }, 1],
       })
-      expectType<void>(result)
+      expectType<{ x: number | bigint; y: number | bigint }[]>(result)
     })
   })
 
@@ -343,7 +343,7 @@ test('writeContract', () => {
       expectType<void>(result)
     })
 
-    test('function with overrides', () => {
+    test('function with overloads', () => {
       const result1 = writeContract({
         address,
         abi: wagmiMintExampleAbi,
@@ -362,7 +362,7 @@ test('writeContract', () => {
     })
 
     test('works without const assertion', () => {
-      const contractInterface = [
+      const abi = [
         {
           name: 'foo',
           type: 'function',
@@ -373,7 +373,7 @@ test('writeContract', () => {
       ]
       const result = writeContract({
         address,
-        abi: contractInterface,
+        abi,
         functionName: 'foo',
         args: ['bar'],
       })
@@ -381,7 +381,7 @@ test('writeContract', () => {
     })
 
     test('declared as Abi type', () => {
-      const contractInterface: Abi = [
+      const abi: Abi = [
         {
           name: 'foo',
           type: 'function',
@@ -392,8 +392,9 @@ test('writeContract', () => {
       ]
       const result = writeContract({
         address,
-        abi: contractInterface,
+        abi,
         functionName: 'foo',
+        args: ['bar'],
       })
       expectType<any>(result)
     })
@@ -421,7 +422,7 @@ test('writeContract', () => {
 test('watchContractEvent', () => {
   test('args', () => {
     test('zero', () => {
-      const contractInterface = [
+      const abi = [
         {
           name: 'Foo',
           type: 'event',
@@ -431,7 +432,7 @@ test('watchContractEvent', () => {
       ] as const
       watchContractEvent({
         address,
-        abi: contractInterface,
+        abi,
         eventName: 'Foo',
         // @ts-expect-error no args allowed
         listener(_arg) {
