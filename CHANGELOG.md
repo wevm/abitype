@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.13
+
+### Patch Changes
+
+- [#20](https://github.com/wagmi-dev/abitype/pull/20) [`a8cb964`](https://github.com/wagmi-dev/abitype/commit/a8cb96464d8caa77b1094cce3e20bde90ece3ad5) Thanks [@tmm](https://github.com/tmm)! - Added `NumberType` configuration option. `NumberType` sets the TypeScript type to use for `int` and `uint` values.
+
 ## 0.0.12
 
 ### Patch Changes
