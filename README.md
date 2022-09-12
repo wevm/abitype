@@ -389,7 +389,7 @@ declare module 'abitype' {
 ```
 
 > **Warning**
-> When configuring these options, there are trade-offs. For example, increasing the upper bound on fixed-length arrays will make your types more exhaustive, but will also slow down the compiler for type checking, autocomplete, etc.
+> When configuring `ArrayMaxDepth`, `FixedArrayMinLength`, and `FixedArrayMaxLength`, there are trade-offs. For example, choosing large numbers for `ArrayMaxDepth` and increasing the range between `FixedArrayMinLength` and `FixedArrayMaxLength` will make your types more exhaustive, but will also slow down the compiler for type checking, autocomplete, etc.
 
 ## Support
 
