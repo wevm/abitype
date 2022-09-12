@@ -1,5 +1,16 @@
 /**
- * Merges two types into new type
+ * Checks if {@link T} is `unknown`
+ *
+ * @param T - Type to check
+ * @returns `true` if `T` is `unknown`, otherwise `false`
+ *
+ * @example
+ * type Result = IsUnknown<unknown>
+ */
+export type IsUnknown<T> = unknown extends T ? true : false
+
+/**
+ * Merges two object types into new type
  *
  * @param Object1 - Object to merge into
  * @param Object2 - Object to merge and override keys from {@link Object1}

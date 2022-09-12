@@ -1,10 +1,13 @@
+import { Address } from './abi'
+import { IsUnknown } from './types'
+
 /**
  * Override `Config` to customize type options
  *
  * @example
  * declare module 'abitype' {
  *   export interface Config {
- *     FixedArrayLengthUpperBound: 6
+ *     FixedArrayMaxLength: 6
  *   }
  * }
  */
@@ -19,11 +22,16 @@ export interface DefaultConfig {
   /** Maximum depth for nested array types (e.g. string[][]) */
   ArrayMaxDepth: 2
   /** Lower bound for fixed array length */
-  FixedArrayLengthLowerBound: 1
+  FixedArrayMinLength: 1
   /** Upper bound for fixed array length */
-  FixedArrayLengthUpperBound: 5
+  FixedArrayMaxLength: 5
+
+  /** TypeScript type to use for `address` values */
+  AddressType: Address
+  /** TypeScript type to use for `bytes` values */
+  BytesType: string | ArrayLike<number>
   /** TypeScript type to use for `int` and `uint` values */
-  NumberType: number | bigint
+  IntType: number | bigint
 }
 
 /**
@@ -38,13 +46,20 @@ export interface ResolvedConfig {
   ArrayMaxDepth: Config['ArrayMaxDepth'] extends number | false
     ? Config['ArrayMaxDepth']
     : DefaultConfig['ArrayMaxDepth']
-  FixedArrayLengthLowerBound: Config['FixedArrayLengthLowerBound'] extends number
-    ? Config['FixedArrayLengthLowerBound']
-    : DefaultConfig['FixedArrayLengthLowerBound']
-  FixedArrayLengthUpperBound: Config['FixedArrayLengthUpperBound'] extends number
-    ? Config['FixedArrayLengthUpperBound']
-    : DefaultConfig['FixedArrayLengthUpperBound']
-  NumberType: Config['NumberType'] extends number | bigint
-    ? Config['NumberType']
-    : DefaultConfig['NumberType']
+  FixedArrayMinLength: Config['FixedArrayMinLength'] extends number
+    ? Config['FixedArrayMinLength']
+    : DefaultConfig['FixedArrayMinLength']
+  FixedArrayMaxLength: Config['FixedArrayMaxLength'] extends number
+    ? Config['FixedArrayMaxLength']
+    : DefaultConfig['FixedArrayMaxLength']
+
+  AddressType: IsUnknown<Config['AddressType']> extends true
+    ? DefaultConfig['AddressType']
+    : Config['AddressType']
+  BytesType: IsUnknown<Config['BytesType']> extends true
+    ? DefaultConfig['BytesType']
+    : Config['BytesType']
+  IntType: IsUnknown<Config['IntType']> extends true
+    ? DefaultConfig['IntType']
+    : Config['IntType']
 }
