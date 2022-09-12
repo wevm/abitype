@@ -369,11 +369,12 @@ import { TypedData } from 'abitype'
 
 ABIType tries to strike a balance between type exhaustiveness and speed with sensible defaults. In some cases, you might want to tune your configuration (e.g. fixed array length). To do this, the following configuration options are available:
 
-| Option                       | Type              | Default | Description                                                                                              |
-| ---------------------------- | ----------------- | ------- | -------------------------------------------------------------------------------------------------------- |
-| `ArrayMaxDepth`              | `number \| false` | `2`     | Maximum depth for nested array types (e.g. `string[][]`). When `false`, there is no maximum array depth. |
-| `FixedArrayLengthLowerBound` | `number`          | `1`     | Lower bound for fixed array length                                                                       |
-| `FixedArrayLengthUpperBound` | `number`          | `5`     | Upper bound for fixed array length                                                                       |
+| Option                       | Type              | Default            | Description                                                                                              |
+| ---------------------------- | ----------------- | ------------------ | -------------------------------------------------------------------------------------------------------- |
+| `ArrayMaxDepth`              | `number \| false` | `2`                | Maximum depth for nested array types (e.g. `string[][]`). When `false`, there is no maximum array depth. |
+| `FixedArrayLengthLowerBound` | `number`          | `1`                | Lower bound for fixed array length                                                                       |
+| `FixedArrayLengthUpperBound` | `number`          | `5`                | Upper bound for fixed array length                                                                       |
+| `NumberType`                 | TypeScript type   | `number \| bigint` | TypeScript type to use for `int` and `uint` values.                                                      |
 
 Configuration options are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). Just extend the `Config` interface either directly in your code or in a `d.ts` file (e.g. `abi.d.ts`):
 

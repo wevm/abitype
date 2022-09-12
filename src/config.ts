@@ -22,6 +22,8 @@ export interface DefaultConfig {
   FixedArrayLengthLowerBound: 1
   /** Upper bound for fixed array length */
   FixedArrayLengthUpperBound: 5
+  /** TypeScript type to use for `int` and `uint` values */
+  NumberType: number | bigint
 }
 
 /**
@@ -42,4 +44,7 @@ export interface ResolvedConfig {
   FixedArrayLengthUpperBound: Config['FixedArrayLengthUpperBound'] extends number
     ? Config['FixedArrayLengthUpperBound']
     : DefaultConfig['FixedArrayLengthUpperBound']
+  NumberType: Config['NumberType'] extends number | bigint
+    ? Config['NumberType']
+    : DefaultConfig['NumberType']
 }
