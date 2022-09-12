@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.15
+
+### Patch Changes
+
+- [`6f2d557`](https://github.com/wagmi-dev/abitype/commit/6f2d55743a7c18b59fb63afcb58c62c3ade83f4c) Thanks [@tmm](https://github.com/tmm)! - Removed signature utilties.
+
 ## 0.0.14
 
 ### Patch Changes
