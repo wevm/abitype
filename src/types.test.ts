@@ -1,5 +1,18 @@
 import { expectType, test } from '../test'
-import { Range, Tuple } from './types'
+import { IsUnknown, Merge, Range, Tuple } from './types'
+
+test('IsUnknown', () => {
+  expectType<IsUnknown<unknown>>(true)
+  expectType<IsUnknown<number | bigint>>(false)
+})
+
+test('Merge', () => {
+  expectType<Merge<{ foo: number }, { bar: string }>>({ foo: 123, bar: 'abc' })
+  expectType<Merge<{ foo: number }, { foo: string; bar: string }>>({
+    foo: 'xyz',
+    bar: 'abc',
+  })
+})
 
 test('Range', () => {
   expectType<Range<0, 2>>([0, 1, 2])

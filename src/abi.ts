@@ -37,8 +37,8 @@ export type SolidityInt = `${'u' | ''}int${MBits}` // `(u)int<M>`: (un)signed in
 //   | `${'u' | ''}fixed${MBits}x${Range<1, 20>[number]}`
 
 export type SolidityFixedArrayRange = Range<
-  ResolvedConfig['FixedArrayLengthLowerBound'],
-  ResolvedConfig['FixedArrayLengthUpperBound']
+  ResolvedConfig['FixedArrayMinLength'],
+  ResolvedConfig['FixedArrayMaxLength']
 >[number]
 export type SolidityFixedArraySizeLookup = {
   [Prop in SolidityFixedArrayRange as `${Prop}`]: Prop

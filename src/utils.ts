@@ -5,7 +5,6 @@ import {
   AbiParameter,
   AbiStateMutability,
   AbiType,
-  Address,
   SolidityAddress,
   SolidityArray,
   SolidityBool,
@@ -37,15 +36,15 @@ export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
 // Using a map to look up types is faster, than nested conditional types
 // s/o https://twitter.com/SeaRyanC/status/1538971176357113858
 type PrimitiveTypeLookup = {
-  [_ in SolidityAddress]: Address
+  [_ in SolidityAddress]: ResolvedConfig['AddressType']
 } & {
   [_ in SolidityBool]: boolean
 } & {
-  [_ in SolidityBytes]: string | ArrayLike<number>
+  [_ in SolidityBytes]: ResolvedConfig['BytesType']
 } & {
-  [_ in SolidityFunction]: `${Address}${string}`
+  [_ in SolidityFunction]: `${ResolvedConfig['AddressType']}${string}`
 } & {
-  [_ in SolidityInt]: ResolvedConfig['NumberType']
+  [_ in SolidityInt]: ResolvedConfig['IntType']
 } & {
   [_ in SolidityString]: string
 } & {
