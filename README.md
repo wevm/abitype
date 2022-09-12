@@ -381,7 +381,7 @@ Configuration options are customizable using [declaration merging](https://www.t
 ```ts
 declare module 'abitype' {
   export interface Config {
-    FixedArrayUpperBound: 6
+    FixedArrayLengthUpperBound: 6
   }
 }
 ```
