@@ -55,17 +55,25 @@ test('AbiTypeToPrimitiveType', () => {
 
   test('number', () => {
     expectType<AbiTypeToPrimitiveType<'int'>>(1)
-    expectType<AbiTypeToPrimitiveType<'int8'>>(1)
-    expectType<AbiTypeToPrimitiveType<'int32'>>(1)
-    expectType<AbiTypeToPrimitiveType<'int256'>>(1)
-    expectType<AbiTypeToPrimitiveType<'int256'>>(1n)
+    expectType<AbiTypeToPrimitiveType<'int'>>(1n)
     expectType<AbiTypeToPrimitiveType<'int'>>(BigInt(1))
     expectType<AbiTypeToPrimitiveType<'uint'>>(1)
-    expectType<AbiTypeToPrimitiveType<'uint8'>>(1)
-    expectType<AbiTypeToPrimitiveType<'uint32'>>(1)
-    expectType<AbiTypeToPrimitiveType<'uint256'>>(1)
-    expectType<AbiTypeToPrimitiveType<'uint256'>>(1n)
+    expectType<AbiTypeToPrimitiveType<'uint'>>(1n)
     expectType<AbiTypeToPrimitiveType<'uint'>>(BigInt(1))
+
+    expectType<AbiTypeToPrimitiveType<'int8'>>(1)
+    expectType<AbiTypeToPrimitiveType<'int32'>>(1)
+    expectType<AbiTypeToPrimitiveType<'uint8'>>(1)
+    expectType<AbiTypeToPrimitiveType<'int8'>>(1)
+    // @ts-expect-error should be number
+    expectType<AbiTypeToPrimitiveType<'int8'>>(1n)
+
+    expectType<AbiTypeToPrimitiveType<'int256'>>(1n)
+    expectType<AbiTypeToPrimitiveType<'int256'>>(BigInt(1))
+    expectType<AbiTypeToPrimitiveType<'uint256'>>(1n)
+    expectType<AbiTypeToPrimitiveType<'uint256'>>(BigInt(1))
+    // @ts-expect-error should be bigint
+    expectType<AbiTypeToPrimitiveType<'int256'>>(1)
   })
 
   test('tuple', () => {
@@ -134,7 +142,7 @@ test('AbiParameterToPrimitiveType', () => {
         { name: 'description'; type: 'string' },
         { name: 'imageURI'; type: 'string' },
         { name: 'contentURI'; type: 'string' },
-        { name: 'price'; type: 'uint256' },
+        { name: 'price'; type: 'uint' },
         { name: 'limit'; type: 'uint256' },
         { name: 'fundingRecipient'; type: 'address' },
         { name: 'renderer'; type: 'address' },
@@ -152,10 +160,10 @@ test('AbiParameterToPrimitiveType', () => {
       imageURI: 'ipfs://hash',
       contentURI: 'arweave://digest',
       price: 0.1,
-      limit: 100,
+      limit: 100n,
       fundingRecipient: address,
       renderer: address,
-      nonce: 123,
+      nonce: 123n,
       fee: 0,
     })
     // @ts-expect-error missing keys
@@ -173,10 +181,10 @@ test('AbiParameterToPrimitiveType', () => {
       contentURI: 'arweave://digest',
       // @ts-expect-error invalid value
       price: '0.1',
-      limit: 100,
+      limit: 100n,
       fundingRecipient: address,
       renderer: address,
-      nonce: 123,
+      nonce: 123n,
       fee: 0,
     })
 
@@ -184,8 +192,8 @@ test('AbiParameterToPrimitiveType', () => {
       name: 's'
       type: 'tuple'
       components: [
-        { name: 'a'; type: 'uint256' },
-        { name: 'b'; type: 'uint256[2]' },
+        { name: 'a'; type: 'uint8' },
+        { name: 'b'; type: 'uint8[2]' },
         {
           name: 'c'
           type: 'tuple[]'
@@ -203,7 +211,7 @@ test('AbiParameterToPrimitiveType', () => {
     expectType<NestedTupleResult>({
       a: 1,
       b: [2, 3],
-      c: [{ x: 1, y: { a: 'foo' } }],
+      c: [{ x: 1n, y: { a: 'foo' } }],
     })
 
     type WithoutNamedParameterResult = AbiParameterToPrimitiveType<{
@@ -213,7 +221,7 @@ test('AbiParameterToPrimitiveType', () => {
         { name: 'description'; type: 'string' },
         { name: 'imageURI'; type: 'string' },
         { name: 'contentURI'; type: 'string' },
-        { name: 'price'; type: 'uint256' },
+        { name: 'price'; type: 'uint' },
         { name: 'limit'; type: 'uint256' },
         { name: 'fundingRecipient'; type: 'address' },
         { name: 'renderer'; type: 'address' },
@@ -231,10 +239,10 @@ test('AbiParameterToPrimitiveType', () => {
       'ipfs://hash',
       'arweave://digest',
       0.1,
-      100,
+      100n,
       address,
       address,
-      123,
+      123n,
       0,
     ])
   })
@@ -244,7 +252,7 @@ test('AbiParameterToPrimitiveType', () => {
       name: 'tokenId'
       type: 'uint256'
     }>
-    expectType<Result>(123)
+    expectType<Result>(123n)
     expectType<Result>(123n)
     expectType<Result>(BigInt(123))
     // @ts-expect-error string value
@@ -285,7 +293,7 @@ test('AbiParameterToPrimitiveType', () => {
           },
         ]
       }>
-      expectType<Result>([{ x: 1, y: 1 }])
+      expectType<Result>([{ x: 1n, y: 1n }])
     })
 
     test('fixed with tuple', () => {
@@ -295,11 +303,11 @@ test('AbiParameterToPrimitiveType', () => {
         components: [
           {
             name: 'x'
-            type: 'uint256'
+            type: 'uint8'
           },
           {
             name: 'y'
-            type: 'uint256'
+            type: 'uint8'
           },
         ]
       }>
@@ -373,7 +381,7 @@ test('AbiParametersToPrimitiveTypes', () => {
       [
         {
           name: 'tokenId'
-          type: 'uint256[2]'
+          type: 'uint8[2]'
         },
       ]
     >
@@ -389,7 +397,7 @@ test('AbiParametersToPrimitiveTypes', () => {
         { name: 'trait'; type: 'string[]' },
       ]
     >
-    expectType<Result>([address, 1, ['foo']])
+    expectType<Result>([address, 1n, ['foo']])
   })
 
   test('deeply nested parameters', () => {
@@ -399,14 +407,14 @@ test('AbiParametersToPrimitiveTypes', () => {
           name: 's'
           type: 'tuple'
           components: [
-            { name: 'a'; type: 'uint256' },
-            { name: 'b'; type: 'uint256[]' },
+            { name: 'a'; type: 'uint8' },
+            { name: 'b'; type: 'uint8[]' },
             {
               name: 'c'
               type: 'tuple[]'
               components: [
-                { name: 'x'; type: 'uint256' },
-                { name: 'y'; type: 'uint256' },
+                { name: 'x'; type: 'uint8' },
+                { name: 'y'; type: 'uint8' },
               ]
             },
           ]
@@ -415,11 +423,11 @@ test('AbiParametersToPrimitiveTypes', () => {
           name: 't'
           type: 'tuple'
           components: [
-            { name: 'x'; type: 'uint256' },
-            { name: 'y'; type: 'uint256' },
+            { name: 'x'; type: 'uint8' },
+            { name: 'y'; type: 'uint8' },
           ]
         },
-        { name: 'a'; type: 'uint256' },
+        { name: 'a'; type: 'uint8' },
         {
           name: 't'
           type: 'tuple[2]'
@@ -435,8 +443,8 @@ test('AbiParametersToPrimitiveTypes', () => {
       { x: 1, y: 1 },
       1,
       [
-        { x: 1, y: 1 },
-        { x: 1, y: 1 },
+        { x: 1n, y: 1n },
+        { x: 1n, y: 1n },
       ],
     ])
   })

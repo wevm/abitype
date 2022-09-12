@@ -34,7 +34,7 @@ test('readContract', () => {
         address,
         abi: wagmiMintExampleAbi,
         functionName: 'tokenURI',
-        args: [123],
+        args: [123n],
       })
       expectType<string>(result)
     })
@@ -65,7 +65,7 @@ test('readContract', () => {
         address,
         abi: wagmiMintExampleAbi,
         functionName: 'ownerOf',
-        args: [123],
+        args: [123n],
       })
       expectType<Address>(result)
     })
@@ -221,7 +221,7 @@ test('writeContract', () => {
         address,
         abi: nounsAuctionHouseAbi,
         functionName: 'createBid',
-        args: [123],
+        args: [123n],
       })
       expectType<void>(result)
     })
@@ -231,13 +231,13 @@ test('writeContract', () => {
         address,
         abi: wagmiMintExampleAbi,
         functionName: 'approve',
-        args: [address, 123],
+        args: [address, 123n],
       })
       const result2 = writeContract({
         address,
         abi: wagmiMintExampleAbi,
         functionName: 'transferFrom',
-        args: [address, address, 123],
+        args: [address, address, 123n],
       })
       expectType<void>(result1)
       expectType<void>(result2)
@@ -256,10 +256,10 @@ test('writeContract', () => {
             imageURI: 'ipfs://hash',
             contentURI: 'arweave://digest',
             price: 0.1,
-            limit: 100,
+            limit: 100n,
             fundingRecipient: address,
             renderer: address,
-            nonce: 123,
+            nonce: 123n,
             fee: 0,
           },
         ],
@@ -326,7 +326,7 @@ test('writeContract', () => {
         address,
         abi: nestedTupleArrayAbi,
         functionName: 'f',
-        args: [{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1, y: 1 }, 1],
+        args: [{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1, y: 1 }, 1n],
       })
       expectType<{ x: number | bigint; y: number | bigint }[]>(result)
     })
@@ -348,7 +348,7 @@ test('writeContract', () => {
         address,
         abi: wagmiMintExampleAbi,
         functionName: 'safeTransferFrom',
-        args: [address, address, 123],
+        args: [address, address, 123n],
       })
       expectType<void>(result1)
 
@@ -356,7 +356,7 @@ test('writeContract', () => {
         address,
         abi: wagmiMintExampleAbi,
         functionName: 'safeTransferFrom',
-        args: [address, address, 123, 'foo'],
+        args: [address, address, 123n, 'foo'],
       })
       expectType<void>(result2)
     })
@@ -535,7 +535,7 @@ test('readContracts', () => {
           address,
           abi: wagmiMintExampleAbi,
           functionName: 'ownerOf' as const,
-          args: [123],
+          args: [123n],
         },
       ])
       expectType<[number | bigint, Address]>(result)
@@ -553,7 +553,7 @@ test('readContracts', () => {
               { a: 1, b: [2] },
             ],
             { x: 5, y: 6 },
-            7,
+            7n,
           ],
         },
         {
@@ -569,10 +569,10 @@ test('readContracts', () => {
               imageURI: 'ipfs://hash',
               contentURI: 'arweave://digest',
               price: 0.1,
-              limit: 100,
+              limit: 100n,
               fundingRecipient: address,
               renderer: address,
-              nonce: 123,
+              nonce: 123n,
               fee: 0,
             },
           ],
