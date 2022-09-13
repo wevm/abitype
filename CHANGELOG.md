@@ -1,5 +1,11 @@
 # abitype
 
+## 0.0.17
+
+### Patch Changes
+
+- [`9e6557a`](https://github.com/wagmi-dev/abitype/commit/9e6557aee3dcd850bccb0f4bf06eea36a4072e02) Thanks [@tmm](https://github.com/tmm)! - Made `Address` resolve `AddressType` config option.
+
 ## 0.0.16
 
 ### Patch Changes
