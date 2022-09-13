@@ -1,4 +1,3 @@
-import { Address } from './abi'
 import { IsUnknown } from './types'
 
 /**
@@ -27,7 +26,7 @@ export interface DefaultConfig {
   FixedArrayMaxLength: 5
 
   /** TypeScript type to use for `address` values */
-  AddressType: Address
+  AddressType: `0x${string}`
   /** TypeScript type to use for `bytes` values */
   BytesType: string | ArrayLike<number>
   /** TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48` */

@@ -1,7 +1,7 @@
 import { ResolvedConfig } from './config'
 import { Range } from './types'
 
-export type Address = `0x${string}`
+export type Address = ResolvedConfig['AddressType']
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Solidity Types
