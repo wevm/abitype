@@ -26,12 +26,11 @@ type UnwrapArray<T> = T extends infer _T extends readonly any[]
 // readContract
 
 type ReadContractConfig<
-  TAbi = unknown,
-  TFunctionName = string,
-  TFunction extends AbiFunction & { type: 'function' } = ExtractAbiFunction<
-    TAbi extends Abi ? TAbi : never,
-    TFunctionName extends string ? TFunctionName : never
-  >,
+  TAbi extends Abi | readonly unknown[] = Abi,
+  TFunctionName extends string = string,
+  TFunction extends AbiFunction & { type: 'function' } = TAbi extends Abi
+    ? ExtractAbiFunction<TAbi, TFunctionName>
+    : never,
 > = {
   /** Contract address */
   address: Address
@@ -49,7 +48,7 @@ type ReadContractConfig<
          *
          * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for better type inference.
          */
-        args?: any[]
+        args?: readonly any[]
       }
     : TArgs['length'] extends 0
     ? { args?: never }
@@ -85,12 +84,11 @@ export function readContract<
 // writeContract
 
 type WriteContractConfig<
-  TAbi = unknown,
-  TFunctionName = string,
-  TFunction extends AbiFunction & { type: 'function' } = ExtractAbiFunction<
-    TAbi extends Abi ? TAbi : never,
-    TFunctionName extends string ? TFunctionName : never
-  >,
+  TAbi extends Abi | readonly unknown[] = Abi,
+  TFunctionName extends string = string,
+  TFunction extends AbiFunction & { type: 'function' } = TAbi extends Abi
+    ? ExtractAbiFunction<TAbi, TFunctionName>
+    : never,
 > = {
   /** Contract address */
   address: Address
@@ -108,7 +106,7 @@ type WriteContractConfig<
          *
          * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for better type inference.
          */
-        args?: any[]
+        args?: readonly any[]
       }
     : TArgs['length'] extends 0
     ? { args?: never }
@@ -179,36 +177,36 @@ export function watchContractEvent<
 
 type MAXIMUM_DEPTH = 20
 type ContractsConfig<
-  T extends unknown[],
+  TContracts extends unknown[],
   Result extends any[] = [],
   Depth extends ReadonlyArray<number> = [],
 > = Depth['length'] extends MAXIMUM_DEPTH
   ? ReadContractConfig[]
-  : T extends []
+  : TContracts extends []
   ? []
-  : T extends [infer Head]
+  : TContracts extends [infer Head]
   ? [...Result, GetConfig<Head>]
-  : T extends [infer Head, ...infer Tail]
+  : TContracts extends [infer Head, ...infer Tail]
   ? ContractsConfig<[...Tail], [...Result, GetConfig<Head>], [...Depth, 1]>
-  : unknown[] extends T
-  ? T
-  : T extends ReadContractConfig<infer TAbi, infer TFunctionName>[]
+  : unknown[] extends TContracts
+  ? TContracts
+  : TContracts extends ReadContractConfig<infer TAbi, infer TFunctionName>[]
   ? ReadContractConfig<TAbi, TFunctionName>[]
   : ReadContractConfig[]
 
 type ContractsResult<
-  T extends unknown[],
+  TContracts extends unknown[],
   Result extends any[] = [],
   Depth extends ReadonlyArray<number> = [],
 > = Depth['length'] extends MAXIMUM_DEPTH
   ? any[]
-  : T extends []
+  : TContracts extends []
   ? []
-  : T extends [infer Head]
+  : TContracts extends [infer Head]
   ? [...Result, GetResult<Head>]
-  : T extends [infer Head, ...infer Tail]
+  : TContracts extends [infer Head, ...infer Tail]
   ? ContractsResult<[...Tail], [...Result, GetResult<Head>], [...Depth, 1]>
-  : T extends ReadContractConfig<infer TAbi, infer TFunctionName>[]
+  : TContracts extends ReadContractConfig<infer TAbi, infer TFunctionName>[]
   ? GetResult<{ abi: TAbi; functionName: TFunctionName }>[]
   : any[]
 
@@ -249,9 +247,9 @@ type GetResult<T> = T extends {
  *   args: [address], // <-- inferred 😍
  * }])
  */
-export function readContracts<T extends unknown[]>(
-  _contracts: readonly [...ContractsConfig<T>],
-): ContractsResult<T> {
+export function readContracts<TContracts extends unknown[]>(_config: {
+  contracts: readonly [...ContractsConfig<TContracts>]
+}): ContractsResult<TContracts> {
   return {} as any
 }
 
@@ -265,7 +263,11 @@ export function signTypedData<
   /** Named list of all type definitions */
   types: TTypedData
   /** Data to sign */
-  value: TSchema[keyof TSchema]
+  value: TSchema[keyof TSchema] extends infer TValue
+    ? { [key: string]: any } extends TValue
+      ? Record<string, any>
+      : TValue
+    : never
 }) {
   return {} as Address
 }

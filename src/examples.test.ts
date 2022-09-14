@@ -496,18 +496,20 @@ test('watchContractEvent', () => {
 test('readContracts', () => {
   test('args', () => {
     test('zero', () => {
-      const result = readContracts([
-        {
-          address,
-          abi: wagmiMintExampleAbi,
-          functionName: 'name' as const,
-        },
-        {
-          address,
-          abi: nounsAuctionHouseAbi,
-          functionName: 'auction' as const,
-        },
-      ])
+      const result = readContracts({
+        contracts: [
+          {
+            address,
+            abi: wagmiMintExampleAbi,
+            functionName: 'name' as const,
+          },
+          {
+            address,
+            abi: nounsAuctionHouseAbi,
+            functionName: 'auction' as const,
+          },
+        ],
+      })
       expectType<
         [
           string,
@@ -524,74 +526,80 @@ test('readContracts', () => {
     })
 
     test('one', () => {
-      const result = readContracts([
-        {
-          address,
-          abi: wagmiMintExampleAbi,
-          functionName: 'balanceOf' as const,
-          args: [address],
-        },
-        {
-          address,
-          abi: wagmiMintExampleAbi,
-          functionName: 'ownerOf' as const,
-          args: [123n],
-        },
-      ])
+      const result = readContracts({
+        contracts: [
+          {
+            address,
+            abi: wagmiMintExampleAbi,
+            functionName: 'balanceOf' as const,
+            args: [address],
+          },
+          {
+            address,
+            abi: wagmiMintExampleAbi,
+            functionName: 'ownerOf' as const,
+            args: [123n],
+          },
+        ],
+      })
       expectType<[number | bigint, Address]>(result)
     })
 
     test('two or more', () => {
-      const result = readContracts([
-        {
-          address,
-          abi: nestedTupleArrayAbi,
-          functionName: 'v' as const,
-          args: [
-            [
-              { a: 1, b: [2] },
-              { a: 1, b: [2] },
-            ],
-            { x: 5, y: 6 },
-            7n,
-          ],
-        },
-        {
-          address,
-          abi: writingEditionsFactoryAbi,
-          functionName: 'getSalt' as const,
-          args: [
+      const result = readContracts({
+        contracts: [
+          {
             address,
-            {
-              name: 'Test',
-              symbol: '$TEST',
-              description: 'Foo bar baz',
-              imageURI: 'ipfs://hash',
-              contentURI: 'arweave://digest',
-              price: 0.1,
-              limit: 100n,
-              fundingRecipient: address,
-              renderer: address,
-              nonce: 123n,
-              fee: 0,
-            },
-          ],
-        },
-      ])
+            abi: nestedTupleArrayAbi,
+            functionName: 'v' as const,
+            args: [
+              [
+                { a: 1, b: [2] },
+                { a: 1, b: [2] },
+              ],
+              { x: 5, y: 6 },
+              7n,
+            ],
+          },
+          {
+            address,
+            abi: writingEditionsFactoryAbi,
+            functionName: 'getSalt' as const,
+            args: [
+              address,
+              {
+                name: 'Test',
+                symbol: '$TEST',
+                description: 'Foo bar baz',
+                imageURI: 'ipfs://hash',
+                contentURI: 'arweave://digest',
+                price: 0.1,
+                limit: 100n,
+                fundingRecipient: address,
+                renderer: address,
+                nonce: 123n,
+                fee: 0,
+              },
+            ],
+          },
+        ],
+      })
       expectType<[void, string | ArrayLike<number>]>(result)
     })
   })
 
   test('behavior', () => {
     test('write function not allowed', () => {
-      const result = readContracts([
-        {
-          address,
-          abi: wagmiMintExampleAbi,
-          // @ts-expect-error Trying to use non-read function
-          functionName: 'approve',
-        },
-      ])
+      const result = readContracts({
+        contracts: [
+          {
+            address,
+            abi: wagmiMintExampleAbi,
+            // @ts-expect-error Trying to use non-read function
+            functionName: 'approve',
+          },
+        ],
+      })
       expectType<any>(result)
     })
   })

@@ -27,7 +27,6 @@
     "lint": "eslint . --cache",
     "lint:fix": "pnpm lint --fix",
     "lint:format": "prettier --write",
-    "preinstall": "npx only-allow pnpm",
     "prepare": "npx simple-git-hooks",
     "test": "pnpm typecheck",
     "typecheck": "tsc --noEmit"
