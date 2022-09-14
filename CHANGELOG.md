@@ -1,5 +1,11 @@
 # abitype
 
+## 0.1.0
+
+### Minor Changes
+
+- [`cece4ca`](https://github.com/wagmi-dev/abitype/commit/cece4cada31c39036cce5b485dba1aaf23a5cefe) Thanks [@tmm](https://github.com/tmm)! - Initial release
+
 ## 0.0.17
 
 ### Patch Changes

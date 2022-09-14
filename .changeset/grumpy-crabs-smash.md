@@ -1,5 +1,0 @@
----
-'abitype': minor
----
-
-Initial release
