@@ -108,7 +108,7 @@ test('AbiParameterToPrimitiveType', () => {
     expectType<Result>(false)
   })
 
-  test('bool', () => {
+  test('bytes', () => {
     type Result = AbiParameterToPrimitiveType<{
       name: 'data'
       type: 'bytes'
