@@ -1,24 +1,54 @@
 {
-  "compilerOptions": {
-    "allowJs": false,
-    "downlevelIteration": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "lib": ["es2019", "es2017", "dom"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noEmit": true,
-    "noImplicitAny": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "target": "es2021",
-    "types": ["node"]
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "formatCodeOptions": {
+    "tabSize": 2,
+    "indentSize": 2
   },
-  "exclude": ["node_modules", "dist"],
-  "include": ["src"]
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": false,
+    "allowUnreachableCode": false,
+    "esModuleInterop": false,
+    "tsBuildInfoFile": "./",
+    "forceConsistentCasingInFileNames": true,
+    "strictPropertyInitialization": true,
+    "noFallthroughCasesInSwitch": true,
+    "useUnknownInCatchVariables": true,
+    "noUncheckedIndexedAccess": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "preserveValueImports": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "isolatedModules": true,
+    "removeComments": true,
+    "incremental": true,
+    "declaration": true,
+    "sourceMap": false,
+    "moduleResolution": "nodenext",
+    "moduleDetection": "auto",
+    "module": "NodeNext",
+    "target": "ESNext",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "types": [
+      "@types/node"
+    ],
+    "plugins": [
+      {
+        "name": "typescript-eslint-language-service"
+      }
+    ]
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/.*/",
+    "src/**/*.test.ts",
+    "dist/**"
+  ]
 }
