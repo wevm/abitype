@@ -15,6 +15,8 @@ type Result = ExtractAbiFunctions<typeof erc721Abi, 'payable'>
 
 Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions, variables, or your own types ([see examples](/src/examples.ts)). No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
 
+https://user-images.githubusercontent.com/6759464/190312390-26febe0d-2ff7-4635-9c18-b8499017ed40.mp4
+
 ## Installation
 
 ```bash
