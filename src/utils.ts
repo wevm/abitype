@@ -133,9 +133,9 @@ export type AbiParameterToPrimitiveType<
       unknown
 
 type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
-  TAbiParameters extends [
+  TAbiParameters extends readonly [
     infer Head extends AbiParameter,
-    ...infer Tail extends AbiParameter[],
+    ...infer Tail extends readonly AbiParameter[],
   ]
     ? Head['name'] extends ''
       ? true

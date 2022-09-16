@@ -1,26 +1,70 @@
-import { Abi, AbiEvent, AbiFunction, Address, TypedData } from './abi'
 import {
+  Abi,
+  AbiEvent,
+  AbiFunction,
+  AbiParameter,
+  Address,
+  TypedData,
+} from '../abi'
+import {
+  AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
   ExtractAbiEvent,
   ExtractAbiEventNames,
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
   TypedDataToPrimitiveTypes,
-} from './utils'
+} from '../utils'
 
 type IsNever<T> = [T] extends [never] ? true : false
 type NotEqual<T, U> = [T] extends [U] ? false : true
 type Or<T, U> = T extends true ? true : U extends true ? true : false
-type UnwrapArray<T> = T extends infer _T extends readonly any[]
-  ? _T['length'] extends 0
-    ? void
-    : _T['length'] extends 1
-    ? _T[0]
-    : // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _T extends readonly [...infer _]
-    ? _T
-    : any
+
+type GetArgs<
+  TAbi extends Abi | readonly unknown[],
+  TFunction extends AbiFunction & { type: 'function' },
+> = TFunction['inputs'] extends infer TInputs extends readonly AbiParameter[]
+  ? Or<IsNever<TInputs>, NotEqual<TAbi, Abi>> extends true
+    ? {
+        /**
+         * Arguments to pass contract method
+         *
+         * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for type inference.
+         */
+        args?: readonly any[]
+      }
+    : TInputs['length'] extends 0
+    ? { args?: never }
+    : {
+        /** Arguments to pass contract method */
+        args: AbiParametersToPrimitiveTypes<TInputs>
+      }
   : never
+
+type GetResult<
+  TAbi extends Abi | readonly unknown[] = Abi,
+  TFunctionName extends string = string,
+> = TAbi extends Abi
+  ? ExtractAbiFunction<
+      TAbi,
+      TFunctionName
+    >['outputs'] extends infer TOutputs extends readonly AbiParameter[]
+    ? TOutputs['length'] extends infer TLength
+      ? TLength extends 0
+        ? void
+        : TLength extends 1
+        ? AbiParameterToPrimitiveType<TOutputs[0]>
+        : // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        TOutputs extends readonly [...infer _]
+        ? {
+            [Output in TOutputs[number] as Output['name'] extends ''
+              ? never
+              : Output['name']]: AbiParameterToPrimitiveType<Output>
+          } & AbiParametersToPrimitiveTypes<TOutputs>
+        : any
+      : never
+    : never
+  : any
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // readContract
@@ -38,36 +82,7 @@ type ReadContractConfig<
   abi: TAbi
   /** Function to invoke on the contract */
   functionName: [TFunctionName] extends [never] ? string : TFunctionName
-} & (AbiParametersToPrimitiveTypes<
-  TFunction['inputs']
-> extends infer TArgs extends readonly any[]
-  ? Or<IsNever<TArgs>, NotEqual<TAbi, Abi>> extends true
-    ? {
-        /**
-         * Arguments to pass contract method
-         *
-         * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for better type inference.
-         */
-        args?: readonly any[]
-      }
-    : TArgs['length'] extends 0
-    ? { args?: never }
-    : {
-        /** Arguments to pass contract method */
-        args: TArgs
-      }
-  : never)
-
-type ReadContractResult<
-  TAbi extends Abi | readonly unknown[],
-  TFunctionName extends string,
-> = TAbi extends Abi
-  ? UnwrapArray<
-      AbiParametersToPrimitiveTypes<
-        ExtractAbiFunction<TAbi, TFunctionName>['outputs']
-      >
-    >
-  : any
+} & GetArgs<TAbi, TFunction>
 
 export function readContract<
   TAbi extends Abi | readonly unknown[],
@@ -76,7 +91,7 @@ export function readContract<
     : string,
 >(
   _config: ReadContractConfig<TAbi, TFunctionName>,
-): ReadContractResult<TAbi, TFunctionName> {
+): GetResult<TAbi, TFunctionName> {
   return {} as any
 }
 
@@ -96,36 +111,7 @@ type WriteContractConfig<
   abi: TAbi
   /** Function to invoke on the contract */
   functionName: [TFunctionName] extends [never] ? string : TFunctionName
-} & (AbiParametersToPrimitiveTypes<
-  TFunction['inputs']
-> extends infer TArgs extends readonly any[]
-  ? Or<IsNever<TArgs>, NotEqual<TAbi, Abi>> extends true
-    ? {
-        /**
-         * Arguments to pass contract method
-         *
-         * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for better type inference.
-         */
-        args?: readonly any[]
-      }
-    : TArgs['length'] extends 0
-    ? { args?: never }
-    : {
-        /** Arguments to pass contract method */
-        args: TArgs
-      }
-  : never)
-
-type WriteContractResult<
-  TAbi extends Abi | readonly unknown[],
-  TFunctionName extends string,
-> = TAbi extends Abi
-  ? UnwrapArray<
-      AbiParametersToPrimitiveTypes<
-        ExtractAbiFunction<TAbi, TFunctionName>['outputs']
-      >
-    >
-  : any
+} & GetArgs<TAbi, TFunction>
 
 export function writeContract<
   TAbi extends Abi | readonly unknown[],
@@ -134,7 +120,7 @@ export function writeContract<
     : string,
 >(
   _config: WriteContractConfig<TAbi, TFunctionName>,
-): WriteContractResult<TAbi, TFunctionName> {
+): GetResult<TAbi, TFunctionName> {
   return {} as any
 }
 
@@ -185,9 +171,9 @@ type ContractsConfig<
   : TContracts extends []
   ? []
   : TContracts extends [infer Head]
-  ? [...Result, GetConfig<Head>]
+  ? [...Result, _GetConfig<Head>]
   : TContracts extends [infer Head, ...infer Tail]
-  ? ContractsConfig<[...Tail], [...Result, GetConfig<Head>], [...Depth, 1]>
+  ? ContractsConfig<[...Tail], [...Result, _GetConfig<Head>], [...Depth, 1]>
   : unknown[] extends TContracts
   ? TContracts
   : TContracts extends ReadContractConfig<infer TAbi, infer TFunctionName>[]
@@ -203,14 +189,14 @@ type ContractsResult<
   : TContracts extends []
   ? []
   : TContracts extends [infer Head]
-  ? [...Result, GetResult<Head>]
+  ? [...Result, _GetResult<Head>]
   : TContracts extends [infer Head, ...infer Tail]
-  ? ContractsResult<[...Tail], [...Result, GetResult<Head>], [...Depth, 1]>
+  ? ContractsResult<[...Tail], [...Result, _GetResult<Head>], [...Depth, 1]>
   : TContracts extends ReadContractConfig<infer TAbi, infer TFunctionName>[]
-  ? GetResult<{ abi: TAbi; functionName: TFunctionName }>[]
+  ? _GetResult<{ abi: TAbi; functionName: TFunctionName }>[]
   : any[]
 
-type GetConfig<T> = T extends {
+type _GetConfig<T> = T extends {
   abi: infer TAbi extends Abi
   functionName: infer TFunctionName extends string
 }
@@ -221,12 +207,12 @@ type GetConfig<T> = T extends {
     >
   : ReadContractConfig
 
-type GetResult<T> = T extends {
+type _GetResult<T> = T extends {
   abi: infer TAbi extends Abi
   functionName: infer TFunctionName extends string
 }
-  ? ReadContractResult<TAbi, TFunctionName>
-  : ReadContractConfig
+  ? GetResult<TAbi, TFunctionName>
+  : GetResult
 
 /**
  * TODO: Not able to infer `args` based on `functionName` without const assertion

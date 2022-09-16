@@ -7,9 +7,9 @@ import {
   test,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
-} from '../test'
+} from '../../test'
 
-import { Abi, Address } from './abi'
+import { Abi, Address } from '../abi'
 import {
   readContract,
   readContracts,
@@ -77,7 +77,7 @@ test('readContract', () => {
         functionName: 'balanceOf',
         args: [address],
       })
-      expectType<number | bigint>(result)
+      expectType<bigint>(result)
     })
   })
 
@@ -283,7 +283,7 @@ test('writeContract', () => {
         address,
         abi: ensRegistryWithFallbackAbi,
         functionName: 'setSubnodeOwner',
-        args: ['foo', 'bar', address],
+        args: ['0xfoo', '0xbar', address],
       })
       expectType<string | ArrayLike<number>>(result)
     })
@@ -356,7 +356,7 @@ test('writeContract', () => {
         address,
         abi: wagmiMintExampleAbi,
         functionName: 'safeTransferFrom',
-        args: [address, address, 123n, 'foo'],
+        args: [address, address, 123n, '0xfoo'],
       })
       expectType<void>(result2)
     })
