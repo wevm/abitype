@@ -1,5 +1,11 @@
 # abitype
 
+## 0.1.1
+
+### Patch Changes
+
+- [#30](https://github.com/wagmi-dev/abitype/pull/30) [`6e56cc2`](https://github.com/wagmi-dev/abitype/commit/6e56cc27380c5886ef7aff96c87bb3564e7b56a8) Thanks [@tmm](https://github.com/tmm)! - Updated default config values and fixed check for unnamed tuples.
+
 ## 0.1.0
 
 ### Minor Changes
