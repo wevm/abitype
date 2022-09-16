@@ -16,7 +16,7 @@ test('Config', () => {
   expectType<AddressType>('0x0000000000000000000000000000000000000000')
 
   type BytesType = ResolvedConfig['BytesType']
-  expectType<BytesType>('foo bar baz')
+  expectType<BytesType>('0xfoobarbaz')
 
   type IntType = ResolvedConfig['IntType']
   expectType<IntType>(123)
