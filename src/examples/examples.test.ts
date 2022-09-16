@@ -44,7 +44,7 @@ test('readContract', () => {
         address,
         abi: writingEditionsFactoryAbi,
         functionName: 'predictDeterministicAddress',
-        args: [address, 'foo'],
+        args: [address, '0xfoo'],
       })
       expectType<Address>(result)
     })

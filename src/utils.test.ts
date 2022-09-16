@@ -38,11 +38,10 @@ test('AbiTypeToPrimitiveType', () => {
   })
 
   test('bytes', () => {
-    expectType<AbiTypeToPrimitiveType<'bytes'>>('foo')
-    expectType<AbiTypeToPrimitiveType<'bytes1'>>('foo')
-    expectType<AbiTypeToPrimitiveType<'bytes24'>>('foo')
-    expectType<AbiTypeToPrimitiveType<'bytes32'>>('foo')
-    expectType<AbiTypeToPrimitiveType<'bytes'>>([1])
+    expectType<AbiTypeToPrimitiveType<'bytes'>>('0xfoo')
+    expectType<AbiTypeToPrimitiveType<'bytes1'>>('0xfoo')
+    expectType<AbiTypeToPrimitiveType<'bytes24'>>('0xfoo')
+    expectType<AbiTypeToPrimitiveType<'bytes32'>>('0xfoo')
   })
 
   test('function', () => {
@@ -113,8 +112,7 @@ test('AbiParameterToPrimitiveType', () => {
       name: 'data'
       type: 'bytes'
     }>
-    expectType<Result>('foo')
-    expectType<Result>([0, 1])
+    expectType<Result>('0xfoo')
   })
 
   test('function', () => {
