@@ -2,4 +2,4 @@
 'abitype': patch
 ---
 
-Update default config values.
+Updated default config values and fixed check for unnamed tuples.
