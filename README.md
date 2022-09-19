@@ -319,6 +319,22 @@ import {
 } from 'abitype'
 ```
 
+### TypedData
+
+[EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) Typed Data Specification
+
+```ts
+import { TypedData } from 'abitype'
+```
+
+### TypedDataDomain
+
+[EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-domainseparator) Domain
+
+```ts
+import { TypedDataDomain } from 'abitype'
+```
+
 ### TypedDataParameter
 
 Entry in `TypedData` type items
@@ -333,14 +349,6 @@ Subset of `AbiType` that excludes `tuple` and `function`
 
 ```ts
 import { TypedDataType } from 'abitype'
-```
-
-### TypedData
-
-[EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) Typed Data Specification
-
-```ts
-import { TypedData } from 'abitype'
 ```
 
 ## Configuration
