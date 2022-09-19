@@ -1,5 +1,0 @@
----
-'abitype': patch
----
-
-Added `TypedDataDomain`

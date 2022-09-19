@@ -1,5 +1,11 @@
 # abitype
 
+## 0.1.2
+
+### Patch Changes
+
+- [#33](https://github.com/wagmi-dev/abitype/pull/33) [`0a2e8ee`](https://github.com/wagmi-dev/abitype/commit/0a2e8ee730956bb41415bb5c5cb37c5a3780c4b5) Thanks [@tmm](https://github.com/tmm)! - Added `TypedDataDomain`
+
 ## 0.1.1
 
 ### Patch Changes
