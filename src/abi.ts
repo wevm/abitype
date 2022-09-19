@@ -160,6 +160,14 @@ export type Abi = readonly (AbiFunction | AbiEvent | AbiError)[]
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Typed Data Types
 
+export type TypedDataDomain = {
+  chainId?: string | number | bigint
+  name?: string
+  salt?: ResolvedConfig['BytesType']
+  verifyingContract?: Address
+  version?: string
+}
+
 // Subset of `AbiType` that excludes `tuple` and `function`
 export type TypedDataType = Exclude<
   AbiType,

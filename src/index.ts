@@ -21,6 +21,7 @@ export type {
   SolidityString,
   SolidityTuple,
   TypedData,
+  TypedDataDomain,
   TypedDataParameter,
   TypedDataType,
 } from './abi'
