@@ -607,6 +607,12 @@ test('readContracts', () => {
 
 test('signTypedData', () => {
   test('basic', () => {
+    const domain = {
+      name: 'Ether Mail',
+      version: '1',
+      chainId: 1,
+      verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+    } as const
     const types = {
       Person: [
         { name: 'name', type: 'Name' },
@@ -626,6 +632,7 @@ test('signTypedData', () => {
     } as const
 
     signTypedData({
+      domain,
       types,
       value: {
         first: 'Tom',
@@ -634,6 +641,7 @@ test('signTypedData', () => {
     })
 
     signTypedData({
+      domain,
       types,
       value: {
         name: {
@@ -647,6 +655,7 @@ test('signTypedData', () => {
     })
 
     signTypedData({
+      domain,
       types,
       value: {
         from: {
@@ -672,6 +681,7 @@ test('signTypedData', () => {
     })
 
     signTypedData({
+      domain,
       types,
       value: {
         first: 'Tom',
@@ -681,6 +691,7 @@ test('signTypedData', () => {
     })
 
     signTypedData({
+      domain,
       types,
       // @ts-expect-error missing `name` property
       value: {
@@ -692,6 +703,12 @@ test('signTypedData', () => {
   })
 
   test('deeply nested structs', () => {
+    const domain = {
+      name: 'Ether Mail',
+      version: '1',
+      chainId: 1,
+      verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+    } as const
     const types = {
       Contributor: [
         { name: 'name', type: 'string' },
@@ -713,6 +730,7 @@ test('signTypedData', () => {
     } as const
 
     signTypedData({
+      domain,
       types,
       value: {
         name: 'John Doe',
@@ -721,6 +739,7 @@ test('signTypedData', () => {
     })
 
     signTypedData({
+      domain,
       types,
       value: {
         name: 'My Organization',

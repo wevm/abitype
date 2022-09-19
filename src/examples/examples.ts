@@ -5,6 +5,7 @@ import {
   AbiParameter,
   Address,
   TypedData,
+  TypedDataDomain,
 } from '../abi'
 import {
   AbiParameterToPrimitiveType,
@@ -246,6 +247,8 @@ export function signTypedData<
   TTypedData extends TypedData,
   TSchema extends TypedDataToPrimitiveTypes<TTypedData>,
 >(_config: {
+  /** Domain info */
+  domain: TypedDataDomain
   /** Named list of all type definitions */
   types: TTypedData
   /** Data to sign */
