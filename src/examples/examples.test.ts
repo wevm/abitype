@@ -55,7 +55,7 @@ test('readContract', () => {
       const result = readContract({
         address,
         abi: wagmiMintExampleAbi,
-        functionName: 'symbol',
+        functionName: 'name',
       })
       expectType<string>(result)
     })
@@ -120,8 +120,10 @@ test('readContract', () => {
         functionName: 'bar',
         args: [address],
       })
-      expectType<any>(result1)
-      expectType<any>(result2)
+      type Result1 = typeof result1
+      type Result2 = typeof result2
+      expectType<Result1>('hello')
+      expectType<Result2>('0x123')
     })
 
     test('declared as Abi type', () => {
@@ -152,8 +154,10 @@ test('readContract', () => {
         functionName: 'bar',
         args: [address],
       })
-      expectType<any>(result1)
-      expectType<any>(result2)
+      type Result1 = typeof result1
+      type Result2 = typeof result2
+      expectType<Result1>('hello')
+      expectType<Result2>('0x123')
     })
 
     test('defined inline', () => {
@@ -199,8 +203,10 @@ test('readContract', () => {
         functionName: 'bar',
         args: [address],
       })
-      expectType<any>(result1)
-      expectType<any>(result2)
+      type Result1 = typeof result1
+      type Result2 = typeof result2
+      expectType<Result1>('hello')
+      expectType<Result2>('0x123')
     })
   })
 })
@@ -769,3 +775,58 @@ test('signTypedData', () => {
     })
   })
 })
+
+const result = readContracts({
+  contracts: [
+    {
+      address,
+      abi: wagmiMintExampleAbi,
+      functionName: 'balanceOf',
+      args: [address],
+    },
+    {
+      address,
+      abi: writingEditionsFactoryAbi,
+      functionName: 'predictDeterministicAddress',
+      args: [address, address],
+    },
+    {
+      address,
+      abi: [
+        {
+          type: 'function',
+          name: 'balanceOf',
+          stateMutability: 'view',
+          inputs: [
+            { type: 'address[]', name: 'owner' },
+            { type: 'address[2]', name: 'owner' },
+            { type: 'uint256', name: 'id' },
+          ],
+          outputs: [{ type: 'uint256', name: 'balance' }],
+        },
+      ],
+      functionName: 'balanceOf',
+      args: [[address], [address, address], 1n],
+    },
+  ],
+})
+result
+
+// const result2 = readContract({
+//   address,
+//   abi: [
+//     {
+//       type: 'function',
+//       name: 'balanceOf',
+//       stateMutability: 'view',
+//       inputs: [
+//         { type: 'address[]', name: 'owner' },
+//         { type: 'address[2]', name: 'owner' },
+//         { type: 'uint256', name: 'id' },
+//       ],
+//       outputs: [{ type: 'uint256', name: 'balance' }],
+//     },
+//   ],
+//   functionName: 'balanceOf',
+//   args: [[address], [address, address], 1n],
+// })
