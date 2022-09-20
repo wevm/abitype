@@ -1,5 +1,11 @@
 # abitype
 
+## 0.1.3
+
+### Patch Changes
+
+- [#35](https://github.com/wagmi-dev/abitype/pull/35) [`d733c67`](https://github.com/wagmi-dev/abitype/commit/d733c672c062fe67efda2b08955b4f039416cc37) Thanks [@tmm](https://github.com/tmm)! - Made array types immutable
+
 ## 0.1.2
 
 ### Patch Changes
