@@ -10,6 +10,7 @@ import {
 } from '../../test'
 
 import { Abi, Address } from '../abi'
+import { ResolvedConfig } from '../config'
 import {
   readContract,
   readContracts,
@@ -55,7 +56,7 @@ test('readContract', () => {
       const result = readContract({
         address,
         abi: wagmiMintExampleAbi,
-        functionName: 'symbol',
+        functionName: 'name',
       })
       expectType<string>(result)
     })
@@ -77,7 +78,7 @@ test('readContract', () => {
         functionName: 'balanceOf',
         args: [address],
       })
-      expectType<bigint>(result)
+      expectType<ResolvedConfig['BigIntType']>(result)
     })
   })
 
@@ -120,8 +121,10 @@ test('readContract', () => {
         functionName: 'bar',
         args: [address],
       })
-      expectType<any>(result1)
-      expectType<any>(result2)
+      type Result1 = typeof result1
+      type Result2 = typeof result2
+      expectType<Result1>('hello')
+      expectType<Result2>('0x123')
     })
 
     test('declared as Abi type', () => {
@@ -152,8 +155,10 @@ test('readContract', () => {
         functionName: 'bar',
         args: [address],
       })
-      expectType<any>(result1)
-      expectType<any>(result2)
+      type Result1 = typeof result1
+      type Result2 = typeof result2
+      expectType<Result1>('hello')
+      expectType<Result2>('0x123')
     })
 
     test('defined inline', () => {
@@ -199,8 +204,10 @@ test('readContract', () => {
         functionName: 'bar',
         args: [address],
       })
-      expectType<any>(result1)
-      expectType<any>(result2)
+      type Result1 = typeof result1
+      type Result2 = typeof result2
+      expectType<Result1>('hello')
+      expectType<Result2>('0x123')
     })
   })
 })
@@ -285,7 +292,7 @@ test('writeContract', () => {
         functionName: 'setSubnodeOwner',
         args: ['0xfoo', '0xbar', address],
       })
-      expectType<string | ArrayLike<number>>(result)
+      expectType<ResolvedConfig['BytesType']>(result)
     })
 
     test('tuple', () => {
@@ -328,7 +335,12 @@ test('writeContract', () => {
         functionName: 'f',
         args: [{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1, y: 1 }, 1n],
       })
-      expectType<{ x: number | bigint; y: number | bigint }[]>(result)
+      expectType<
+        readonly {
+          x: ResolvedConfig['BigIntType']
+          y: ResolvedConfig['BigIntType']
+        }[]
+      >(result)
     })
   })
 
@@ -340,7 +352,7 @@ test('writeContract', () => {
         // @ts-expect-error Trying to use read function
         functionName: 'symbol',
       })
-      expectType<void>(result)
+      expectType<string>(result)
     })
 
     test('function with overloads', () => {
@@ -460,7 +472,7 @@ test('watchContractEvent', () => {
         listener(from, to, tokenId) {
           expectType<Address>(from)
           expectType<Address>(to)
-          expectType<number | bigint>(tokenId)
+          expectType<ResolvedConfig['BigIntType']>(tokenId)
         },
       })
     })
@@ -501,23 +513,30 @@ test('readContracts', () => {
           {
             address,
             abi: wagmiMintExampleAbi,
-            functionName: 'name' as const,
+            functionName: 'name',
           },
           {
             address,
             abi: nounsAuctionHouseAbi,
-            functionName: 'auction' as const,
+            functionName: 'auction',
           },
         ],
       })
       expectType<
         [
           string,
-          readonly [
-            number | bigint,
-            number | bigint,
-            number | bigint,
-            number | bigint,
+          {
+            nounId: ResolvedConfig['BigIntType']
+            amount: ResolvedConfig['BigIntType']
+            startTime: ResolvedConfig['BigIntType']
+            endTime: ResolvedConfig['BigIntType']
+            bidder: Address
+            settled: boolean
+          } & readonly [
+            ResolvedConfig['BigIntType'],
+            ResolvedConfig['BigIntType'],
+            ResolvedConfig['BigIntType'],
+            ResolvedConfig['BigIntType'],
             Address,
             boolean,
           ],
@@ -531,18 +550,18 @@ test('readContracts', () => {
           {
             address,
             abi: wagmiMintExampleAbi,
-            functionName: 'balanceOf' as const,
+            functionName: 'balanceOf',
             args: [address],
           },
           {
             address,
             abi: wagmiMintExampleAbi,
-            functionName: 'ownerOf' as const,
+            functionName: 'ownerOf',
             args: [123n],
           },
         ],
       })
-      expectType<[number | bigint, Address]>(result)
+      expectType<[ResolvedConfig['BigIntType'], Address]>(result)
     })
 
     test('two or more', () => {
@@ -551,7 +570,7 @@ test('readContracts', () => {
           {
             address,
             abi: nestedTupleArrayAbi,
-            functionName: 'v' as const,
+            functionName: 'v',
             args: [
               [
                 { a: 1, b: [2] },
@@ -564,7 +583,7 @@ test('readContracts', () => {
           {
             address,
             abi: writingEditionsFactoryAbi,
-            functionName: 'getSalt' as const,
+            functionName: 'getSalt',
             args: [
               address,
               {
@@ -584,7 +603,7 @@ test('readContracts', () => {
           },
         ],
       })
-      expectType<[void, string | ArrayLike<number>]>(result)
+      expectType<[void, ResolvedConfig['BytesType']]>(result)
     })
   })
 
@@ -601,6 +620,47 @@ test('readContracts', () => {
         ],
       })
       expectType<any>(result)
+    })
+
+    test('mixed result', () => {
+      const result = readContracts({
+        contracts: [
+          {
+            address,
+            abi: wagmiMintExampleAbi,
+            functionName: 'tokenURI',
+            args: [1n],
+          },
+          {
+            address,
+            abi: writingEditionsFactoryAbi,
+            functionName: 'predictDeterministicAddress',
+            args: [address, address],
+          },
+          {
+            address,
+            abi: [
+              {
+                type: 'function',
+                name: 'balanceOf',
+                stateMutability: 'view',
+                inputs: [
+                  { type: 'address[]', name: 'owner' },
+                  { type: 'address[1]', name: 'owner' },
+                  { type: 'uint256', name: 'id' },
+                ],
+                outputs: [{ type: 'uint256', name: 'balance' }],
+              },
+            ],
+            functionName: 'balanceOf',
+            args: [[address], [address], 1n],
+          },
+        ],
+      })
+      type Result = typeof result
+      //   ^?
+      type Expected = [string, `0x${string}`, any] extends Result ? true : false
+      expectType<Expected>(true)
     })
   })
 })

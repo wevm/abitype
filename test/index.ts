@@ -17,7 +17,7 @@ export function test(name: string, _callback: () => void) {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
 }
 
-export const address = '0x0000000000000000000000000000000000000000'
+export const address = '0x0000000000000000000000000000000000000000' as const
 
 export {
   ensRegistryWithFallbackAbi,
