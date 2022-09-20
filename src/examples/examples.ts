@@ -57,6 +57,38 @@ type ContractConfig<
   functionName: [TFunctionName] extends [never] ? string : TFunctionName
 } & GetArgs<TAbi, TFunction>
 
+type GetReadParameters<T> = T extends {
+  abi: infer TAbi extends Abi
+  functionName: infer TFunctionName extends string
+}
+  ? ContractConfig<
+      TAbi,
+      ExtractAbiFunctionNames<TAbi, 'view' | 'pure'>,
+      ExtractAbiFunction<TAbi, TFunctionName>
+    >
+  : T extends {
+      abi: infer TAbi extends readonly unknown[]
+      functionName: infer TFunctionName extends string
+    }
+  ? ContractConfig<TAbi, TFunctionName>
+  : ContractConfig
+
+type GetWriteParameters<T> = T extends {
+  abi: infer TAbi extends Abi
+  functionName: infer TFunctionName extends string
+}
+  ? ContractConfig<
+      TAbi,
+      ExtractAbiFunctionNames<TAbi, 'nonpayable' | 'payable'>,
+      ExtractAbiFunction<TAbi, TFunctionName>
+    >
+  : T extends {
+      abi: infer TAbi extends readonly unknown[]
+      functionName: infer TFunctionName extends string
+    }
+  ? ContractConfig<TAbi, TFunctionName>
+  : ContractConfig
+
 type GetResult<
   TAbi extends Abi | readonly unknown[] = Abi,
   TFunctionName extends string = string,
@@ -82,22 +114,6 @@ type GetResult<
     : never
   : never
 
-type GetParameters<T> = T extends {
-  abi: infer TAbi extends Abi
-  functionName: infer TFunctionName extends string
-}
-  ? ContractConfig<
-      TAbi,
-      ExtractAbiFunctionNames<TAbi, 'view' | 'pure'>,
-      ExtractAbiFunction<TAbi, TFunctionName>
-    >
-  : T extends {
-      abi: infer TAbi extends readonly unknown[]
-      functionName: infer TFunctionName extends string
-    }
-  ? ContractConfig<TAbi, TFunctionName>
-  : ContractConfig
-
 type GetReturnType<T> = T extends {
   abi: infer TAbi extends Abi
   functionName: infer TFunctionName extends string
@@ -115,11 +131,9 @@ type GetReturnType<T> = T extends {
 
 export function readContract<
   TAbi extends Abi | readonly unknown[],
-  TFunctionName extends TAbi extends Abi
-    ? ExtractAbiFunctionNames<TAbi, 'view' | 'pure'>
-    : string,
+  TFunctionName extends string,
 >(
-  _config: GetParameters<{ abi: TAbi; functionName: TFunctionName }>,
+  _config: GetReadParameters<{ abi: TAbi; functionName: TFunctionName }>,
 ): GetReturnType<{ abi: TAbi; functionName: TFunctionName }> {
   return {} as any
 }
@@ -129,12 +143,10 @@ export function readContract<
 
 export function writeContract<
   TAbi extends Abi | readonly unknown[],
-  TFunctionName extends TAbi extends Abi
-    ? ExtractAbiFunctionNames<TAbi, 'payable' | 'nonpayable'>
-    : string,
+  TFunctionName extends string,
 >(
-  _config: GetParameters<{ abi: TAbi; functionName: TFunctionName }>,
-): GetResult<TAbi, TFunctionName> {
+  _config: GetWriteParameters<{ abi: TAbi; functionName: TFunctionName }>,
+): GetReturnType<{ abi: TAbi; functionName: TFunctionName }> {
   return {} as any
 }
 
@@ -165,10 +177,26 @@ type WatchContractEventConfig<
     : never
 }
 
+type GetEventParameters<T> = T extends {
+  abi: infer TAbi extends Abi
+  eventName: infer TEventName extends string
+}
+  ? WatchContractEventConfig<
+      TAbi,
+      ExtractAbiEventNames<TAbi>,
+      ExtractAbiEvent<TAbi, TEventName>
+    >
+  : T extends {
+      abi: infer TAbi extends readonly unknown[]
+      eventName: infer TEventName extends string
+    }
+  ? WatchContractEventConfig<TAbi, TEventName>
+  : WatchContractEventConfig
+
 export function watchContractEvent<
   TAbi extends Abi | readonly unknown[],
-  TEventName extends TAbi extends Abi ? ExtractAbiEventNames<TAbi> : string,
->(_config: WatchContractEventConfig<TAbi, TEventName>) {
+  TEventName extends string,
+>(_config: GetEventParameters<{ abi: TAbi; eventName: TEventName }>) {
   return
 }
 
@@ -185,9 +213,13 @@ type ContractsConfig<
   : TContracts extends []
   ? []
   : TContracts extends [infer Head]
-  ? [...Result, GetParameters<Head>]
+  ? [...Result, GetReadParameters<Head>]
   : TContracts extends [infer Head, ...infer Tail]
-  ? ContractsConfig<[...Tail], [...Result, GetParameters<Head>], [...Depth, 1]>
+  ? ContractsConfig<
+      [...Tail],
+      [...Result, GetReadParameters<Head>],
+      [...Depth, 1]
+    >
   : unknown[] extends TContracts
   ? TContracts
   : TContracts extends ContractConfig<infer TAbi, infer TFunctionName>[]
@@ -212,9 +244,7 @@ type ContractsResult<
 
 export function readContracts<
   TAbi extends Abi | readonly unknown[],
-  TFunctionName extends TAbi extends Abi
-    ? ExtractAbiFunctionNames<TAbi, 'view' | 'pure'>
-    : string,
+  TFunctionName extends string,
   TContracts extends { abi: TAbi; functionName: TFunctionName }[],
 >(_config: {
   contracts: readonly [...ContractsConfig<TContracts>]

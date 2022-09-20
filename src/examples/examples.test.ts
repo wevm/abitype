@@ -346,7 +346,7 @@ test('writeContract', () => {
         // @ts-expect-error Trying to use read function
         functionName: 'symbol',
       })
-      expectType<void>(result)
+      expectType<string>(result)
     })
 
     test('function with overloads', () => {
@@ -812,21 +812,22 @@ const result = readContracts({
 })
 result
 
-// const result2 = readContract({
-//   address,
-//   abi: [
-//     {
-//       type: 'function',
-//       name: 'balanceOf',
-//       stateMutability: 'view',
-//       inputs: [
-//         { type: 'address[]', name: 'owner' },
-//         { type: 'address[2]', name: 'owner' },
-//         { type: 'uint256', name: 'id' },
-//       ],
-//       outputs: [{ type: 'uint256', name: 'balance' }],
-//     },
-//   ],
-//   functionName: 'balanceOf',
-//   args: [[address], [address, address], 1n],
-// })
+const result2 = readContract({
+  address,
+  abi: [
+    {
+      type: 'function',
+      name: 'balanceOf',
+      stateMutability: 'view',
+      inputs: [
+        { type: 'address[]', name: 'owner' },
+        { type: 'address[2]', name: 'owner' },
+        { type: 'uint256', name: 'id' },
+      ],
+      outputs: [{ type: 'uint256', name: 'balance' }],
+    },
+  ] as const,
+  functionName: 'balanceOf',
+  args: [[address], [address, address], 1n],
+})
+result2
