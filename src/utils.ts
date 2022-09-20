@@ -53,7 +53,7 @@ type PrimitiveTypeLookup<TAbiType extends AbiType> = {
 } & {
   [_ in SolidityTuple]: Record<string, unknown>
 } & {
-  [_ in SolidityArray]: unknown[]
+  [_ in SolidityArray]: readonly unknown[]
 }
 
 type GreaterThan48Bits = Exclude<MBits, 8 | 16 | 24 | 32 | 40 | 48 | ''>
@@ -86,11 +86,13 @@ export type AbiParameterToPrimitiveType<
       }
       ? _HasUnnamedAbiParameter<TComponents> extends true
         ? // Has unnamed tuple parameters so return as array
-          {
-            [K in keyof TComponents]: AbiParameterToPrimitiveType<
-              TComponents[K]
-            >
-          }
+          readonly [
+            ...{
+              [K in keyof TComponents]: AbiParameterToPrimitiveType<
+                TComponents[K]
+              >
+            },
+          ]
         : // All tuple parameters are named so return as object
           {
             [Component in TComponents[number] as Component['name']]: AbiParameterToPrimitiveType<Component>
@@ -125,7 +127,9 @@ export type AbiParameterToPrimitiveType<
             AbiParameterToPrimitiveType<Merge<TAbiParameter, { type: Head }>>,
             SolidityFixedArraySizeLookup[Size]
           >
-        : AbiParameterToPrimitiveType<Merge<TAbiParameter, { type: Head }>>[]
+        : readonly AbiParameterToPrimitiveType<
+            Merge<TAbiParameter, { type: Head }>
+          >[]
       : never
     : // 4. If type is not basic, tuple, or array, we don't know what the type is.
       // This can happen when a fixed-length array is out of range (`Size` doesn't exist in `SolidityFixedArraySizeLookup`),

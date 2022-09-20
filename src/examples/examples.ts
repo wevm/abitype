@@ -54,7 +54,7 @@ type ContractConfig<
   /** Contract ABI */
   abi: TAbi
   /** Function to invoke on the contract */
-  functionName: [TFunctionName] extends [never] ? string : TFunctionName
+  functionName: IsNever<TFunctionName> extends true ? string : TFunctionName
 } & GetArgs<TAbi, TFunction>
 
 type GetReadParameters<T> = T extends {

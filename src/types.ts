@@ -71,5 +71,7 @@ export type Tuple<Type, Size extends number> = Size extends Size
 type _TupleOf<
   TNumber,
   TSize extends number,
-  R extends unknown[],
-> = R['length'] extends TSize ? R : _TupleOf<TNumber, TSize, [TNumber, ...R]>
+  R extends readonly unknown[],
+> = R['length'] extends TSize
+  ? R
+  : _TupleOf<TNumber, TSize, readonly [TNumber, ...R]>
