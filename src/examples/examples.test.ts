@@ -828,4 +828,36 @@ test('signTypedData', () => {
       },
     })
   })
+
+  test('no const assertion', () => {
+    signTypedData({
+      domain: {
+        name: 'Ether Mail',
+        version: '1',
+        chainId: 1,
+        verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+      },
+      types: {
+        Person: [
+          { name: 'name', type: 'Name' },
+          { name: 'wallet', type: 'address' },
+          { name: 'favoriteColors', type: 'string[3]' },
+          { name: 'age', type: 'uint8' },
+        ],
+        Mail: [
+          { name: 'from', type: 'Person' },
+          { name: 'to', type: 'Person' },
+          { name: 'contents', type: 'string' },
+        ],
+        Name: [
+          { name: 'first', type: 'string' },
+          { name: 'last', type: 'string' },
+        ],
+      },
+      value: {
+        first: 'Tom',
+        last: 'Meagher',
+      },
+    })
+  })
 })

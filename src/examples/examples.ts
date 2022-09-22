@@ -3,6 +3,7 @@ import {
   AbiEvent,
   AbiFunction,
   AbiParameter,
+  AbiStateMutability,
   Address,
   TypedData,
   TypedDataDomain,
@@ -17,15 +18,49 @@ import {
   TypedDataToPrimitiveTypes,
 } from '../utils'
 
+/**
+ * Check if {@link T} is `never`
+ *
+ * @param T - Type to check
+ * @returns `true` if {@link T} is `never`, otherwise `false`
+ *
+ * @example
+ * type Result = IsNever<'foo'>
+ */
 type IsNever<T> = [T] extends [never] ? true : false
+/**
+ * Check if {@link T} and {@link U} are equal
+ *
+ * @param T
+ * @param U
+ * @returns `true` if {@link T} and {@link U} are not equal, otherwise `false`
+ *
+ * @example
+ * type Result = NotEqual<'foo', 'bar'>
+ */
 type NotEqual<T, U> = [T] extends [U] ? false : true
+/**
+ * Boolean "or" operator
+ *
+ * @param T
+ * @param U
+ * @returns `true` if either {@link T} or {@link U} are `true`, otherwise `false`
+ *
+ * @example
+ * type Result = Or<true, false>
+ */
 type Or<T, U> = T extends true ? true : U extends true ? true : false
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Utils
 
 type GetArgs<
   TAbi extends Abi | readonly unknown[],
+  // It's important that we use `TFunction` to parse args so overloads still return the correct types
   TFunction extends AbiFunction & { type: 'function' },
 > = TFunction['inputs'] extends infer TInputs extends readonly AbiParameter[]
-  ? Or<IsNever<TInputs>, NotEqual<TAbi, Abi>> extends true
+  ? // Check if valid ABI. If `TInputs` is `never` or `TAbi` does not have the same shape as `Abi`, then return optional `readonly any[]` args.
+    Or<IsNever<TInputs>, NotEqual<TAbi, Abi>> extends true
     ? {
         /**
          * Arguments to pass contract method
@@ -34,9 +69,11 @@ type GetArgs<
          */
         args?: readonly any[]
       }
-    : TInputs['length'] extends 0
+    : // If there are no inputs, do not include `args` in the return type.
+    TInputs['length'] extends 0
     ? { args?: never }
-    : {
+    : // Convert `TInputs` to primitive TypeScript types
+      {
         /** Arguments to pass contract method */
         args: AbiParametersToPrimitiveTypes<TInputs>
       }
@@ -54,35 +91,23 @@ type ContractConfig<
   /** Contract ABI */
   abi: TAbi
   /** Function to invoke on the contract */
+  // If `TFunctionName` is `never`, then ABI was not parsable. Fall back to `string`.
   functionName: IsNever<TFunctionName> extends true ? string : TFunctionName
 } & GetArgs<TAbi, TFunction>
 
-type GetReadParameters<T> = T extends {
+type GetConfig<
+  TContract = unknown,
+  TAbiStateMutibility extends AbiStateMutability = AbiStateMutability,
+> = TContract extends {
   abi: infer TAbi extends Abi
   functionName: infer TFunctionName extends string
 }
   ? ContractConfig<
       TAbi,
-      ExtractAbiFunctionNames<TAbi, 'view' | 'pure'>,
+      ExtractAbiFunctionNames<TAbi, TAbiStateMutibility>,
       ExtractAbiFunction<TAbi, TFunctionName>
     >
-  : T extends {
-      abi: infer TAbi extends readonly unknown[]
-      functionName: infer TFunctionName extends string
-    }
-  ? ContractConfig<TAbi, TFunctionName>
-  : ContractConfig
-
-type GetWriteParameters<T> = T extends {
-  abi: infer TAbi extends Abi
-  functionName: infer TFunctionName extends string
-}
-  ? ContractConfig<
-      TAbi,
-      ExtractAbiFunctionNames<TAbi, 'nonpayable' | 'payable'>,
-      ExtractAbiFunction<TAbi, TFunctionName>
-    >
-  : T extends {
+  : TContract extends {
       abi: infer TAbi extends readonly unknown[]
       functionName: infer TFunctionName extends string
     }
@@ -95,31 +120,44 @@ type GetResult<
   TFunction extends AbiFunction & { type: 'function' } = TAbi extends Abi
     ? ExtractAbiFunction<TAbi, TFunctionName>
     : never,
-> = TFunction['outputs'] extends infer TOutputs extends readonly AbiParameter[]
-  ? Or<IsNever<TOutputs>, NotEqual<TAbi, Abi>> extends true
-    ? any
-    : TOutputs['length'] extends infer TLength
-    ? TLength extends 0
-      ? void
-      : TLength extends 1
-      ? AbiParameterToPrimitiveType<TOutputs[0]>
-      : // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      TOutputs extends readonly [...infer _]
-      ? {
-          [Output in TOutputs[number] as Output['name'] extends ''
-            ? never
-            : Output['name']]: AbiParameterToPrimitiveType<Output>
-        } & AbiParametersToPrimitiveTypes<TOutputs>
-      : any
+> =
+  // Save `TOutputs` to local variable
+  TFunction['outputs'] extends infer TOutputs extends readonly AbiParameter[]
+    ? // Check if valid ABI. If `TOutputs` is `never` or `TAbi` does not have the same shape as `Abi`, then return `any` as result.
+      Or<IsNever<TOutputs>, NotEqual<TAbi, Abi>> extends true
+      ? any
+      : // Save `TLength` to local variable for comparisons
+      TOutputs['length'] extends infer TLength
+      ? TLength extends 0
+        ? void // If there are no outputs, return `void`
+        : TLength extends 1
+        ? AbiParameterToPrimitiveType<TOutputs[0]> // If there is one output, return the primitive type
+        : // If outputs are inferrable, must be a known type. Convert to TypeScript primitives.
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        TOutputs extends readonly [...infer _]
+        ? /**
+           * Return output as array assigned to an object with named keys
+           *
+           * | Outputs                                                               | Result                                                     |
+           * | --------------------------------------------------------------------- | ---------------------------------------------------------- |
+           * | `[{ name: 'foo', type: 'uint256' }, { name: 'bar', type: 'string' }]` | `readonly [bigint, string] & { foo: bigint; bar: string }` |
+           * | `[{ name: 'foo', type: 'uint256' }, { name: '', type: 'string' }]`    | `readonly [bigint, string] & { foo: bigint }`              |
+           */
+          {
+            [Output in TOutputs[number] as Output['name'] extends ''
+              ? never
+              : Output['name']]: AbiParameterToPrimitiveType<Output>
+          } & AbiParametersToPrimitiveTypes<TOutputs>
+        : any
+      : never
     : never
-  : never
 
-type GetReturnType<T> = T extends {
+type GetReturnType<TContract = unknown> = TContract extends {
   abi: infer TAbi extends Abi
   functionName: infer TFunctionName extends string
 }
   ? GetResult<TAbi, TFunctionName, ExtractAbiFunction<TAbi, TFunctionName>>
-  : T extends {
+  : TContract extends {
       abi: infer TAbi extends readonly unknown[]
       functionName: infer TFunctionName extends string
     }
@@ -133,7 +171,10 @@ export function readContract<
   TAbi extends Abi | readonly unknown[],
   TFunctionName extends string,
 >(
-  _config: GetReadParameters<{ abi: TAbi; functionName: TFunctionName }>,
+  _config: GetConfig<
+    { abi: TAbi; functionName: TFunctionName },
+    'pure' | 'view'
+  >,
 ): GetReturnType<{ abi: TAbi; functionName: TFunctionName }> {
   return {} as any
 }
@@ -145,7 +186,10 @@ export function writeContract<
   TAbi extends Abi | readonly unknown[],
   TFunctionName extends string,
 >(
-  _config: GetWriteParameters<{ abi: TAbi; functionName: TFunctionName }>,
+  _config: GetConfig<
+    { abi: TAbi; functionName: TFunctionName },
+    'nonpayable' | 'payable'
+  >,
 ): GetReturnType<{ abi: TAbi; functionName: TFunctionName }> {
   return {} as any
 }
@@ -153,13 +197,35 @@ export function writeContract<
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // watchContractEvent
 
-type WatchContractEventConfig<
+type GetListener<
+  TEvent extends AbiEvent,
   TAbi = unknown,
-  TEventName = string,
-  TEvent extends AbiEvent = ExtractAbiEvent<
-    TAbi extends Abi ? TAbi : Abi,
-    TEventName extends string ? TEventName : never
-  >,
+> = AbiParametersToPrimitiveTypes<
+  TEvent['inputs']
+> extends infer TArgs extends readonly unknown[]
+  ? // If `TArgs` is never or `TAbi` does not have the same shape as `Abi`, we were not able to infer args.
+    Or<IsNever<TArgs>, NotEqual<TAbi, Abi>> extends true
+    ? {
+        /**
+         * Callback when event is emitted
+         *
+         * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for type inference.
+         */
+        listener: (...args: any) => void
+      }
+    : // We are able to infer args, spread the types.
+      {
+        /** Callback when event is emitted */
+        listener: (...args: TArgs) => void
+      }
+  : never
+
+type WatchContractEventConfig<
+  TAbi extends Abi | readonly unknown[] = Abi,
+  TEventName extends string = string,
+  TEvent extends AbiEvent = TAbi extends Abi
+    ? ExtractAbiEvent<TAbi, TEventName>
+    : never,
 > = {
   /** Contract address */
   address: Address
@@ -167,17 +233,9 @@ type WatchContractEventConfig<
   abi: TAbi
   /** Event to listen for */
   eventName: TEventName
-  /** Callback when event is emitted */
-  listener: AbiParametersToPrimitiveTypes<
-    TEvent['inputs']
-  > extends infer TArgs extends readonly any[]
-    ? Or<IsNever<TArgs>, NotEqual<TAbi, Abi>> extends true
-      ? (...args: any) => void
-      : (...args: TArgs) => void
-    : never
-}
+} & GetListener<TEvent, TAbi>
 
-type GetEventParameters<T> = T extends {
+type GetEventConfig<T> = T extends {
   abi: infer TAbi extends Abi
   eventName: infer TEventName extends string
 }
@@ -196,42 +254,52 @@ type GetEventParameters<T> = T extends {
 export function watchContractEvent<
   TAbi extends Abi | readonly unknown[],
   TEventName extends string,
->(_config: GetEventParameters<{ abi: TAbi; eventName: TEventName }>) {
+>(_config: GetEventConfig<{ abi: TAbi; eventName: TEventName }>) {
   return
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // readContracts
 
+// Avoid TS depth-limit error in case of large array literal
 type MAXIMUM_DEPTH = 20
+
+/**
+ * ContractsConfig reducer recursively unwraps function arguments to infer/enforce type param
+ */
 type ContractsConfig<
   TContracts extends unknown[],
   Result extends any[] = [],
   Depth extends ReadonlyArray<number> = [],
 > = Depth['length'] extends MAXIMUM_DEPTH
-  ? ContractConfig[]
+  ? GetConfig[]
   : TContracts extends []
   ? []
   : TContracts extends [infer Head]
-  ? [...Result, GetReadParameters<Head>]
+  ? [...Result, GetConfig<Head, 'pure' | 'view'>]
   : TContracts extends [infer Head, ...infer Tail]
   ? ContractsConfig<
       [...Tail],
-      [...Result, GetReadParameters<Head>],
+      [...Result, GetConfig<Head, 'pure' | 'view'>],
       [...Depth, 1]
     >
   : unknown[] extends TContracts
   ? TContracts
-  : TContracts extends ContractConfig<infer TAbi, infer TFunctionName>[]
+  : // If `TContracts` is *some* array but we couldn't assign `unknown[]` to it, then it must hold some known/homogenous type!
+  // use this to infer the param types in the case of Array.map() argument
+  TContracts extends ContractConfig<infer TAbi, infer TFunctionName>[]
   ? ContractConfig<TAbi, TFunctionName>[]
-  : ContractConfig[]
+  : GetConfig[]
 
+/**
+ * ContractsResult reducer recursively maps type param to results
+ */
 type ContractsResult<
   TContracts extends unknown[],
   Result extends any[] = [],
   Depth extends ReadonlyArray<number> = [],
 > = Depth['length'] extends MAXIMUM_DEPTH
-  ? any[]
+  ? GetReturnType[]
   : TContracts extends []
   ? []
   : TContracts extends [infer Head]
@@ -239,8 +307,9 @@ type ContractsResult<
   : TContracts extends [infer Head, ...infer Tail]
   ? ContractsResult<[...Tail], [...Result, GetReturnType<Head>], [...Depth, 1]>
   : TContracts extends ContractConfig<infer TAbi, infer TFunctionName>[]
-  ? GetReturnType<{ abi: TAbi; functionName: TFunctionName }>[]
-  : any[]
+  ? // Dynamic-size (homogenous) UseQueryOptions array: map directly to array of results
+    GetReturnType<{ abi: TAbi; functionName: TFunctionName }>[]
+  : GetReturnType[]
 
 export function readContracts<
   TAbi extends Abi | readonly unknown[],
@@ -255,20 +324,33 @@ export function readContracts<
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // signTypedData
 
+type GetValue<TSchema = unknown> = TSchema[keyof TSchema] extends infer TValue
+  ? // Check if we were able to infer the shape of typed data
+    { [key: string]: any } extends TValue
+    ? {
+        /**
+         * Data to sign
+         *
+         * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link types} for type inference.
+         */
+        value: Record<string, any>
+      }
+    : {
+        /** Data to sign */
+        value: TValue
+      }
+  : never
+
 export function signTypedData<
   TTypedData extends TypedData,
   TSchema extends TypedDataToPrimitiveTypes<TTypedData>,
->(_config: {
-  /** Domain info */
-  domain: TypedDataDomain
-  /** Named list of all type definitions */
-  types: TTypedData
-  /** Data to sign */
-  value: TSchema[keyof TSchema] extends infer TValue
-    ? { [key: string]: any } extends TValue
-      ? Record<string, any>
-      : TValue
-    : never
-}) {
+>(
+  _config: {
+    /** Domain info */
+    domain: TypedDataDomain
+    /** Named list of all type definitions */
+    types: TTypedData
+  } & GetValue<TSchema>,
+) {
   return {} as Address
 }

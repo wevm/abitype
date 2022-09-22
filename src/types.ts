@@ -2,7 +2,7 @@
  * Checks if {@link T} is `unknown`
  *
  * @param T - Type to check
- * @returns `true` if `T` is `unknown`, otherwise `false`
+ * @returns `true` if {@link T} is `unknown`, otherwise `false`
  *
  * @example
  * type Result = IsUnknown<unknown>
@@ -14,6 +14,7 @@ export type IsUnknown<T> = unknown extends T ? true : false
  *
  * @param Object1 - Object to merge into
  * @param Object2 - Object to merge and override keys from {@link Object1}
+ * @returns New object type with keys from {@link Object1} and {@link Object2}. If a key exists in both {@link Object1} and {@link Object2}, the key from {@link Object2} will be used.
  *
  * @example
  * type Result = Merge<{ foo: string }, { foo: number; bar: string }>
