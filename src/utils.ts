@@ -315,12 +315,15 @@ export type IsTypedData<TTypedData> = TTypedData extends TypedData
  * @param TTypedData - {@link TypedData} to convert
  * @returns Union of TypeScript primitive types
  */
+// TODO: Check for recursive structs
 export type TypedDataToPrimitiveTypes<TTypedData extends TypedData> = {
   [K in keyof TTypedData]: {
     // Map over typed data values and turn into key-value pairs
-    [K2 in TTypedData[K][number] as K2['name']]: K2['type'] extends keyof TTypedData // 1. Check if type is struct
+    [K2 in TTypedData[K][number] as K2['name']]: K2['type'] extends K // 1. Eliminate self-referencing structs
+      ? never
+      : K2['type'] extends keyof TTypedData // 2. Check if type is struct
       ? TypedDataToPrimitiveTypes<Exclude<TTypedData, K>>[K2['type']]
-      : // 2. Check if type is array of structs
+      : // 3. Check if type is array of structs
       K2['type'] extends `${infer TType extends keyof TTypedData &
           string}[${infer Tail}]`
       ? AbiParameterToPrimitiveType<
@@ -335,8 +338,9 @@ export type TypedDataToPrimitiveTypes<TTypedData extends TypedData> = {
             }
           >
         >
-      : // 3. Known type to covert
-        AbiParameterToPrimitiveType<K2>
+      : K2['type'] extends TypedDataType // 4. Known type to covert
+      ? AbiParameterToPrimitiveType<K2>
+      : never
   }
 }
 
@@ -354,7 +358,7 @@ type _TypedDataParametersToAbiParameters<
       ? Merge<
           TTypedDataParameter,
           {
-            type: `tuple`
+            type: 'tuple'
             components: _TypedDataParametersToAbiParameters<
               TTypedData[TTypedDataParameter['type']],
               TTypedData

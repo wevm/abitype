@@ -725,6 +725,38 @@ test('TypedDataToPrimitiveTypes', () => {
       },
     })
   })
+
+  test('behavior', () => {
+    test('self-referencing struct', () => {
+      const types = {
+        Name: [
+          { name: 'first', type: 'Name' },
+          { name: 'last', type: 'string' },
+        ],
+      } as const
+      type Result = TypedDataToPrimitiveTypes<typeof types>
+      const name: Result['Name'] = {
+        first: undefined as never,
+        last: 'Meagher',
+      }
+      expectType<Result>({ Name: name })
+    })
+
+    test('unknown struct', () => {
+      const types = {
+        Name: [
+          { name: 'first', type: 'Foo' },
+          { name: 'last', type: 'string' },
+        ],
+      } as const
+      type Result = TypedDataToPrimitiveTypes<typeof types>
+      const name: Result['Name'] = {
+        first: undefined as never,
+        last: 'Meagher',
+      }
+      expectType<Result>({ Name: name })
+    })
+  })
 })
 
 test('IsTypedData', () => {
