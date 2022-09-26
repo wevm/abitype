@@ -725,6 +725,41 @@ test('TypedDataToPrimitiveTypes', () => {
       },
     })
   })
+
+  test('behavior', () => {
+    test('self-referencing struct', () => {
+      const types = {
+        Name: [
+          { name: 'first', type: 'Name' },
+          { name: 'last', type: 'string' },
+        ],
+      } as const
+      type Result = TypedDataToPrimitiveTypes<typeof types>
+      expectType<Result>({
+        Name: {
+          first:
+            "Error: Cannot convert self-referencing struct 'Name' to primitive type.",
+          last: 'Meagher',
+        },
+      })
+    })
+
+    test('unknown struct', () => {
+      const types = {
+        Name: [
+          { name: 'first', type: 'Foo' },
+          { name: 'last', type: 'string' },
+        ],
+      } as const
+      type Result = TypedDataToPrimitiveTypes<typeof types>
+      expectType<Result>({
+        Name: {
+          first: "Error: Cannot convert unknown type 'Foo' to primitive type.",
+          last: 'Meagher',
+        },
+      })
+    })
+  })
 })
 
 test('IsTypedData', () => {
@@ -742,7 +777,7 @@ test('IsTypedData', () => {
   expectType<Result>(true)
 
   type Result2 = IsTypedData<{
-    Person: [{ name: 'name'; type: 'string' }, { name: 'wallet'; type: 'merp' }]
+    Person: [{ name: 'name'; type: 'string' }, { name: 'wallet'; type: 'Foo' }] // `Foo` does not exist in schema
     Mail: [
       { name: 'from'; type: 'Person' },
       { name: 'to'; type: 'Person' },
