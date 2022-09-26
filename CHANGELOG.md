@@ -1,5 +1,11 @@
 # abitype
 
+## 0.1.4
+
+### Patch Changes
+
+- [#37](https://github.com/wagmi-dev/abitype/pull/37) [`2c67082`](https://github.com/wagmi-dev/abitype/commit/2c670823f5ac3ed882709af2c458fc90a8cc8169) Thanks [@tmm](https://github.com/tmm)! - Added filter on typed data to disallow self-referencing objects.
+
 ## 0.1.3
 
 ### Patch Changes
