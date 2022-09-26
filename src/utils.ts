@@ -73,6 +73,7 @@ type BitsTypeLookup = {
  * @param TAbiParameter - {@link AbiParameter} to convert to TypeScript representation
  * @returns TypeScript primitive type
  */
+// TODO: Add error messages for `never` types
 export type AbiParameterToPrimitiveType<
   TAbiParameter extends AbiParameter | { name: string; type: unknown },
 > =
@@ -293,7 +294,8 @@ export type ExtractAbiError<
 export type IsTypedData<TTypedData> = TTypedData extends TypedData
   ? {
       [K in keyof TTypedData]: {
-        // Map over typed data values and turn into key-value pairs
+        // Map over typed data values and turn into key-value pairs.
+        // Valid types are set to `never` so we can weed out invalid types more easily.
         [K2 in TTypedData[K][number] as K2['type'] extends keyof TTypedData
           ? never
           : K2['type'] extends `${keyof TTypedData & string}[${string}]`
@@ -315,12 +317,12 @@ export type IsTypedData<TTypedData> = TTypedData extends TypedData
  * @param TTypedData - {@link TypedData} to convert
  * @returns Union of TypeScript primitive types
  */
-// TODO: Check for recursive structs
+// TODO: Check for recursive structs (e.g. add generic slot for recursion)
 export type TypedDataToPrimitiveTypes<TTypedData extends TypedData> = {
   [K in keyof TTypedData]: {
     // Map over typed data values and turn into key-value pairs
     [K2 in TTypedData[K][number] as K2['name']]: K2['type'] extends K // 1. Eliminate self-referencing structs
-      ? never
+      ? `Error: Cannot convert self-referencing struct '${K2['type']}' to primitive type.`
       : K2['type'] extends keyof TTypedData // 2. Check if type is struct
       ? TypedDataToPrimitiveTypes<Exclude<TTypedData, K>>[K2['type']]
       : // 3. Check if type is array of structs
@@ -338,9 +340,9 @@ export type TypedDataToPrimitiveTypes<TTypedData extends TypedData> = {
             }
           >
         >
-      : K2['type'] extends TypedDataType // 4. Known type to covert
+      : K2['type'] extends TypedDataType // 4. Known type to convert
       ? AbiParameterToPrimitiveType<K2>
-      : never
+      : `Error: Cannot convert unknown type '${K2['type']}' to primitive type.`
   }
 }
 
