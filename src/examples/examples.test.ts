@@ -432,7 +432,7 @@ test('writeContract', () => {
 })
 
 test('watchContractEvent', () => {
-  test('args', () => {
+  test('listener args', () => {
     test('zero', () => {
       const abi = [
         {
@@ -473,6 +473,45 @@ test('watchContractEvent', () => {
           expectType<Address>(from)
           expectType<Address>(to)
           expectType<ResolvedConfig['BigIntType']>(tokenId)
+        },
+      })
+    })
+  })
+
+  test('filter args', () => {
+    test('are optional', () => {
+      watchContractEvent({
+        address,
+        abi: writingEditionsFactoryAbi,
+        eventName: 'FactoryLimitSet',
+        args: [],
+        listener() {
+          return
+        },
+      })
+    })
+
+    test('uninedex allow only null', () => {
+      watchContractEvent({
+        address,
+        abi: writingEditionsFactoryAbi,
+        eventName: 'FactoryGuardSet',
+        // @ts-expect-error no args allowed
+        args: [false],
+        listener() {
+          return
+        },
+      })
+    })
+
+    test('indexed allow their type or null', () => {
+      watchContractEvent({
+        address,
+        abi: writingEditionsFactoryAbi,
+        eventName: 'RoyaltyChange',
+        args: [address, undefined, null, null],
+        listener() {
+          return
         },
       })
     })

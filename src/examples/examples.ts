@@ -220,6 +220,30 @@ type GetListener<
       }
   : never
 
+type GetEventArgs<
+  TEvent extends AbiEvent,
+  TAbi = unknown,
+> = AbiParametersToPrimitiveTypes<
+  TEvent['inputs'],
+  true
+> extends infer TArgs extends readonly unknown[]
+  ? // If `TArgs` is never or `TAbi` does not have the same shape as `Abi`, we were not able to infer args.
+    Or<IsNever<TArgs>, NotEqual<TAbi, Abi>> extends true
+    ? {
+        /**
+         * Topics for filtering events
+         *
+         * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for type inference.
+         */
+        args?: any[]
+      }
+    : // We are able to infer args, make types optional.
+      {
+        /** Topics for filtering events */
+        args?: { [P in keyof TArgs]?: TArgs[P] | null }
+      }
+  : never
+
 type WatchContractEventConfig<
   TAbi extends Abi | readonly unknown[] = Abi,
   TEventName extends string = string,
@@ -233,7 +257,8 @@ type WatchContractEventConfig<
   abi: TAbi
   /** Event to listen for */
   eventName: TEventName
-} & GetListener<TEvent, TAbi>
+} & GetListener<TEvent, TAbi> &
+  GetEventArgs<TEvent, TAbi>
 
 type GetEventConfig<T> = T extends {
   abi: infer TAbi extends Abi

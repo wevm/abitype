@@ -67,6 +67,16 @@ type BitsTypeLookup = {
   [_ in DynamicBits]: ResolvedConfig['IntType'] | ResolvedConfig['BigIntType']
 }
 
+// Unindexed event topics can't be used as arguments for filters
+type NullUnindexed<
+  TAbiParameter,
+  TNullUnindexedFlag extends boolean,
+> = TNullUnindexedFlag extends true
+  ? TAbiParameter extends { indexed: false }
+    ? true
+    : false
+  : false
+
 /**
  * Converts {@link AbiParameter} to corresponding TypeScript primitive type.
  *
@@ -76,11 +86,18 @@ type BitsTypeLookup = {
 // TODO: Add error messages for `never` types
 export type AbiParameterToPrimitiveType<
   TAbiParameter extends AbiParameter | { name: string; type: unknown },
+  TNullUnindexedFlag extends boolean = false,
 > =
-  // 1. Check to see if type is basic (not tuple or array) and can be looked up immediately.
-  TAbiParameter['type'] extends Exclude<AbiType, SolidityTuple | SolidityArray>
+  // 1. Check if type is irrelevant and should be nulled (unindexed event filter arguments)
+  NullUnindexed<TAbiParameter, TNullUnindexedFlag> extends true
+    ? null
+    : // 2. Check to see if type is basic (not tuple or array) and can be looked up immediately.
+    TAbiParameter['type'] extends Exclude<
+        AbiType,
+        SolidityTuple | SolidityArray
+      >
     ? AbiTypeToPrimitiveType<TAbiParameter['type']>
-    : // 2. Check if type is tuple and covert each component
+    : // 3. Check if type is tuple and covert each component
     TAbiParameter['type'] extends SolidityTuple
     ? TAbiParameter extends {
         components: infer TComponents extends readonly AbiParameter[]
@@ -99,7 +116,7 @@ export type AbiParameterToPrimitiveType<
             [Component in TComponents[number] as Component['name']]: AbiParameterToPrimitiveType<Component>
           }
       : never
-    : // 3. Check if type is array.
+    : // 4. Check if type is array.
     /**
      * First, infer `Head` against a known size type (either fixed-length array value or `""`).
      *
@@ -132,7 +149,7 @@ export type AbiParameterToPrimitiveType<
             Merge<TAbiParameter, { type: Head }>
           >[]
       : never
-    : // 4. If type is not basic, tuple, or array, we don't know what the type is.
+    : // 5. If type is not basic, tuple, or array, we don't know what the type is.
       // This can happen when a fixed-length array is out of range (`Size` doesn't exist in `SolidityFixedArraySizeLookup`),
       // the array has depth greater than `Config['ArrayMaxDepth']`, etc.
       unknown
@@ -155,11 +172,15 @@ type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
  */
 export type AbiParametersToPrimitiveTypes<
   TAbiParameters extends readonly AbiParameter[],
+  TNullUnindexedFlag extends boolean = false,
 > = {
   // TODO: Convert to labeled tuple so parameter names show up in autocomplete
   // e.g. [foo: string, bar: string]
   // https://github.com/microsoft/TypeScript/issues/44939
-  [K in keyof TAbiParameters]: AbiParameterToPrimitiveType<TAbiParameters[K]>
+  [K in keyof TAbiParameters]: AbiParameterToPrimitiveType<
+    TAbiParameters[K],
+    TNullUnindexedFlag
+  >
 }
 
 /**

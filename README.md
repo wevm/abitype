@@ -48,6 +48,11 @@ type Result = AbiParameterToPrimitiveType<{
 }>
 ```
 
+> **Note**
+> With optional `NullUnindexedFlag` returns null for `AbiParameter` with exactly `{ indexed: false }`
+>
+> (For use with event filter arguments)
+
 ### AbiParametersToPrimitiveTypes
 
 Converts array of `AbiParameter` to corresponding TypeScript primitive types.
@@ -68,6 +73,11 @@ type Result = AbiParametersToPrimitiveTypes<
   ]
 >
 ```
+
+> **Note**
+> With optional `NullUnindexedFlag` returns null for `AbiParameter` with exactly `{ indexed: false }`
+>
+> (For use with event filter arguments)
 
 ### AbiTypeToPrimitiveType
 
