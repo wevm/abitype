@@ -530,7 +530,7 @@ test('Function', () => {
       })
     })
 
-    test('with overrides', () => {
+    test('with overloads', () => {
       type Result = ExtractAbiFunction<
         typeof wagmiMintExampleAbi,
         'safeTransferFrom'
