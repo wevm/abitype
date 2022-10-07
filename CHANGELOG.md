@@ -1,5 +1,11 @@
 # abitype
 
+## 0.1.5
+
+### Patch Changes
+
+- [#41](https://github.com/wagmi-dev/abitype/pull/41) [`7147b07`](https://github.com/wagmi-dev/abitype/commit/7147b07decaa2f6071d33de688859bdac7ce4fdc) Thanks [@tmm](https://github.com/tmm)! - Set `ArrayMaxDepth` default to `false` so there is no maximum array depth. Added new configuration option `StrictAbiType` for validating `AbiParameter`'s `type`. Defaults to `false` so `AbiParameter['type']` is `string` instead of a large union.
+
 ## 0.1.4
 
 ### Patch Changes
