@@ -8,9 +8,9 @@ import { ResolvedConfig } from './config'
 // }
 
 test('Config', () => {
-  expectType<ResolvedConfig['ArrayMaxDepth']>(2)
+  expectType<ResolvedConfig['ArrayMaxDepth']>(false)
   expectType<ResolvedConfig['FixedArrayMinLength']>(1)
-  expectType<ResolvedConfig['FixedArrayMaxLength']>(5)
+  expectType<ResolvedConfig['FixedArrayMaxLength']>(99)
 
   type AddressType = ResolvedConfig['AddressType']
   expectType<AddressType>('0x0000000000000000000000000000000000000000')
@@ -23,4 +23,7 @@ test('Config', () => {
 
   type BigIntType = ResolvedConfig['BigIntType']
   expectType<BigIntType>(123n)
+
+  type StrictAbiType = ResolvedConfig['StrictAbiType']
+  expectType<StrictAbiType>(false)
 })

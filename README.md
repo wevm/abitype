@@ -353,30 +353,31 @@ import { TypedDataType } from 'abitype'
 
 ## Configuration
 
-ABIType tries to strike a balance between type exhaustiveness and speed with sensible defaults. In some cases, you might want to tune your configuration (e.g. fixed array length). To do this, the following configuration options are available:
+ABIType tries to strike a balance between type exhaustiveness and speed with sensible defaults. In some cases, you might want to tune your configuration (e.g. use a custom bigint type). To do this, the following configuration options are available:
 
 | Option                | Type              | Default             | Description                                                                                              |
 | --------------------- | ----------------- | ------------------- | -------------------------------------------------------------------------------------------------------- |
 | `AddressType`         | `any`             | `` `0x${string}` `` | TypeScript type to use for `address` values.                                                             |
-| `ArrayMaxDepth`       | `number \| false` | `2`                 | Maximum depth for nested array types (e.g. `string[][]`). When `false`, there is no maximum array depth. |
+| `ArrayMaxDepth`       | `number \| false` | `false`             | Maximum depth for nested array types (e.g. `string[][]`). When `false`, there is no maximum array depth. |
 | `BigIntType`          | `any`             | `bigint`            | TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48`.                                |
 | `BytesType`           | `any`             | `` `0x${string}` `` | TypeScript type to use for `bytes<M>` values.                                                            |
 | `FixedArrayMinLength` | `number`          | `1`                 | Lower bound for fixed-length arrays                                                                      |
-| `FixedArrayMaxLength` | `number`          | `5`                 | Upper bound for fixed-length arrays                                                                      |
+| `FixedArrayMaxLength` | `number`          | `99`                | Upper bound for fixed-length arrays                                                                      |
 | `IntType`             | `any`             | `number`            | TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48`.                               |
+| `StrictAbiType`       | `boolean`         | `false`             | When set, validates `AbiParameter`'s `type` against `AbiType`.                                           |
 
 Configuration options are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). Just extend the `Config` interface either directly in your code or in a `d.ts` file (e.g. `abi.d.ts`):
 
 ```ts
 declare module 'abitype' {
   export interface Config {
-    FixedArrayMaxLength: 6
+    BigIntType: MyCustomBigIntType
   }
 }
 ```
 
 > **Warning**
-> When configuring `ArrayMaxDepth`, `FixedArrayMinLength`, and `FixedArrayMaxLength`, there are trade-offs. For example, choosing large numbers for `ArrayMaxDepth` and increasing the range between `FixedArrayMinLength` and `FixedArrayMaxLength` will make your types more exhaustive, but will also slow down the compiler for type checking, autocomplete, etc.
+> When configuring `ArrayMaxDepth`, `FixedArrayMinLength`, and `FixedArrayMaxLength`, there are trade-offs. For example, choosing a non-false value for `ArrayMaxDepth` and increasing the range between `FixedArrayMinLength` and `FixedArrayMaxLength` will make your types more exhaustive, but will also slow down the compiler for type checking, autocomplete, etc.
 
 ## Support
 

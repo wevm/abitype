@@ -19,11 +19,11 @@ export interface Config {
  */
 export interface DefaultConfig {
   /** Maximum depth for nested array types (e.g. string[][]) */
-  ArrayMaxDepth: 2
+  ArrayMaxDepth: false
   /** Lower bound for fixed array length */
   FixedArrayMinLength: 1
   /** Upper bound for fixed array length */
-  FixedArrayMaxLength: 5
+  FixedArrayMaxLength: 99
 
   /** TypeScript type to use for `address` values */
   AddressType: `0x${string}`
@@ -33,6 +33,9 @@ export interface DefaultConfig {
   BigIntType: bigint
   /** TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48` */
   IntType: number
+
+  /** When set, validates {@link AbiParameter}'s `type` against {@link AbiType} */
+  StrictAbiType: false
 }
 
 /**
@@ -46,7 +49,11 @@ export interface DefaultConfig {
 export interface ResolvedConfig {
   /**
    * Maximum depth for nested array types (e.g. string[][])
-   * @default 2
+   *
+   * Note: You probably only want to set this to a specific number if parsed types are returning as `unknown`
+   * and you want to figure out why. If you set this, you should probably also reduce `FixedArrayMaxLength`.
+   *
+   * @default false
    */
   ArrayMaxDepth: Config['ArrayMaxDepth'] extends number | false
     ? Config['ArrayMaxDepth']
@@ -60,7 +67,7 @@ export interface ResolvedConfig {
     : DefaultConfig['FixedArrayMinLength']
   /**
    * Upper bound for fixed array length
-   * @default 5
+   * @default 99
    */
   FixedArrayMaxLength: Config['FixedArrayMaxLength'] extends number
     ? Config['FixedArrayMaxLength']
@@ -94,4 +101,16 @@ export interface ResolvedConfig {
   IntType: IsUnknown<Config['IntType']> extends true
     ? DefaultConfig['IntType']
     : Config['IntType']
+
+  /**
+   * When set, validates {@link AbiParameter}'s `type` against {@link AbiType}
+   *
+   * Note: You probably only want to set this to `true` if parsed types are returning as `unknown`
+   * and you want to figure out why.
+   *
+   * @default false
+   */
+  StrictAbiType: Config['StrictAbiType'] extends true
+    ? Config['StrictAbiType']
+    : DefaultConfig['StrictAbiType']
 }

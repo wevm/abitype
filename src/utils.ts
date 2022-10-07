@@ -46,8 +46,8 @@ type PrimitiveTypeLookup<TAbiType extends AbiType> = {
   [_ in SolidityInt]: TAbiType extends `${'u' | ''}int${infer TBits}`
     ? TBits extends keyof BitsTypeLookup
       ? BitsTypeLookup[TBits]
-      : never
-    : never
+      : 'Error: Unknown bits value.'
+    : `Error: Unknown 'SolidityInt' format.`
 } & {
   [_ in SolidityString]: string
 } & {
@@ -73,7 +73,6 @@ type BitsTypeLookup = {
  * @param TAbiParameter - {@link AbiParameter} to convert to TypeScript representation
  * @returns TypeScript primitive type
  */
-// TODO: Add error messages for `never` types
 export type AbiParameterToPrimitiveType<
   TAbiParameter extends AbiParameter | { name: string; type: unknown },
 > =
@@ -81,24 +80,23 @@ export type AbiParameterToPrimitiveType<
   TAbiParameter['type'] extends Exclude<AbiType, SolidityTuple | SolidityArray>
     ? AbiTypeToPrimitiveType<TAbiParameter['type']>
     : // 2. Check if type is tuple and covert each component
-    TAbiParameter['type'] extends SolidityTuple
-    ? TAbiParameter extends {
+    TAbiParameter extends {
+        type: SolidityTuple
         components: infer TComponents extends readonly AbiParameter[]
       }
-      ? _HasUnnamedAbiParameter<TComponents> extends true
-        ? // Has unnamed tuple parameters so return as array
-          readonly [
-            ...{
-              [K in keyof TComponents]: AbiParameterToPrimitiveType<
-                TComponents[K]
-              >
-            },
-          ]
-        : // All tuple parameters are named so return as object
-          {
-            [Component in TComponents[number] as Component['name']]: AbiParameterToPrimitiveType<Component>
-          }
-      : never
+    ? _HasUnnamedAbiParameter<TComponents> extends true
+      ? // Has unnamed tuple parameters so return as array
+        readonly [
+          ...{
+            [K in keyof TComponents]: AbiParameterToPrimitiveType<
+              TComponents[K]
+            >
+          },
+        ]
+      : // All tuple parameters are named so return as object
+        {
+          [Component in TComponents[number] as Component['name']]: AbiParameterToPrimitiveType<Component>
+        }
     : // 3. Check if type is array.
     /**
      * First, infer `Head` against a known size type (either fixed-length array value or `""`).
@@ -133,9 +131,13 @@ export type AbiParameterToPrimitiveType<
           >[]
       : never
     : // 4. If type is not basic, tuple, or array, we don't know what the type is.
-      // This can happen when a fixed-length array is out of range (`Size` doesn't exist in `SolidityFixedArraySizeLookup`),
-      // the array has depth greater than `Config['ArrayMaxDepth']`, etc.
-      unknown
+    // This can happen when a fixed-length array is out of range (`Size` doesn't exist in `SolidityFixedArraySizeLookup`),
+    // the array has depth greater than `Config['ArrayMaxDepth']`, etc.
+    ResolvedConfig['StrictAbiType'] extends true
+    ? TAbiParameter['type'] extends infer TAbiType extends string
+      ? `Error: Unknown type '${TAbiType}'.`
+      : never
+    : unknown
 
 type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
   TAbiParameters extends readonly [
