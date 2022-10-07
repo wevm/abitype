@@ -7,10 +7,10 @@ import {
 import { IsNever, NotEqual, Or } from './types'
 
 type GetListener<
-  TEvent extends AbiEvent,
+  TAbiEvent extends AbiEvent,
   TAbi = unknown,
 > = AbiParametersToPrimitiveTypes<
-  TEvent['inputs']
+  TAbiEvent['inputs']
 > extends infer TArgs extends readonly unknown[]
   ? // If `TArgs` is never or `TAbi` does not have the same shape as `Abi`, we were not able to infer args.
     Or<IsNever<TArgs>, NotEqual<TAbi, Abi>> extends true
@@ -32,7 +32,7 @@ type GetListener<
 type WatchContractEventConfig<
   TAbi extends Abi | readonly unknown[] = Abi,
   TEventName extends string = string,
-  TEvent extends AbiEvent = TAbi extends Abi
+  TAbiEvent extends AbiEvent = TAbi extends Abi
     ? ExtractAbiEvent<TAbi, TEventName>
     : never,
 > = {
@@ -42,7 +42,7 @@ type WatchContractEventConfig<
   abi: TAbi
   /** Event to listen for */
   eventName: TEventName
-} & GetListener<TEvent, TAbi>
+} & GetListener<TAbiEvent, TAbi>
 
 type GetEventConfig<T> = T extends {
   abi: infer TAbi extends Abi

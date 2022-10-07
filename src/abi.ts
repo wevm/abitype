@@ -84,21 +84,24 @@ export type AbiType =
   | SolidityInt
   | SolidityString
   | SolidityTuple
+type ResolvedAbiType = ResolvedConfig['StrictAbiType'] extends true
+  ? AbiType
+  : string
 
 export type AbiInternalType =
-  | AbiType
+  | ResolvedAbiType
   | `address ${string}`
   | `contract ${string}`
   | `enum ${string}`
   | `struct ${string}`
 
 export type AbiParameter = {
-  type: AbiType
+  type: ResolvedAbiType
   name: string
   /** Representation used by Solidity compiler */
   internalType?: AbiInternalType
 } & (
-  | { type: Exclude<AbiType, SolidityTuple | SolidityArrayWithTuple> }
+  | { type: Exclude<ResolvedAbiType, SolidityTuple | SolidityArrayWithTuple> }
   | {
       type: SolidityTuple | SolidityArrayWithTuple
       components: readonly AbiParameter[]

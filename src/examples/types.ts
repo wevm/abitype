@@ -50,8 +50,8 @@ export type Or<T, U> = T extends true ? true : U extends true ? true : false
 type GetArgs<
   TAbi extends Abi | readonly unknown[],
   // It's important that we use `TFunction` to parse args so overloads still return the correct types
-  TFunction extends AbiFunction & { type: 'function' },
-> = TFunction['inputs'] extends infer TInputs extends readonly AbiParameter[]
+  TAbiFunction extends AbiFunction & { type: 'function' },
+> = TAbiFunction['inputs'] extends infer TInputs extends readonly AbiParameter[]
   ? // Check if valid ABI. If `TInputs` is `never` or `TAbi` does not have the same shape as `Abi`, then return optional `readonly unknown[]` args.
     Or<IsNever<TInputs>, NotEqual<TAbi, Abi>> extends true
     ? {
@@ -75,7 +75,7 @@ type GetArgs<
 export type ContractConfig<
   TAbi extends Abi | readonly unknown[] = Abi,
   TFunctionName extends string = string,
-  TFunction extends AbiFunction & { type: 'function' } = TAbi extends Abi
+  TAbiFunction extends AbiFunction & { type: 'function' } = TAbi extends Abi
     ? ExtractAbiFunction<TAbi, TFunctionName>
     : never,
 > = {
@@ -86,7 +86,7 @@ export type ContractConfig<
   /** Function to invoke on the contract */
   // If `TFunctionName` is `never`, then ABI was not parsable. Fall back to `string`.
   functionName: IsNever<TFunctionName> extends true ? string : TFunctionName
-} & GetArgs<TAbi, TFunction>
+} & GetArgs<TAbi, TAbiFunction>
 
 export type GetConfig<
   TContract = unknown,
@@ -110,12 +110,12 @@ export type GetConfig<
 type GetResult<
   TAbi extends Abi | readonly unknown[] = Abi,
   TFunctionName extends string = string,
-  TFunction extends AbiFunction & { type: 'function' } = TAbi extends Abi
+  TAbiFunction extends AbiFunction & { type: 'function' } = TAbi extends Abi
     ? ExtractAbiFunction<TAbi, TFunctionName>
     : never,
 > =
   // Save `TOutputs` to local variable
-  TFunction['outputs'] extends infer TOutputs extends readonly AbiParameter[]
+  TAbiFunction['outputs'] extends infer TOutputs extends readonly AbiParameter[]
     ? // Check if valid ABI. If `TOutputs` is `never` or `TAbi` does not have the same shape as `Abi`, then return `unknown` as result.
       Or<IsNever<TOutputs>, NotEqual<TAbi, Abi>> extends true
       ? unknown

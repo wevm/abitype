@@ -366,6 +366,27 @@ test('AbiParameterToPrimitiveType', () => {
       ])
     })
   })
+
+  test('unknown', () => {
+    test('single value', () => {
+      type Result = AbiParameterToPrimitiveType<{
+        name: 'data'
+        type: 'foo'
+      }>
+      expectType<Result>(null)
+    })
+
+    test('array', () => {
+      type Result = AbiParameterToPrimitiveType<{
+        name: 'data'
+        type: 'foo[2][2]'
+      }>
+      expectType<Result>([
+        [null, null],
+        [null, null],
+      ])
+    })
+  })
 })
 
 test('AbiParametersToPrimitiveTypes', () => {
