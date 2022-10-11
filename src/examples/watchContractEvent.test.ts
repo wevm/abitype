@@ -36,7 +36,7 @@ test('watchContractEvent', () => {
         abi: writingEditionsFactoryAbi,
         eventName: 'FactoryGuardSet',
         listener(guard) {
-          expectType<boolean>(guard)
+          expectType<boolean | null>(guard)
         },
       })
     })

@@ -1,15 +1,29 @@
-import { Abi, AbiEvent, Address } from '../abi'
+import { Abi, AbiEvent, AbiParameter, Address } from '../abi'
 import {
-  AbiParametersToPrimitiveTypes,
+  AbiParameterToPrimitiveType,
   ExtractAbiEvent,
   ExtractAbiEventNames,
 } from '../utils'
 import { IsNever, NotEqual, Or } from './types'
 
+type AbiEventParametersToPrimitiveTypes<
+  TAbiParameters extends readonly (AbiParameter & {
+    indexed?: boolean
+  })[],
+> = {
+  // TODO: Convert to labeled tuple so parameter names show up in autocomplete
+  // e.g. [foo: string, bar: string]
+  // https://github.com/microsoft/TypeScript/issues/44939
+  [K in keyof TAbiParameters]:
+    | AbiParameterToPrimitiveType<TAbiParameters[K]>
+    // If event is not indexed, add `null` to type
+    | (TAbiParameters[K]['indexed'] extends true ? never : null)
+}
+
 type GetListener<
   TAbiEvent extends AbiEvent,
   TAbi = unknown,
-> = AbiParametersToPrimitiveTypes<
+> = AbiEventParametersToPrimitiveTypes<
   TAbiEvent['inputs']
 > extends infer TArgs extends readonly unknown[]
   ? // If `TArgs` is never or `TAbi` does not have the same shape as `Abi`, we were not able to infer args.
