@@ -167,7 +167,7 @@ test('readContracts', () => {
       })
       type Result = typeof result
       //   ^?
-      type Expected = [string, `0x${string}`, unknown] extends Result
+      type Expected = Result extends [string, `0x${string}`, unknown]
         ? true
         : false
       expectType<Expected>(true)

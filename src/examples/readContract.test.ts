@@ -172,7 +172,6 @@ test('readContract', () => {
           },
         ],
         functionName: 'foo',
-        args: [],
       })
       const result2 = readContract({
         address,

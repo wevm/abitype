@@ -220,13 +220,13 @@ test('writeContract', () => {
             type: 'function',
             stateMutability: 'payable',
             inputs: [{ type: 'string', name: '' }],
-            outputs: [{ type: 'string', name: '' }],
+            outputs: [{ type: 'address', name: '' }],
           },
         ],
         functionName: 'foo',
         args: ['bar'],
       })
-      expectType<typeof result>(result as unknown)
+      expectType<ResolvedConfig['AddressType']>(result)
     })
   })
 })

@@ -23,14 +23,16 @@ npm install abitype
 
 ## Usage
 
-Since ABIs can contain deeply nested arrays and objects, you must assert your ABIs to constants using [`const` assertions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions). This allows TypeScript to take the most specific types for expressions and avoid type widening (e.g. no going from `"hello"` to `string`).
+Since ABIs can contain deeply nested arrays and objects, you must either assert ABIs to constants using [`const` assertions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) or use the built-in `narrow` function (works with JavaScript). This allows TypeScript to take the most specific types for expressions and avoid type widening (e.g. no going from `"hello"` to `string`).
 
 ```ts
 const erc721Abi = [...] as const
+const erc721Abi = <const>[...]
 ```
 
 ```ts
-const erc721Abi = <const>[...]
+import { narrow } from 'abitype'
+const erc721Abi = narrow([...])
 ```
 
 ## Utilities

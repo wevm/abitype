@@ -5,6 +5,7 @@ import {
   AbiStateMutability,
   Address,
 } from '../abi'
+import { Narrow } from '../narrow'
 import {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
@@ -47,6 +48,16 @@ export type NotEqual<T, U> = [T] extends [U] ? false : true
  */
 export type Or<T, U> = T extends true ? true : U extends true ? true : false
 
+/**
+ * Gets arguments of contract function
+ *
+ * @param TAbi - Contract {@link Abi}
+ * @param TFunctionName - Name of contract function
+ * @returns Inferred args of contract function
+ *
+ * @example
+ * type Result = GetArgs<[…], 'tokenURI'>
+ */
 type GetArgs<
   TAbi extends Abi | readonly unknown[],
   // It's important that we use `TFunction` to parse args so overloads still return the correct types
@@ -72,6 +83,9 @@ type GetArgs<
       }
   : never
 
+/**
+ * Contract configuration object for inferring function name and arguments based on {@link TAbi}.
+ */
 export type ContractConfig<
   TAbi extends Abi | readonly unknown[] = Abi,
   TFunctionName extends string = string,
@@ -82,12 +96,22 @@ export type ContractConfig<
   /** Contract address */
   address: Address
   /** Contract ABI */
-  abi: TAbi
+  abi: Narrow<TAbi>
   /** Function to invoke on the contract */
   // If `TFunctionName` is `never`, then ABI was not parsable. Fall back to `string`.
   functionName: IsNever<TFunctionName> extends true ? string : TFunctionName
 } & GetArgs<TAbi, TAbiFunction>
 
+/**
+ * Gets configuration type of contract function
+ *
+ * @param TContract - Contract config in `{ abi: Abi, functionName: string }` format
+ * @param TAbiStateMutibility - State mutability of contract function
+ * @returns Inferred configuration type of contract function
+ *
+ * @example
+ * type Result = GetConfig<{ abi: […], functionName: 'tokenURI' }, 'view'>
+ */
 export type GetConfig<
   TContract = unknown,
   TAbiStateMutibility extends AbiStateMutability = AbiStateMutability,
@@ -107,6 +131,16 @@ export type GetConfig<
   ? ContractConfig<TAbi, TFunctionName>
   : ContractConfig
 
+/**
+ * Unwraps return type of contract function
+ *
+ * @param TAbi - Contract {@link Abi}
+ * @param TFunctionName - Name of contract function
+ * @returns Inferred return type of contract function
+ *
+ * @example
+ * type Result = GetResult<[…], 'tokenURI'>
+ */
 type GetResult<
   TAbi extends Abi | readonly unknown[] = Abi,
   TFunctionName extends string = string,
@@ -145,6 +179,15 @@ type GetResult<
       : never
     : never
 
+/**
+ * Gets return type of contract function
+ *
+ * @param TContract - Contract config in `{ abi: Abi, functionName: string }` format
+ * @returns Inferred return type of contract function
+ *
+ * @example
+ * type Result = GetReturnType<{ abi: […], functionName: 'tokenURI' }>
+ */
 export type GetReturnType<TContract = unknown> = TContract extends {
   abi: infer TAbi extends Abi
   functionName: infer TFunctionName extends string
@@ -156,3 +199,23 @@ export type GetReturnType<TContract = unknown> = TContract extends {
     }
   ? GetResult<TAbi, TFunctionName>
   : GetResult
+
+/**
+ * Converts array of {@link AbiEvent} parameters to corresponding TypeScript primitive types.
+ *
+ * @param TAbiEventParameters - Array of {@link AbiEvent} parameters to convert to TypeScript representations
+ * @returns Array of TypeScript primitive types
+ */
+export type AbiEventParametersToPrimitiveTypes<
+  TAbiParameters extends readonly (AbiParameter & {
+    indexed?: boolean
+  })[],
+> = {
+  // TODO: Convert to labeled tuple so parameter names show up in autocomplete
+  // e.g. [foo: string, bar: string]
+  // https://github.com/microsoft/TypeScript/issues/44939
+  [K in keyof TAbiParameters]:
+    | AbiParameterToPrimitiveType<TAbiParameters[K]>
+    // If event is not indexed, add `null` to type
+    | (TAbiParameters[K]['indexed'] extends true ? never : null)
+}
