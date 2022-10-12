@@ -11,21 +11,25 @@ import { watchContractEvent } from './watchContractEvent'
 test('watchContractEvent', () => {
   test('args', () => {
     test('zero', () => {
-      const abi = [
-        {
-          name: 'Foo',
-          type: 'event',
-          inputs: [],
-          anonymous: false,
-        },
-      ] as const
       watchContractEvent({
         address,
-        abi,
+        abi: [
+          {
+            name: 'Foo',
+            type: 'event',
+            inputs: [],
+            anonymous: false,
+          },
+          {
+            name: 'Bar',
+            type: 'event',
+            inputs: [{ name: 'baz', type: 'uint256', indexed: false }],
+            anonymous: false,
+          },
+        ],
         eventName: 'Foo',
-        // @ts-expect-error no args allowed
-        listener(_arg) {
-          return
+        listener(...args) {
+          expectType<[]>(args)
         },
       })
     })
@@ -57,25 +61,26 @@ test('watchContractEvent', () => {
 
   test('behavior', () => {
     test('works without const assertion', () => {
+      const abi = [
+        {
+          name: 'Foo',
+          type: 'event',
+          inputs: [
+            {
+              indexed: true,
+              name: 'name',
+              type: 'address',
+            },
+          ],
+          anonymous: false,
+        },
+      ]
       watchContractEvent({
         address,
-        abi: [
-          {
-            name: 'Foo',
-            type: 'event',
-            inputs: [
-              {
-                indexed: true,
-                name: 'name',
-                type: 'string',
-              },
-            ],
-            anonymous: false,
-          },
-        ],
+        abi,
         eventName: 'Foo',
         listener(name) {
-          expectType<typeof name>(name as unknown)
+          expectType<unknown>(name)
         },
       })
     })

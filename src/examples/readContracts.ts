@@ -51,12 +51,10 @@ type ContractsResult<
     GetReturnType<{ abi: TAbi; functionName: TFunctionName }>[]
   : GetReturnType[]
 
-export function readContracts<
+export declare function readContracts<
   TAbi extends Abi | readonly unknown[],
   TFunctionName extends string,
   TContracts extends { abi: TAbi; functionName: TFunctionName }[],
->(_config: {
+>(config: {
   contracts: readonly [...ContractsConfig<TContracts>]
-}): ContractsResult<TContracts> {
-  return {} as any
-}
+}): ContractsResult<TContracts>

@@ -28,6 +28,9 @@ export type {
 
 export type { Config, DefaultConfig, ResolvedConfig } from './config'
 
+export type { Narrow } from './narrow'
+export { narrow } from './narrow'
+
 export type {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
