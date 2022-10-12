@@ -1,5 +1,11 @@
 # abitype
 
+## 0.1.6
+
+### Patch Changes
+
+- [#43](https://github.com/wagmi-dev/abitype/pull/43) [`6117996`](https://github.com/wagmi-dev/abitype/commit/61179967d112af3e0c1a9bd016cd7a377335956c) Thanks [@tmm](https://github.com/tmm)! - Added `Narrow` type
+
 ## 0.1.5
 
 ### Patch Changes
