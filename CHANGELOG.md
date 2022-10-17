@@ -1,5 +1,11 @@
 # abitype
 
+## 0.1.7
+
+### Patch Changes
+
+- [`402a410`](https://github.com/wagmi-dev/abitype/commit/402a4105f711e1a033d6e55c95b36a9ebe3d59dd) Thanks [@tmm](https://github.com/tmm)! - Removed `engines` from `package.json`.
+
 ## 0.1.6
 
 ### Patch Changes
