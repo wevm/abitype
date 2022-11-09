@@ -1,5 +1,11 @@
 # abitype
 
+## 0.1.8
+
+### Patch Changes
+
+- [#52](https://github.com/wagmi-dev/abitype/pull/52) [`e53dcda`](https://github.com/wagmi-dev/abitype/commit/e53dcda589c25351f38f8200f62e428d19cb1985) Thanks [@tmm](https://github.com/tmm)! - Made `AbiParameter['name']` optional
+
 ## 0.1.7
 
 ### Patch Changes
