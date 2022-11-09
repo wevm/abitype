@@ -95,7 +95,11 @@ export type AbiParameterToPrimitiveType<
         ]
       : // All tuple parameters are named so return as object
         {
-          [Component in TComponents[number] as Component['name']]: AbiParameterToPrimitiveType<Component>
+          [Component in TComponents[number] as Component extends {
+            name: string
+          }
+            ? Component['name']
+            : never]: AbiParameterToPrimitiveType<Component>
         }
     : // 3. Check if type is array.
     /**
@@ -144,9 +148,11 @@ type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
     infer Head extends AbiParameter,
     ...infer Tail extends readonly AbiParameter[],
   ]
-    ? Head['name'] extends ''
-      ? true
-      : _HasUnnamedAbiParameter<Tail>
+    ? Head extends { name: string }
+      ? Head['name'] extends ''
+        ? true
+        : _HasUnnamedAbiParameter<Tail>
+      : false
     : false
 
 /**

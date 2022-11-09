@@ -97,7 +97,7 @@ export type AbiInternalType =
 
 export type AbiParameter = {
   type: ResolvedAbiType
-  name: string
+  name?: string
   /** Representation used by Solidity compiler */
   internalType?: AbiInternalType
 } & (
