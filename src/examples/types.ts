@@ -201,23 +201,3 @@ export type GetReturnType<TContract = unknown> = TContract extends {
     }
   ? GetResult<TAbi, TFunctionName>
   : GetResult
-
-/**
- * Converts array of {@link AbiEvent} parameters to corresponding TypeScript primitive types.
- *
- * @param TAbiEventParameters - Array of {@link AbiEvent} parameters to convert to TypeScript representations
- * @returns Array of TypeScript primitive types
- */
-export type AbiEventParametersToPrimitiveTypes<
-  TAbiParameters extends readonly (AbiParameter & {
-    indexed?: boolean
-  })[],
-> = {
-  // TODO: Convert to labeled tuple so parameter names show up in autocomplete
-  // e.g. [foo: string, bar: string]
-  // https://github.com/microsoft/TypeScript/issues/44939
-  [K in keyof TAbiParameters]:
-    | AbiParameterToPrimitiveType<TAbiParameters[K]>
-    // If event is not indexed, add `null` to type
-    | (TAbiParameters[K]['indexed'] extends true ? never : null)
-}

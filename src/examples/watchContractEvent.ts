@@ -1,12 +1,11 @@
 import { Abi, AbiEvent, Address } from '../abi'
 import { Narrow } from '../narrow'
-import { ExtractAbiEvent, ExtractAbiEventNames } from '../utils'
 import {
-  AbiEventParametersToPrimitiveTypes,
-  IsNever,
-  NotEqual,
-  Or,
-} from './types'
+  AbiParametersToPrimitiveTypes,
+  ExtractAbiEvent,
+  ExtractAbiEventNames,
+} from '../utils'
+import { IsNever, NotEqual, Or } from './types'
 
 type GetEventConfig<TContract> = TContract extends {
   abi: infer TAbi extends Abi
@@ -37,7 +36,7 @@ type WatchContractEventConfig<
   abi: Narrow<TAbi>
   /** Event to listen for */
   eventName: IsNever<TEventName> extends true ? string : TEventName
-} & (AbiEventParametersToPrimitiveTypes<
+} & (AbiParametersToPrimitiveTypes<
   TAbiEvent['inputs']
 > extends infer TArgs extends readonly unknown[]
   ? // If `TArgs` is never or `TAbi` does not have the same shape as `Abi`, we were not able to infer args.
