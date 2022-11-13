@@ -399,4 +399,4 @@ If you're interested in contributing, please read the [contributing docs](/.gith
 
 ## License
 
-[WAGMIT](/LICENSE) License
+[MIT](/LICENSE) License
