@@ -1,5 +1,5 @@
-import { Abi } from '../abi'
-import { ContractConfig, GetConfig, GetReturnType } from './types'
+import type { Abi } from '../abi'
+import type { ContractConfig, GetConfig, GetReturnType } from './types'
 
 // Avoid TS depth-limit error in case of large array literal
 type MAXIMUM_DEPTH = 20

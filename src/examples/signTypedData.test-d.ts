@@ -1,4 +1,5 @@
-import { test } from '../../test'
+import { test } from 'vitest'
+
 import { signTypedData } from './signTypedData'
 
 test('signTypedData', () => {

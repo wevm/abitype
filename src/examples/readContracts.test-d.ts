@@ -1,14 +1,14 @@
+import { assertType, test } from 'vitest'
+
 import {
   address,
-  expectType,
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
-  test,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
 } from '../../test'
 
-import { ResolvedConfig } from '../config'
+import type { ResolvedConfig } from '../config'
 import { readContracts } from './readContracts'
 
 test('readContracts', () => {
@@ -28,7 +28,7 @@ test('readContracts', () => {
           },
         ],
       })
-      expectType<
+      assertType<
         [
           string,
           {
@@ -67,7 +67,7 @@ test('readContracts', () => {
           },
         ],
       })
-      expectType<[ResolvedConfig['BigIntType'], ResolvedConfig['AddressType']]>(
+      assertType<[ResolvedConfig['BigIntType'], ResolvedConfig['AddressType']]>(
         result,
       )
     })
@@ -111,7 +111,7 @@ test('readContracts', () => {
           },
         ],
       })
-      expectType<[void, ResolvedConfig['BytesType']]>(result)
+      assertType<[void, ResolvedConfig['BytesType']]>(result)
     })
   })
 
@@ -127,7 +127,7 @@ test('readContracts', () => {
           },
         ],
       })
-      expectType<[void]>(result)
+      assertType<[void]>(result)
     })
 
     test('mixed result', () => {
@@ -170,7 +170,7 @@ test('readContracts', () => {
       type Expected = Result extends [string, `0x${string}`, unknown]
         ? true
         : false
-      expectType<Expected>(true)
+      assertType<Expected>(true)
     })
   })
 })

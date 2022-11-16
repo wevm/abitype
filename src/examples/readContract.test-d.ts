@@ -1,13 +1,13 @@
+import { assertType, test } from 'vitest'
+
 import {
   address,
-  expectType,
-  test,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
 } from '../../test'
 
-import { Abi, Address } from '../abi'
-import { ResolvedConfig } from '../config'
+import type { Abi, Address } from '../abi'
+import type { ResolvedConfig } from '../config'
 import { readContract } from './readContract'
 
 test('readContract', () => {
@@ -18,7 +18,7 @@ test('readContract', () => {
         abi: wagmiMintExampleAbi,
         functionName: 'name',
       })
-      expectType<string>(result)
+      assertType<string>(result)
     })
 
     test('one', () => {
@@ -28,7 +28,7 @@ test('readContract', () => {
         functionName: 'tokenURI',
         args: [123n],
       })
-      expectType<string>(result)
+      assertType<string>(result)
     })
 
     test('two or more', () => {
@@ -38,7 +38,7 @@ test('readContract', () => {
         functionName: 'predictDeterministicAddress',
         args: [address, '0xfoo'],
       })
-      expectType<Address>(result)
+      assertType<Address>(result)
     })
   })
 
@@ -49,7 +49,7 @@ test('readContract', () => {
         abi: wagmiMintExampleAbi,
         functionName: 'name',
       })
-      expectType<string>(result)
+      assertType<string>(result)
     })
 
     test('Address', () => {
@@ -59,7 +59,7 @@ test('readContract', () => {
         functionName: 'ownerOf',
         args: [123n],
       })
-      expectType<Address>(result)
+      assertType<Address>(result)
     })
 
     test('number', () => {
@@ -69,7 +69,7 @@ test('readContract', () => {
         functionName: 'balanceOf',
         args: [address],
       })
-      expectType<ResolvedConfig['BigIntType']>(result)
+      assertType<ResolvedConfig['BigIntType']>(result)
     })
   })
 
@@ -81,7 +81,7 @@ test('readContract', () => {
         // @ts-expect-error Trying to use non-read function
         functionName: 'approve',
       })
-      expectType<void>(result)
+      assertType<void>(result)
     })
 
     test('without const assertion', () => {
@@ -114,8 +114,8 @@ test('readContract', () => {
       })
       type Result1 = typeof result1
       type Result2 = typeof result2
-      expectType<Result1>('hello')
-      expectType<Result2>('0x123')
+      assertType<Result1>('hello')
+      assertType<Result2>('0x123')
     })
 
     test('declared as Abi type', () => {
@@ -148,8 +148,8 @@ test('readContract', () => {
       })
       type Result1 = typeof result1
       type Result2 = typeof result2
-      expectType<Result1>('hello')
-      expectType<Result2>('0x123')
+      assertType<Result1>('hello')
+      assertType<Result2>('0x123')
     })
 
     test('defined inline', () => {
@@ -196,8 +196,8 @@ test('readContract', () => {
       })
       type Result1 = typeof result1
       type Result2 = typeof result2
-      expectType<Result1>('hello')
-      expectType<Result2>('0x123')
+      assertType<Result1>('hello')
+      assertType<Result2>('0x123')
     })
   })
 })

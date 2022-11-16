@@ -1,4 +1,4 @@
-import { IsUnknown } from './types'
+import type { IsUnknown } from './types'
 
 /**
  * Override `Config` to customize type options

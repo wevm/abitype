@@ -1,12 +1,12 @@
-import {
+import type {
   Abi,
   AbiFunction,
   AbiParameter,
   AbiStateMutability,
   Address,
 } from '../abi'
-import { Narrow } from '../narrow'
-import {
+import type { Narrow } from '../narrow'
+import type {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
   ExtractAbiFunction,
