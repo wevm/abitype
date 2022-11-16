@@ -1,5 +1,5 @@
-import { ResolvedConfig } from './config'
-import { Range } from './types'
+import type { ResolvedConfig } from './config'
+import type { Range } from './types'
 
 export type Address = ResolvedConfig['AddressType']
 

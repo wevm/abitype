@@ -1,5 +1,5 @@
-import { Abi } from '../abi'
-import { GetConfig, GetReturnType } from './types'
+import type { Abi } from '../abi'
+import type { GetConfig, GetReturnType } from './types'
 
 export declare function readContract<
   TAbi extends Abi | readonly unknown[],

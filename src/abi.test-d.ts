@@ -1,6 +1,8 @@
-import { expectType, test, wagmiMintExampleAbi } from '../test'
+import { assertType, test } from 'vitest'
 
-import {
+import { wagmiMintExampleAbi } from '../test'
+
+import type {
   Abi,
   AbiError,
   AbiEvent,
@@ -23,103 +25,103 @@ import {
 } from './abi'
 
 test('Address', () => {
-  expectType<Address>('0xA0Cf798816D4b9b9866b5330EEa46a18382f251e')
+  assertType<Address>('0xA0Cf798816D4b9b9866b5330EEa46a18382f251e')
   // @ts-expect-error No leading `0x
-  expectType<Address>('A0Cf798816D4b9b9866b5330EEa46a18382f251e')
+  assertType<Address>('A0Cf798816D4b9b9866b5330EEa46a18382f251e')
 })
 
 test('Solidity Types', () => {
-  expectType<SolidityAddress>('address')
+  assertType<SolidityAddress>('address')
 
-  expectType<SolidityBool>('bool')
+  assertType<SolidityBool>('bool')
 
-  expectType<SolidityBytes>('bytes')
-  expectType<SolidityBytes>('bytes1')
-  expectType<SolidityBytes>('bytes24')
-  expectType<SolidityBytes>('bytes32')
+  assertType<SolidityBytes>('bytes')
+  assertType<SolidityBytes>('bytes1')
+  assertType<SolidityBytes>('bytes24')
+  assertType<SolidityBytes>('bytes32')
   // @ts-expect-error Greater than 32
-  expectType<SolidityBytes>('bytes36')
+  assertType<SolidityBytes>('bytes36')
 
-  expectType<SolidityFunction>('function')
+  assertType<SolidityFunction>('function')
 
-  expectType<SolidityString>('string')
+  assertType<SolidityString>('string')
 
-  expectType<SolidityTuple>('tuple')
+  assertType<SolidityTuple>('tuple')
 
-  expectType<SolidityInt>('int')
-  expectType<SolidityInt>('int8')
-  expectType<SolidityInt>('int32')
-  expectType<SolidityInt>('int256')
-  expectType<SolidityInt>('uint')
-  expectType<SolidityInt>('uint8')
-  expectType<SolidityInt>('uint32')
-  expectType<SolidityInt>('uint256')
+  assertType<SolidityInt>('int')
+  assertType<SolidityInt>('int8')
+  assertType<SolidityInt>('int32')
+  assertType<SolidityInt>('int256')
+  assertType<SolidityInt>('uint')
+  assertType<SolidityInt>('uint8')
+  assertType<SolidityInt>('uint32')
+  assertType<SolidityInt>('uint256')
   // @ts-expect-error Not multiple of 8
-  expectType<SolidityInt>('int6')
+  assertType<SolidityInt>('int6')
   // @ts-expect-error Multiple of 8 greater than 256
-  expectType<SolidityInt>('uint264')
+  assertType<SolidityInt>('uint264')
 
-  expectType<SolidityArray>('address[]')
-  expectType<SolidityArray>('uint256[]')
-  expectType<SolidityArray>('string[]')
-  expectType<SolidityArray>('address[5]')
-  expectType<SolidityArray>('uint256[5]')
-  expectType<SolidityArray>('string[5]')
+  assertType<SolidityArray>('address[]')
+  assertType<SolidityArray>('uint256[]')
+  assertType<SolidityArray>('string[]')
+  assertType<SolidityArray>('address[5]')
+  assertType<SolidityArray>('uint256[5]')
+  assertType<SolidityArray>('string[5]')
 
-  expectType<SolidityArray>('address[][]')
-  expectType<SolidityArray>('uint256[][]')
-  expectType<SolidityArray>('string[][]')
-  expectType<SolidityArray>('address[5][]')
-  expectType<SolidityArray>('uint256[5][]')
-  expectType<SolidityArray>('string[5][]')
-  expectType<SolidityArray>('address[][3]')
+  assertType<SolidityArray>('address[][]')
+  assertType<SolidityArray>('uint256[][]')
+  assertType<SolidityArray>('string[][]')
+  assertType<SolidityArray>('address[5][]')
+  assertType<SolidityArray>('uint256[5][]')
+  assertType<SolidityArray>('string[5][]')
+  assertType<SolidityArray>('address[][3]')
 })
 
 test('AbiType', () => {
-  expectType<AbiType>('address')
-  expectType<AbiType>('bool')
+  assertType<AbiType>('address')
+  assertType<AbiType>('bool')
 
-  expectType<AbiType>('bytes')
-  expectType<AbiType>('bytes1')
-  expectType<AbiType>('bytes24')
-  expectType<AbiType>('bytes32')
+  assertType<AbiType>('bytes')
+  assertType<AbiType>('bytes1')
+  assertType<AbiType>('bytes24')
+  assertType<AbiType>('bytes32')
 
-  expectType<AbiType>('function')
-  expectType<AbiType>('string')
-  expectType<AbiType>('tuple')
+  assertType<AbiType>('function')
+  assertType<AbiType>('string')
+  assertType<AbiType>('tuple')
 
-  expectType<AbiType>('int')
-  expectType<AbiType>('int8')
-  expectType<AbiType>('int32')
-  expectType<AbiType>('int256')
-  expectType<AbiType>('uint')
-  expectType<AbiType>('uint8')
-  expectType<AbiType>('uint32')
-  expectType<AbiType>('uint256')
+  assertType<AbiType>('int')
+  assertType<AbiType>('int8')
+  assertType<AbiType>('int32')
+  assertType<AbiType>('int256')
+  assertType<AbiType>('uint')
+  assertType<AbiType>('uint8')
+  assertType<AbiType>('uint32')
+  assertType<AbiType>('uint256')
 })
 
 test('AbiInternalType', () => {
-  expectType<AbiInternalType>('address')
-  expectType<AbiInternalType>('bytes32')
-  expectType<AbiInternalType>('address payable')
-  expectType<AbiInternalType>('contract ENS')
-  expectType<AbiInternalType>('struct IWritingEditions.WritingEdition')
+  assertType<AbiInternalType>('address')
+  assertType<AbiInternalType>('bytes32')
+  assertType<AbiInternalType>('address payable')
+  assertType<AbiInternalType>('contract ENS')
+  assertType<AbiInternalType>('struct IWritingEditions.WritingEdition')
 })
 
 test('AbiParameter', () => {
-  expectType<AbiParameter>({
+  assertType<AbiParameter>({
     internalType: 'address',
     name: 'owner',
     type: 'address',
   })
 
-  expectType<AbiParameter>({
+  assertType<AbiParameter>({
     internalType: 'string',
     name: 'symbol',
     type: 'string',
   })
 
-  expectType<AbiParameter>({
+  assertType<AbiParameter>({
     name: 'foo',
     type: 'tuple',
     internalType: 'struct a',
@@ -133,7 +135,7 @@ test('AbiParameter', () => {
     ],
   })
 
-  expectType<AbiParameter>({
+  assertType<AbiParameter>({
     components: [
       { internalType: 'string', name: 'name', type: 'string' },
       { internalType: 'string', name: 'symbol', type: 'string' },
@@ -158,14 +160,14 @@ test('AbiParameter', () => {
 })
 
 test('AbiStateMutability', () => {
-  expectType<AbiStateMutability>('pure')
-  expectType<AbiStateMutability>('view')
-  expectType<AbiStateMutability>('nonpayable')
-  expectType<AbiStateMutability>('payable')
+  assertType<AbiStateMutability>('pure')
+  assertType<AbiStateMutability>('view')
+  assertType<AbiStateMutability>('nonpayable')
+  assertType<AbiStateMutability>('payable')
 })
 
 test('AbiFunction', () => {
-  expectType<AbiFunction>({
+  assertType<AbiFunction>({
     inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
     name: 'tokenURI',
     outputs: [{ internalType: 'string', name: '', type: 'string' }],
@@ -173,23 +175,23 @@ test('AbiFunction', () => {
     type: 'function',
   })
 
-  expectType<AbiFunction>({
+  assertType<AbiFunction>({
     inputs: [],
     stateMutability: 'nonpayable',
     type: 'constructor',
   })
 
-  expectType<AbiFunction>({
+  assertType<AbiFunction>({
     stateMutability: 'nonpayable',
     type: 'fallback',
   })
 
-  expectType<AbiFunction>({
+  assertType<AbiFunction>({
     stateMutability: 'payable',
     type: 'receive',
   })
 
-  expectType<AbiFunction>({
+  assertType<AbiFunction>({
     inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
     name: 'tokenURI',
     outputs: [{ internalType: 'string', name: '', type: 'string' }],
@@ -200,7 +202,7 @@ test('AbiFunction', () => {
 })
 
 test('AbiEvent', () => {
-  expectType<AbiEvent>({
+  assertType<AbiEvent>({
     anonymous: false,
     inputs: [
       {
@@ -223,7 +225,7 @@ test('AbiEvent', () => {
 })
 
 test('AbiError', () => {
-  expectType<AbiError>({
+  assertType<AbiError>({
     type: 'error',
     inputs: [
       { name: 'available', type: 'uint256' },
@@ -234,8 +236,8 @@ test('AbiError', () => {
 })
 
 test('Abi', () => {
-  expectType<Abi>(wagmiMintExampleAbi)
-  expectType<Abi>([
+  assertType<Abi>(wagmiMintExampleAbi)
+  assertType<Abi>([
     {
       type: 'error',
       inputs: [
@@ -271,23 +273,23 @@ test('Abi', () => {
 })
 
 test('TypedDataType', () => {
-  expectType<TypedDataType>('address')
-  expectType<TypedDataType>('bool')
-  expectType<TypedDataType>('int256')
-  expectType<TypedDataType>('string')
-  expectType<TypedDataType>('uint256')
+  assertType<TypedDataType>('address')
+  assertType<TypedDataType>('bool')
+  assertType<TypedDataType>('int256')
+  assertType<TypedDataType>('string')
+  assertType<TypedDataType>('uint256')
 
   // @ts-expect-error tuple not allowed
-  expectType<TypedDataType>('tuple')
+  assertType<TypedDataType>('tuple')
   // @ts-expect-error tuple not allowed
-  expectType<TypedDataType>('tuple[]')
+  assertType<TypedDataType>('tuple[]')
 })
 
 test('TypedData', () => {
-  expectType<TypedData>({
+  assertType<TypedData>({
     Foo: [{ name: 'bar', type: 'string' }],
   })
-  expectType<TypedData>({
+  assertType<TypedData>({
     // @ts-expect-error Cannot use `AbiType` as `TypedData` key
     address: [{ name: 'bar', type: 'string' }],
   })

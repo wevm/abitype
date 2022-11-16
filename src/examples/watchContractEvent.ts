@@ -1,11 +1,11 @@
-import { Abi, AbiEvent, Address } from '../abi'
-import { Narrow } from '../narrow'
-import {
+import type { Abi, AbiEvent, Address } from '../abi'
+import type { Narrow } from '../narrow'
+import type {
   AbiParametersToPrimitiveTypes,
   ExtractAbiEvent,
   ExtractAbiEventNames,
 } from '../utils'
-import { IsNever, NotEqual, Or } from './types'
+import type { IsNever, NotEqual, Or } from './types'
 
 type GetEventConfig<TContract> = TContract extends {
   abi: infer TAbi extends Abi

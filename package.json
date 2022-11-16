@@ -28,7 +28,7 @@
     "lint:fix": "pnpm lint --fix",
     "lint:format": "prettier --write",
     "prepare": "npx simple-git-hooks",
-    "test": "pnpm typecheck",
+    "test": "vitest typecheck",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
@@ -51,7 +51,8 @@
     "lint-staged": "^12.4.1",
     "prettier": "^2.6.2",
     "simple-git-hooks": "^2.8.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "vitest": "^0.25.2"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"

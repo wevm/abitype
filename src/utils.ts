@@ -1,4 +1,4 @@
-import {
+import type {
   Abi,
   AbiParameter,
   AbiStateMutability,
@@ -18,8 +18,8 @@ import {
   TypedDataParameter,
   TypedDataType,
 } from './abi'
-import { ResolvedConfig } from './config'
-import { Merge, Tuple } from './types'
+import type { ResolvedConfig } from './config'
+import type { Merge, Tuple } from './types'
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.

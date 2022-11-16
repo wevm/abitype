@@ -1,15 +1,15 @@
+import { assertType, test } from 'vitest'
+
 import {
   address,
   ensRegistryWithFallbackAbi,
-  expectType,
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
-  test,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
 } from '../../test'
-import { Abi } from '../abi'
-import { ResolvedConfig } from '../config'
+import type { Abi } from '../abi'
+import type { ResolvedConfig } from '../config'
 import { writeContract } from './writeContract'
 
 test('writeContract', () => {
@@ -20,7 +20,7 @@ test('writeContract', () => {
         abi: wagmiMintExampleAbi,
         functionName: 'mint',
       })
-      expectType<void>(result)
+      assertType<void>(result)
     })
 
     test('one', () => {
@@ -30,7 +30,7 @@ test('writeContract', () => {
         functionName: 'createBid',
         args: [123n],
       })
-      expectType<void>(result)
+      assertType<void>(result)
     })
 
     test('two or more', () => {
@@ -46,8 +46,8 @@ test('writeContract', () => {
         functionName: 'transferFrom',
         args: [address, address, 123n],
       })
-      expectType<void>(result1)
-      expectType<void>(result2)
+      assertType<void>(result1)
+      assertType<void>(result2)
     })
 
     test('tuple', () => {
@@ -71,7 +71,7 @@ test('writeContract', () => {
           },
         ],
       })
-      expectType<ResolvedConfig['AddressType']>(result)
+      assertType<ResolvedConfig['AddressType']>(result)
     })
   })
 
@@ -82,7 +82,7 @@ test('writeContract', () => {
         abi: nounsAuctionHouseAbi,
         functionName: 'pause',
       })
-      expectType<void>(result)
+      assertType<void>(result)
     })
 
     test('bytes32', () => {
@@ -92,7 +92,7 @@ test('writeContract', () => {
         functionName: 'setSubnodeOwner',
         args: ['0xfoo', '0xbar', address],
       })
-      expectType<ResolvedConfig['BytesType']>(result)
+      assertType<ResolvedConfig['BytesType']>(result)
     })
 
     test('tuple', () => {
@@ -125,7 +125,7 @@ test('writeContract', () => {
         abi,
         functionName: 'foo',
       })
-      expectType<Output>(result)
+      assertType<Output>(result)
     })
 
     test('tuple[]', () => {
@@ -135,7 +135,7 @@ test('writeContract', () => {
         functionName: 'f',
         args: [{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1, y: 1 }, 1n],
       })
-      expectType<
+      assertType<
         readonly {
           x: ResolvedConfig['BigIntType']
           y: ResolvedConfig['BigIntType']
@@ -152,7 +152,7 @@ test('writeContract', () => {
         // @ts-expect-error Trying to use read function
         functionName: 'symbol',
       })
-      expectType<string>(result)
+      assertType<string>(result)
     })
 
     test('function with overloads', () => {
@@ -162,7 +162,7 @@ test('writeContract', () => {
         functionName: 'safeTransferFrom',
         args: [address, address, 123n],
       })
-      expectType<void>(result1)
+      assertType<void>(result1)
 
       const result2 = writeContract({
         address,
@@ -170,7 +170,7 @@ test('writeContract', () => {
         functionName: 'safeTransferFrom',
         args: [address, address, 123n, '0xfoo'],
       })
-      expectType<void>(result2)
+      assertType<void>(result2)
     })
 
     test('works without const assertion', () => {
@@ -189,7 +189,7 @@ test('writeContract', () => {
         functionName: 'foo',
         args: ['bar'],
       })
-      expectType<typeof result>(result as unknown)
+      assertType<typeof result>(result as unknown)
     })
 
     test('declared as Abi type', () => {
@@ -208,7 +208,7 @@ test('writeContract', () => {
         functionName: 'foo',
         args: ['bar'],
       })
-      expectType<typeof result>(result as unknown)
+      assertType<typeof result>(result as unknown)
     })
 
     test('defined inline', () => {
@@ -226,7 +226,7 @@ test('writeContract', () => {
         functionName: 'foo',
         args: ['bar'],
       })
-      expectType<ResolvedConfig['AddressType']>(result)
+      assertType<ResolvedConfig['AddressType']>(result)
     })
   })
 })

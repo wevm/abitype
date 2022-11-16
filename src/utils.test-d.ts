@@ -1,15 +1,15 @@
-import {
-  address,
+import { assertType, test } from 'vitest'
+
+import type {
   ensRegistryWithFallbackAbi,
-  expectType,
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
-  test,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
 } from '../test'
-import { Abi } from './abi'
-import {
+import { address } from '../test'
+import type { Abi } from './abi'
+import type {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
   AbiTypeToPrimitiveType,
@@ -29,64 +29,64 @@ import {
 
 test('AbiTypeToPrimitiveType', () => {
   test('address', () => {
-    expectType<AbiTypeToPrimitiveType<'address'>>(address)
+    assertType<AbiTypeToPrimitiveType<'address'>>(address)
   })
 
   test('bool', () => {
-    expectType<AbiTypeToPrimitiveType<'bool'>>(true)
-    expectType<AbiTypeToPrimitiveType<'bool'>>(false)
+    assertType<AbiTypeToPrimitiveType<'bool'>>(true)
+    assertType<AbiTypeToPrimitiveType<'bool'>>(false)
   })
 
   test('bytes', () => {
-    expectType<AbiTypeToPrimitiveType<'bytes'>>('0xfoo')
-    expectType<AbiTypeToPrimitiveType<'bytes1'>>('0xfoo')
-    expectType<AbiTypeToPrimitiveType<'bytes24'>>('0xfoo')
-    expectType<AbiTypeToPrimitiveType<'bytes32'>>('0xfoo')
+    assertType<AbiTypeToPrimitiveType<'bytes'>>('0xfoo')
+    assertType<AbiTypeToPrimitiveType<'bytes1'>>('0xfoo')
+    assertType<AbiTypeToPrimitiveType<'bytes24'>>('0xfoo')
+    assertType<AbiTypeToPrimitiveType<'bytes32'>>('0xfoo')
   })
 
   test('function', () => {
-    expectType<AbiTypeToPrimitiveType<'function'>>(`${address}foo`)
+    assertType<AbiTypeToPrimitiveType<'function'>>(`${address}foo`)
   })
 
   test('string', () => {
-    expectType<AbiTypeToPrimitiveType<'string'>>('foo')
+    assertType<AbiTypeToPrimitiveType<'string'>>('foo')
   })
 
   test('number', () => {
-    expectType<AbiTypeToPrimitiveType<'int'>>(1)
-    expectType<AbiTypeToPrimitiveType<'int'>>(1n)
-    expectType<AbiTypeToPrimitiveType<'int'>>(BigInt(1))
-    expectType<AbiTypeToPrimitiveType<'uint'>>(1)
-    expectType<AbiTypeToPrimitiveType<'uint'>>(1n)
-    expectType<AbiTypeToPrimitiveType<'uint'>>(BigInt(1))
+    assertType<AbiTypeToPrimitiveType<'int'>>(1)
+    assertType<AbiTypeToPrimitiveType<'int'>>(1n)
+    assertType<AbiTypeToPrimitiveType<'int'>>(BigInt(1))
+    assertType<AbiTypeToPrimitiveType<'uint'>>(1)
+    assertType<AbiTypeToPrimitiveType<'uint'>>(1n)
+    assertType<AbiTypeToPrimitiveType<'uint'>>(BigInt(1))
 
-    expectType<AbiTypeToPrimitiveType<'int8'>>(1)
-    expectType<AbiTypeToPrimitiveType<'int32'>>(1)
-    expectType<AbiTypeToPrimitiveType<'uint8'>>(1)
-    expectType<AbiTypeToPrimitiveType<'int8'>>(1)
+    assertType<AbiTypeToPrimitiveType<'int8'>>(1)
+    assertType<AbiTypeToPrimitiveType<'int32'>>(1)
+    assertType<AbiTypeToPrimitiveType<'uint8'>>(1)
+    assertType<AbiTypeToPrimitiveType<'int8'>>(1)
     // @ts-expect-error should be number
-    expectType<AbiTypeToPrimitiveType<'int8'>>(1n)
+    assertType<AbiTypeToPrimitiveType<'int8'>>(1n)
 
-    expectType<AbiTypeToPrimitiveType<'int256'>>(1n)
-    expectType<AbiTypeToPrimitiveType<'int256'>>(BigInt(1))
-    expectType<AbiTypeToPrimitiveType<'uint256'>>(1n)
-    expectType<AbiTypeToPrimitiveType<'uint256'>>(BigInt(1))
+    assertType<AbiTypeToPrimitiveType<'int256'>>(1n)
+    assertType<AbiTypeToPrimitiveType<'int256'>>(BigInt(1))
+    assertType<AbiTypeToPrimitiveType<'uint256'>>(1n)
+    assertType<AbiTypeToPrimitiveType<'uint256'>>(BigInt(1))
     // @ts-expect-error should be bigint
-    expectType<AbiTypeToPrimitiveType<'int256'>>(1)
+    assertType<AbiTypeToPrimitiveType<'int256'>>(1)
   })
 
   test('tuple', () => {
-    expectType<AbiTypeToPrimitiveType<'tuple'>>({ foo: 'bar' })
+    assertType<AbiTypeToPrimitiveType<'tuple'>>({ foo: 'bar' })
   })
 
   test('array', () => {
-    expectType<AbiTypeToPrimitiveType<'string[]'>>(['foo'])
-    expectType<AbiTypeToPrimitiveType<'string[1]'>>(['foo', 'foo'])
+    assertType<AbiTypeToPrimitiveType<'string[]'>>(['foo'])
+    assertType<AbiTypeToPrimitiveType<'string[1]'>>(['foo', 'foo'])
   })
 
   test('2d array', () => {
-    expectType<AbiTypeToPrimitiveType<'string[][]'>>([['foo']])
-    expectType<AbiTypeToPrimitiveType<'string[1][]'>>([['foo', 'foo']])
+    assertType<AbiTypeToPrimitiveType<'string[][]'>>([['foo']])
+    assertType<AbiTypeToPrimitiveType<'string[1][]'>>([['foo', 'foo']])
   })
 })
 
@@ -96,15 +96,15 @@ test('AbiParameterToPrimitiveType', () => {
       name: 'owner'
       type: 'address'
     }>
-    expectType<Result>(address)
+    assertType<Result>(address)
     // @ts-expect-error missing "0x" prefix
-    expectType<Result>('foo')
+    assertType<Result>('foo')
   })
 
   test('bool', () => {
     type Result = AbiParameterToPrimitiveType<{ name: ''; type: 'bool' }>
-    expectType<Result>(true)
-    expectType<Result>(false)
+    assertType<Result>(true)
+    assertType<Result>(false)
   })
 
   test('bytes', () => {
@@ -112,7 +112,7 @@ test('AbiParameterToPrimitiveType', () => {
       name: 'data'
       type: 'bytes'
     }>
-    expectType<Result>('0xfoo')
+    assertType<Result>('0xfoo')
   })
 
   test('function', () => {
@@ -120,7 +120,7 @@ test('AbiParameterToPrimitiveType', () => {
       name: ''
       type: 'function'
     }>
-    expectType<FunctionResult>(`${address}foo`)
+    assertType<FunctionResult>(`${address}foo`)
   })
 
   test('string', () => {
@@ -128,8 +128,8 @@ test('AbiParameterToPrimitiveType', () => {
       name: ''
       type: 'string'
     }>
-    expectType<Result>('foo')
-    expectType<Result>(address)
+    assertType<Result>('foo')
+    assertType<Result>(address)
   })
 
   test('tuple', () => {
@@ -151,7 +151,7 @@ test('AbiParameterToPrimitiveType', () => {
       name: 'edition'
       type: 'tuple'
     }>
-    expectType<Result>({
+    assertType<Result>({
       name: 'Test',
       symbol: '$TEST',
       description: 'Foo bar baz',
@@ -165,13 +165,13 @@ test('AbiParameterToPrimitiveType', () => {
       fee: 0,
     })
     // @ts-expect-error missing keys
-    expectType<Result>({
+    assertType<Result>({
       name: 'Test',
       symbol: '$TEST',
       description: 'Foo bar baz',
       imageURI: 'ipfs://hash',
     })
-    expectType<Result>({
+    assertType<Result>({
       name: 'Test',
       symbol: '$TEST',
       description: 'Foo bar baz',
@@ -206,7 +206,7 @@ test('AbiParameterToPrimitiveType', () => {
         },
       ]
     }>
-    expectType<NestedTupleResult>({
+    assertType<NestedTupleResult>({
       a: 1,
       b: [2, 3],
       c: [{ x: 1n, y: { a: 'foo' } }],
@@ -230,7 +230,7 @@ test('AbiParameterToPrimitiveType', () => {
       name: 'edition'
       type: 'tuple'
     }>
-    expectType<WithoutNamedParameterResult>([
+    assertType<WithoutNamedParameterResult>([
       'Test',
       '$TEST',
       'Foo bar baz',
@@ -250,11 +250,11 @@ test('AbiParameterToPrimitiveType', () => {
       name: 'tokenId'
       type: 'uint256'
     }>
-    expectType<Result>(123n)
-    expectType<Result>(123n)
-    expectType<Result>(BigInt(123))
+    assertType<Result>(123n)
+    assertType<Result>(123n)
+    assertType<Result>(BigInt(123))
     // @ts-expect-error string value
-    expectType<Result>('123')
+    assertType<Result>('123')
   })
 
   test('array', () => {
@@ -263,7 +263,7 @@ test('AbiParameterToPrimitiveType', () => {
         name: ''
         type: 'string[]'
       }>
-      expectType<Result>(['foo', 'bar', 'baz'])
+      assertType<Result>(['foo', 'bar', 'baz'])
     })
 
     test('fixed', () => {
@@ -271,9 +271,9 @@ test('AbiParameterToPrimitiveType', () => {
         name: ''
         type: 'string[3]'
       }>
-      expectType<Result>(['foo', 'bar', 'baz'])
+      assertType<Result>(['foo', 'bar', 'baz'])
       // @ts-expect-error not enough items
-      expectType<Result>(['foo', 'bar'])
+      assertType<Result>(['foo', 'bar'])
     })
 
     test('dynamic with tuple', () => {
@@ -291,7 +291,7 @@ test('AbiParameterToPrimitiveType', () => {
           },
         ]
       }>
-      expectType<Result>([{ x: 1n, y: 1n }])
+      assertType<Result>([{ x: 1n, y: 1n }])
     })
 
     test('fixed with tuple', () => {
@@ -309,7 +309,7 @@ test('AbiParameterToPrimitiveType', () => {
           },
         ]
       }>
-      expectType<Result>([
+      assertType<Result>([
         { x: 1, y: 1 },
         { x: 1, y: 1 },
       ])
@@ -322,18 +322,18 @@ test('AbiParameterToPrimitiveType', () => {
         name: ''
         type: 'string[][]'
       }>
-      expectType<Result>([['foo'], ['bar'], ['baz']])
+      assertType<Result>([['foo'], ['bar'], ['baz']])
     })
 
     test('fixed', () => {
-      expectType<
+      assertType<
         AbiParameterToPrimitiveType<{
           name: ''
           type: 'string[][3]'
         }>
       >([['foo'], ['bar'], ['baz']])
 
-      expectType<
+      assertType<
         AbiParameterToPrimitiveType<{
           name: ''
           type: 'string[3][]'
@@ -343,7 +343,7 @@ test('AbiParameterToPrimitiveType', () => {
         ['foo', 'bar', 'baz'],
       ])
 
-      expectType<
+      assertType<
         AbiParameterToPrimitiveType<{
           name: ''
           type: 'string[3][3]'
@@ -354,7 +354,7 @@ test('AbiParameterToPrimitiveType', () => {
         ['foo', 'bar', 'baz'],
       ])
 
-      expectType<
+      assertType<
         AbiParameterToPrimitiveType<{
           name: ''
           type: 'string[3][3]'
@@ -373,7 +373,7 @@ test('AbiParameterToPrimitiveType', () => {
         name: 'data'
         type: 'foo'
       }>
-      expectType<Result>(null)
+      assertType<Result>(null)
     })
 
     test('array', () => {
@@ -381,7 +381,7 @@ test('AbiParameterToPrimitiveType', () => {
         name: 'data'
         type: 'foo[2][2]'
       }>
-      expectType<Result>([
+      assertType<Result>([
         [null, null],
         [null, null],
       ])
@@ -392,7 +392,7 @@ test('AbiParameterToPrimitiveType', () => {
 test('AbiParametersToPrimitiveTypes', () => {
   test('no parameters', () => {
     type Result = AbiParametersToPrimitiveTypes<[]>
-    expectType<Result>([])
+    assertType<Result>([])
   })
 
   test('single parameter', () => {
@@ -404,7 +404,7 @@ test('AbiParametersToPrimitiveTypes', () => {
         },
       ]
     >
-    expectType<Result>([[1, 1]])
+    assertType<Result>([[1, 1]])
     //          ^?
   })
 
@@ -416,7 +416,7 @@ test('AbiParametersToPrimitiveTypes', () => {
         { name: 'trait'; type: 'string[]' },
       ]
     >
-    expectType<Result>([address, 1n, ['foo']])
+    assertType<Result>([address, 1n, ['foo']])
   })
 
   test('deeply nested parameters', () => {
@@ -457,7 +457,7 @@ test('AbiParametersToPrimitiveTypes', () => {
         },
       ]
     >
-    expectType<Result>([
+    assertType<Result>([
       { a: 1, b: [2], c: [{ x: 1, y: 1 }] },
       { x: 1, y: 1 },
       1,
@@ -471,11 +471,11 @@ test('AbiParametersToPrimitiveTypes', () => {
 
 test('IsAbi', () => {
   test('const assertion', () => {
-    expectType<IsAbi<typeof nestedTupleArrayAbi>>(true)
-    expectType<IsAbi<typeof wagmiMintExampleAbi>>(true)
-    expectType<IsAbi<typeof writingEditionsFactoryAbi>>(true)
-    expectType<IsAbi<typeof ensRegistryWithFallbackAbi>>(true)
-    expectType<IsAbi<typeof nounsAuctionHouseAbi>>(true)
+    assertType<IsAbi<typeof nestedTupleArrayAbi>>(true)
+    assertType<IsAbi<typeof wagmiMintExampleAbi>>(true)
+    assertType<IsAbi<typeof writingEditionsFactoryAbi>>(true)
+    assertType<IsAbi<typeof ensRegistryWithFallbackAbi>>(true)
+    assertType<IsAbi<typeof nounsAuctionHouseAbi>>(true)
   })
 
   test('declared as Abi type', () => {
@@ -489,7 +489,7 @@ test('IsAbi', () => {
       },
     ]
     type Result = IsAbi<typeof abi>
-    expectType<Result>(true)
+    assertType<Result>(true)
   })
 
   test('no const assertion', () => {
@@ -503,10 +503,10 @@ test('IsAbi', () => {
       },
     ]
     type Result = IsAbi<typeof abi>
-    expectType<Result>(false)
+    assertType<Result>(false)
 
     type InvalidAbiResult = IsAbi<'foo'>
-    expectType<InvalidAbiResult>(false)
+    assertType<InvalidAbiResult>(false)
   })
 })
 
@@ -519,18 +519,18 @@ test('Function', () => {
       name: 'foo',
       outputs: [],
     } as const
-    expectType<ExtractAbiFunctions<[typeof abiFunction]>>(abiFunction)
-    expectType<ExtractAbiFunctions<[]>>(undefined as never)
+    assertType<ExtractAbiFunctions<[typeof abiFunction]>>(abiFunction)
+    assertType<ExtractAbiFunctions<[]>>(undefined as never)
   })
 
   test('ExtractAbiFunctionNames', () => {
-    expectType<ExtractAbiFunctionNames<typeof wagmiMintExampleAbi>>('symbol')
-    expectType<ExtractAbiFunctionNames<[]>>(undefined as never)
+    assertType<ExtractAbiFunctionNames<typeof wagmiMintExampleAbi>>('symbol')
+    assertType<ExtractAbiFunctionNames<[]>>(undefined as never)
   })
 
   test('ExtractAbiFunction', () => {
     test('default', () => {
-      expectType<ExtractAbiFunction<typeof wagmiMintExampleAbi, 'tokenURI'>>({
+      assertType<ExtractAbiFunction<typeof wagmiMintExampleAbi, 'tokenURI'>>({
         inputs: [
           {
             internalType: 'uint256',
@@ -556,7 +556,7 @@ test('Function', () => {
         typeof wagmiMintExampleAbi,
         'safeTransferFrom'
       >
-      expectType<Result>({
+      assertType<Result>({
         inputs: [
           { internalType: 'address', name: 'from', type: 'address' },
           { internalType: 'address', name: 'to', type: 'address' },
@@ -567,7 +567,7 @@ test('Function', () => {
         stateMutability: 'nonpayable',
         type: 'function',
       })
-      expectType<Result>({
+      assertType<Result>({
         inputs: [
           { internalType: 'address', name: 'from', type: 'address' },
           { internalType: 'address', name: 'to', type: 'address' },
@@ -591,19 +591,19 @@ test('Events', () => {
       inputs: [{ name: 'a', type: 'uint256' }],
       name: 'foo',
     } as const
-    expectType<ExtractAbiEvents<[typeof abiEvent]>>(abiEvent)
-    expectType<ExtractAbiEvents<[]>>(undefined as never)
+    assertType<ExtractAbiEvents<[typeof abiEvent]>>(abiEvent)
+    assertType<ExtractAbiEvents<[]>>(undefined as never)
   })
 
   test('ExtractAbiEventNames', () => {
-    expectType<ExtractAbiEventNames<typeof wagmiMintExampleAbi>>(
+    assertType<ExtractAbiEventNames<typeof wagmiMintExampleAbi>>(
       'ApprovalForAll',
     )
-    expectType<ExtractAbiEventNames<[]>>(undefined as never)
+    assertType<ExtractAbiEventNames<[]>>(undefined as never)
   })
 
   test('ExtractAbiEvent', () => {
-    expectType<ExtractAbiEvent<typeof wagmiMintExampleAbi, 'Transfer'>>({
+    assertType<ExtractAbiEvent<typeof wagmiMintExampleAbi, 'Transfer'>>({
       anonymous: false,
       inputs: [
         {
@@ -638,12 +638,12 @@ test('Error', () => {
       inputs: [{ name: 'a', type: 'uint256' }],
       name: 'foo',
     } as const
-    expectType<ExtractAbiErrors<[typeof abiError]>>(abiError)
-    expectType<ExtractAbiErrors<[]>>(undefined as never)
+    assertType<ExtractAbiErrors<[typeof abiError]>>(abiError)
+    assertType<ExtractAbiErrors<[]>>(undefined as never)
   })
 
   test('ExtractAbiErrorNames', () => {
-    expectType<
+    assertType<
       ExtractAbiErrorNames<
         [
           {
@@ -654,7 +654,7 @@ test('Error', () => {
         ]
       >
     >('foo')
-    expectType<ExtractAbiErrorNames<[]>>(undefined as never)
+    assertType<ExtractAbiErrorNames<[]>>(undefined as never)
   })
 
   test('ExtractAbiError', () => {
@@ -663,7 +663,7 @@ test('Error', () => {
       inputs: [{ name: 'a', type: 'uint256' }],
       name: 'foo',
     } as const
-    expectType<ExtractAbiError<[typeof abiError], 'foo'>>(abiError)
+    assertType<ExtractAbiError<[typeof abiError], 'foo'>>(abiError)
   })
 })
 
@@ -685,12 +685,12 @@ test('TypedDataToPrimitiveTypes', () => {
       ],
     } as const
     type Result = TypedDataToPrimitiveTypes<typeof types>
-    expectType<Result>({ Contributor: contributor })
+    assertType<Result>({ Contributor: contributor })
 
     // @ts-expect-error key `Foo` does not exist
-    expectType<Result>({ Foo: contributor })
+    assertType<Result>({ Foo: contributor })
     // @ts-expect-error Incorrect data type for `Contributor`
-    expectType<Result>({ Contributor: { foo: 'bar' } })
+    assertType<Result>({ Contributor: { foo: 'bar' } })
   })
 
   test('nested struct', () => {
@@ -705,7 +705,7 @@ test('TypedDataToPrimitiveTypes', () => {
       ],
     } as const
     type Result = TypedDataToPrimitiveTypes<typeof types>
-    expectType<Result>({ Contributor: contributor, Website: website })
+    assertType<Result>({ Contributor: contributor, Website: website })
   })
 
   test('deeply nested structs', () => {
@@ -735,7 +735,7 @@ test('TypedDataToPrimitiveTypes', () => {
       contributors: [contributor, contributor],
       website,
     }
-    expectType<Result>({
+    assertType<Result>({
       Contributor: contributor,
       Website: website,
       Project: project,
@@ -756,7 +756,7 @@ test('TypedDataToPrimitiveTypes', () => {
         ],
       } as const
       type Result = TypedDataToPrimitiveTypes<typeof types>
-      expectType<Result>({
+      assertType<Result>({
         Name: {
           first:
             "Error: Cannot convert self-referencing struct 'Name' to primitive type.",
@@ -773,7 +773,7 @@ test('TypedDataToPrimitiveTypes', () => {
         ],
       } as const
       type Result = TypedDataToPrimitiveTypes<typeof types>
-      expectType<Result>({
+      assertType<Result>({
         Name: {
           first: "Error: Cannot convert unknown type 'Foo' to primitive type.",
           last: 'Meagher',
@@ -795,7 +795,7 @@ test('IsTypedData', () => {
       { name: 'contents'; type: 'string' },
     ]
   }>
-  expectType<Result>(true)
+  assertType<Result>(true)
 
   type Result2 = IsTypedData<{
     Person: [{ name: 'name'; type: 'string' }, { name: 'wallet'; type: 'Foo' }] // `Foo` does not exist in schema
@@ -805,5 +805,5 @@ test('IsTypedData', () => {
       { name: 'contents'; type: 'string' },
     ]
   }>
-  expectType<Result2>(false)
+  assertType<Result2>(false)
 })

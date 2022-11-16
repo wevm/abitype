@@ -1,6 +1,6 @@
-import { Address, TypedData, TypedDataDomain } from '../abi'
-import { Narrow } from '../narrow'
-import { TypedDataToPrimitiveTypes } from '../utils'
+import type { Address, TypedData, TypedDataDomain } from '../abi'
+import type { Narrow } from '../narrow'
+import type { TypedDataToPrimitiveTypes } from '../utils'
 
 type SignTypedDataConfig<TTypedData = unknown> = {
   /** Domain info */

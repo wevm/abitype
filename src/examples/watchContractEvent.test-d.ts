@@ -1,11 +1,11 @@
+import { assertType, test } from 'vitest'
+
 import {
   address,
-  expectType,
-  test,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
 } from '../../test'
-import { ResolvedConfig } from '../config'
+import type { ResolvedConfig } from '../config'
 import { watchContractEvent } from './watchContractEvent'
 
 test('watchContractEvent', () => {
@@ -29,7 +29,7 @@ test('watchContractEvent', () => {
         ],
         eventName: 'Foo',
         listener(...args) {
-          expectType<[]>(args)
+          assertType<[]>(args)
         },
       })
     })
@@ -40,7 +40,7 @@ test('watchContractEvent', () => {
         abi: writingEditionsFactoryAbi,
         eventName: 'FactoryGuardSet',
         listener(guard) {
-          expectType<boolean | null>(guard)
+          assertType<boolean | null>(guard)
         },
       })
     })
@@ -51,9 +51,9 @@ test('watchContractEvent', () => {
         abi: wagmiMintExampleAbi,
         eventName: 'Transfer',
         listener(from, to, tokenId) {
-          expectType<ResolvedConfig['AddressType']>(from)
-          expectType<ResolvedConfig['AddressType']>(to)
-          expectType<ResolvedConfig['BigIntType']>(tokenId)
+          assertType<ResolvedConfig['AddressType']>(from)
+          assertType<ResolvedConfig['AddressType']>(to)
+          assertType<ResolvedConfig['BigIntType']>(tokenId)
         },
       })
     })
@@ -80,7 +80,7 @@ test('watchContractEvent', () => {
         abi,
         eventName: 'Foo',
         listener(name) {
-          expectType<unknown>(name)
+          assertType<unknown>(name)
         },
       })
     })
