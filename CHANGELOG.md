@@ -1,5 +1,11 @@
 # abitype
 
+## 0.2.0
+
+### Minor Changes
+
+- [#55](https://github.com/wagmi-dev/abitype/pull/55) [`7034511`](https://github.com/wagmi-dev/abitype/commit/70345115cbbb01c78a10ae132dbe581265052b50) Thanks [@tmm](https://github.com/tmm)! - Added `abitype/zod` entrypoint
+
 ## 0.1.8
 
 ### Patch Changes
