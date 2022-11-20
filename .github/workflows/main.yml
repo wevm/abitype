@@ -120,3 +120,5 @@ jobs:
           key: modules-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Test
         run: pnpm test
+      - name: Test types
+        run: pnpm test:typecheck
