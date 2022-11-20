@@ -20,5 +20,5 @@
     "types": ["node"]
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["src"]
+  "include": ["src", "*.ts"]
 }
