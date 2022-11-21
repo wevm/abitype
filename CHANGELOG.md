@@ -1,5 +1,11 @@
 # abitype
 
+## 0.2.3
+
+### Patch Changes
+
+- [`75fbeb2`](https://github.com/wagmi-dev/abitype/commit/75fbeb2012b103a291e1d0fc9968db26929411c1) Thanks [@tmm](https://github.com/tmm)! - Fixed zod entrypoint
+
 ## 0.2.2
 
 ### Patch Changes
