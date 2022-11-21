@@ -24,8 +24,8 @@
       "default": "./dist/index.js"
     },
     "./zod": {
-      "types": "./dist/zod.d.ts",
-      "default": "./dist/zod.js"
+      "types": "./dist/zod/index.d.ts",
+      "default": "./dist/zod/index.js"
     },
     "./package.json": "./package.json"
   },

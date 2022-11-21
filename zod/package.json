@@ -1,4 +1,4 @@
 {
   "type": "module",
-  "main": "./dist/zod/index.js"
+  "main": "../dist/zod/index.js"
 }
