@@ -1,5 +1,11 @@
 # abitype
 
+## 0.2.1
+
+### Patch Changes
+
+- [`bae62e5`](https://github.com/wagmi-dev/abitype/commit/bae62e5e8293f8f9a565ce9609f109ead4605ca4) Thanks [@github-actions[bot]](https://github.com/github-actions%5Bbot%5D)! - Added missing zod entrypoint package.json
+
 ## 0.2.0
 
 ### Minor Changes
