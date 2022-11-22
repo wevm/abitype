@@ -414,7 +414,7 @@ If you're interested in contributing, please read the [contributing docs](/.gith
 
 ## Authors
 
-- awkweb.eth ([@awkweb](https://twitter.com/awkweb)) – [Mirror](https://mirror.xyz)
+- [@tmm](https://github.com/tmm) (awkweb.eth, [Twitter](https://twitter.com/awkweb))
 
 ## License
 
