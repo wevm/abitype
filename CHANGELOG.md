@@ -1,5 +1,11 @@
 # abitype
 
+## 0.2.4
+
+### Patch Changes
+
+- [#63](https://github.com/wagmi-dev/abitype/pull/63) [`db3d249`](https://github.com/wagmi-dev/abitype/commit/db3d2491a165351151de69feb02829e03ea7f191) Thanks [@tmm](https://github.com/tmm)! - Added `stateMutability` calculation for older contracts that only use deprecated `constant` and `payable` fields.
+
 ## 0.2.3
 
 ### Patch Changes
