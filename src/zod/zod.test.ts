@@ -62,4 +62,82 @@ describe('AbiSchema', () => {
       ]"
     `)
   })
+
+  describe('behavior', () => {
+    it("deprecated 'constant' field", () => {
+      expect(
+        Abi.parse([
+          {
+            constant: true,
+            inputs: [{ name: 'node', type: 'bytes32' }],
+            name: 'resolver',
+            outputs: [{ name: '', type: 'address' }],
+            payable: false,
+            type: 'function',
+          },
+        ]),
+      ).toMatchInlineSnapshot(`
+        [
+          {
+            "constant": true,
+            "inputs": [
+              {
+                "name": "node",
+                "type": "bytes32",
+              },
+            ],
+            "name": "resolver",
+            "outputs": [
+              {
+                "name": "",
+                "type": "address",
+              },
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function",
+          },
+        ]
+      `)
+    })
+
+    it("deprecated 'payable' field", () => {
+      expect(
+        Abi.parse([
+          {
+            constant: false,
+            inputs: [
+              { name: 'node', type: 'bytes32' },
+              { name: 'owner', type: 'address' },
+            ],
+            name: 'setOwner',
+            outputs: [],
+            payable: false,
+            type: 'function',
+          },
+        ]),
+      ).toMatchInlineSnapshot(`
+        [
+          {
+            "constant": false,
+            "inputs": [
+              {
+                "name": "node",
+                "type": "bytes32",
+              },
+              {
+                "name": "owner",
+                "type": "address",
+              },
+            ],
+            "name": "setOwner",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function",
+          },
+        ]
+      `)
+    })
+  })
 })
