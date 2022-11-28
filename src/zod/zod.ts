@@ -118,7 +118,10 @@ export const AbiFunction = z.preprocess(
         type: z.literal('constructor'),
         inputs: z.array(AbiParameter),
       }),
-      z.object({ type: z.literal('fallback'), inputs: z.tuple([]) }),
+      z.object({
+        type: z.literal('fallback'),
+        inputs: z.optional(z.tuple([])),
+      }),
       z.object({
         type: z.literal('receive'),
         stateMutability: z.literal('payable'),
