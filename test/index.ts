@@ -6,4 +6,5 @@ export {
   nounsAuctionHouseAbi,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
+  ensAbi,
 } from './abis'
