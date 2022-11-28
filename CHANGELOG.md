@@ -1,5 +1,11 @@
 # abitype
 
+## 0.2.5
+
+### Patch Changes
+
+- [#65](https://github.com/wagmi-dev/abitype/pull/65) [`a542514`](https://github.com/wagmi-dev/abitype/commit/a54251412f343d706c0a7903948b8744c87a39c3) Thanks [@Bind](https://github.com/Bind)! - Fixed `abitype/zod` support for legacy contracts, like WETH, by making `inputs` optional for `type: 'fallback'` and `AbiError` `type` from `"event"` to `"error"`.
+
 ## 0.2.4
 
 ### Patch Changes
