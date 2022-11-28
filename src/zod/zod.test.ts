@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest'
 
+import {
+  ensRegistryWithFallbackAbi,
+  nestedTupleArrayAbi,
+  nounsAuctionHouseAbi,
+  wagmiMintExampleAbi,
+  wethAbi,
+  writingEditionsFactoryAbi,
+} from '../../test/abis'
+
 import { Abi } from './zod'
 
 describe('AbiSchema', () => {
@@ -34,7 +43,14 @@ describe('AbiSchema', () => {
       ]
     `)
   })
-
+  it('successfully parses Abis', () => {
+    Abi.parse(ensRegistryWithFallbackAbi)
+    Abi.parse(nestedTupleArrayAbi)
+    Abi.parse(nounsAuctionHouseAbi)
+    Abi.parse(wagmiMintExampleAbi)
+    Abi.parse(writingEditionsFactoryAbi)
+    Abi.parse(wethAbi)
+  })
   it('throws error for invalid schema', async () => {
     await expect(
       Abi.parseAsync([
