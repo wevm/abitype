@@ -2,5 +2,4 @@
 'abitype': patch
 ---
 
-- "fallback" type supports optional inputs (supports legacy contracts like WETH)
-- fix AbiError "type": change from z.literal("event") to z.literal("error")
+Fixed `abitype/zod` support for legacy contracts, like WETH, by making `inputs` optional for `type: 'fallback'` and `AbiError` `type` from `"event"` to `"error"`.
