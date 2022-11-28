@@ -120,7 +120,7 @@ export const AbiFunction = z.preprocess(
       }),
       z.object({
         type: z.literal('fallback'),
-        inputs: z.optional(z.tuple([])),
+        inputs: z.tuple([]).optional(),
       }),
       z.object({
         type: z.literal('receive'),
