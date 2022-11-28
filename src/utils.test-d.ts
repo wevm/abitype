@@ -5,10 +5,10 @@ import type {
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
   wagmiMintExampleAbi,
+  wethAbi,
   writingEditionsFactoryAbi,
 } from '../test'
 import { address } from '../test'
-import type { wethAbi } from '../test/abis'
 import type { Abi } from './abi'
 import type {
   AbiParameterToPrimitiveType,

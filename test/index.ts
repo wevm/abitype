@@ -7,5 +7,6 @@ export {
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
   ensAbi,
+  wethAbi,
   customSolidityErrorsAbi,
 } from './abis'
