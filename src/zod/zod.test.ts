@@ -2,13 +2,14 @@ import { describe, expect, it } from 'vitest'
 
 import {
   customSolidityErrorsAbi,
+  ensAbi,
   ensRegistryWithFallbackAbi,
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
-} from '../../test/abis'
+} from '../../test'
 
 import { Abi } from './zod'
 
@@ -43,27 +44,6 @@ describe('AbiSchema', () => {
         },
       ]
     `)
-  })
-  it('successfully parses ensRegistryWithFallbackAbi', () => {
-    Abi.parse(ensRegistryWithFallbackAbi)
-  })
-  it('successfully parses nestedTupleArrayAbi', () => {
-    Abi.parse(nestedTupleArrayAbi)
-  })
-  it('successfully parses nounsAuctionHouseAbi', () => {
-    Abi.parse(nounsAuctionHouseAbi)
-  })
-  it('successfully parses wagmiMintExampleAbi', () => {
-    Abi.parse(wagmiMintExampleAbi)
-  })
-  it('successfully parses wethAbi', () => {
-    Abi.parse(wethAbi)
-  })
-  it('successfully parses writingEditionsFactoryAbi', () => {
-    Abi.parse(writingEditionsFactoryAbi)
-  })
-  it('successfully parses customSolidityErrorsAbi', () => {
-    Abi.parse(customSolidityErrorsAbi)
   })
   it('throws error for invalid schema', async () => {
     await expect(
@@ -169,5 +149,32 @@ describe('AbiSchema', () => {
         ]
       `)
     })
+  })
+})
+
+describe('Abi', () => {
+  it('ensRegistryWithFallbackAbi', () => {
+    Abi.parse(ensRegistryWithFallbackAbi)
+  })
+  it('nestedTupleArrayAbi', () => {
+    Abi.parse(nestedTupleArrayAbi)
+  })
+  it('nounsAuctionHouseAbi', () => {
+    Abi.parse(nounsAuctionHouseAbi)
+  })
+  it('wagmiMintExampleAbi', () => {
+    Abi.parse(wagmiMintExampleAbi)
+  })
+  it('ensAbi', () => {
+    Abi.parse(ensAbi)
+  })
+  it('wethAbi', () => {
+    Abi.parse(wethAbi)
+  })
+  it('writingEditionsFactoryAbi', () => {
+    Abi.parse(writingEditionsFactoryAbi)
+  })
+  it('customSolidityErrorsAbi', () => {
+    Abi.parse(customSolidityErrorsAbi)
   })
 })
