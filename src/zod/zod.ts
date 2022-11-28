@@ -118,7 +118,10 @@ export const AbiFunction = z.preprocess(
         type: z.literal('constructor'),
         inputs: z.array(AbiParameter),
       }),
-      z.object({ type: z.literal('fallback'), inputs: z.tuple([]) }),
+      z.object({
+        type: z.literal('fallback'),
+        inputs: z.tuple([]).optional(),
+      }),
       z.object({
         type: z.literal('receive'),
         stateMutability: z.literal('payable'),
@@ -137,7 +140,7 @@ export const AbiEvent = z.object({
 })
 
 export const AbiError = z.object({
-  type: z.literal('event'),
+  type: z.literal('error'),
   inputs: z.array(AbiParameter),
   name: z.string(),
 })

@@ -1,13 +1,15 @@
 import { assertType, test } from 'vitest'
 
+import { address } from '../test'
 import type {
+  customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
   wagmiMintExampleAbi,
+  wethAbi,
   writingEditionsFactoryAbi,
 } from '../test'
-import { address } from '../test'
 import type { Abi } from './abi'
 import type {
   AbiParameterToPrimitiveType,
@@ -476,6 +478,8 @@ test('IsAbi', () => {
     assertType<IsAbi<typeof writingEditionsFactoryAbi>>(true)
     assertType<IsAbi<typeof ensRegistryWithFallbackAbi>>(true)
     assertType<IsAbi<typeof nounsAuctionHouseAbi>>(true)
+    assertType<IsAbi<typeof wethAbi>>(true)
+    assertType<IsAbi<typeof customSolidityErrorsAbi>>(true)
   })
 
   test('declared as Abi type', () => {

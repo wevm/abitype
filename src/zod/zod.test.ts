@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest'
 
+import {
+  customSolidityErrorsAbi,
+  ensAbi,
+  ensRegistryWithFallbackAbi,
+  nestedTupleArrayAbi,
+  nounsAuctionHouseAbi,
+  wagmiMintExampleAbi,
+  wethAbi,
+  writingEditionsFactoryAbi,
+} from '../../test'
+
 import { Abi } from './zod'
 
 describe('AbiSchema', () => {
@@ -34,7 +45,6 @@ describe('AbiSchema', () => {
       ]
     `)
   })
-
   it('throws error for invalid schema', async () => {
     await expect(
       Abi.parseAsync([
@@ -139,5 +149,32 @@ describe('AbiSchema', () => {
         ]
       `)
     })
+  })
+})
+
+describe('Abi', () => {
+  it('ensRegistryWithFallbackAbi', () => {
+    Abi.parse(ensRegistryWithFallbackAbi)
+  })
+  it('nestedTupleArrayAbi', () => {
+    Abi.parse(nestedTupleArrayAbi)
+  })
+  it('nounsAuctionHouseAbi', () => {
+    Abi.parse(nounsAuctionHouseAbi)
+  })
+  it('wagmiMintExampleAbi', () => {
+    Abi.parse(wagmiMintExampleAbi)
+  })
+  it('ensAbi', () => {
+    Abi.parse(ensAbi)
+  })
+  it('wethAbi', () => {
+    Abi.parse(wethAbi)
+  })
+  it('writingEditionsFactoryAbi', () => {
+    Abi.parse(writingEditionsFactoryAbi)
+  })
+  it('customSolidityErrorsAbi', () => {
+    Abi.parse(customSolidityErrorsAbi)
   })
 })
