@@ -140,7 +140,7 @@ export const AbiEvent = z.object({
 })
 
 export const AbiError = z.object({
-  type: z.literal('event'),
+  type: z.literal('error'),
   inputs: z.array(AbiParameter),
   name: z.string(),
 })
