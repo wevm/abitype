@@ -1871,3 +1871,9 @@ export const wethAbi = [
     type: 'event',
   },
 ] as const
+
+export const customSolidityErrorsAbi = [
+  { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
+  { inputs: [], name: 'ApprovalCallerNotOwnerNorApproved', type: 'error' },
+  { inputs: [], name: 'ApprovalQueryForNonexistentToken', type: 'error' },
+] as const

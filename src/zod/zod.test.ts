@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
@@ -43,13 +44,26 @@ describe('AbiSchema', () => {
       ]
     `)
   })
-  it('successfully parses Abis', () => {
+  it('successfully parses ensRegistryWithFallbackAbi', () => {
     Abi.parse(ensRegistryWithFallbackAbi)
+  })
+  it('successfully parses nestedTupleArrayAbi', () => {
     Abi.parse(nestedTupleArrayAbi)
+  })
+  it('successfully parses nounsAuctionHouseAbi', () => {
     Abi.parse(nounsAuctionHouseAbi)
+  })
+  it('successfully parses wagmiMintExampleAbi', () => {
     Abi.parse(wagmiMintExampleAbi)
-    Abi.parse(writingEditionsFactoryAbi)
+  })
+  it('successfully parses wethAbi', () => {
     Abi.parse(wethAbi)
+  })
+  it('successfully parses writingEditionsFactoryAbi', () => {
+    Abi.parse(writingEditionsFactoryAbi)
+  })
+  it('successfully parses customSolidityErrorsAbi', () => {
+    Abi.parse(customSolidityErrorsAbi)
   })
   it('throws error for invalid schema', async () => {
     await expect(
