@@ -2,70 +2,26 @@ import type {
   Abi,
   AbiFunction,
   AbiParameter,
-  AbiStateMutability,
-  Address,
-} from '../abi'
-import type { Narrow } from '../narrow'
-import type {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
+  AbiStateMutability,
+  Address,
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
-} from '../utils'
+  Narrow,
+} from '../index'
 
-/**
- * Check if {@link T} is `never`
- *
- * @param T - Type to check
- * @returns `true` if {@link T} is `never`, otherwise `false`
- *
- * @example
- * type Result = IsNever<'foo'>
- */
-export type IsNever<T> = [T] extends [never] ? true : false
+export type Contract<
+  TAbi extends Abi | readonly unknown[] = Abi | readonly unknown[],
+  TFunctionName extends string = string,
+> = { abi: TAbi; functionName: TFunctionName }
 
-/**
- * Check if {@link T} and {@link U} are equal
- *
- * @param T
- * @param U
- * @returns `true` if {@link T} and {@link U} are not equal, otherwise `false`
- *
- * @example
- * type Result = NotEqual<'foo', 'bar'>
- */
-export type NotEqual<T, U> = [T] extends [U] ? false : true
-
-/**
- * Boolean "or" operator
- *
- * @param T
- * @param U
- * @returns `true` if either {@link T} or {@link U} are `true`, otherwise `false`
- *
- * @example
- * type Result = Or<true, false>
- */
-export type Or<T, U> = T extends true ? true : U extends true ? true : false
-
-/**
- * Gets arguments of contract function
- *
- * @param TAbi - Contract {@link Abi}
- * @param TFunctionName - Name of contract function
- * @returns Inferred args of contract function
- *
- * @example
- * type Result = GetArgs<[…], 'tokenURI'>
- */
-type GetArgs<
-  TAbi extends Abi | readonly unknown[],
-  // It's important that we use `TFunction` to parse args so overloads still return the correct types
-  TAbiFunction extends AbiFunction & { type: 'function' },
-> = TAbiFunction['inputs'] extends infer TInputs extends readonly AbiParameter[]
-  ? // Check if valid ABI. If `TInputs` is `never` or `TAbi` does not have the same shape as `Abi`, then return optional `readonly unknown[]` args.
-    Or<IsNever<TInputs>, NotEqual<TAbi, Abi>> extends true
-    ? {
+type GetArgs<TAbiFunction extends AbiFunction & { type: 'function' }> =
+  TAbiFunction['inputs']['length'] extends 0
+    ? object
+    : readonly AbiParameter[] extends TAbiFunction['inputs']
+    ? // Not able to parse `inputs` from `AbiFunction`, return catch-all type
+      {
         /**
          * Arguments to pass contract method
          *
@@ -73,131 +29,83 @@ type GetArgs<
          */
         args?: readonly unknown[]
       }
-    : // If there are no inputs, do not include `args` in the return type.
-    TInputs['length'] extends 0
-    ? { args?: never }
-    : // Convert `TInputs` to primitive TypeScript types
-      {
+    : {
         /** Arguments to pass contract method */
-        args: AbiParametersToPrimitiveTypes<TInputs>
+        args: AbiParametersToPrimitiveTypes<TAbiFunction['inputs']>
       }
-  : never
 
-/**
- * Contract configuration object for inferring function name and arguments based on {@link TAbi}.
- */
-export type ContractConfig<
+export type Config<
   TAbi extends Abi | readonly unknown[] = Abi,
   TFunctionName extends string = string,
   TAbiFunction extends AbiFunction & { type: 'function' } = TAbi extends Abi
     ? ExtractAbiFunction<TAbi, TFunctionName>
-    : never,
+    : AbiFunction & { type: 'function' },
 > = {
+  /** Contract ABI */
+  abi: Narrow<TAbi> // infer `TAbi` type for inline usage
   /** Contract address */
   address: Address
-  /** Contract ABI */
-  abi: Narrow<TAbi>
   /** Function to invoke on the contract */
-  // If `TFunctionName` is `never`, then ABI was not parsable. Fall back to `string`.
-  functionName: IsNever<TFunctionName> extends true ? string : TFunctionName
-} & GetArgs<TAbi, TAbiFunction>
+  functionName: TFunctionName
+} & GetArgs<TAbiFunction>
 
-/**
- * Gets configuration type of contract function
- *
- * @param TContract - Contract config in `{ abi: Abi, functionName: string }` format
- * @param TAbiStateMutibility - State mutability of contract function
- * @returns Inferred configuration type of contract function
- *
- * @example
- * type Result = GetConfig<{ abi: […], functionName: 'tokenURI' }, 'view'>
- */
+// Allows us to infer `functionName` while also typing it to the full union of function names.
 export type GetConfig<
-  TContract = unknown,
-  TAbiStateMutibility extends AbiStateMutability = AbiStateMutability,
+  TContract extends Contract = Contract,
+  TAbiStateMutability extends AbiStateMutability = AbiStateMutability,
 > = TContract extends {
   abi: infer TAbi extends Abi
   functionName: infer TFunctionName extends string
 }
-  ? ContractConfig<
-      TAbi,
-      ExtractAbiFunctionNames<TAbi, TAbiStateMutibility>,
-      ExtractAbiFunction<TAbi, TFunctionName>
-    >
+  ? Abi extends TAbi
+    ? // Not able to parse `TAbi`, return catch-all type.
+      // Can happen when `abi` is declared as `Abi` directly (e.g. `const abi: Abi = […]`)
+      Config
+    : Config<
+        TAbi,
+        ExtractAbiFunctionNames<TAbi, TAbiStateMutability>,
+        ExtractAbiFunction<TAbi, TFunctionName>
+      >
   : TContract extends {
       abi: infer TAbi extends readonly unknown[]
       functionName: infer TFunctionName extends string
     }
-  ? ContractConfig<TAbi, TFunctionName>
-  : ContractConfig
+  ? Config<TAbi, TFunctionName>
+  : Config
 
-/**
- * Unwraps return type of contract function
- *
- * @param TAbi - Contract {@link Abi}
- * @param TFunctionName - Name of contract function
- * @returns Inferred return type of contract function
- *
- * @example
- * type Result = GetResult<[…], 'tokenURI'>
- */
-type GetResult<
-  TAbi extends Abi | readonly unknown[] = Abi,
-  TFunctionName extends string = string,
-  TAbiFunction extends AbiFunction & { type: 'function' } = TAbi extends Abi
-    ? ExtractAbiFunction<TAbi, TFunctionName>
-    : never,
+export type GetReturnType<
+  TContract extends Contract = Contract,
+  TAbiFunction extends AbiFunction & {
+    type: 'function'
+  } = TContract['abi'] extends Abi
+    ? ExtractAbiFunction<TContract['abi'], TContract['functionName']>
+    : AbiFunction & { type: 'function' },
+  TOutputsLength = TAbiFunction['outputs']['length'],
 > =
-  // Save `TOutputs` to local variable
-  TAbiFunction['outputs'] extends infer TOutputs extends readonly AbiParameter[]
-    ? // Check if valid ABI. If `TOutputs` is `never` or `TAbi` does not have the same shape as `Abi`, then return `unknown` as result.
-      Or<IsNever<TOutputs>, NotEqual<TAbi, Abi>> extends true
+  | (TOutputsLength extends 0
+      ? void
+      : TOutputsLength extends 1
+      ? AbiParameterToPrimitiveType<TAbiFunction['outputs'][0]>
+      : readonly AbiParameter[] extends TAbiFunction['outputs']
       ? unknown
-      : // Save `TLength` to local variable for comparisons
-      TOutputs['length'] extends infer TLength
-      ? TLength extends 0
-        ? void // If there are no outputs, return `void`
-        : TLength extends 1
-        ? AbiParameterToPrimitiveType<TOutputs[0]> // If there is one output, return the primitive type
-        : // If outputs are inferrable, must be a known type. Convert to TypeScript primitives.
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        TOutputs extends readonly [...infer _]
-        ? /**
-           * Return output as array assigned to an object with named keys
-           *
-           * | Outputs                                                               | Result                                                     |
-           * | --------------------------------------------------------------------- | ---------------------------------------------------------- |
-           * | `[{ name: 'foo', type: 'uint256' }, { name: 'bar', type: 'string' }]` | `readonly [bigint, string] & { foo: bigint; bar: string }` |
-           * | `[{ name: 'foo', type: 'uint256' }, { name: '', type: 'string' }]`    | `readonly [bigint, string] & { foo: bigint }`              |
-           */
-          {
-            [Output in TOutputs[number] as Output extends { name: string }
-              ? Output['name'] extends ''
-                ? never
-                : Output['name']
-              : never]: AbiParameterToPrimitiveType<Output>
-          } & AbiParametersToPrimitiveTypes<TOutputs>
-        : unknown
-      : never
-    : never
+      : AbiParametersToPrimitiveTypes<TAbiFunction['outputs']> &
+          _GetNamedOutputs<TAbiFunction>)
+  // Return `unknown` when not able to parse `TAbi`
+  // Can happen when `abi` is declared as `Abi` directly (e.g. `const abi: Abi = […]`)
+  | (Abi extends TContract['abi'] ? unknown : never)
 
-/**
- * Gets return type of contract function
- *
- * @param TContract - Contract config in `{ abi: Abi, functionName: string }` format
- * @returns Inferred return type of contract function
- *
- * @example
- * type Result = GetReturnType<{ abi: […], functionName: 'tokenURI' }>
- */
-export type GetReturnType<TContract = unknown> = TContract extends {
-  abi: infer TAbi extends Abi
-  functionName: infer TFunctionName extends string
+// ethers returns hybrid array-objects for named outputs.
+// This constructs the an object type from outputs if keys are named.
+type _GetNamedOutputs<
+  TAbiFunction extends AbiFunction & {
+    type: 'function'
+  },
+> = {
+  [Output in TAbiFunction['outputs'][number] as Output extends {
+    name: infer Name extends string
+  }
+    ? Name extends ''
+      ? never
+      : Name
+    : never]: AbiParameterToPrimitiveType<Output>
 }
-  ? GetResult<TAbi, TFunctionName, ExtractAbiFunction<TAbi, TFunctionName>>
-  : TContract extends {
-      abi: infer TAbi extends readonly unknown[]
-      functionName: infer TFunctionName extends string
-    }
-  ? GetResult<TAbi, TFunctionName>
-  : GetResult

@@ -5,6 +5,7 @@ import {
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
 } from '../../test'
+import type { Abi } from '../abi'
 import type { ResolvedConfig } from '../config'
 import { watchContractEvent } from './watchContractEvent'
 
@@ -81,6 +82,55 @@ test('watchContractEvent', () => {
         eventName: 'Foo',
         listener(name) {
           assertType<unknown>(name)
+        },
+      })
+    })
+
+    test('declared as Abi type', () => {
+      const abi: Abi = [
+        {
+          name: 'Foo',
+          type: 'event',
+          inputs: [
+            {
+              indexed: true,
+              name: 'name',
+              type: 'address',
+            },
+          ],
+          anonymous: false,
+        },
+      ]
+      watchContractEvent({
+        address,
+        abi,
+        eventName: 'Foo',
+        listener(name) {
+          assertType<unknown>(name)
+        },
+      })
+    })
+
+    test('defined inline', () => {
+      watchContractEvent({
+        address,
+        abi: [
+          {
+            name: 'Foo',
+            type: 'event',
+            inputs: [
+              {
+                indexed: true,
+                name: 'name',
+                type: 'address',
+              },
+            ],
+            anonymous: false,
+          },
+        ],
+        eventName: 'Foo',
+        listener(name) {
+          assertType<ResolvedConfig['AddressType']>(name)
         },
       })
     })

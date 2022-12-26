@@ -143,6 +143,7 @@ export type AbiParameterToPrimitiveType<
       : never
     : unknown
 
+// TODO: Speed up by returning immediately as soon as named parameter is found.
 type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
   TAbiParameters extends readonly [
     infer Head extends AbiParameter,

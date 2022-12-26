@@ -1,5 +1,5 @@
 import type { Abi } from '../abi'
-import type { ContractConfig, GetConfig, GetReturnType } from './types'
+import type { Config, Contract, GetConfig, GetReturnType } from './types'
 
 // Avoid TS depth-limit error in case of large array literal
 type MAXIMUM_DEPTH = 20
@@ -8,16 +8,19 @@ type MAXIMUM_DEPTH = 20
  * ContractsConfig reducer recursively unwraps function arguments to infer/enforce type param
  */
 type ContractsConfig<
-  TContracts extends unknown[],
+  TContracts extends Contract[],
   Result extends any[] = [],
   Depth extends ReadonlyArray<number> = [],
 > = Depth['length'] extends MAXIMUM_DEPTH
   ? GetConfig[]
   : TContracts extends []
   ? []
-  : TContracts extends [infer Head]
+  : TContracts extends [infer Head extends Contract]
   ? [...Result, GetConfig<Head, 'pure' | 'view'>]
-  : TContracts extends [infer Head, ...infer Tail]
+  : TContracts extends [
+      infer Head extends Contract,
+      ...infer Tail extends Contract[],
+    ]
   ? ContractsConfig<
       [...Tail],
       [...Result, GetConfig<Head, 'pure' | 'view'>],
@@ -27,28 +30,30 @@ type ContractsConfig<
   ? TContracts
   : // If `TContracts` is *some* array but we couldn't assign `unknown[]` to it, then it must hold some known/homogenous type!
   // use this to infer the param types in the case of Array.map() argument
-  TContracts extends ContractConfig<infer TAbi, infer TFunctionName>[]
-  ? ContractConfig<TAbi, TFunctionName>[]
+  TContracts extends Config<infer TAbi, infer TFunctionName>[]
+  ? Config<TAbi, TFunctionName>[]
   : GetConfig[]
 
 /**
  * ContractsResult reducer recursively maps type param to results
  */
 type ContractsResult<
-  TContracts extends unknown[],
+  TContracts extends Contract[],
   Result extends any[] = [],
   Depth extends ReadonlyArray<number> = [],
 > = Depth['length'] extends MAXIMUM_DEPTH
   ? GetReturnType[]
   : TContracts extends []
   ? []
-  : TContracts extends [infer Head]
+  : TContracts extends [infer Head extends Contract]
   ? [...Result, GetReturnType<Head>]
-  : TContracts extends [infer Head, ...infer Tail]
+  : TContracts extends [
+      infer Head extends Contract,
+      ...infer Tail extends Contract[],
+    ]
   ? ContractsResult<[...Tail], [...Result, GetReturnType<Head>], [...Depth, 1]>
-  : TContracts extends ContractConfig<infer TAbi, infer TFunctionName>[]
-  ? // Dynamic-size (homogenous) UseQueryOptions array: map directly to array of results
-    GetReturnType<{ abi: TAbi; functionName: TFunctionName }>[]
+  : TContracts extends Config<infer TAbi, infer TFunctionName>[]
+  ? GetReturnType<{ abi: TAbi; functionName: TFunctionName }>[]
   : GetReturnType[]
 
 export declare function readContracts<

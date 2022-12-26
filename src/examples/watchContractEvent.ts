@@ -1,46 +1,61 @@
-import type { Abi, AbiEvent, Address } from '../abi'
+import type { Abi, AbiEvent, AbiParameter, Address } from '../abi'
 import type { Narrow } from '../narrow'
 import type {
   AbiParametersToPrimitiveTypes,
   ExtractAbiEvent,
   ExtractAbiEventNames,
 } from '../utils'
-import type { IsNever, NotEqual, Or } from './types'
 
-type GetEventConfig<TContract> = TContract extends {
+export declare function watchContractEvent<
+  TAbi extends Abi | readonly unknown[],
+  TEventName extends string,
+>(_config: GetConfig<{ abi: TAbi; eventName: TEventName }>): void
+
+type GetConfig<TContract extends Contract = Contract> = TContract extends {
   abi: infer TAbi extends Abi
   eventName: infer TEventName extends string
 }
-  ? WatchContractEventConfig<
-      TAbi,
-      ExtractAbiEventNames<TAbi>,
-      ExtractAbiEvent<TAbi, TEventName>
-    >
+  ? Abi extends TAbi
+    ? Config
+    : Config<
+        TAbi,
+        ExtractAbiEventNames<TAbi>,
+        ExtractAbiEvent<TAbi, TEventName>
+      >
   : TContract extends {
       abi: infer TAbi extends readonly unknown[]
       eventName: infer TEventName extends string
     }
-  ? WatchContractEventConfig<TAbi, TEventName>
-  : WatchContractEventConfig
+  ? Config<TAbi, TEventName>
+  : Config
 
-type WatchContractEventConfig<
+type Contract<
+  TAbi extends Abi | readonly unknown[] = Abi | readonly unknown[],
+  TEventName extends string = string,
+> = { abi: TAbi; eventName: TEventName }
+
+type Config<
   TAbi = unknown,
   TEventName extends string = string,
   TAbiEvent extends AbiEvent = TAbi extends Abi
     ? ExtractAbiEvent<TAbi, TEventName>
     : never,
 > = {
-  /** Contract address */
-  address: Address
   /** Contract ABI */
   abi: Narrow<TAbi>
+  /** Contract address */
+  address: Address
   /** Event to listen for */
-  eventName: IsNever<TEventName> extends true ? string : TEventName
-} & (AbiParametersToPrimitiveTypes<
+  eventName: TEventName
+} & GetListener<TAbiEvent>
+
+type GetListener<TAbiEvent extends AbiEvent> = AbiParametersToPrimitiveTypes<
   TAbiEvent['inputs']
 > extends infer TArgs extends readonly unknown[]
-  ? // If `TArgs` is never or `TAbi` does not have the same shape as `Abi`, we were not able to infer args.
-    Or<IsNever<TArgs>, NotEqual<TAbi, Abi>> extends true
+  ? Or<
+      Equal<readonly AbiParameter[], TAbiEvent['inputs']>,
+      IsNever<TArgs>
+    > extends true
     ? {
         /**
          * Callback when event is emitted
@@ -49,16 +64,12 @@ type WatchContractEventConfig<
          */
         listener: (...args: unknown[]) => void
       }
-    : // We are able to infer args, spread the types.
-      {
+    : {
         /** Callback when event is emitted */
         listener: (...args: TArgs) => void
       }
-  : never)
+  : never
 
-export function watchContractEvent<
-  TAbi extends Abi | readonly unknown[],
-  TEventName extends string,
->(_config: GetEventConfig<{ abi: TAbi; eventName: TEventName }>) {
-  return
-}
+type Equal<T, U> = [T] extends [U] ? true : false
+type IsNever<T> = [T] extends [never] ? true : false
+type Or<T, U> = T extends true ? true : U extends true ? true : false

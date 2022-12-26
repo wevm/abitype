@@ -3,9 +3,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "eslint.options": {
-    "extensions": [".js", ".json", ".md", ".ts"]
-  },
-  "eslint.validate": ["javascript", "json", "markdown", "typescript"],
-  "eslint.packageManager": "pnpm"
+  "eslint.packageManager": "pnpm",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }
