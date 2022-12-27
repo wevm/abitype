@@ -64,7 +64,7 @@ export type GetArgs<
       args?: readonly unknown[]
     }
   : TArgs extends readonly []
-  ? object
+  ? { args?: never }
   : {
       /** Arguments to pass contract method */ args: TArgs
     }
@@ -87,20 +87,13 @@ export type GetReturnType<
   ? void
   : TArgs extends readonly [infer Arg]
   ? Arg
-  : TArgs & _GetNamedOutputs<TAbiFunction>
-
-// ethers returns hybrid array-objects for named outputs.
-// This constructs the an object type from outputs if keys are named.
-type _GetNamedOutputs<
-  TAbiFunction extends AbiFunction & {
-    type: 'function'
-  },
-> = {
-  [Output in TAbiFunction['outputs'][number] as Output extends {
-    name: infer Name extends string
-  }
-    ? Name extends ''
-      ? never
-      : Name
-    : never]: AbiParameterToPrimitiveType<Output>
-}
+  : TArgs & {
+      // Construct ethers hybrid array-objects for named outputs.
+      [Output in TAbiFunction['outputs'][number] as Output extends {
+        name: infer Name extends string
+      }
+        ? Name extends ''
+          ? never
+          : Name
+        : never]: AbiParameterToPrimitiveType<Output>
+    }
