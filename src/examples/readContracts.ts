@@ -41,7 +41,7 @@ type ContractsConfig<
   ? TContracts
   : // If `TContracts` is *some* array but we couldn't assign `unknown[]` to it, then it must hold some known/homogenous type!
   // use this to infer the param types in the case of Array.map() argument
-  TContracts extends Contract<infer TAbi, infer TFunctionName>[]
+  TContracts extends GetConfig<infer TAbi, infer TFunctionName>[]
   ? GetConfig<TAbi, TFunctionName>[]
   : GetConfig[]
 
@@ -67,6 +67,6 @@ type ContractsResult<
       [...Result, GetReturnType<Head['abi'], Head['functionName']>],
       [...Depth, 1]
     >
-  : TContracts extends Contract<infer TAbi, infer TFunctionName>[]
+  : TContracts extends GetConfig<infer TAbi, infer TFunctionName>[]
   ? GetReturnType<TAbi, TFunctionName>[]
   : GetReturnType[]

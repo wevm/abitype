@@ -167,10 +167,31 @@ test('readContracts', () => {
       })
       type Result = typeof result
       //   ^?
-      type Expected = Result extends [string, `0x${string}`, unknown]
+      type Expected = Result extends [string, `0x${string}`, bigint]
         ? true
         : false
       assertType<Expected>(true)
+    })
+
+    test('without const assertion', () => {
+      const contracts = [
+        {
+          address,
+          abi: wagmiMintExampleAbi,
+          functionName: 'tokenURI',
+          args: [1n],
+        },
+        {
+          address,
+          abi: wagmiMintExampleAbi,
+          functionName: 'balanceOf',
+          args: ['0x…'],
+        },
+      ]
+      const result = readContracts({
+        contracts,
+      })
+      assertType<unknown[]>(result)
     })
   })
 })
