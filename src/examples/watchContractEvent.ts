@@ -1,4 +1,4 @@
-import type { Abi, AbiEvent, AbiParameter, Address } from '../abi'
+import type { Abi, AbiEvent, Address } from '../abi'
 import type { Narrow } from '../narrow'
 import type {
   AbiParametersToPrimitiveTypes,
@@ -9,67 +9,53 @@ import type {
 export declare function watchContractEvent<
   TAbi extends Abi | readonly unknown[],
   TEventName extends string,
->(_config: GetConfig<{ abi: TAbi; eventName: TEventName }>): void
+>(config: GetConfig<TAbi, TEventName>): void
 
-type GetConfig<TContract extends Contract = Contract> = TContract extends {
-  abi: infer TAbi extends Abi
-  eventName: infer TEventName extends string
-}
-  ? Abi extends TAbi
-    ? Config
-    : Config<
-        TAbi,
-        ExtractAbiEventNames<TAbi>,
-        ExtractAbiEvent<TAbi, TEventName>
-      >
-  : TContract extends {
-      abi: infer TAbi extends readonly unknown[]
-      eventName: infer TEventName extends string
-    }
-  ? Config<TAbi, TEventName>
-  : Config
-
-type Contract<
-  TAbi extends Abi | readonly unknown[] = Abi | readonly unknown[],
+type GetConfig<
+  TAbi extends Abi | readonly unknown[] = Abi,
   TEventName extends string = string,
-> = { abi: TAbi; eventName: TEventName }
-
-type Config<
-  TAbi = unknown,
-  TEventName extends string = string,
-  TAbiEvent extends AbiEvent = TAbi extends Abi
-    ? ExtractAbiEvent<TAbi, TEventName>
-    : never,
 > = {
   /** Contract ABI */
-  abi: Narrow<TAbi>
+  abi: Narrow<TAbi> // infer `TAbi` type for inline usage
   /** Contract address */
   address: Address
-  /** Event to listen for */
-  eventName: TEventName
-} & GetListener<TAbiEvent>
+  /** Function to invoke on the contract */
+  eventName: GetEventName<TAbi, TEventName>
+} & GetListener<TAbi, TEventName>
 
-type GetListener<TAbiEvent extends AbiEvent> = AbiParametersToPrimitiveTypes<
-  TAbiEvent['inputs']
-> extends infer TArgs extends readonly unknown[]
-  ? Or<
-      Equal<readonly AbiParameter[], TAbiEvent['inputs']>,
-      IsNever<TArgs>
-    > extends true
-    ? {
-        /**
-         * Callback when event is emitted
-         *
-         * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for type inference.
-         */
-        listener: (...args: unknown[]) => void
-      }
-    : {
-        /** Callback when event is emitted */
-        listener: (...args: TArgs) => void
-      }
-  : never
+type GetEventName<
+  TAbi extends Abi | readonly unknown[] = Abi,
+  TEventName extends string = string,
+> = TAbi extends Abi
+  ? ExtractAbiEventNames<TAbi> extends infer AbiEventNames
+    ?
+        | AbiEventNames
+        | (TEventName extends AbiEventNames ? TEventName : never)
+        | (Abi extends TAbi ? string : never)
+    : never
+  : TEventName
 
-type Equal<T, U> = [T] extends [U] ? true : false
-type IsNever<T> = [T] extends [never] ? true : false
-type Or<T, U> = T extends true ? true : U extends true ? true : false
+type GetListener<
+  TAbi extends Abi | readonly unknown[],
+  TEventName extends string,
+  TAbiEvent extends AbiEvent = TAbi extends Abi
+    ? ExtractAbiEvent<TAbi, TEventName>
+    : AbiEvent,
+  TArgs = AbiParametersToPrimitiveTypes<TAbiEvent['inputs']>,
+  FailedToParseArgs =
+    | ([TArgs] extends [never] ? true : false)
+    | (readonly unknown[] extends TArgs ? true : false),
+> = true extends FailedToParseArgs
+  ? {
+      /**
+       * Callback when event is emitted
+       *
+       * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for type inference.
+       */
+      listener: (...args: unknown[]) => void
+    }
+  : {
+      /** Callback when event is emitted */ listener: (
+        ...args: TArgs extends readonly unknown[] ? TArgs : unknown[]
+      ) => void
+    }

@@ -5,8 +5,5 @@ export declare function writeContract<
   TAbi extends Abi | readonly unknown[],
   TFunctionName extends string,
 >(
-  config: GetConfig<
-    { abi: TAbi; functionName: TFunctionName },
-    'nonpayable' | 'payable'
-  >,
-): GetReturnType<{ abi: TAbi; functionName: TFunctionName }>
+  config: GetConfig<TAbi, TFunctionName, 'nonpayable' | 'payable'>,
+): GetReturnType<TAbi, TFunctionName>
