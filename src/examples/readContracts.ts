@@ -5,9 +5,14 @@ export declare function readContracts<
   TAbi extends Abi | readonly unknown[],
   TFunctionName extends string,
   TContracts extends { abi: TAbi; functionName: TFunctionName }[],
->(config: {
+>(config: ReadContractsConfig<TContracts>): ContractsResult<TContracts>
+
+export type ReadContractsConfig<TContracts extends Contract[]> = {
   contracts: readonly [...ContractsConfig<TContracts>]
-}): ContractsResult<TContracts>
+}
+
+export type ReadContractsResult<TContracts extends Contract[]> =
+  ContractsResult<TContracts>
 
 // Avoid TS depth-limit error in case of large array literal
 type MAXIMUM_DEPTH = 20

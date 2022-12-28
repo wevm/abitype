@@ -2,11 +2,6 @@ import type { wagmiMintExampleAbi } from '../../test'
 import type { Abi } from '../abi'
 import type { GetConfig, GetReturnType } from './types'
 
-export type ReadContractConfig<
-  TAbi extends Abi | readonly unknown[],
-  TFunctionName extends string,
-> = GetConfig<TAbi, TFunctionName, 'pure' | 'view'>
-
 export declare function readContract<
   TAbi extends Abi | readonly unknown[],
   TFunctionName extends string,
@@ -20,3 +15,8 @@ export declare function readWagmiMintExample<
 >(
   config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>,
 ): GetReturnType<TAbi, TFunctionName>
+
+export type ReadContractConfig<
+  TAbi extends Abi | readonly unknown[],
+  TFunctionName extends string,
+> = GetConfig<TAbi, TFunctionName, 'pure' | 'view'>

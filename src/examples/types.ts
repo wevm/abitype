@@ -10,6 +10,11 @@ import type {
   Narrow,
 } from '../index'
 
+export type InferOptional<TType, TKeys extends keyof TType> = Partial<
+  Pick<TType, TKeys>
+> &
+  Omit<TType, TKeys>
+
 export type Contract<
   TAbi extends Abi | readonly unknown[] = Abi | readonly unknown[],
   TFunctionName extends string = string,
@@ -97,3 +102,13 @@ export type GetReturnType<
           : Name
         : never]: AbiParameterToPrimitiveType<Output>
     }
+
+export type DeepPartial<
+  T,
+  MaxDepth extends number,
+  Depth extends ReadonlyArray<number> = [],
+> = Depth['length'] extends MaxDepth
+  ? T
+  : T extends object
+  ? { [P in keyof T]?: DeepPartial<T[P], MaxDepth, [...Depth, 1]> }
+  : T
