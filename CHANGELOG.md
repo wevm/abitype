@@ -1,5 +1,11 @@
 # abitype
 
+## 0.3.0
+
+### Minor Changes
+
+- [#71](https://github.com/wagmi-dev/abitype/pull/71) [`a3880d9`](https://github.com/wagmi-dev/abitype/commit/a3880d9497a4ad6124f4776a7f0a5d1200b93008) Thanks [@tmm](https://github.com/tmm)! - Bumped minimum TypeScript version to 4.9.4.
+
 ## 0.2.5
 
 ### Patch Changes
