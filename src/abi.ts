@@ -46,7 +46,7 @@ export type SolidityFixedArraySizeLookup = {
 
 /**
  * Recursively build arrays up to maximum depth
- * or use a more broad type when maximum depth is switch "off"
+ * or use a more broad type when maximum depth is switched "off"
  */
 type _BuildArrayTypes<
   T extends string,

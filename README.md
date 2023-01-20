@@ -13,7 +13,7 @@ const erc721Abi = [...] as const
 type Result = ExtractAbiFunctions<typeof erc721Abi, 'payable'>
 ```
 
-Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions, variables, or your own types ([see examples](/src/examples/)). No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
+Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions, variables, or your own types ([examples](/src/examples/)). No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
 
 ## Installation
 
@@ -394,10 +394,10 @@ Then, import and use schemas:
 ```ts
 import { Abi } from 'abitype/zod'
 
-const abi = await fetch(
+const result = await fetch(
   'https://api.etherscan.io/api?module=contract&action=getabi&address=0x…',
 )
-const parsedAbi = Abi.parse(abi)
+const abi = Abi.parse(result)
 ```
 
 ## Support
