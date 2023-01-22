@@ -406,7 +406,7 @@ const abi = Abi.parse(result)
 If you find ABIType useful, please consider supporting development. Thank you 🙏
 
 - [GitHub Sponsors](https://github.com/sponsors/wagmi-dev?metadata_campaign=gh_readme_support)
-- [Gitcoin Grant](https://gitcoin.co/grants/4493/wagmi-react-hooks-library-for-ethereum)
+- [Gitcoin Grant](https://wagmi.sh/gitcoin)
 - [wagmi-dev.eth](https://etherscan.io/enslookup-search?search=wagmi-dev.eth)
 
 ## Contributing
