@@ -368,7 +368,7 @@ ABIType tries to strike a balance between type exhaustiveness and speed with sen
 | `IntType`             | `any`             | `number`            | TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48`.                               |
 | `StrictAbiType`       | `boolean`         | `false`             | When set, validates `AbiParameter`'s `type` against `AbiType`.                                           |
 
-Configuration options are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). Just extend the `Config` interface either directly in your code or in a `d.ts` file (e.g. `abi.d.ts`):
+Configuration options are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). Just install `abitype` (make sure versions match) and extend the `Config` interface either directly in your code or in a `d.ts` file (e.g. `abi.d.ts`):
 
 ```ts
 declare module 'abitype' {
