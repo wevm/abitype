@@ -227,7 +227,7 @@ test('HandleArguments', () => {
     assertType<HandleArguments<ExtractArgs<FuncTypeTuple>, 'function'>>([
       {
         type: 'tuple',
-        name: 'person', // FIX THIS
+        name: 'person',
         components: [
           {
             name: 'name',
@@ -246,7 +246,7 @@ test('HandleArguments', () => {
     assertType<HandleArguments<ExtractArgs<FuncTypeTupleArray>, 'function'>>([
       {
         type: 'tuple[]',
-        name: 'person', // FIX THIS
+        name: 'person',
         components: [
           {
             name: 'name',
@@ -266,7 +266,7 @@ test('HandleArguments', () => {
       { name: 'id', type: 'uint256', internalType: 'uint256', indexed: true },
       {
         type: 'tuple',
-        name: 'person', // TO BE FIXED
+        name: 'person',
         components: [
           { name: 'name', type: 'string' },
           { name: 'age', type: 'uint16' },
@@ -305,11 +305,9 @@ test('HandleReturnArguments', () => {
 test('ParseComponents', () => {
   test('Nested Tuples', () => {
     assertType<
-      //       ^?
-
       ParseComponents<
         [
-          'tuple(tuple(address baby, tuple(tuple(uint tokenId))), address cucked)[] person',
+          'tuple(tuple(address baby, tuple(tuple(uint tokenId))), address from)[] person',
         ]
       >
     >([
@@ -318,7 +316,7 @@ test('ParseComponents', () => {
         type: 'tuple[]',
         components: [
           {
-            name: 'cucked',
+            name: 'from',
             type: 'address',
           },
           {

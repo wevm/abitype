@@ -214,11 +214,11 @@ export type HandleReturnArguments<T extends unknown[]> = T extends [
     : [...ParseFunctionReturn<[THead]>, ...HandleReturnArguments<Rest>]
   : []
 
-export type ParseHAbiFunctions<T extends readonly unknown[]> = T extends [never]
+export type ParseHAbiFunctions<T extends HAbi> = T extends [never]
   ? never
   : T extends ''
   ? T
-  : T extends readonly [infer Head, ...infer Rest]
+  : T extends readonly [infer Head, ...infer Rest extends HAbi]
   ? Head extends `function${infer Tail}`
     ? [
         {
@@ -237,11 +237,11 @@ export type ParseHAbiFunctions<T extends readonly unknown[]> = T extends [never]
     : ParseHAbiFunctions<Rest>
   : []
 
-export type ParseHAbiEvents<T extends readonly unknown[]> = T extends [never]
+export type ParseHAbiEvents<T extends HAbi> = T extends [never]
   ? never
   : T extends ['']
   ? T
-  : T extends readonly [infer Head, ...infer Rest]
+  : T extends readonly [infer Head, ...infer Rest extends HAbi]
   ? Head extends `event${infer Tail}`
     ? [
         {
@@ -250,18 +250,18 @@ export type ParseHAbiEvents<T extends readonly unknown[]> = T extends [never]
           readonly anonymous: false
           readonly inputs: readonly [
             ...HandleArguments<ExtractArgs<Head>, 'event'>,
-          ] //ParseEventArgs<ExtractArgs<Head>>;
+          ]
         },
         ...ParseHAbiEvents<Rest>,
       ]
     : ParseHAbiEvents<Rest>
   : []
 
-export type ParseHAbiErrors<T extends readonly unknown[]> = T extends [never]
+export type ParseHAbiErrors<T extends HAbi> = T extends [never]
   ? never
   : T extends ['']
   ? T
-  : T extends readonly [infer Head, ...infer Rest]
+  : T extends readonly [infer Head, ...infer Rest extends HAbi]
   ? Head extends `error${infer Tail}`
     ? [
         {
@@ -274,10 +274,10 @@ export type ParseHAbiErrors<T extends readonly unknown[]> = T extends [never]
     : ParseHAbiErrors<Rest>
   : []
 
-export type ParseHumanAbi<HAbi extends readonly unknown[]> = [
-  ...ParseHAbiErrors<HAbi>,
-  ...ParseHAbiEvents<HAbi>,
-  ...ParseHAbiFunctions<HAbi>,
+export type ParseHumanAbi<HumanAbi extends HAbi> = [
+  ...ParseHAbiErrors<HumanAbi>,
+  ...ParseHAbiEvents<HumanAbi>,
+  ...ParseHAbiFunctions<HumanAbi>,
 ]
 
 export type HAbi = readonly (
