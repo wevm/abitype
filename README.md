@@ -401,6 +401,43 @@ const result = await fetch(
 const abi = Abi.parse(result)
 ```
 
+## Human Readable Abi
+
+ABIType now also can parse human readable ABI introduced by [ethers](https://docs.ethers.org/v5/api/utils/abi/formats/#abi-formats--human-readable-abi).
+
+To get the type inference you will need to declare as const like before.
+
+```ts
+import type { isAbi, ExtractAbiFunction } from 'abitype'
+import type { ParseHumanAbi, isHAbi } from 'abitype/human-abi'
+
+const humanReadableAbi = [
+  'constructor(string symbol, string name)',
+  'function transferFrom(address from, address to, uint value)',
+  'function balanceOf(address owner) view returns (uint balance)',
+  'event Transfer(address indexed from, address indexed to, address value)',
+  'error InsufficientBalance(account owner, uint balance)',
+  'function addPerson(tuple(string name, uint16 age) person)',
+  'function addPeople(tuple(string name, uint16 age)[] person)',
+  'function getPerson(uint id) view returns (tuple(string name, uint16 age))',
+  'event PersonAdded(uint indexed id, tuple(string name, uint16 age) person)',
+] as const
+
+type isHumanReadableAbi = isHAbi<typeof humanReadableAbi>
+//        ^? true
+
+type ParsedAbi = ParseHumanAbi<typeof humanReadableAbi>
+type Abi = isAbi<ParsedAbi>
+//    ^? true
+
+// Now we can use all the type helpers that abitype already provides.
+
+type BalanceOfFunction = ExtractAbiFunction<ParsedAbi, 'balanceOf'>
+//                                                        ^ typescript will now autocomplete this for you
+```
+
+With this you can also
+
 ## Support
 
 If you find ABIType useful, please consider supporting development. Thank you 🙏
