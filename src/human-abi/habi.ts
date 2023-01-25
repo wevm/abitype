@@ -16,7 +16,7 @@ export type ExtractType<T> = T extends `${infer TType}${WS}${string}`
   : never
 
 export type ExtractNames<T extends string> =
-  T extends `${WS}${infer TName}(${string})${string}` ? TName : never
+  T extends `${AbiTypes}${WS}${infer TName}(${string})${string}` ? TName : never
 
 export type ExtractMutability<T extends string> =
   T extends `${AbiTypes}${WS}${string}(${string})${WS}${infer P}${WS}${string}`
@@ -44,6 +44,8 @@ export type ExtractTupleName<T extends string> = T extends `${string})${
   | WS
   | `[${string}]${WS}`}${infer Name})`
   ? Name
+  : T extends `tuple(${string})${WS | `[${string}]${WS}`}${infer TName}`
+  ? TName
   : ''
 
 export type ExtractTupleType<T extends string> =
@@ -220,7 +222,7 @@ export type ParseHAbiFunctions<T extends readonly unknown[]> = T extends [never]
   ? Head extends `function${infer Tail}`
     ? [
         {
-          readonly name: ExtractNames<Tail>
+          readonly name: ExtractNames<`function${Tail}`>
           readonly type: ExtractType<Head>
           readonly stateMutability: ExtractMutability<Head>
           readonly inputs: readonly [
@@ -243,7 +245,7 @@ export type ParseHAbiEvents<T extends readonly unknown[]> = T extends [never]
   ? Head extends `event${infer Tail}`
     ? [
         {
-          readonly name: ExtractNames<Tail>
+          readonly name: ExtractNames<`event${Tail}`>
           readonly type: ExtractType<Head>
           readonly anonymous: false
           readonly inputs: readonly [
@@ -263,7 +265,7 @@ export type ParseHAbiErrors<T extends readonly unknown[]> = T extends [never]
   ? Head extends `error${infer Tail}`
     ? [
         {
-          readonly name: ExtractNames<Tail>
+          readonly name: ExtractNames<`error${Tail}`>
           readonly type: ExtractType<Head>
           readonly inputs: readonly [...ParseFunctionArgs<ExtractArgs<Head>>]
         },
