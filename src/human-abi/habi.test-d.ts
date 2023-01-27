@@ -6,6 +6,7 @@ import type {
   ExtractNames,
   ExtractReturn,
   ExtractTArgs,
+  ExtractTupleInternalType,
   ExtractTupleName,
   ExtractTupleType,
   ExtractType,
@@ -20,6 +21,7 @@ import type {
   ParseHAbiEvents,
   ParseHAbiFunctions,
   ParseHumanAbi,
+  isIndexed,
 } from './habi'
 
 const testAbi = [
@@ -108,6 +110,10 @@ test('ExtractArgs', () => {
     ])
   })
 
+  test('Event Indexed Tuple', () => {
+    assertType<isIndexed<'tuple(string name, uint16 age) indexed person'>>(true)
+  })
+
   test('Function Tuple Array', () => {
     assertType<ExtractArgs<FuncTypeTupleArray>>([
       'tuple(string name, uint16 age)[] person',
@@ -138,6 +144,12 @@ test('ExtractType', () => {
 
   test('Function', () => {
     assertType<ExtractType<ErrorType>>('error')
+  })
+
+  test('Internal Type', () => {
+    assertType<
+      ExtractTupleInternalType<'tuple(string name, uint16 age) person'>
+    >('Struct person')
   })
 })
 
@@ -230,14 +242,17 @@ test('HandleArguments', () => {
       {
         type: 'tuple',
         name: 'person',
+        internalType: 'Struct person',
         components: [
           {
             name: 'name',
             type: 'string',
+            internalType: 'string',
           },
           {
             name: 'age',
             type: 'uint16',
+            internalType: 'uint16',
           },
         ],
       },
@@ -249,14 +264,17 @@ test('HandleArguments', () => {
       {
         type: 'tuple[]',
         name: 'person',
+        internalType: 'Struct[] person',
         components: [
           {
             name: 'name',
             type: 'string',
+            internalType: 'string',
           },
           {
             name: 'age',
             type: 'uint16',
+            internalType: 'uint16',
           },
         ],
       },
@@ -269,9 +287,11 @@ test('HandleArguments', () => {
       {
         type: 'tuple',
         name: 'person',
+        indexed: false,
+        internalType: 'Struct person',
         components: [
-          { name: 'name', type: 'string' },
-          { name: 'age', type: 'uint16' },
+          { name: 'name', type: 'string', internalType: 'string' },
+          { name: 'age', type: 'uint16', internalType: 'uint16' },
         ],
       },
     ])
@@ -294,16 +314,16 @@ test('HandleReturnArguments', () => {
       {
         name: 'person',
         type: 'tuple',
+        internalType: 'Struct person',
         components: [
-          { name: 'name', type: 'string' },
-          { name: 'age', type: 'uint16' },
+          { name: 'name', type: 'string', internalType: 'string' },
+          { name: 'age', type: 'uint16', internalType: 'uint16' },
         ],
       },
     ])
   })
 })
 
-// Inference break here on nested named and array tuple.
 test('ParseComponents', () => {
   test('Nested Tuples', () => {
     assertType<
@@ -316,21 +336,25 @@ test('ParseComponents', () => {
       {
         name: 'person',
         type: 'tuple',
+        internalType: 'Struct person',
         components: [
-          { name: 'owner', type: 'address' },
-          { name: 'tokenId', type: 'uint256' },
+          { name: 'owner', type: 'address', internalType: 'address' },
+          { name: 'tokenId', type: 'uint256', internalType: 'uint256' },
           {
             name: 'dog',
             type: 'tuple[]',
+            internalType: 'Struct[] dog',
             components: [
-              { name: 'loading', type: 'bool' },
+              { name: 'loading', type: 'bool', internalType: 'bool' },
               {
                 name: 'cats',
                 type: 'tuple',
+                internalType: 'Struct cats',
                 components: [
                   {
                     name: 'names',
                     type: 'string[][]',
+                    internalType: 'string[][]',
                   },
                 ],
               },
@@ -352,46 +376,57 @@ test('ParseComponents', () => {
       {
         name: 'person',
         type: 'tuple',
+        internalType: 'Struct person',
         components: [
           {
             name: 'person',
             type: 'tuple[]',
+            internalType: 'Struct[] person',
             components: [
               {
                 name: 'person',
                 type: 'tuple',
+                internalType: 'Struct person',
                 components: [
                   {
                     name: 'person',
                     type: 'tuple',
+                    internalType: 'Struct person',
                     components: [
                       {
                         name: 'person',
                         type: 'tuple[3]',
+                        internalType: 'Struct[3] person',
                         components: [
                           {
                             name: 'person',
                             type: 'tuple',
+                            internalType: 'Struct person',
                             components: [
                               {
                                 name: 'person',
                                 type: 'tuple',
+                                internalType: 'Struct person',
                                 components: [
                                   {
                                     name: 'person',
                                     type: 'tuple',
+                                    internalType: 'Struct person',
                                     components: [
                                       {
                                         name: 'person',
                                         type: 'tuple[24]',
+                                        internalType: 'Struct[24] person',
                                         components: [
                                           {
                                             name: 'person',
                                             type: 'tuple',
+                                            internalType: 'Struct person',
                                             components: [
                                               {
                                                 name: 'tokenId',
                                                 type: 'uint256',
+                                                internalType: 'uint256',
                                               },
                                             ],
                                           },
@@ -496,9 +531,11 @@ test('ParseHAbiEvents', () => {
         {
           name: 'person',
           type: 'tuple',
+          internalType: 'Struct person',
+          indexed: false,
           components: [
-            { name: 'name', type: 'string' },
-            { name: 'age', type: 'uint16' },
+            { name: 'name', type: 'string', internalType: 'string' },
+            { name: 'age', type: 'uint16', internalType: 'uint16' },
           ],
         },
       ],
@@ -523,9 +560,10 @@ test('ParseHAbiFunctions', () => {
         {
           name: 'person',
           type: 'tuple',
+          internalType: 'Struct person',
           components: [
-            { name: 'name', type: 'string' },
-            { name: 'age', type: 'uint16' },
+            { name: 'name', type: 'string', internalType: 'string' },
+            { name: 'age', type: 'uint16', internalType: 'uint16' },
           ],
         },
       ],
@@ -539,9 +577,10 @@ test('ParseHAbiFunctions', () => {
         {
           name: 'person',
           type: 'tuple[]',
+          internalType: 'Struct[] person',
           components: [
-            { name: 'name', type: 'string' },
-            { name: 'age', type: 'uint16' },
+            { name: 'name', type: 'string', internalType: 'string' },
+            { name: 'age', type: 'uint16', internalType: 'uint16' },
           ],
         },
       ],
@@ -556,9 +595,10 @@ test('ParseHAbiFunctions', () => {
         {
           name: 'person',
           type: 'tuple',
+          internalType: 'Struct person',
           components: [
-            { name: 'name', type: 'string' },
-            { name: 'age', type: 'uint16' },
+            { name: 'name', type: 'string', internalType: 'string' },
+            { name: 'age', type: 'uint16', internalType: 'uint16' },
           ],
         },
       ],
@@ -605,9 +645,11 @@ test('ParseHumanAbi', () => {
         {
           name: 'person',
           type: 'tuple',
+          internalType: 'Struct person',
+          indexed: false,
           components: [
-            { name: 'name', type: 'string' },
-            { name: 'age', type: 'uint16' },
+            { name: 'name', type: 'string', internalType: 'string' },
+            { name: 'age', type: 'uint16', internalType: 'uint16' },
           ],
         },
       ],
@@ -627,9 +669,10 @@ test('ParseHumanAbi', () => {
         {
           name: 'person',
           type: 'tuple',
+          internalType: 'Struct person',
           components: [
-            { name: 'name', type: 'string' },
-            { name: 'age', type: 'uint16' },
+            { name: 'name', type: 'string', internalType: 'string' },
+            { name: 'age', type: 'uint16', internalType: 'uint16' },
           ],
         },
       ],
@@ -643,9 +686,10 @@ test('ParseHumanAbi', () => {
         {
           name: 'person',
           type: 'tuple[]',
+          internalType: 'Struct[] person',
           components: [
-            { name: 'name', type: 'string' },
-            { name: 'age', type: 'uint16' },
+            { name: 'name', type: 'string', internalType: 'string' },
+            { name: 'age', type: 'uint16', internalType: 'uint16' },
           ],
         },
       ],
@@ -660,9 +704,10 @@ test('ParseHumanAbi', () => {
         {
           name: 'person',
           type: 'tuple',
+          internalType: 'Struct person',
           components: [
-            { name: 'name', type: 'string' },
-            { name: 'age', type: 'uint16' },
+            { name: 'name', type: 'string', internalType: 'string' },
+            { name: 'age', type: 'uint16', internalType: 'uint16' },
           ],
         },
       ],

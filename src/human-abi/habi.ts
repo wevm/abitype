@@ -58,6 +58,22 @@ export type ExtractTupleType<T extends string> = Remove<
   ? `tuple[${K}]`
   : 'tuple'
 
+export type ExtractTupleInternalType<T extends string> = Remove<
+  T,
+  ExtractTArgs<T>
+> extends `tuple()[${infer K}]${infer Name}`
+  ? `Struct[${K}]${Name}`
+  : Remove<T, ExtractTArgs<T>> extends `tuple()${infer Name}`
+  ? `Struct${Name}`
+  : 'Struct'
+
+export type isIndexed<T extends string> = Remove<
+  T,
+  ExtractTArgs<T>
+> extends `tuple()${string}${AbiIndexed}${string}`
+  ? true
+  : false
+
 export type ExtractTArgs<T extends string> =
   T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${infer H})${infer I})${infer J})${string}`
     ? `${A})${B})${C})${D})${E})${F})${G})${H})${I})${J}`
@@ -179,6 +195,7 @@ export type ParseComponents<T extends unknown[]> = T extends [never]
         {
           readonly name: ExtractTupleName<Head>
           readonly type: ExtractTupleType<Head>
+          readonly internalType: ExtractTupleInternalType<Head>
           readonly components: [
             ...ParseComponents<[...CustomSplit<ExtractTArgs<Head>>, ...Last]>,
           ]
@@ -192,6 +209,7 @@ export type ParseComponents<T extends unknown[]> = T extends [never]
         {
           readonly name: TName
           readonly type: SolidityType<TType>
+          readonly internalType: SolidityType<TType>
         },
         ...ParseComponents<Last>,
       ]
@@ -200,6 +218,48 @@ export type ParseComponents<T extends unknown[]> = T extends [never]
         {
           readonly name: ''
           readonly type: SolidityType<TType>
+          readonly internalType: SolidityType<TType>
+        },
+        ...ParseComponents<Last>,
+      ]
+    : []
+  : []
+
+export type ParseEventComponents<T extends unknown[]> = T extends [never]
+  ? never
+  : T extends ['']
+  ? never
+  : T extends [infer Head extends string, ...infer Last extends string[]]
+  ? isTupleValue<Head> extends true
+    ? [
+        {
+          readonly name: ExtractTupleName<Head>
+          readonly type: ExtractTupleType<Head>
+          readonly internalType: ExtractTupleInternalType<Head>
+          readonly indexed: isIndexed<Head>
+          readonly components: [
+            ...ParseComponents<[...CustomSplit<ExtractTArgs<Head>>, ...Last]>,
+          ]
+        },
+      ]
+    : T extends [
+        `${infer TType}${WS}${infer TName}`,
+        ...infer Last extends string[],
+      ]
+    ? [
+        {
+          readonly name: TName
+          readonly type: SolidityType<TType>
+          readonly internalType: SolidityType<TType>
+        },
+        ...ParseComponents<Last>,
+      ]
+    : T extends [`${infer TType}`, ...infer Last]
+    ? [
+        {
+          readonly name: ''
+          readonly type: SolidityType<TType>
+          readonly internalType: SolidityType<TType>
         },
         ...ParseComponents<Last>,
       ]
@@ -217,7 +277,7 @@ export type HandleArguments<
     : []
   : T extends [infer THead extends string, ...infer Rest extends string[]]
   ? isTupleValue<THead> extends true
-    ? [...ParseComponents<[THead]>, ...HandleArguments<Rest, 'event'>]
+    ? [...ParseEventComponents<[THead]>, ...HandleArguments<Rest, 'event'>]
     : [...ParseEventArgs<[THead]>, ...HandleArguments<Rest, 'event'>]
   : []
 
@@ -290,7 +350,7 @@ export type ParseHAbiErrors<T extends HAbi> = T extends [never]
     : ParseHAbiErrors<Rest>
   : []
 
-export type ParseHumanAbi<HumanAbi extends HAbi> = [
+export type ParseHumanAbi<HumanAbi extends HAbi> = readonly [
   ...ParseHAbiErrors<HumanAbi>,
   ...ParseHAbiEvents<HumanAbi>,
   ...ParseHAbiFunctions<HumanAbi>,
