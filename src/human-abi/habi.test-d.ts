@@ -15,6 +15,7 @@ import type {
   IsHAbi,
   ParseComponents,
   ParseEventArgs,
+  ParseEventComponents,
   ParseFunctionArgs,
   ParseFunctionReturn,
   ParseHAbiErrors,
@@ -31,7 +32,7 @@ const testAbi = [
   'function addPerson(tuple(string name, uint16 age) person)',
   'function addPeople(tuple(string name, uint16 age)[] person)',
   'function getPerson(uint id) view returns (tuple(string name, uint16 age) person)',
-  'event PersonAdded(uint indexed id, tuple(string name, uint16 age) person)',
+  'event PersonAdded(uint indexed id, tuple(string name, uint16 age) indexed person)',
 ] as const
 
 type FuncType = typeof testAbi[0]
@@ -106,7 +107,7 @@ test('ExtractArgs', () => {
   test('Event Tuple', () => {
     assertType<ExtractArgs<EventTuple>>([
       'uint indexed id',
-      'tuple(string name, uint16 age) person',
+      'tuple(string name, uint16 age) indexed person',
     ])
   })
 
@@ -287,7 +288,7 @@ test('HandleArguments', () => {
       {
         type: 'tuple',
         name: 'person',
-        indexed: false,
+        indexed: true,
         internalType: 'Struct person',
         components: [
           { name: 'name', type: 'string', internalType: 'string' },
@@ -452,6 +453,25 @@ test('ParseComponents', () => {
   })
 })
 
+test('ParseEventComponents', () => {
+  test('Event Tuple', () => {
+    assertType<
+      ParseEventComponents<['tuple(string name, uint16 age) indexed person']>
+    >([
+      {
+        type: 'tuple',
+        name: 'person',
+        indexed: true,
+        internalType: 'Struct person',
+        components: [
+          { name: 'name', type: 'string', internalType: 'string' },
+          { name: 'age', type: 'uint16', internalType: 'uint16' },
+        ],
+      },
+    ])
+  })
+})
+
 test('ParseEventArgs', () => {
   assertType<ParseEventArgs<ExtractArgs<EventType>>>([
     {
@@ -532,7 +552,7 @@ test('ParseHAbiEvents', () => {
           name: 'person',
           type: 'tuple',
           internalType: 'Struct person',
-          indexed: false,
+          indexed: true,
           components: [
             { name: 'name', type: 'string', internalType: 'string' },
             { name: 'age', type: 'uint16', internalType: 'uint16' },
@@ -646,7 +666,7 @@ test('ParseHumanAbi', () => {
           name: 'person',
           type: 'tuple',
           internalType: 'Struct person',
-          indexed: false,
+          indexed: true,
           components: [
             { name: 'name', type: 'string', internalType: 'string' },
             { name: 'age', type: 'uint16', internalType: 'uint16' },

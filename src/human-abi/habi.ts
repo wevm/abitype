@@ -42,12 +42,12 @@ export type ExtractArgs<T extends string> = hasTupleValue<T> extends true
   ? CustomSplit<TNames>
   : never
 
-export type ExtractTupleName<T extends string> = Remove<
-  T,
-  ExtractTArgs<T>
-> extends `tuple()[${string}]${infer Name}`
+export type ExtractTupleName<
+  T extends string,
+  TRemove = Remove<T, ExtractTArgs<T>>,
+> = TRemove extends `tuple()[${string}]${WS | AbiIndexed}${infer Name}`
   ? Trim<Name>
-  : Remove<T, ExtractTArgs<T>> extends `tuple()${infer Name}`
+  : TRemove extends `tuple()${WS | AbiIndexed}${infer Name}`
   ? Trim<Name>
   : ''
 
@@ -58,13 +58,13 @@ export type ExtractTupleType<T extends string> = Remove<
   ? `tuple[${K}]`
   : 'tuple'
 
-export type ExtractTupleInternalType<T extends string> = Remove<
-  T,
-  ExtractTArgs<T>
-> extends `tuple()[${infer K}]${infer Name}`
-  ? `Struct[${K}]${Name}`
-  : Remove<T, ExtractTArgs<T>> extends `tuple()${infer Name}`
-  ? `Struct${Name}`
+export type ExtractTupleInternalType<
+  T extends string,
+  TRemove = Remove<T, ExtractTArgs<T>>,
+> = TRemove extends `tuple()[${infer K}]${WS | AbiIndexed}${infer Name}`
+  ? `Struct[${K}]${WS}${Name}`
+  : TRemove extends `tuple()${WS | AbiIndexed}${infer Name}`
+  ? `Struct${WS}${Name}`
   : 'Struct'
 
 export type isIndexed<T extends string> = Remove<
@@ -238,7 +238,9 @@ export type ParseEventComponents<T extends unknown[]> = T extends [never]
           readonly internalType: ExtractTupleInternalType<Head>
           readonly indexed: isIndexed<Head>
           readonly components: [
-            ...ParseComponents<[...CustomSplit<ExtractTArgs<Head>>, ...Last]>,
+            ...ParseEventComponents<
+              [...CustomSplit<ExtractTArgs<Head>>, ...Last]
+            >,
           ]
         },
       ]
@@ -252,7 +254,7 @@ export type ParseEventComponents<T extends unknown[]> = T extends [never]
           readonly type: SolidityType<TType>
           readonly internalType: SolidityType<TType>
         },
-        ...ParseComponents<Last>,
+        ...ParseEventComponents<Last>,
       ]
     : T extends [`${infer TType}`, ...infer Last]
     ? [
@@ -261,7 +263,7 @@ export type ParseEventComponents<T extends unknown[]> = T extends [never]
           readonly type: SolidityType<TType>
           readonly internalType: SolidityType<TType>
         },
-        ...ParseComponents<Last>,
+        ...ParseEventComponents<Last>,
       ]
     : []
   : []
