@@ -24,15 +24,15 @@ export type isTupleValue<T extends string> =
   T extends `tuple(${string})${string}` ? true : false
 
 export type CustomSplit<S extends string> = isTupleValue<S> extends true
-  ? S extends `tuple(tuple(${string}), ${string})`
+  ? S extends `tuple(tuple(${string})${string}, ${string})${string}`
     ? [Trim<S>]
     : S extends `tuple(${string}, tuple(${string})${string})`
     ? [Trim<S>]
-    : S extends `tuple(tuple(${string})${string})`
+    : S extends `tuple(tuple(${string})${string})${string}`
     ? [Trim<S>]
-    : S extends `tuple(${infer Args}),${infer Tail}`
-    ? [...CustomSplit<Tail>, Trim<`tuple(${Args})`>]
-    : S extends `${infer Head}, tuple(${infer Args})`
+    : S extends `tuple(${infer Args})${infer Name},${infer Tail}`
+    ? [...CustomSplit<Tail>, Trim<`tuple(${Args})${Name}`>]
+    : S extends `${infer Head}, tuple(${infer Args})${string}`
     ? [...CustomSplit<Head>, Trim<`tuple(${Args})`>]
     : S extends `tuple(${infer Args})${infer Tail}`
     ? [Trim<`tuple(${Args})${Tail}`>]
@@ -42,3 +42,8 @@ export type CustomSplit<S extends string> = isTupleValue<S> extends true
   : S extends ''
   ? []
   : [Trim<S>]
+
+export type Remove<
+  T,
+  K extends string,
+> = T extends `${infer Head}${K}${infer Tail}` ? `${Head}${Tail}` : T

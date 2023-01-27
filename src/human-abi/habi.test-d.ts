@@ -2,12 +2,10 @@ import { assertType, test } from 'vitest'
 
 import type {
   ExtractArgs,
-  ExtractArrayTupleArgs,
   ExtractMutability,
   ExtractNames,
   ExtractReturn,
   ExtractTArgs,
-  ExtractTupleArgs,
   ExtractTupleName,
   ExtractTupleType,
   ExtractType,
@@ -145,11 +143,13 @@ test('ExtractType', () => {
 
 test('ExtractTupleName', () => {
   test('Name', () => {
-    assertType<ExtractTupleName<FuncTypeTuple>>('person')
+    assertType<ExtractTupleName<ExtractArgs<FuncTypeTuple>[number]>>('person')
   })
 
   test('Name Array', () => {
-    assertType<ExtractTupleName<FuncTypeTupleArray>>('person')
+    assertType<ExtractTupleName<ExtractArgs<FuncTypeTupleArray>[number]>>(
+      'person',
+    )
   })
 
   test('No Name', () => {
@@ -159,7 +159,9 @@ test('ExtractTupleName', () => {
 
 test('ExtractTupleType', () => {
   test('Array', () => {
-    assertType<ExtractTupleType<FuncTypeTupleArray>>('tuple[]')
+    assertType<ExtractTupleType<ExtractArgs<FuncTypeTupleArray>[number]>>(
+      'tuple[]',
+    )
   })
 
   test('Normal', () => {
@@ -175,13 +177,13 @@ test('ExtractTupleType', () => {
 
 test('ExtractTupleArgs', () => {
   test('Non Array', () => {
-    assertType<ExtractTupleArgs<ExtractArgs<FuncTypeTuple>[number]>>(
+    assertType<ExtractTArgs<ExtractArgs<FuncTypeTuple>[number]>>(
       'string name, uint16 age',
     )
   })
 
   test('Array', () => {
-    assertType<ExtractArrayTupleArgs<ExtractArgs<FuncTypeTupleArray>[number]>>(
+    assertType<ExtractTArgs<ExtractArgs<FuncTypeTupleArray>[number]>>(
       'string name, uint16 age',
     )
   })
@@ -307,31 +309,103 @@ test('ParseComponents', () => {
     assertType<
       ParseComponents<
         [
-          'tuple(tuple(address baby, tuple(tuple(uint tokenId))), address from)[] person',
+          'tuple(address owner, tuple(bool loading, tuple(string[][] names) cats)[] dog, uint tokenId) person',
         ]
       >
     >([
       {
         name: 'person',
-        type: 'tuple[]',
+        type: 'tuple',
         components: [
+          { name: 'owner', type: 'address' },
+          { name: 'tokenId', type: 'uint256' },
           {
-            name: 'from',
-            type: 'address',
-          },
-          {
-            name: '',
-            type: 'tuple',
+            name: 'dog',
+            type: 'tuple[]',
             components: [
-              { name: 'baby', type: 'address' },
+              { name: 'loading', type: 'bool' },
               {
-                name: '',
+                name: 'cats',
                 type: 'tuple',
                 components: [
                   {
-                    name: '',
+                    name: 'names',
+                    type: 'string[][]',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ])
+  })
+
+  test('Max Depth', () => {
+    assertType<
+      ParseComponents<
+        [
+          'tuple(tuple(tuple(tuple(tuple(tuple(tuple(tuple(tuple(tuple(uint tokenId) person)[24] person) person) person) person)[3] person) person) person)[] person) person',
+        ]
+      >
+    >([
+      {
+        name: 'person',
+        type: 'tuple',
+        components: [
+          {
+            name: 'person',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'person',
+                type: 'tuple',
+                components: [
+                  {
+                    name: 'person',
                     type: 'tuple',
-                    components: [{ name: 'tokenId', type: 'uint256' }],
+                    components: [
+                      {
+                        name: 'person',
+                        type: 'tuple[3]',
+                        components: [
+                          {
+                            name: 'person',
+                            type: 'tuple',
+                            components: [
+                              {
+                                name: 'person',
+                                type: 'tuple',
+                                components: [
+                                  {
+                                    name: 'person',
+                                    type: 'tuple',
+                                    components: [
+                                      {
+                                        name: 'person',
+                                        type: 'tuple[24]',
+                                        components: [
+                                          {
+                                            name: 'person',
+                                            type: 'tuple',
+                                            components: [
+                                              {
+                                                name: 'tokenId',
+                                                type: 'uint256',
+                                              },
+                                            ],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
                   },
                 ],
               },

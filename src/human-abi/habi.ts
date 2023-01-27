@@ -3,7 +3,9 @@ import type {
   AbiMutability,
   AbiTypes,
   CustomSplit,
+  Remove,
   SolidityType,
+  Trim,
   WS,
   hasTupleValue,
   isTupleValue,
@@ -40,32 +42,46 @@ export type ExtractArgs<T extends string> = hasTupleValue<T> extends true
   ? CustomSplit<TNames>
   : never
 
-export type ExtractTupleName<T extends string> = T extends `${string})${
-  | WS
-  | `[${string}]${WS}`}${infer Name})`
-  ? Name
-  : T extends `tuple(${string})${WS | `[${string}]${WS}`}${infer TName}`
-  ? TName
+export type ExtractTupleName<T extends string> = Remove<
+  T,
+  ExtractTArgs<T>
+> extends `tuple()[${string}]${infer Name}`
+  ? Trim<Name>
+  : Remove<T, ExtractTArgs<T>> extends `tuple()${infer Name}`
+  ? Trim<Name>
   : ''
 
-export type ExtractTupleType<T extends string> =
-  T extends `${string}(${string})[${infer K}]${string}`
-    ? `tuple[${K}]`
-    : 'tuple'
+export type ExtractTupleType<T extends string> = Remove<
+  T,
+  ExtractTArgs<T>
+> extends `tuple()[${infer K}]${string}`
+  ? `tuple[${K}]`
+  : 'tuple'
 
-export type ExtractTupleArgs<T extends string> =
-  T extends `tuple(${infer Args})`
+export type ExtractTArgs<T extends string> =
+  T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${infer H})${infer I})${infer J})${string}`
+    ? `${A})${B})${C})${D})${E})${F})${G})${H})${I})${J}`
+    : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${infer H})${infer I})${string}`
+    ? `${A})${B})${C})${D})${E})${F})${G})${H})${I}`
+    : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${infer H})${string}`
+    ? `${A})${B})${C})${D})${E})${F})${G})${H}`
+    : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${string}`
+    ? `${A})${B})${C})${D})${E})${F})${G}`
+    : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${string}`
+    ? `${A})${B})${C})${D})${E})${F}`
+    : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${string}`
+    ? `${A})${B})${C})${D})${E}`
+    : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${string}`
+    ? `${A})${B})${C})${D}`
+    : T extends `tuple(${infer A})${infer B})${infer C})${string}`
+    ? `${A})${B})${C}`
+    : T extends `tuple(${infer A})${infer B})${string}`
+    ? `${A})${B}`
+    : T extends `tuple(${infer Args})[${string}]${string}`
     ? Args
-    : T extends `tuple(${infer Args})${WS}${string}`
+    : T extends `tuple(${infer Args})${string}`
     ? Args
     : never
-
-export type ExtractArrayTupleArgs<T extends string> =
-  T extends `tuple(${infer Args})[${string}]${string}` ? `${Args}` : never
-
-export type ExtractTArgs<T extends string> = ExtractTupleType<T> extends 'tuple'
-  ? ExtractTupleArgs<T>
-  : ExtractArrayTupleArgs<T>
 
 export type ParseFunctionArgs<T extends string[]> = T extends [never]
   ? never
@@ -219,10 +235,10 @@ export type ParseHAbiFunctions<T extends HAbi> = T extends [never]
   : T extends ''
   ? T
   : T extends readonly [infer Head, ...infer Rest extends HAbi]
-  ? Head extends `function${infer Tail}`
+  ? Head extends `function${string}`
     ? [
         {
-          readonly name: ExtractNames<`function${Tail}`>
+          readonly name: ExtractNames<Head>
           readonly type: ExtractType<Head>
           readonly stateMutability: ExtractMutability<Head>
           readonly inputs: readonly [
@@ -242,10 +258,10 @@ export type ParseHAbiEvents<T extends HAbi> = T extends [never]
   : T extends ['']
   ? T
   : T extends readonly [infer Head, ...infer Rest extends HAbi]
-  ? Head extends `event${infer Tail}`
+  ? Head extends `event${string}`
     ? [
         {
-          readonly name: ExtractNames<`event${Tail}`>
+          readonly name: ExtractNames<Head>
           readonly type: ExtractType<Head>
           readonly anonymous: false
           readonly inputs: readonly [
@@ -262,10 +278,10 @@ export type ParseHAbiErrors<T extends HAbi> = T extends [never]
   : T extends ['']
   ? T
   : T extends readonly [infer Head, ...infer Rest extends HAbi]
-  ? Head extends `error${infer Tail}`
+  ? Head extends `error${string}`
     ? [
         {
-          readonly name: ExtractNames<`error${Tail}`>
+          readonly name: ExtractNames<Head>
           readonly type: ExtractType<Head>
           readonly inputs: readonly [...ParseFunctionArgs<ExtractArgs<Head>>]
         },

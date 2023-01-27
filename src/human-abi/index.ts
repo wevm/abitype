@@ -1,11 +1,9 @@
 export type {
   ExtractArgs,
-  ExtractArrayTupleArgs,
   ExtractMutability,
   ExtractNames,
   ExtractReturn,
   ExtractTArgs,
-  ExtractTupleArgs,
   ExtractTupleName,
   ExtractTupleType,
   ExtractType,
