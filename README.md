@@ -412,7 +412,6 @@ import type { isAbi, ExtractAbiFunction } from 'abitype'
 import type { ParseHumanAbi, isHAbi } from 'abitype/human-abi'
 
 const humanReadableAbi = [
-  'constructor(string symbol, string name)',
   'function transferFrom(address from, address to, uint value)',
   'function balanceOf(address owner) view returns (uint balance)',
   'event Transfer(address indexed from, address indexed to, address value)',
@@ -433,10 +432,10 @@ type Abi = isAbi<ParsedAbi>
 // Now we can use all the type helpers that abitype already provides.
 
 type BalanceOfFunction = ExtractAbiFunction<ParsedAbi, 'balanceOf'>
-//                                                        ^ typescript will now autocomplete this for you
+//                                  ^ typescript will now autocomplete this for you
 ```
 
-With this you can also
+Check out the `habi.test-d.ts` file for more examples usage of the other type helpers.
 
 ## Support
 
