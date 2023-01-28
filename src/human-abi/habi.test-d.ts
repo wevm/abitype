@@ -569,6 +569,8 @@ test('ParseHAbiFunctions', () => {
       name: 'balanceOf',
       type: 'function',
       stateMutability: 'view',
+      constant: true,
+      payable: false,
       inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
       outputs: [{ name: 'tokenId', type: 'uint256', internalType: 'uint256' }],
     },
@@ -576,6 +578,8 @@ test('ParseHAbiFunctions', () => {
       name: 'addPerson',
       type: 'function',
       stateMutability: 'nonpayable',
+      constant: false,
+      payable: false,
       inputs: [
         {
           name: 'person',
@@ -593,6 +597,8 @@ test('ParseHAbiFunctions', () => {
       name: 'addPeople',
       type: 'function',
       stateMutability: 'nonpayable',
+      constant: false,
+      payable: false,
       inputs: [
         {
           name: 'person',
@@ -610,6 +616,8 @@ test('ParseHAbiFunctions', () => {
       name: 'getPerson',
       type: 'function',
       stateMutability: 'view',
+      constant: true,
+      payable: false,
       inputs: [{ name: 'id', type: 'uint256', internalType: 'uint256' }],
       outputs: [
         {
@@ -678,6 +686,8 @@ test('ParseHumanAbi', () => {
       name: 'balanceOf',
       type: 'function',
       stateMutability: 'view',
+      constant: true,
+      payable: false,
       inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
       outputs: [{ name: 'tokenId', type: 'uint256', internalType: 'uint256' }],
     },
@@ -685,6 +695,8 @@ test('ParseHumanAbi', () => {
       name: 'addPerson',
       type: 'function',
       stateMutability: 'nonpayable',
+      constant: false,
+      payable: false,
       inputs: [
         {
           name: 'person',
@@ -701,6 +713,8 @@ test('ParseHumanAbi', () => {
     {
       name: 'addPeople',
       type: 'function',
+      constant: false,
+      payable: false,
       stateMutability: 'nonpayable',
       inputs: [
         {
@@ -718,6 +732,8 @@ test('ParseHumanAbi', () => {
     {
       name: 'getPerson',
       type: 'function',
+      constant: true,
+      payable: false,
       stateMutability: 'view',
       inputs: [{ name: 'id', type: 'uint256', internalType: 'uint256' }],
       outputs: [

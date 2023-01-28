@@ -302,7 +302,13 @@ export type ParseHAbiFunctions<T extends HAbi> = T extends [never]
         {
           readonly name: ExtractNames<Head>
           readonly type: ExtractType<Head>
+          readonly constant: ExtractMutability<Head> extends 'view' | 'pure'
+            ? true
+            : false
           readonly stateMutability: ExtractMutability<Head>
+          readonly payable: ExtractMutability<Head> extends 'payable'
+            ? true
+            : false
           readonly inputs: readonly [
             ...HandleArguments<ExtractArgs<Head>, 'function'>,
           ]
