@@ -18,32 +18,59 @@ export type AbiIndexed = ' indexed '
 export type AbiMutability = 'view' | 'pure' | 'payable' | 'nonpayable'
 
 export type hasTupleValue<T extends string> =
-  T extends `${string}tuple${string}` ? true : false
+  T extends `${string}(${string})${string}` ? true : false
 
-export type isTupleValue<T extends string> =
-  T extends `tuple(${string})${string}` ? true : false
-
-export type CustomSplit<S extends string> = isTupleValue<S> extends true
-  ? S extends `tuple(tuple(${string})${string}, ${string})${string}`
-    ? [Trim<S>]
-    : S extends `tuple(${string}, tuple(${string})${string})`
-    ? [Trim<S>]
-    : S extends `tuple(tuple(${string})${string})${string}`
-    ? [Trim<S>]
-    : S extends `tuple(${infer Args})${infer Name},${infer Tail}`
-    ? [...CustomSplit<Tail>, Trim<`tuple(${Args})${Name}`>]
-    : S extends `${infer Head}, tuple(${infer Args})${string}`
-    ? [...CustomSplit<Head>, Trim<`tuple(${Args})`>]
-    : S extends `tuple(${infer Args})${infer Tail}`
-    ? [Trim<`tuple(${Args})${Tail}`>]
-    : []
-  : S extends `${infer L},${infer Tail}`
-  ? [Trim<L>, ...CustomSplit<Trim<Tail>>]
-  : S extends ''
-  ? []
-  : [Trim<S>]
+export type isTupleValue<T extends string> = T extends `(${string})${string}`
+  ? true
+  : false
 
 export type Remove<
   T,
   K extends string,
 > = T extends `${infer Head}${K}${infer Tail}` ? `${Head}${Tail}` : T
+
+export type ReplaceAll<
+  S extends string,
+  From extends string,
+  To extends string,
+> = From extends ''
+  ? S
+  : S extends `${infer Prefix}${From}${infer Suffix}`
+  ? `${ReplaceAll<Prefix, From, To>}${To}${ReplaceAll<Suffix, From, To>}`
+  : S
+
+type Pop<T extends any[]> = T extends [...infer R, any] ? R : []
+
+export type SplitNesting<
+  T extends string,
+  TResult extends any[] = [],
+  TStr extends string = '',
+  Depth extends any[] = [],
+> = T extends ''
+  ? [...TResult, Trim<TStr>]
+  : Depth['length'] extends 0
+  ? T extends `${infer Char}${infer Rest}`
+    ? Char extends ','
+      ? SplitNesting<Rest, [...TResult, Trim<TStr>], ''>
+      : Char extends '('
+      ? SplitNesting<Rest, TResult, `${TStr}${Char}`, [...Depth, 1]>
+      : SplitNesting<Rest, TResult, `${TStr}${Char}`>
+    : []
+  : T extends `${infer Char}${infer Rest}`
+  ? Char extends '('
+    ? SplitNesting<Rest, TResult, `${TStr}${Char}`, [...Depth, 1]>
+    : Char extends ')'
+    ? SplitNesting<Rest, TResult, `${TStr}${Char}`, Pop<Depth>>
+    : SplitNesting<Rest, TResult, `${TStr}${Char}`, Depth>
+  : []
+
+export type ReOrderArray<
+  T extends string[],
+  TRemain extends any[] = [],
+> = T extends ['']
+  ? []
+  : T extends [infer Head extends string, ...infer Rest extends string[]]
+  ? Head extends `(${string})${string}`
+    ? [...TRemain, ...Rest, Head]
+    : ReOrderArray<Rest, [...TRemain, Head]>
+  : TRemain

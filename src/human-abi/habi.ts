@@ -2,9 +2,10 @@ import type {
   AbiIndexed,
   AbiMutability,
   AbiTypes,
-  CustomSplit,
-  Remove,
+  ReOrderArray,
+  ReplaceAll,
   SolidityType,
+  SplitNesting,
   Trim,
   WS,
   hasTupleValue,
@@ -28,76 +29,112 @@ export type ExtractMutability<T extends string> =
     : 'nonpayable'
 
 export type ExtractReturn<T extends string> =
-  T extends `${string}returns (${infer TName})` ? CustomSplit<TName> : ['void']
+  T extends `${string}returns (${infer TName})`
+    ? ReOrderArray<SplitNesting<ReplaceAll<TName, 'tuple', ''>>>
+    : ['void']
 
 export type ExtractArgs<T extends string> = hasTupleValue<T> extends true
   ? T extends `${AbiTypes}${WS}${string}(${infer TName})${WS}${string}returns${string}`
-    ? CustomSplit<TName>
+    ? ReOrderArray<SplitNesting<ReplaceAll<TName, 'tuple', ''>>>
     : T extends `${AbiTypes}${WS}${string}(${infer TNames})`
-    ? CustomSplit<TNames>
+    ? ReOrderArray<SplitNesting<ReplaceAll<TNames, 'tuple', ''>>>
     : never
   : T extends `${AbiTypes}${WS}${string}(${infer TName})${string}returns${string}`
-  ? CustomSplit<TName>
+  ? ReOrderArray<SplitNesting<ReplaceAll<TName, 'tuple', ''>>>
   : T extends `${AbiTypes}${WS}${string}(${infer TNames})`
-  ? CustomSplit<TNames>
+  ? ReOrderArray<SplitNesting<ReplaceAll<TNames, 'tuple', ''>>>
   : never
 
-export type ExtractTupleName<
-  T extends string,
-  TRemove = Remove<T, ExtractTArgs<T>>,
-> = TRemove extends `tuple()[${string}]${WS | AbiIndexed}${infer Name}`
-  ? Trim<Name>
-  : TRemove extends `tuple()${WS | AbiIndexed}${infer Name}`
-  ? Trim<Name>
-  : ''
+// export type ExtractTupleName<
+//   T extends string,
+//   TRemove = Remove<T, ExtractTArgs<T>>,
+// > = TRemove extends `tuple()[${string}]${WS | AbiIndexed}${infer Name}`
+//   ? Trim<Name>
+//   : TRemove extends `tuple()${WS | AbiIndexed}${infer Name}`
+//   ? Trim<Name>
+//   : ''
 
-export type ExtractTupleType<T extends string> = Remove<
-  T,
-  ExtractTArgs<T>
-> extends `tuple()[${infer K}]${string}`
-  ? `tuple[${K}]`
-  : 'tuple'
+// export type ExtractTupleType<T extends string> = Remove<
+//   T,
+//   ExtractTArgs<T>
+// > extends `tuple()[${infer K}]${string}`
+//   ? `tuple[${K}]`
+//   : 'tuple'
 
-export type ExtractTupleInternalType<
-  T extends string,
-  TRemove = Remove<T, ExtractTArgs<T>>,
-> = TRemove extends `tuple()[${infer K}]${WS | AbiIndexed}${infer Name}`
-  ? `Struct[${K}]${WS}${Name}`
-  : TRemove extends `tuple()${WS | AbiIndexed}${infer Name}`
-  ? `Struct${WS}${Name}`
-  : 'Struct'
+// export type ExtractTupleInternalType<
+//   T extends string,
+//   TRemove = Remove<T, ExtractTArgs<T>>,
+// > = TRemove extends `tuple()[${infer K}]${WS | AbiIndexed}${infer Name}`
+//   ? `Struct[${K}]${WS}${Name}`
+//   : TRemove extends `tuple()${WS | AbiIndexed}${infer Name}`
+//   ? `Struct${WS}${Name}`
+//   : 'Struct'
 
-export type isIndexed<T extends string> = Remove<
-  T,
-  ExtractTArgs<T>
-> extends `tuple()${string}${AbiIndexed}${string}`
-  ? true
-  : false
+export type isIndexed<T extends string> =
+  T extends `${string}${AbiIndexed}${string}` ? true : unknown
 
+export type ExtractTupleInfo<T extends string> =
+  T extends `${string})${infer Info}`
+    ? Info extends `${string})`
+      ? ''
+      : Info extends `${string})${infer TInfo}`
+      ? TInfo extends ''
+        ? Trim<Info>
+        : ExtractTupleInfo<Trim<TInfo>>
+      : Trim<Info>
+    : T
 export type ExtractTArgs<T extends string> =
-  T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${infer H})${infer I})${infer J})${string}`
-    ? `${A})${B})${C})${D})${E})${F})${G})${H})${I})${J}`
-    : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${infer H})${infer I})${string}`
-    ? `${A})${B})${C})${D})${E})${F})${G})${H})${I}`
-    : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${infer H})${string}`
-    ? `${A})${B})${C})${D})${E})${F})${G})${H}`
-    : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${string}`
-    ? `${A})${B})${C})${D})${E})${F})${G}`
-    : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${string}`
-    ? `${A})${B})${C})${D})${E})${F}`
-    : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${string}`
-    ? `${A})${B})${C})${D})${E}`
-    : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${string}`
-    ? `${A})${B})${C})${D}`
-    : T extends `tuple(${infer A})${infer B})${infer C})${string}`
-    ? `${A})${B})${C}`
-    : T extends `tuple(${infer A})${infer B})${string}`
-    ? `${A})${B}`
-    : T extends `tuple(${infer Args})[${string}]${string}`
+  T extends `(${infer Args})${ExtractTupleInfo<T>}`
     ? Args
-    : T extends `tuple(${infer Args})${string}`
+    : T extends `(${infer Args})${WS}${ExtractTupleInfo<T>}`
     ? Args
-    : never
+    : ''
+
+export type ExtractTupleName<T extends string> =
+  T extends `[${string}]${AbiIndexed}${infer Name}`
+    ? Name
+    : T extends `[${string}]${infer Name}`
+    ? Trim<Name>
+    : T extends `indexed ${infer Name}`
+    ? Name
+    : T
+
+export type ExtractTupleType<T extends string> =
+  T extends `[${infer K}]${string}` ? `tuple[${K}]` : 'tuple'
+
+export type ExtractTupleInternalType<T extends string> =
+  T extends `[${infer K}]${AbiIndexed}${infer Name}`
+    ? `Struct[${K}]${WS}${Name}`
+    : T extends `[${infer K}]${infer Name}`
+    ? `Struct[${K}]${Name}`
+    : T extends `indexed ${infer Name}`
+    ? `Struct${WS}${Name}`
+    : Trim<`Struct${WS}${T}`>
+
+// export type ExtractTArgs<T extends string> =
+//   T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${infer H})${infer I})${infer J})${string}`
+//     ? `${A})${B})${C})${D})${E})${F})${G})${H})${I})${J}`
+//     : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${infer H})${infer I})${string}`
+//     ? `${A})${B})${C})${D})${E})${F})${G})${H})${I}`
+//     : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${infer H})${string}`
+//     ? `${A})${B})${C})${D})${E})${F})${G})${H}`
+//     : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${infer G})${string}`
+//     ? `${A})${B})${C})${D})${E})${F})${G}`
+//     : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${infer F})${string}`
+//     ? `${A})${B})${C})${D})${E})${F}`
+//     : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${infer E})${string}`
+//     ? `${A})${B})${C})${D})${E}`
+//     : T extends `tuple(${infer A})${infer B})${infer C})${infer D})${string}`
+//     ? `${A})${B})${C})${D}`
+//     : T extends `tuple(${infer A})${infer B})${infer C})${string}`
+//     ? `${A})${B})${C}`
+//     : T extends `tuple(${infer A})${infer B})${string}`
+//     ? `${A})${B}`
+//     : T extends `tuple(${infer Args})[${string}]${string}`
+//     ? Args
+//     : T extends `tuple(${infer Args})${string}`
+//     ? Args
+//     : never
 
 export type ParseFunctionArgs<T extends string[]> = T extends [never]
   ? never
@@ -109,9 +146,9 @@ export type ParseFunctionArgs<T extends string[]> = T extends [never]
     ]
   ? [
       {
-        readonly internalType: SolidityType<TType>
-        readonly name: TName
         readonly type: SolidityType<TType>
+        readonly name: TName
+        readonly internalType: SolidityType<TType>
       },
       ...ParseFunctionArgs<Rest>,
     ]
@@ -136,18 +173,18 @@ export type ParseFunctionReturn<T extends string[]> = T extends [never]
     ]
   ? [
       {
-        readonly internalType: SolidityType<TType>
+        readonly type: SolidityType<TType>
         readonly name: TName
-        type: SolidityType<TType>
+        readonly internalType: SolidityType<TType>
       },
       ...ParseFunctionReturn<Rest>,
     ]
   : T extends [`${infer TType}`, ...infer Rest extends string[]]
   ? [
       {
-        readonly internalType: SolidityType<TType>
-        readonly name: ''
         readonly type: SolidityType<TType>
+        readonly name: ''
+        readonly internalType: SolidityType<TType>
       },
       ...ParseFunctionReturn<Rest>,
     ]
@@ -176,7 +213,6 @@ export type ParseEventArgs<T extends string[]> = T extends [never]
     ]
   ? [
       {
-        readonly indexed: false
         readonly internalType: SolidityType<TType>
         readonly name: TName
         readonly type: SolidityType<TType>
@@ -190,14 +226,18 @@ export type ParseComponents<T extends unknown[]> = T extends [never]
   : T extends ['']
   ? never
   : T extends [infer Head extends string, ...infer Last extends string[]]
-  ? isTupleValue<Head> extends true
+  ? Head extends `(${string}`
     ? [
         {
-          readonly name: ExtractTupleName<Head>
-          readonly type: ExtractTupleType<Head>
-          readonly internalType: ExtractTupleInternalType<Head>
+          readonly type: ExtractTupleType<ExtractTupleInfo<Head>>
+          readonly name: ExtractTupleName<ExtractTupleInfo<Head>>
+          readonly internalType: ExtractTupleInternalType<
+            ExtractTupleInfo<Head>
+          >
           readonly components: [
-            ...ParseComponents<[...CustomSplit<ExtractTArgs<Head>>, ...Last]>,
+            ...ParseComponents<
+              [...ReOrderArray<SplitNesting<ExtractTArgs<Head>>>, ...Last]
+            >,
           ]
         },
       ]
@@ -207,8 +247,8 @@ export type ParseComponents<T extends unknown[]> = T extends [never]
       ]
     ? [
         {
-          readonly name: TName
           readonly type: SolidityType<TType>
+          readonly name: TName
           readonly internalType: SolidityType<TType>
         },
         ...ParseComponents<Last>,
@@ -216,8 +256,8 @@ export type ParseComponents<T extends unknown[]> = T extends [never]
     : T extends [`${infer TType}`, ...infer Last]
     ? [
         {
-          readonly name: ''
           readonly type: SolidityType<TType>
+          readonly name: ''
           readonly internalType: SolidityType<TType>
         },
         ...ParseComponents<Last>,
@@ -230,16 +270,18 @@ export type ParseEventComponents<T extends unknown[]> = T extends [never]
   : T extends ['']
   ? never
   : T extends [infer Head extends string, ...infer Last extends string[]]
-  ? isTupleValue<Head> extends true
+  ? Head extends `(${string}`
     ? [
         {
-          readonly name: ExtractTupleName<Head>
-          readonly type: ExtractTupleType<Head>
-          readonly internalType: ExtractTupleInternalType<Head>
+          readonly name: ExtractTupleName<ExtractTupleInfo<Head>>
+          readonly type: ExtractTupleType<ExtractTupleInfo<Head>>
           readonly indexed: isIndexed<Head>
+          readonly internalType: ExtractTupleInternalType<
+            ExtractTupleInfo<Head>
+          >
           readonly components: [
             ...ParseEventComponents<
-              [...CustomSplit<ExtractTArgs<Head>>, ...Last]
+              [...ReOrderArray<SplitNesting<ExtractTArgs<Head>>>, ...Last]
             >,
           ]
         },
@@ -300,8 +342,8 @@ export type ParseHAbiFunctions<T extends HAbi> = T extends [never]
   ? Head extends `function${string}`
     ? [
         {
-          readonly name: ExtractNames<Head>
           readonly type: ExtractType<Head>
+          readonly name: ExtractNames<Head>
           readonly constant: ExtractMutability<Head> extends 'view' | 'pure'
             ? true
             : false

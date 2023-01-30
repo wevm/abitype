@@ -1,4 +1,5 @@
 import { assertType, test } from 'vitest'
+// import { ExtractAbiFunction } from '../utils'
 
 import type {
   ExtractArgs,
@@ -6,6 +7,7 @@ import type {
   ExtractNames,
   ExtractReturn,
   ExtractTArgs,
+  ExtractTupleInfo,
   ExtractTupleInternalType,
   ExtractTupleName,
   ExtractTupleType,
@@ -24,6 +26,7 @@ import type {
   ParseHumanAbi,
   isIndexed,
 } from './habi'
+import type { ReOrderArray, ReplaceAll, SplitNesting } from './utils'
 
 const testAbi = [
   'function balanceOf(address owner) view returns (uint tokenId)',
@@ -43,6 +46,34 @@ type FuncTypeTupleArray = typeof testAbi[4]
 type FuncTypeReturnTuple = typeof testAbi[5]
 type EventTuple = typeof testAbi[6]
 
+test('Utils', () => {
+  test('ReOrder', () => {
+    assertType<
+      ReOrderArray<
+        SplitNesting<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
+      >
+    >([
+      'address owner',
+      'uint tokenId',
+      '(bool loading, (string[][] names) cats)[] dog',
+    ])
+  }),
+    test('SplitNesting', () => {
+      assertType<
+        SplitNesting<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
+      >([
+        'address owner',
+        '(bool loading, (string[][] names) cats)[] dog',
+        'uint tokenId',
+      ])
+    })
+
+  test('Remove All', () => {
+    assertType<
+      ReplaceAll<'tuple(tuple(tuple(tuple(tuple(tuple())))))', 'tuple', ''>
+    >('(((((())))))')
+  })
+})
 test('Extract Names', () => {
   test('Function', () => {
     assertType<ExtractNames<FuncType>>('balanceOf')
@@ -99,15 +130,13 @@ test('ExtractArgs', () => {
   })
 
   test('Function Tuple', () => {
-    assertType<ExtractArgs<FuncTypeTuple>>([
-      'tuple(string name, uint16 age) person',
-    ])
+    assertType<ExtractArgs<FuncTypeTuple>>(['(string name, uint16 age) person'])
   })
 
   test('Event Tuple', () => {
     assertType<ExtractArgs<EventTuple>>([
       'uint indexed id',
-      'tuple(string name, uint16 age) indexed person',
+      '(string name, uint16 age) indexed person',
     ])
   })
 
@@ -117,7 +146,7 @@ test('ExtractArgs', () => {
 
   test('Function Tuple Array', () => {
     assertType<ExtractArgs<FuncTypeTupleArray>>([
-      'tuple(string name, uint16 age)[] person',
+      '(string name, uint16 age)[] person',
     ])
   })
 })
@@ -125,7 +154,7 @@ test('ExtractArgs', () => {
 test('ExtractReturn', () => {
   test('Tuple', () => {
     assertType<ExtractReturn<FuncTypeReturnTuple>>([
-      'tuple(string name, uint16 age) person',
+      '(string name, uint16 age) person',
     ])
   })
 
@@ -149,32 +178,40 @@ test('ExtractType', () => {
 
   test('Internal Type', () => {
     assertType<
-      ExtractTupleInternalType<'tuple(string name, uint16 age) person'>
+      ExtractTupleInternalType<
+        ExtractTupleInfo<'(string name, uint16 age) person'>
+      >
     >('Struct person')
   })
 })
 
 test('ExtractTupleName', () => {
   test('Name', () => {
-    assertType<ExtractTupleName<ExtractArgs<FuncTypeTuple>[number]>>('person')
+    assertType<
+      ExtractTupleName<ExtractTupleInfo<ExtractArgs<FuncTypeTuple>[number]>>
+    >('person')
   })
 
   test('Name Array', () => {
-    assertType<ExtractTupleName<ExtractArgs<FuncTypeTupleArray>[number]>>(
-      'person',
-    )
+    assertType<
+      ExtractTupleName<
+        ExtractTupleInfo<ExtractArgs<FuncTypeTupleArray>[number]>
+      >
+    >('person')
   })
 
   test('No Name', () => {
-    assertType<ExtractTupleName<'FuncType'>>('')
+    assertType<ExtractTupleName<ExtractTupleInfo<'FuncType'>>>('FuncType')
   })
 })
 
 test('ExtractTupleType', () => {
   test('Array', () => {
-    assertType<ExtractTupleType<ExtractArgs<FuncTypeTupleArray>[number]>>(
-      'tuple[]',
-    )
+    assertType<
+      ExtractTupleType<
+        ExtractTupleInfo<ExtractArgs<FuncTypeTupleArray>[number]>
+      >
+    >('tuple[]')
   })
 
   test('Normal', () => {
@@ -182,9 +219,9 @@ test('ExtractTupleType', () => {
   })
 
   test('Fixed size Array', () => {
-    assertType<ExtractTupleType<'tuple(address whatever)[5] person'>>(
-      'tuple[5]',
-    )
+    assertType<
+      ExtractTupleType<ExtractTupleInfo<'(address whatever)[5] person'>>
+    >('tuple[5]')
   })
 })
 
@@ -329,9 +366,9 @@ test('ParseComponents', () => {
   test('Nested Tuples', () => {
     assertType<
       ParseComponents<
-        [
-          'tuple(address owner, tuple(bool loading, tuple(string[][] names) cats)[] dog, uint tokenId) person',
-        ]
+        ReOrderArray<
+          SplitNesting<'(address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId) person'>
+        >
       >
     >([
       {
@@ -370,7 +407,7 @@ test('ParseComponents', () => {
     assertType<
       ParseComponents<
         [
-          'tuple(tuple(tuple(tuple(tuple(tuple(tuple(tuple(tuple(tuple(uint tokenId) person)[24] person) person) person) person)[3] person) person) person)[] person) person',
+          '(((((((((((uint tokenId) animal) person)[24] person) person) person) person)[3] person) person) person)[] person) person',
         ]
       >
     >([
@@ -425,9 +462,16 @@ test('ParseComponents', () => {
                                             internalType: 'Struct person',
                                             components: [
                                               {
-                                                name: 'tokenId',
-                                                type: 'uint256',
-                                                internalType: 'uint256',
+                                                name: 'animal',
+                                                type: 'tuple',
+                                                internalType: 'Struct animal',
+                                                components: [
+                                                  {
+                                                    type: 'uint256',
+                                                    name: 'tokenId',
+                                                    internalType: 'uint256',
+                                                  },
+                                                ],
                                               },
                                             ],
                                           },
@@ -456,7 +500,7 @@ test('ParseComponents', () => {
 test('ParseEventComponents', () => {
   test('Event Tuple', () => {
     assertType<
-      ParseEventComponents<['tuple(string name, uint16 age) indexed person']>
+      ParseEventComponents<['(string name, uint16 age) indexed person']>
     >([
       {
         type: 'tuple',
@@ -481,7 +525,7 @@ test('ParseEventArgs', () => {
       indexed: true,
     },
     { indexed: true, name: 'to', type: 'address', internalType: 'address' },
-    { indexed: false, internalType: 'address', type: 'address', name: 'value' },
+    { internalType: 'address', type: 'address', name: 'value' },
   ])
 })
 
@@ -538,7 +582,6 @@ test('ParseHAbiEvents', () => {
           name: 'value',
           type: 'address',
           internalType: 'address',
-          indexed: false,
         },
       ],
     },
@@ -660,7 +703,6 @@ test('ParseHumanAbi', () => {
           name: 'value',
           type: 'address',
           internalType: 'address',
-          indexed: false,
         },
       ],
     },
@@ -750,3 +792,129 @@ test('ParseHumanAbi', () => {
     },
   ])
 })
+
+// https://docs.ethers.org/v5/api/utils/abi/formats/#abi-formats--object
+// const iface = new Interface(humanReadableAbi);
+// jsonAbi = iface.format(FormatTypes.json);
+
+// const ethersParsedAbi = <const>[
+//   {
+//     type: 'function',
+//     name: 'balanceOf',
+//     constant: true,
+//     stateMutability: 'view',
+//     payable: false,
+//     inputs: [
+//       {
+//         type: 'address',
+//         name: 'owner',
+//       },
+//     ],
+//     outputs: [
+//       {
+//         type: 'uint256',
+//         name: 'tokenId',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'event',
+//     anonymous: false,
+//     name: 'Transfer',
+//     inputs: [
+//       {
+//         type: 'address',
+//         name: 'from',
+//         indexed: true,
+//       },
+//       {
+//         type: 'address',
+//         name: 'to',
+//         indexed: true,
+//       },
+//       {
+//         type: 'address',
+//         name: 'value',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'error',
+//     name: 'InsufficientBalance',
+//     inputs: [
+//       {
+//         type: 'account',
+//         name: 'owner',
+//       },
+//       {
+//         type: 'uint256',
+//         name: 'balance',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'function',
+//     name: 'getPerson',
+//     constant: true,
+//     stateMutability: 'view',
+//     payable: false,
+//     inputs: [
+//       {
+//         type: 'uint256',
+//         name: 'id',
+//       },
+//     ],
+//     outputs: [
+//       {
+//         type: 'tuple',
+//         name: 'person',
+//         components: [
+//           {
+//             type: 'string',
+//             name: 'name',
+//           },
+//           {
+//             type: 'uint16',
+//             name: 'age',
+//           },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     type: 'event',
+//     anonymous: false,
+//     name: 'PersonAdded',
+//     inputs: [
+//       {
+//         type: 'uint256',
+//         name: 'id',
+//         indexed: true,
+//       },
+//       {
+//         type: 'tuple',
+//         name: 'person',
+//         indexed: true,
+//         components: [
+//           {
+//             type: 'string',
+//             name: 'name',
+//             indexed: false,
+//           },
+//           {
+//             type: 'uint16',
+//             name: 'age',
+//             indexed: false,
+//           },
+//         ],
+//       },
+//     ],
+//   },
+// ]
+
+// type Expect<T extends true> = T
+// type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y
+//   ? 1
+//   : 2
+//   ? true
+//   : false
