@@ -137,6 +137,7 @@ type Pop<T extends any[]> = T extends [...infer R, any] ? R : []
  * type Result = SplitNesting<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
  * //    ^? ["address owner","(bool loading, (string[][] names) cats)[] dog","uint tokenId"]
  */
+// Adapted from "https://github.com/ethers-io/ethers.js/blob/bf0b468490cb293cd916e4fff06e0909273719e6/packages/abi/src.ts/fragments.ts#L1043"
 export type SplitNesting<
   T extends string,
   TResult extends any[] = [],
