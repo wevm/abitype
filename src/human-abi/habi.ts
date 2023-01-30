@@ -483,21 +483,21 @@ export type ParseHAbiFunctions<T extends HAbi> = T extends [never]
   ? Head extends `function${string}`
     ? [
         {
-          readonly type: ExtractType<Head>
-          readonly name: ExtractNames<Head>
           readonly constant: ExtractMutability<Head> extends 'view' | 'pure'
-            ? true
-            : false
-          readonly stateMutability: ExtractMutability<Head>
-          readonly payable: ExtractMutability<Head> extends 'payable'
             ? true
             : false
           readonly inputs: readonly [
             ...HandleArguments<ExtractArgs<Head>, 'function'>,
           ]
+          readonly name: ExtractNames<Head>
           readonly outputs: readonly [
             ...HandleReturnArguments<ExtractReturn<Head>>,
           ]
+          readonly payable: ExtractMutability<Head> extends 'payable'
+            ? true
+            : false
+          readonly stateMutability: ExtractMutability<Head>
+          readonly type: ExtractType<Head>
         },
         ...ParseHAbiFunctions<Rest>,
       ]
@@ -522,12 +522,12 @@ export type ParseHAbiEvents<T extends HAbi> = T extends [never]
   ? Head extends `event${string}`
     ? [
         {
-          readonly name: ExtractNames<Head>
-          readonly type: ExtractType<Head>
           readonly anonymous: false
           readonly inputs: readonly [
             ...HandleArguments<ExtractArgs<Head>, 'event'>,
           ]
+          readonly name: ExtractNames<Head>
+          readonly type: ExtractType<Head>
         },
         ...ParseHAbiEvents<Rest>,
       ]
@@ -552,8 +552,8 @@ export type ParseHAbiErrors<T extends HAbi> = T extends [never]
   ? Head extends `error${string}`
     ? [
         {
-          readonly name: ExtractNames<Head>
           readonly type: ExtractType<Head>
+          readonly name: ExtractNames<Head>
           readonly inputs: readonly [...ParseFunctionArgs<ExtractArgs<Head>>]
         },
         ...ParseHAbiErrors<Rest>,
@@ -597,3 +597,104 @@ export type HAbi = readonly (
  * //    ^? "false"
  */
 export type IsHAbi<THAbi> = THAbi extends HAbi ? true : false
+
+/**
+ * Extracts all the func names in the HAbi spec array
+ *
+ * @param THAbi - Array of strings to check
+ * @returns A union type of all the names extracted
+ *
+ * @example
+ * type Result = ExtractHAbiFunctionNames<typeof erc721abi>
+ * //    ^? "balanceOf | ownerOf | ..."
+ */
+export type ExtractHAbiFunctionNames<THAbi extends HAbi> = Extract<
+  {
+    [TKey in keyof THAbi]: THAbi[TKey] extends infer TFunc extends `function${string}`
+      ? {
+          name: ExtractNames<TFunc>
+        }
+      : never
+  }[number],
+  { name: string }
+>['name']
+
+/**
+ * Extracts all the event names in the HAbi spec array
+ *
+ * @param THAbi - Array of strings to check
+ * @returns A union type of all the names extracted
+ *
+ * @example
+ * type Result = ExtractHAbiEventNames<typeof erc721abi>
+ * //    ^? "Transfer |  ..."
+ */
+export type ExtractHAbiEventNames<THAbi extends HAbi> = {
+  [TKey in keyof THAbi]: THAbi[TKey] extends infer TFunc extends `event${string}`
+    ? ExtractNames<TFunc>
+    : never
+}[number]
+
+/**
+ * Extracts all the error names in the HAbi spec array
+ *
+ * @param THAbi - Array of strings to check
+ * @returns A union type of all the names extracted
+ *
+ * @example
+ * type Result = ExtractHAbiErrorNames<>
+ * //    ^? "NotOwner |  ..."
+ */
+export type ExtractHAbiErrorNames<THAbi extends HAbi> = {
+  [TKey in keyof THAbi]: THAbi[TKey] extends infer TFunc extends `error${string}`
+    ? ExtractNames<TFunc>
+    : never
+}[number]
+
+/**
+ * Extracts a func type from the parsed abi. Usefull if you want to grab a specific function
+ *
+ * @param THAbi - Array of strings to check
+ * @param TFuncName - Union of all possible function names to grab from
+ * @returns Object of the the selected function
+ *
+ * @example
+ * type Result = ExtractHAbiFunction<["error hello(string world)","event hello(string world)","function hello(string world)"]>
+ * //    ^? [{name: "hello", type: "function", constant: false, payable: false, inputs:[{name: "world", type: "string", internalType: "string"}], outputs:[]}]
+ */
+export type ExtractHAbiFunction<
+  THAbi extends HAbi,
+  TFuncName extends ExtractHAbiFunctionNames<THAbi>,
+> = Extract<ParseHAbiFunctions<THAbi>[number], { name: TFuncName }>
+
+/**
+ * Extracts a func type from the parsed abi. Usefull if you want to grab a specific event
+ *
+ * @param THAbi - Array of strings to check
+ * @param TFuncName - Union of all possible event names to grab from
+ * @returns Object of the the selected function
+ *
+ * @example
+ * type Result = ExtractHAbiEvent<["error hello(string world)","event hello(string world)","function hello(string world)"]>
+ * //    ^? [{name: "hello", type: "event", anonymous: false, inputs:[{name: "world", type: "string", internalType: "string"}]}]
+ */
+export type ExtractHAbiEvent<
+  THAbi extends HAbi,
+  TEventName extends ExtractHAbiEventNames<THAbi>,
+> = Extract<ParseHAbiEvents<THAbi>[number], { name: TEventName }>
+
+/**
+ * Extracts a func type from the parsed abi. Usefull if you want to grab a specific error
+ *
+ * @param THAbi - Array of strings to check
+ * @param TFuncName - Union of all possible error names to grab from
+ * @returns Object of the the selected function
+ *
+ * @example
+ * type Result = ExtractHAbiError<["error hello(string world)","event hello(string world)","function hello(string world)"]>
+ * //    ^? [{name: "hello", type: "error", inputs:[{name: "world", type: "string", internalType: "string"}]}]
+ */
+export type ExtractHAbiError<
+  THAbi extends HAbi,
+  TErrorName extends ExtractHAbiErrorNames<THAbi>,
+> = Extract<ParseHAbiErrors<THAbi>[number], { name: TErrorName }>

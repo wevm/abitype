@@ -3,6 +3,12 @@ import { assertType, test } from 'vitest'
 
 import type {
   ExtractArgs,
+  ExtractHAbiError,
+  ExtractHAbiErrorNames,
+  ExtractHAbiEvent,
+  ExtractHAbiEventNames,
+  ExtractHAbiFunction,
+  ExtractHAbiFunctionNames,
   ExtractMutability,
   ExtractNames,
   ExtractReturn,
@@ -791,4 +797,42 @@ test('ParseHumanAbi', () => {
       ],
     },
   ])
+})
+
+test('Extract Names', () => {
+  assertType<ExtractHAbiFunctionNames<typeof testAbi>>('balanceOf')
+  assertType<ExtractHAbiEventNames<typeof testAbi>>('Transfer')
+  assertType<ExtractHAbiErrorNames<typeof testAbi>>('InsufficientBalance')
+})
+
+test('Extract Abi Specs', () => {
+  assertType<ExtractHAbiFunction<typeof testAbi, 'balanceOf'>>({
+    constant: true,
+    inputs: [{ name: 'owner', type: 'address', internalType: 'address' }],
+    type: 'function',
+    name: 'balanceOf',
+    outputs: [{ name: 'tokenId', type: 'uint256', internalType: 'uint256' }],
+    payable: false,
+    stateMutability: 'view',
+  })
+
+  assertType<ExtractHAbiEvent<typeof testAbi, 'Transfer'>>({
+    name: 'Transfer',
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', type: 'address', internalType: 'address', indexed: true },
+      { name: 'to', type: 'address', internalType: 'address', indexed: true },
+      { name: 'value', type: 'address', internalType: 'address' },
+    ],
+  })
+
+  assertType<ExtractHAbiError<typeof testAbi, 'InsufficientBalance'>>({
+    name: 'InsufficientBalance',
+    type: 'error',
+    inputs: [
+      { name: 'owner', type: 'account', internalType: 'account' },
+      { name: 'balance', type: 'uint256', internalType: 'uint256' },
+    ],
+  })
 })
