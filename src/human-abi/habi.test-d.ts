@@ -1,5 +1,4 @@
 import { assertType, test } from 'vitest'
-// import { ExtractAbiFunction } from '../utils'
 
 import type {
   ExtractArgs,
@@ -19,20 +18,17 @@ import type {
   ExtractTupleType,
   ExtractType,
   HandleArguments,
-  HandleReturnArguments,
   IsHAbi,
+  ParseArgs,
   ParseComponents,
-  ParseEventArgs,
-  ParseEventComponents,
-  ParseFunctionArgs,
-  ParseFunctionReturn,
   ParseHAbiErrors,
   ParseHAbiEvents,
   ParseHAbiFunctions,
   ParseHumanAbi,
+  ParseParams,
   isIndexed,
 } from './habi'
-import type { ReOrderArray, ReplaceAll, SplitNesting } from './utils'
+import type { ReOrderArray, ReplaceAll } from './utils'
 
 const testAbi = [
   'function balanceOf(address owner) view returns (uint tokenId)',
@@ -56,7 +52,7 @@ test('Utils', () => {
   test('ReOrder', () => {
     assertType<
       ReOrderArray<
-        SplitNesting<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
+        ParseParams<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
       >
     >([
       'address owner',
@@ -66,7 +62,7 @@ test('Utils', () => {
   }),
     test('SplitNesting', () => {
       assertType<
-        SplitNesting<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
+        ParseParams<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
       >([
         'address owner',
         '(bool loading, (string[][] names) cats)[] dog',
@@ -272,7 +268,7 @@ test('IsHAbi', () => {
 
 test('HandleArguments', () => {
   test('Function', () => {
-    assertType<HandleArguments<ExtractArgs<FuncType>, 'function'>>([
+    assertType<HandleArguments<ExtractArgs<FuncType>>>([
       {
         internalType: 'address',
         name: 'owner',
@@ -282,7 +278,7 @@ test('HandleArguments', () => {
   })
 
   test('Function Tuple', () => {
-    assertType<HandleArguments<ExtractArgs<FuncTypeTuple>, 'function'>>([
+    assertType<HandleArguments<ExtractArgs<FuncTypeTuple>>>([
       {
         type: 'tuple',
         name: 'person',
@@ -304,7 +300,7 @@ test('HandleArguments', () => {
   })
 
   test('Function Tuple Array', () => {
-    assertType<HandleArguments<ExtractArgs<FuncTypeTupleArray>, 'function'>>([
+    assertType<HandleArguments<ExtractArgs<FuncTypeTupleArray>>>([
       {
         type: 'tuple[]',
         name: 'person',
@@ -326,7 +322,7 @@ test('HandleArguments', () => {
   })
 
   test('Event Tuple', () => {
-    assertType<HandleArguments<ExtractArgs<EventTuple>, 'event'>>([
+    assertType<HandleArguments<ExtractArgs<EventTuple>>>([
       { name: 'id', type: 'uint256', internalType: 'uint256', indexed: true },
       {
         type: 'tuple',
@@ -344,7 +340,7 @@ test('HandleArguments', () => {
 
 test('HandleReturnArguments', () => {
   test('Non Tuple', () => {
-    assertType<HandleReturnArguments<ExtractReturn<FuncType>>>([
+    assertType<HandleArguments<ExtractReturn<FuncType>>>([
       {
         internalType: 'uint256',
         name: 'tokenId',
@@ -354,7 +350,7 @@ test('HandleReturnArguments', () => {
   })
 
   test('Tuple Return', () => {
-    assertType<HandleReturnArguments<ExtractReturn<FuncTypeReturnTuple>>>([
+    assertType<HandleArguments<ExtractReturn<FuncTypeReturnTuple>>>([
       {
         name: 'person',
         type: 'tuple',
@@ -373,7 +369,7 @@ test('ParseComponents', () => {
     assertType<
       ParseComponents<
         ReOrderArray<
-          SplitNesting<'(address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId) person'>
+          ParseParams<'(address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId) person'>
         >
       >
     >([
@@ -505,9 +501,7 @@ test('ParseComponents', () => {
 
 test('ParseEventComponents', () => {
   test('Event Tuple', () => {
-    assertType<
-      ParseEventComponents<['(string name, uint16 age) indexed person']>
-    >([
+    assertType<ParseComponents<['(string name, uint16 age) indexed person']>>([
       {
         type: 'tuple',
         name: 'person',
@@ -523,7 +517,7 @@ test('ParseEventComponents', () => {
 })
 
 test('ParseEventArgs', () => {
-  assertType<ParseEventArgs<ExtractArgs<EventType>>>([
+  assertType<ParseArgs<ExtractArgs<EventType>>>([
     {
       name: 'from',
       type: 'address',
@@ -537,7 +531,7 @@ test('ParseEventArgs', () => {
 
 test('ParseFunctionArgs and Return', () => {
   test('Function Args', () => {
-    assertType<ParseFunctionArgs<ExtractArgs<FuncType>>>([
+    assertType<ParseArgs<ExtractArgs<FuncType>>>([
       {
         name: 'owner',
         type: 'address',
@@ -547,7 +541,7 @@ test('ParseFunctionArgs and Return', () => {
   })
 
   test('Function Return', () => {
-    assertType<ParseFunctionReturn<ExtractReturn<FuncType>>>([
+    assertType<ParseArgs<ExtractReturn<FuncType>>>([
       {
         name: 'tokenId',
         type: 'uint256',

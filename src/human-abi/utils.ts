@@ -125,41 +125,7 @@ export type ReplaceAll<
  * type Result = Pop<[1,2,3]>
  * //    ^? "[1,2]"
  */
-type Pop<T extends any[]> = T extends [...infer R, any] ? R : []
-
-/**
- * Splits a string for every `,` value in it in the expection it has nested values e.g `(${string})`
- *
- * @param T - string to split
- * @returns Array with the splited string {@link T}
- *
- * @example
- * type Result = SplitNesting<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
- * //    ^? ["address owner","(bool loading, (string[][] names) cats)[] dog","uint tokenId"]
- */
-// Adapted from "https://github.com/ethers-io/ethers.js/blob/bf0b468490cb293cd916e4fff06e0909273719e6/packages/abi/src.ts/fragments.ts#L1043"
-export type SplitNesting<
-  T extends string,
-  TResult extends any[] = [],
-  TStr extends string = '',
-  Depth extends any[] = [],
-> = T extends ''
-  ? [...TResult, Trim<TStr>]
-  : Depth['length'] extends 0
-  ? T extends `${infer Char}${infer Rest}`
-    ? Char extends ','
-      ? SplitNesting<Rest, [...TResult, Trim<TStr>], ''>
-      : Char extends '('
-      ? SplitNesting<Rest, TResult, `${TStr}${Char}`, [...Depth, 1]>
-      : SplitNesting<Rest, TResult, `${TStr}${Char}`>
-    : []
-  : T extends `${infer Char}${infer Rest}`
-  ? Char extends '('
-    ? SplitNesting<Rest, TResult, `${TStr}${Char}`, [...Depth, 1]>
-    : Char extends ')'
-    ? SplitNesting<Rest, TResult, `${TStr}${Char}`, Pop<Depth>>
-    : SplitNesting<Rest, TResult, `${TStr}${Char}`, Depth>
-  : []
+export type Pop<T extends any[]> = T extends [...infer R, any] ? R : []
 
 /**
  * Re-order an array to ensure that strings that match `(${string})${string}` are the last element

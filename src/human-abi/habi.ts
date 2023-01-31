@@ -2,10 +2,10 @@ import type {
   AbiIndexed,
   AbiMutability,
   AbiTypes,
+  Pop,
   ReOrderArray,
   ReplaceAll,
   SolidityType,
-  SplitNesting,
   Trim,
   WS,
   hasTupleValue,
@@ -70,7 +70,7 @@ export type ExtractMutability<T extends string> =
  */
 export type ExtractReturn<T extends string> =
   T extends `${string}returns (${infer TName})`
-    ? ReOrderArray<SplitNesting<ReplaceAll<TName, 'tuple', ''>>>
+    ? ReOrderArray<ParseParams<ReplaceAll<TName, 'tuple', ''>>>
     : ['void']
 
 /**
@@ -85,14 +85,14 @@ export type ExtractReturn<T extends string> =
  */
 export type ExtractArgs<T extends string> = hasTupleValue<T> extends true
   ? T extends `${AbiTypes}${WS}${string}(${infer TName})${WS}${string}returns${string}`
-    ? ReOrderArray<SplitNesting<ReplaceAll<TName, 'tuple', ''>>>
+    ? ReOrderArray<ParseParams<ReplaceAll<TName, 'tuple', ''>>>
     : T extends `${AbiTypes}${WS}${string}(${infer TNames})`
-    ? ReOrderArray<SplitNesting<ReplaceAll<TNames, 'tuple', ''>>>
+    ? ReOrderArray<ParseParams<ReplaceAll<TNames, 'tuple', ''>>>
     : never
   : T extends `${AbiTypes}${WS}${string}(${infer TName})${string}returns${string}`
-  ? ReOrderArray<SplitNesting<ReplaceAll<TName, 'tuple', ''>>>
+  ? ReOrderArray<ParseParams<ReplaceAll<TName, 'tuple', ''>>>
   : T extends `${AbiTypes}${WS}${string}(${infer TNames})`
-  ? ReOrderArray<SplitNesting<ReplaceAll<TNames, 'tuple', ''>>>
+  ? ReOrderArray<ParseParams<ReplaceAll<TNames, 'tuple', ''>>>
   : never
 
 /**
@@ -198,7 +198,41 @@ export type ExtractTupleInternalType<T extends string> =
     : Trim<`Struct${WS}${T}`>
 
 /**
- * Parse HAbi string arguments.
+ * Splits a string for every `,` value in it in the expection it has nested values e.g `(${string})` {@link ExtractArgs} {@link ExtractReturn} {@link ExtractTArgs}
+ *
+ * @param T - string to split
+ * @returns Array with the splited string {@link T}
+ *
+ * @example
+ * type Result = ParseParms<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
+ * //    ^? ["address owner","(bool loading, (string[][] names) cats)[] dog","uint tokenId"]
+ */
+// Adapted from "https://github.com/ethers-io/ethers.js/blob/bf0b468490cb293cd916e4fff06e0909273719e6/packages/abi/src.ts/fragments.ts#L1043"
+export type ParseParams<
+  T extends string,
+  TResult extends any[] = [],
+  TStr extends string = '',
+  Depth extends any[] = [],
+> = T extends ''
+  ? [...TResult, Trim<TStr>]
+  : Depth['length'] extends 0
+  ? T extends `${infer Char}${infer Rest}`
+    ? Char extends ','
+      ? ParseParams<Rest, [...TResult, Trim<TStr>], ''>
+      : Char extends '('
+      ? ParseParams<Rest, TResult, `${TStr}${Char}`, [...Depth, 1]>
+      : ParseParams<Rest, TResult, `${TStr}${Char}`>
+    : []
+  : T extends `${infer Char}${infer Rest}`
+  ? Char extends '('
+    ? ParseParams<Rest, TResult, `${TStr}${Char}`, [...Depth, 1]>
+    : Char extends ')'
+    ? ParseParams<Rest, TResult, `${TStr}${Char}`, Pop<Depth>>
+    : ParseParams<Rest, TResult, `${TStr}${Char}`, Depth>
+  : []
+
+/**
+ * Parse HAbi string arguments and return arguments.
  *
  * @param T - String to parse
  * @returns Array with the parsed abi values. Assumes values were extracted previously from {@link ExtractArgs}
@@ -207,83 +241,11 @@ export type ExtractTupleInternalType<T extends string> =
  * type Result = ParseFunctionArgs<["string world"]>
  * //    ^? "[{name: "hello", type: "string", internalType: "string"}]"
  */
-export type ParseFunctionArgs<T extends string[]> = T extends [never]
+export type ParseArgs<T extends string[]> = T extends [never]
   ? never
   : T extends ['']
   ? []
-  : T extends [
-      `${infer TType}${WS}${infer TName}`,
-      ...infer Rest extends string[],
-    ]
-  ? [
-      {
-        readonly type: SolidityType<TType>
-        readonly name: TName
-        readonly internalType: SolidityType<TType>
-      },
-      ...ParseFunctionArgs<Rest>,
-    ]
-  : T extends [`${infer TType}`, ...infer Rest extends string[]]
-  ? [
-      {
-        readonly internalType: SolidityType<TType>
-        readonly name: ''
-        readonly type: SolidityType<TType>
-      },
-      ...ParseFunctionArgs<Rest>,
-    ]
-  : []
-
-/**
- * Parse HAbi string return.
- *
- * @param T - String to parse
- * @returns Array with the parsed abi values. Assumes values were extracted previously from {@link ExtractReturn}
- *
- * @example
- * type Result = ParseFunctionReturn<["string world"]>
- * //    ^? "[{name: "hello", type: "string", internalType: "string"}]"
- */
-export type ParseFunctionReturn<T extends string[]> = T extends [never]
-  ? never
   : T extends ['void']
-  ? []
-  : T extends [
-      `${infer TType}${WS}${infer TName}`,
-      ...infer Rest extends string[],
-    ]
-  ? [
-      {
-        readonly type: SolidityType<TType>
-        readonly name: TName
-        readonly internalType: SolidityType<TType>
-      },
-      ...ParseFunctionReturn<Rest>,
-    ]
-  : T extends [`${infer TType}`, ...infer Rest extends string[]]
-  ? [
-      {
-        readonly type: SolidityType<TType>
-        readonly name: ''
-        readonly internalType: SolidityType<TType>
-      },
-      ...ParseFunctionReturn<Rest>,
-    ]
-  : []
-
-/**
- * Parse HAbi event string arguments.
- *
- * @param T - String to parse
- * @returns Array with the parsed abi values. Assumes values were extracted previously from {@link ExtractArgs}
- *
- * @example
- * type Result = ParseFunctionArgs<["address indexed owner"]>
- * //    ^? "[{name: "owner", type: "address", internalType: "address", indexed: true}]"
- */
-export type ParseEventArgs<T extends string[]> = T extends [never]
-  ? never
-  : T extends ['']
   ? []
   : T extends [
       `${infer TType}${AbiIndexed}${infer TName}`,
@@ -296,7 +258,7 @@ export type ParseEventArgs<T extends string[]> = T extends [never]
         readonly name: TName
         readonly type: SolidityType<TType>
       },
-      ...ParseEventArgs<Rest>,
+      ...ParseArgs<Rest>,
     ]
   : T extends [
       `${infer TType}${WS}${infer TName}`,
@@ -304,11 +266,20 @@ export type ParseEventArgs<T extends string[]> = T extends [never]
     ]
   ? [
       {
-        readonly internalType: SolidityType<TType>
+        readonly type: SolidityType<TType>
         readonly name: TName
+        readonly internalType: SolidityType<TType>
+      },
+      ...ParseArgs<Rest>,
+    ]
+  : T extends [`${infer TType}`, ...infer Rest extends string[]]
+  ? [
+      {
+        readonly internalType: SolidityType<TType>
+        readonly name: ''
         readonly type: SolidityType<TType>
       },
-      ...ParseEventArgs<Rest>,
+      ...ParseArgs<Rest>,
     ]
   : []
 
@@ -337,10 +308,10 @@ export type ParseComponents<T extends unknown[]> = T extends [never]
           >
           readonly components: [
             ...ParseComponents<
-              [...ReOrderArray<SplitNesting<ExtractTArgs<Head>>>, ...Last]
+              [...ReOrderArray<ParseParams<ExtractTArgs<Head>>>, ...Last]
             >,
           ]
-        },
+        } & (isIndexed<Head> extends true ? { indexed: true } : unknown),
       ]
     : T extends [
         `${infer TType}${WS}${infer TName}`,
@@ -362,61 +333,6 @@ export type ParseComponents<T extends unknown[]> = T extends [never]
           readonly internalType: SolidityType<TType>
         },
         ...ParseComponents<Last>,
-      ]
-    : []
-  : []
-
-/**
- * Parse HAbi tuple string arguments. This handles the indexed values on the string
- *
- * @param T - String to parse
- * @returns Array with the parsed abi values. Assumes values were extracted previously from {@link ExtractTArgs}
- *
- * @example
- * type Result = ParseComponents<["(string world)[] person"]>
- * //    ^? [{name: "person", type: "tuple[]", internalType: "Struct[] person", indexed: true, components:[{name: "world", type: "string", internalType: "world"}]}]
- */
-export type ParseEventComponents<T extends unknown[]> = T extends [never]
-  ? never
-  : T extends ['']
-  ? never
-  : T extends [infer Head extends string, ...infer Last extends string[]]
-  ? Head extends `(${string}`
-    ? [
-        {
-          readonly name: ExtractTupleName<ExtractTupleInfo<Head>>
-          readonly type: ExtractTupleType<ExtractTupleInfo<Head>>
-          readonly indexed: isIndexed<Head>
-          readonly internalType: ExtractTupleInternalType<
-            ExtractTupleInfo<Head>
-          >
-          readonly components: [
-            ...ParseEventComponents<
-              [...ReOrderArray<SplitNesting<ExtractTArgs<Head>>>, ...Last]
-            >,
-          ]
-        },
-      ]
-    : T extends [
-        `${infer TType}${WS}${infer TName}`,
-        ...infer Last extends string[],
-      ]
-    ? [
-        {
-          readonly name: TName
-          readonly type: SolidityType<TType>
-          readonly internalType: SolidityType<TType>
-        },
-        ...ParseEventComponents<Last>,
-      ]
-    : T extends [`${infer TType}`, ...infer Last]
-    ? [
-        {
-          readonly name: ''
-          readonly type: SolidityType<TType>
-          readonly internalType: SolidityType<TType>
-        },
-        ...ParseEventComponents<Last>,
       ]
     : []
   : []
@@ -431,38 +347,13 @@ export type ParseEventComponents<T extends unknown[]> = T extends [never]
  * type Result = HandleArguments<["(string world)[] person"], "function">
  * //    ^? [{name: "person", type: "tuple[]", internalType: "Struct[] person", indexed: true, components:[{name: "world", type: "string", internalType: "world"}]}]
  */
-export type HandleArguments<
-  T extends unknown[],
-  TType extends 'function' | 'event',
-> = TType extends 'function'
-  ? T extends [infer THead extends string, ...infer Rest extends string[]]
-    ? isTupleValue<THead> extends true
-      ? [...ParseComponents<[THead]>, ...HandleArguments<Rest, 'function'>]
-      : [...ParseFunctionArgs<[THead]>, ...HandleArguments<Rest, 'function'>]
-    : []
-  : T extends [infer THead extends string, ...infer Rest extends string[]]
-  ? isTupleValue<THead> extends true
-    ? [...ParseEventComponents<[THead]>, ...HandleArguments<Rest, 'event'>]
-    : [...ParseEventArgs<[THead]>, ...HandleArguments<Rest, 'event'>]
-  : []
-
-/**
- * Extract name from HAbi string.
- *
- * @param T - Assumes the string starts with `"function" | "event" | "error"` followed by `WS` in order to extract the name
- * @returns The name in case of a match or never in case it fails
- *
- * @example
- * type Result = ExtractName<"function hello(string world)">
- * //    ^? "hello"
- */
-export type HandleReturnArguments<T extends unknown[]> = T extends [
+export type HandleArguments<T extends unknown[]> = T extends [
   infer THead extends string,
   ...infer Rest extends string[],
 ]
   ? isTupleValue<THead> extends true
-    ? [...ParseComponents<[THead]>, ...HandleReturnArguments<Rest>]
-    : [...ParseFunctionReturn<[THead]>, ...HandleReturnArguments<Rest>]
+    ? [...ParseComponents<[THead]>, ...HandleArguments<Rest>]
+    : [...ParseArgs<[THead]>, ...HandleArguments<Rest>]
   : []
 
 /**
@@ -486,13 +377,9 @@ export type ParseHAbiFunctions<T extends HAbi> = T extends [never]
           readonly constant: ExtractMutability<Head> extends 'view' | 'pure'
             ? true
             : false
-          readonly inputs: readonly [
-            ...HandleArguments<ExtractArgs<Head>, 'function'>,
-          ]
+          readonly inputs: readonly [...HandleArguments<ExtractArgs<Head>>]
           readonly name: ExtractNames<Head>
-          readonly outputs: readonly [
-            ...HandleReturnArguments<ExtractReturn<Head>>,
-          ]
+          readonly outputs: readonly [...HandleArguments<ExtractReturn<Head>>]
           readonly payable: ExtractMutability<Head> extends 'payable'
             ? true
             : false
@@ -523,9 +410,7 @@ export type ParseHAbiEvents<T extends HAbi> = T extends [never]
     ? [
         {
           readonly anonymous: false
-          readonly inputs: readonly [
-            ...HandleArguments<ExtractArgs<Head>, 'event'>,
-          ]
+          readonly inputs: readonly [...HandleArguments<ExtractArgs<Head>>]
           readonly name: ExtractNames<Head>
           readonly type: ExtractType<Head>
         },
@@ -554,7 +439,7 @@ export type ParseHAbiErrors<T extends HAbi> = T extends [never]
         {
           readonly type: ExtractType<Head>
           readonly name: ExtractNames<Head>
-          readonly inputs: readonly [...ParseFunctionArgs<ExtractArgs<Head>>]
+          readonly inputs: readonly [...ParseArgs<ExtractArgs<Head>>]
         },
         ...ParseHAbiErrors<Rest>,
       ]
