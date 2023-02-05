@@ -72,6 +72,21 @@ test('readContracts', () => {
       )
     })
 
+    test('Read bytes input types', () => {
+      const result = readContracts({
+        contracts: [
+          {
+            address,
+            abi: wagmiMintExampleAbi,
+            functionName: 'supportsInterface',
+            args: [new Uint8Array(Buffer.from('0xfoobarbaz'))],
+            //^?
+          },
+        ],
+      })
+      assertType<[boolean]>(result)
+    })
+
     test('two or more', () => {
       const result = readContracts({
         contracts: [
@@ -111,7 +126,7 @@ test('readContracts', () => {
           },
         ],
       })
-      assertType<[void, ResolvedConfig['BytesType']]>(result)
+      assertType<[void, ResolvedConfig['BytesReturnType']]>(result)
     })
   })
 

@@ -82,7 +82,7 @@ export type GetReturnType<
   } = TAbi extends Abi
     ? ExtractAbiFunction<TAbi, TFunctionName>
     : AbiFunction & { type: 'function' },
-  TArgs = AbiParametersToPrimitiveTypes<TAbiFunction['outputs']>,
+  TArgs = AbiParametersToPrimitiveTypes<TAbiFunction['outputs'], 'outputs'>,
   FailedToParseArgs =
     | ([TArgs] extends [never] ? true : false)
     | (readonly unknown[] extends TArgs ? true : false),
