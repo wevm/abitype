@@ -368,7 +368,7 @@ export type TypedDataToPrimitiveTypes<TTypedData extends TypedData> = {
           'inputs'
         >
       : K2['type'] extends TypedDataType // 4. Known type to convert
-      ? AbiParameterToPrimitiveType<K2, 'inputs'>
+      ? AbiParameterToPrimitiveType<K2>
       : `Error: Cannot convert unknown type '${K2['type']}' to primitive type.`
   }
 }

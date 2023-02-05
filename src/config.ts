@@ -29,7 +29,7 @@ export interface DefaultConfig {
   AddressType: `0x${string}`
   /** TypeScript type to use for `bytes` return values */
   BytesReturnType: `0x${string}`
-  /** TypeScript type to use for `bytes` arg values */
+  /** TypeScript type to use for `bytes` input values */
   BytesInputType: `0x${string}` | Uint8Array
   /** TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48` */
   BigIntType: bigint
