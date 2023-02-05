@@ -166,7 +166,7 @@ export type Abi = readonly (AbiFunction | AbiEvent | AbiError)[]
 export type TypedDataDomain = {
   chainId?: string | number | bigint
   name?: string
-  salt?: ResolvedConfig['BytesType']
+  salt?: ResolvedConfig['BytesInputType']
   verifyingContract?: Address
   version?: string
 }

@@ -29,17 +29,24 @@ import type { Merge, Tuple } from './types'
  * @param TAbiType - {@link AbiType} to convert to TypeScript representation
  * @returns TypeScript primitive type
  */
-export type AbiTypeToPrimitiveType<TAbiType extends AbiType> =
-  PrimitiveTypeLookup<TAbiType>[TAbiType]
+export type AbiTypeToPrimitiveType<
+  TAbiType extends AbiType,
+  TAbiParameterType extends 'inputs' | 'outputs' = 'inputs',
+> = PrimitiveTypeLookup<TAbiType, TAbiParameterType>[TAbiType]
 
 // Using a map to look up types is faster, than nested conditional types
 // s/o https://twitter.com/SeaRyanC/status/1538971176357113858
-type PrimitiveTypeLookup<TAbiType extends AbiType> = {
+type PrimitiveTypeLookup<
+  TAbiType extends AbiType,
+  TAbiParameterType extends 'inputs' | 'outputs',
+> = {
   [_ in SolidityAddress]: ResolvedConfig['AddressType']
 } & {
   [_ in SolidityBool]: boolean
 } & {
-  [_ in SolidityBytes]: ResolvedConfig['BytesType']
+  [_ in SolidityBytes]: TAbiParameterType extends 'inputs'
+    ? ResolvedConfig['BytesInputType']
+    : ResolvedConfig['BytesReturnType']
 } & {
   [_ in SolidityFunction]: `${ResolvedConfig['AddressType']}${string}`
 } & {
@@ -75,10 +82,11 @@ type BitsTypeLookup = {
  */
 export type AbiParameterToPrimitiveType<
   TAbiParameter extends AbiParameter | { name: string; type: unknown },
+  TAbiParameterType extends 'inputs' | 'outputs' = 'inputs',
 > =
   // 1. Check to see if type is basic (not tuple or array) and can be looked up immediately.
   TAbiParameter['type'] extends Exclude<AbiType, SolidityTuple | SolidityArray>
-    ? AbiTypeToPrimitiveType<TAbiParameter['type']>
+    ? AbiTypeToPrimitiveType<TAbiParameter['type'], TAbiParameterType>
     : // 2. Check if type is tuple and covert each component
     TAbiParameter extends {
         type: SolidityTuple
@@ -89,7 +97,8 @@ export type AbiParameterToPrimitiveType<
         readonly [
           ...{
             [K in keyof TComponents]: AbiParameterToPrimitiveType<
-              TComponents[K]
+              TComponents[K],
+              TAbiParameterType
             >
           },
         ]
@@ -99,7 +108,7 @@ export type AbiParameterToPrimitiveType<
             name: string
           }
             ? Component['name']
-            : never]: AbiParameterToPrimitiveType<Component>
+            : never]: AbiParameterToPrimitiveType<Component, TAbiParameterType>
         }
     : // 3. Check if type is array.
     /**
@@ -127,11 +136,15 @@ export type AbiParameterToPrimitiveType<
         // and passed back into the function to continue reduing down to the basic types found in Step 1.
         Size extends keyof SolidityFixedArraySizeLookup
         ? Tuple<
-            AbiParameterToPrimitiveType<Merge<TAbiParameter, { type: Head }>>,
+            AbiParameterToPrimitiveType<
+              Merge<TAbiParameter, { type: Head }>,
+              TAbiParameterType
+            >,
             SolidityFixedArraySizeLookup[Size]
           >
         : readonly AbiParameterToPrimitiveType<
-            Merge<TAbiParameter, { type: Head }>
+            Merge<TAbiParameter, { type: Head }>,
+            TAbiParameterType
           >[]
       : never
     : // 4. If type is not basic, tuple, or array, we don't know what the type is.
@@ -164,11 +177,15 @@ type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
  */
 export type AbiParametersToPrimitiveTypes<
   TAbiParameters extends readonly AbiParameter[],
+  TAbiParameterType extends 'inputs' | 'outputs' = 'inputs',
 > = {
   // TODO: Convert to labeled tuple so parameter names show up in autocomplete
   // e.g. [foo: string, bar: string]
   // https://github.com/microsoft/TypeScript/issues/44939
-  [K in keyof TAbiParameters]: AbiParameterToPrimitiveType<TAbiParameters[K]>
+  [K in keyof TAbiParameters]: AbiParameterToPrimitiveType<
+    TAbiParameters[K],
+    TAbiParameterType
+  >
 }
 
 /**
@@ -347,10 +364,11 @@ export type TypedDataToPrimitiveTypes<TTypedData extends TypedData> = {
                 TTypedData
               >
             }
-          >
+          >,
+          'inputs'
         >
       : K2['type'] extends TypedDataType // 4. Known type to convert
-      ? AbiParameterToPrimitiveType<K2>
+      ? AbiParameterToPrimitiveType<K2, 'inputs'>
       : `Error: Cannot convert unknown type '${K2['type']}' to primitive type.`
   }
 }
