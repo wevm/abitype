@@ -364,8 +364,7 @@ export type TypedDataToPrimitiveTypes<TTypedData extends TypedData> = {
                 TTypedData
               >
             }
-          >,
-          'inputs'
+          >
         >
       : K2['type'] extends TypedDataType // 4. Known type to convert
       ? AbiParameterToPrimitiveType<K2>
