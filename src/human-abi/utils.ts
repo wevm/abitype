@@ -1,3 +1,5 @@
+import type { AbiType, SolidityArrayWithTuple, SolidityTuple } from '../abi'
+
 export type WS = ' '
 
 /**
@@ -7,7 +9,7 @@ export type WS = ' '
  * @returns Trimmed string to the right side {@link S}
  *
  * @example
- * type Result = TrimLeft<"Hello     ">
+ * type Result = TrimLeft<"    Hello">
  * //    ^? "Hello"
  */
 export type TrimLeft<S extends string> = S extends `${WS}${infer L}`
@@ -21,7 +23,7 @@ export type TrimLeft<S extends string> = S extends `${WS}${infer L}`
  * @returns Trimmed string to the left side {@link S}
  *
  * @example
- * type Result = TrimLeft<"    Hello">
+ * type Result = TrimRight<"Hello   ">
  * //    ^? "Hello"
  */
 
@@ -44,11 +46,63 @@ export type Trim<S extends string> = TrimLeft<TrimRight<S>>
 // Convert uint string to proper representation of uint256
 export type SolidityType<T extends string> = T extends 'uint' ? 'uint256' : T
 
+/**
+ * All types of methods in the abi spec
+ */
 export type AbiTypes = 'function' | 'event' | 'error'
 
+/**
+ * Indexed argument helper
+ */
 export type AbiIndexed = ' indexed '
 
+/**
+ * All types of mutability on function types
+ */
 export type AbiMutability = 'view' | 'pure' | 'payable' | 'nonpayable'
+
+/**
+ * All of the Solidity types excluding tuple types
+ */
+export type UnnamedArgs = Exclude<
+  AbiType,
+  SolidityTuple | SolidityArrayWithTuple
+>
+
+/**
+ * All named solidity argument types
+ */
+export type NamedArgs = `${UnnamedArgs}${WS}${string}`
+
+/**
+ * All named solidity indexed argument types
+ */
+export type NamedIndexedArgs = `${UnnamedArgs}${AbiIndexed}${string}`
+
+/**
+ * Tuple type values
+ */
+export type TupleValue = `(${string})${string}`
+
+/**
+ * All possible abi argument values. Excluding tuples
+ */
+export type AbiArgs = NamedArgs | NamedIndexedArgs | UnnamedArgs | '' | 'void'
+
+/**
+ * Array of all possible abi argument values. Excluding tuples
+ */
+export type AbiArgsType = readonly AbiArgs[]
+
+/**
+ * All possible abi argument values.
+ */
+export type AbiArgsWithTuple = AbiArgs | TupleValue
+
+/**
+ * Array of all possible abi argument values.
+ */
+export type AbiArgsTypeWithTuple = readonly AbiArgsWithTuple[]
 
 /**
  * Check if the a string has any "()". This is used after {@link ExtractArgs}

@@ -1,4 +1,7 @@
 import type {
+  AbiArgsType,
+  AbiArgsTypeWithTuple,
+  AbiArgsWithTuple,
   AbiIndexed,
   AbiMutability,
   AbiTypes,
@@ -7,6 +10,7 @@ import type {
   ReplaceAll,
   SolidityType,
   Trim,
+  TupleValue,
   WS,
   hasTupleValue,
   isTupleValue,
@@ -241,7 +245,7 @@ export type ParseParams<
  * type Result = ParseFunctionArgs<["string world"]>
  * //    ^? "[{name: "hello", type: "string", internalType: "string"}]"
  */
-export type ParseArgs<T extends string[]> = T extends [never]
+export type ParseArgs<T extends AbiArgsType> = T extends [never]
   ? never
   : T extends ['']
   ? []
@@ -249,7 +253,7 @@ export type ParseArgs<T extends string[]> = T extends [never]
   ? []
   : T extends [
       `${infer TType}${AbiIndexed}${infer TName}`,
-      ...infer Rest extends string[],
+      ...infer Rest extends AbiArgsType,
     ]
   ? [
       {
@@ -262,7 +266,7 @@ export type ParseArgs<T extends string[]> = T extends [never]
     ]
   : T extends [
       `${infer TType}${WS}${infer TName}`,
-      ...infer Rest extends string[],
+      ...infer Rest extends AbiArgsType,
     ]
   ? [
       {
@@ -272,7 +276,7 @@ export type ParseArgs<T extends string[]> = T extends [never]
       },
       ...ParseArgs<Rest>,
     ]
-  : T extends [`${infer TType}`, ...infer Rest extends string[]]
+  : T extends [`${infer TType}`, ...infer Rest extends AbiArgsType]
   ? [
       {
         readonly internalType: SolidityType<TType>
@@ -293,11 +297,14 @@ export type ParseArgs<T extends string[]> = T extends [never]
  * type Result = ParseComponents<["(string world)[] person"]>
  * //    ^? [{name: "person", type: "tuple[]", internalType: "Struct[] person", components:[{name: "world", type: "string", internalType: "world"}]}]
  */
-export type ParseComponents<T extends unknown[]> = T extends [never]
+export type ParseComponents<T extends AbiArgsTypeWithTuple> = T extends [never]
   ? never
   : T extends ['']
   ? never
-  : T extends [infer Head extends string, ...infer Last extends string[]]
+  : T extends [
+      infer Head extends AbiArgsWithTuple,
+      ...infer Last extends AbiArgsTypeWithTuple,
+    ]
   ? Head extends `(${string}`
     ? [
         {
@@ -313,28 +320,7 @@ export type ParseComponents<T extends unknown[]> = T extends [never]
           ]
         } & (isIndexed<Head> extends true ? { indexed: true } : unknown),
       ]
-    : T extends [
-        `${infer TType}${WS}${infer TName}`,
-        ...infer Last extends string[],
-      ]
-    ? [
-        {
-          readonly type: SolidityType<TType>
-          readonly name: TName
-          readonly internalType: SolidityType<TType>
-        },
-        ...ParseComponents<Last>,
-      ]
-    : T extends [`${infer TType}`, ...infer Last]
-    ? [
-        {
-          readonly type: SolidityType<TType>
-          readonly name: ''
-          readonly internalType: SolidityType<TType>
-        },
-        ...ParseComponents<Last>,
-      ]
-    : []
+    : [...ParseArgs<[Exclude<Head, TupleValue>]>, ...ParseComponents<Last>]
   : []
 
 /**
@@ -347,13 +333,13 @@ export type ParseComponents<T extends unknown[]> = T extends [never]
  * type Result = HandleArguments<["(string world)[] person"], "function">
  * //    ^? [{name: "person", type: "tuple[]", internalType: "Struct[] person", indexed: true, components:[{name: "world", type: "string", internalType: "world"}]}]
  */
-export type HandleArguments<T extends unknown[]> = T extends [
-  infer THead extends string,
-  ...infer Rest extends string[],
+export type HandleArguments<T extends AbiArgsTypeWithTuple> = T extends [
+  infer THead extends AbiArgsWithTuple,
+  ...infer Rest extends AbiArgsTypeWithTuple,
 ]
   ? isTupleValue<THead> extends true
     ? [...ParseComponents<[THead]>, ...HandleArguments<Rest>]
-    : [...ParseArgs<[THead]>, ...HandleArguments<Rest>]
+    : [...ParseArgs<[Exclude<THead, TupleValue>]>, ...HandleArguments<Rest>]
   : []
 
 /**
