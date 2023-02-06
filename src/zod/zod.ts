@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import type {
   AbiFunction as AbiFunctionType,
-  AbiParameter as AbiParameterType,
+  AbiParameter as AbiParameter_,
 } from '../abi'
 
 // From https://docs.soliditylang.org/en/latest/abi-spec.html#types
@@ -32,7 +32,7 @@ export const SolidityArray = z.union([
   SolidityArrayWithoutTuple,
 ])
 
-export const AbiParameter: z.ZodType<AbiParameterType> = z.lazy(() =>
+export const AbiParameter: z.ZodType<AbiParameter_> = z.lazy(() =>
   z.intersection(
     z.object({
       name: z.string().optional(),
