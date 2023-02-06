@@ -1,6 +1,7 @@
 import type {
   Abi,
   AbiParameter,
+  AbiParameterType,
   AbiStateMutability,
   AbiType,
   MBits,
@@ -31,22 +32,20 @@ import type { Merge, Tuple } from './types'
  */
 export type AbiTypeToPrimitiveType<
   TAbiType extends AbiType,
-  TAbiParameterType extends 'inputs' | 'outputs' = 'inputs',
+  TAbiParameterType extends AbiParameterType = AbiParameterType,
 > = PrimitiveTypeLookup<TAbiType, TAbiParameterType>[TAbiType]
 
 // Using a map to look up types is faster, than nested conditional types
 // s/o https://twitter.com/SeaRyanC/status/1538971176357113858
 type PrimitiveTypeLookup<
   TAbiType extends AbiType,
-  TAbiParameterType extends 'inputs' | 'outputs',
+  TAbiParameterType extends AbiParameterType = AbiParameterType,
 > = {
   [_ in SolidityAddress]: ResolvedConfig['AddressType']
 } & {
   [_ in SolidityBool]: boolean
 } & {
-  [_ in SolidityBytes]: TAbiParameterType extends 'inputs'
-    ? ResolvedConfig['BytesInputType']
-    : ResolvedConfig['BytesReturnType']
+  [_ in SolidityBytes]: ResolvedConfig['BytesType'][TAbiParameterType]
 } & {
   [_ in SolidityFunction]: `${ResolvedConfig['AddressType']}${string}`
 } & {
@@ -82,7 +81,7 @@ type BitsTypeLookup = {
  */
 export type AbiParameterToPrimitiveType<
   TAbiParameter extends AbiParameter | { name: string; type: unknown },
-  TAbiParameterType extends 'inputs' | 'outputs' = 'inputs',
+  TAbiParameterType extends AbiParameterType = AbiParameterType,
 > =
   // 1. Check to see if type is basic (not tuple or array) and can be looked up immediately.
   TAbiParameter['type'] extends Exclude<AbiType, SolidityTuple | SolidityArray>
@@ -177,7 +176,7 @@ type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
  */
 export type AbiParametersToPrimitiveTypes<
   TAbiParameters extends readonly AbiParameter[],
-  TAbiParameterType extends 'inputs' | 'outputs' = 'inputs',
+  TAbiParameterType extends AbiParameterType = AbiParameterType,
 > = {
   // TODO: Convert to labeled tuple so parameter names show up in autocomplete
   // e.g. [foo: string, bar: string]
@@ -344,7 +343,10 @@ export type IsTypedData<TTypedData> = TTypedData extends TypedData
  * @returns Union of TypeScript primitive types
  */
 // TODO: Check for recursive structs (e.g. add generic slot for recursion)
-export type TypedDataToPrimitiveTypes<TTypedData extends TypedData> = {
+export type TypedDataToPrimitiveTypes<
+  TTypedData extends TypedData,
+  TAbiParameterType extends AbiParameterType = AbiParameterType,
+> = {
   [K in keyof TTypedData]: {
     // Map over typed data values and turn into key-value pairs
     [K2 in TTypedData[K][number] as K2['name']]: K2['type'] extends K // 1. Eliminate self-referencing structs
@@ -364,10 +366,11 @@ export type TypedDataToPrimitiveTypes<TTypedData extends TypedData> = {
                 TTypedData
               >
             }
-          >
+          >,
+          TAbiParameterType
         >
       : K2['type'] extends TypedDataType // 4. Known type to convert
-      ? AbiParameterToPrimitiveType<K2>
+      ? AbiParameterToPrimitiveType<K2, TAbiParameterType>
       : `Error: Cannot convert unknown type '${K2['type']}' to primitive type.`
   }
 }

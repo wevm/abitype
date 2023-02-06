@@ -17,10 +17,10 @@ test('Config', () => {
   type AddressType = ResolvedConfig['AddressType']
   assertType<AddressType>('0x0000000000000000000000000000000000000000')
 
-  type BytesTypeReturn = ResolvedConfig['BytesReturnType']
+  type BytesTypeReturn = ResolvedConfig['BytesType']['outputs']
   assertType<BytesTypeReturn>('0xfoobarbaz')
 
-  type BytesTypeArgs = ResolvedConfig['BytesInputType']
+  type BytesTypeArgs = ResolvedConfig['BytesType']['inputs']
   assertType<BytesTypeArgs>(new Uint8Array(Buffer.from('0xfoobarbaz')))
 
   type IntType = ResolvedConfig['IntType']

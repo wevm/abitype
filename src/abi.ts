@@ -110,6 +110,8 @@ export type AbiParameter = {
 
 export type AbiStateMutability = 'pure' | 'view' | 'nonpayable' | 'payable'
 
+export type AbiParameterType = 'inputs' | 'outputs'
+
 export type AbiFunction = {
   /**
    * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
@@ -166,7 +168,7 @@ export type Abi = readonly (AbiFunction | AbiEvent | AbiError)[]
 export type TypedDataDomain = {
   chainId?: string | number | bigint
   name?: string
-  salt?: ResolvedConfig['BytesInputType']
+  salt?: ResolvedConfig['BytesType'][AbiParameterType]
   verifyingContract?: Address
   version?: string
 }

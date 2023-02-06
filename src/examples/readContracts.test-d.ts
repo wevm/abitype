@@ -126,7 +126,7 @@ test('readContracts', () => {
           },
         ],
       })
-      assertType<[void, ResolvedConfig['BytesReturnType']]>(result)
+      assertType<[void, ResolvedConfig['BytesType']['outputs']]>(result)
     })
   })
 
