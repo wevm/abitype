@@ -82,6 +82,7 @@ type Result = AbiTypeToPrimitiveType<'address'>
 ```
 
 > **Note**
+>
 > Does not include full array or tuple conversion. Use `AbiParameterToPrimitiveType` to fully convert array and tuple types.
 
 ### ExtractAbiError
