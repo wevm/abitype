@@ -15,11 +15,15 @@ type Result = ExtractAbiFunctions<typeof erc721Abi, 'payable'>
 
 Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions, variables, or your own types ([examples](/src/examples/)). No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
 
-## Installation
+## Install
 
 ```bash
 npm install abitype
+pnpm add abitype
+yarn add abitype
 ```
+
+ABIType requires `typescript@>=4.9.4`
 
 ## Usage
 
@@ -35,11 +39,31 @@ import { narrow } from 'abitype'
 const erc721Abi = narrow([...])
 ```
 
+## TL;DR
+
+ABIType might be a good option for your project if:
+
+- You want to typecheck your ABIs or EIP-712 Typed Data.
+- You want to add type inference and autocomplete to your library based on user-provided ABIs or EIP-712 Typed Data.
+- You need to convert ABI types (e.g. `'string'`) to TypeScript types (e.g. `string`) or other type transformations.
+- You need to validate ABIs at [runtime](#zod) (e.g. after fetching from external resource).
+- You don’t want to set up a build process to generate types (e.g. TypeChain).
+
 ## Utilities
 
-### AbiParameterToPrimitiveType
+### `AbiParameterToPrimitiveType`
 
 Converts `AbiParameter` to corresponding TypeScript primitive type.
+
+| Name                | Description                                        | Type                          |
+| ------------------- | -------------------------------------------------- | ----------------------------- |
+| `TAbiParameter`     | Parameter to convert to TypeScript representation. | `AbiParameter`                |
+| `TAbiParameterKind` | Kind to narrow by parameter type.                  | `AbiParameterKind` (optional) |
+| returns             | TypeScript primitive type.                         | `TType` (inferred)            |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgQQEbAAoEMpZAUxnygBUIMpRgZgA3fEgTzHzgF84AzKCEOAcizoYzfPwBQ4kSzgAlfAGcArgBt4AXhTpsuAkVLlKIanQaiAPAnEB6a3HsA9APzj7AOzz4AXAIgB3N2IJe2lvASwAEwioRQUJNgA+IA)
 
 ```ts
 import { AbiParameterToPrimitiveType } from 'abitype'
@@ -50,9 +74,19 @@ type Result = AbiParameterToPrimitiveType<{
 }>
 ```
 
-### AbiParametersToPrimitiveTypes
+### `AbiParametersToPrimitiveTypes`
 
 Converts array of `AbiParameter` to corresponding TypeScript primitive types.
+
+| Name                | Description                                          | Type                          |
+| ------------------- | ---------------------------------------------------- | ----------------------------- |
+| `TAbiParameters`    | Parameters to convert to TypeScript representations. | `readonly AbiParameter[]`     |
+| `TAbiParameterKind` | Kind to narrow by parameter type.                    | `AbiParameterKind` (optional) |
+| returns             | TypeScript primitive types.                          | `TType[]` (inferred)          |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgQQEbAAoEMpZAUxnygGcAVCDKUYGYAN3zIE8x8S4BfOAMyghBwA5FnQxW+IQCgp4tnABK7AK4AbeAF4U6bLgJFSFKjTqMWbEgB4pAehtwHAPQD8UhwG03DxF+9wAdnj4AFzCMBDSfg5yIcJYACbxUOwkkd6cADS+PlEBQaFC4QDW+P4AkvFpfjEFysD+MABMAKwAbFVcWQ4AulIAfEA)
 
 ```ts
 import { AbiParametersToPrimitiveTypes } from 'abitype'
@@ -71,108 +105,350 @@ type Result = AbiParametersToPrimitiveTypes<
 >
 ```
 
-### AbiTypeToPrimitiveType
+### `AbiTypeToPrimitiveType`
 
 Converts `AbiType` to corresponding TypeScript primitive type.
 
+| Name                | Description                                       | Type                          |
+| ------------------- | ------------------------------------------------- | ----------------------------- |
+| `TAbiType`          | ABI type to convert to TypeScript representation. | `AbiType`                     |
+| `TAbiParameterKind` | Kind to narrow by parameter type.                 | `AbiParameterKind` (optional) |
+| returns             | TypeScript primitive type.                        | `TType` (inferred)            |
+
+> **Note**
+>
+> Does not include full array or tuple conversion. Use [`AbiParameterToPrimitiveType`](#abiparametertoprimitivetype) to fully convert array and tuple types.
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgQQEbACoE8wFMMQAKUowMwAbvjrnAL5wBmUEIcA5AIbow3sBQ-XnjgAlXAGcArgBt4AXhTpseAsVLkqK3AB4uAE31RJE9gD5+AektxbAPQD8QA)
+
 ```ts
-import { AbiParametersToPrimitiveTypes } from 'abitype'
+import { AbiTypeToPrimitiveType } from 'abitype'
 
 type Result = AbiTypeToPrimitiveType<'address'>
 ```
 
-> **Note**
->
-> Does not include full array or tuple conversion. Use `AbiParameterToPrimitiveType` to fully convert array and tuple types.
+### `ExtractAbiError`
 
-### ExtractAbiError
+Extracts `AbiError` with name from `Abi`.
 
-Extracts all `AbiError` types from `Abi`
+| Name         | Description    | Type                |
+| ------------ | -------------- | ------------------- |
+| `TAbi`       | ABI.           | `Abi`               |
+| `TErrorName` | Name of error. | `string` (inferred) |
+| returns      | ABI Error.     | `AbiError`          |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwyUU0cAvnAGZkhwDkmRMAnmAKYMBQ32EAOwDO8ZsDgBeOAG1ucRHAGYQHAFyM8YMGQBumADYBhA-o5QAchBgB5AO4CzlqJu0QdHACYMANHDad1BjMyKB84YAEwAFcYIXVpAF1KbzkFJRVAl10DAEUos1YAMWhLB1RgEQ4BGAAVCABrKrD-NUZg6DCI6Nj4pIoUpMwhOH5hGF4WuAAlDiEo-XgpNAwcfCISEIAeFohqODFfBiy3XPyoIpLBDnLK6rrGgQYAPm4Aelf5OAA9AH5uIA)
 
 ```ts
 import { ExtractAbiError } from 'abitype'
 
-type Result = ExtractAbiError<typeof erc721Abi, 'SomeError'>
+const abi = [
+  { name: 'ApprovalCallerNotOwnerNorApproved', type: 'error', inputs: [] },
+  { name: 'ApprovalQueryForNonexistentToken', type: 'error', inputs: [] },
+] as const
+
+type Result = ExtractAbiError<typeof abi, 'ApprovalQueryForNonexistentToken'>
 ```
 
-### ExtractAbiErrorNames
+### `ExtractAbiErrorNames`
 
-Extracts all `AbiError` names from `Abi`
+Extracts all `AbiError` names from `Abi`.
+
+| Name    | Description      | Type                |
+| ------- | ---------------- | ------------------- |
+| `TAbi`  | ABI.             | `Abi`               |
+| returns | ABI Error names. | `string` (inferred) |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwyUU0AcpiAKYDOcAvnAGZkhwDkmRMAnmNQ4AoIdggA7WvG7A4AXjgBtIXERxxVagC5OeMGDIA3TABsAwqZPUo5CDADyAd3HXbUPQYiHqAEw4AaOD4BHQ5rMigAuGBxMABXGFodRQBdRn8VNQ0aUI8jUwBFOOteADEKCWpUYClqcRgAFQgAazqo4O1OcOgomPjE5LSGDLTMejFJGBEOuAAlOjiTeAU0DBx8IhIIyhpaAB4OiGY4GQA+IQB6C9U4AD0AfiEgA)
 
 ```ts
 import { ExtractAbiErrorNames } from 'abitype'
 
-type Result = ExtractAbiErrorNames<typeof erc721Abi>
+const abi = [
+  { name: 'ApprovalCallerNotOwnerNorApproved', type: 'error', inputs: [] },
+  { name: 'ApprovalQueryForNonexistentToken', type: 'error', inputs: [] },
+] as const
+
+type Result = ExtractAbiErrorNames<typeof abi>
 ```
 
-### ExtractAbiErrors
+### `ExtractAbiErrors`
 
-Extracts all `AbiError` types from `Abi`
+Extracts all `AbiError` types from `Abi`.
+
+| Name    | Description | Type               |
+| ------- | ----------- | ------------------ |
+| `TAbi`  | ABI.        | `Abi`              |
+| returns | ABI Errors. | `AbiError` (union) |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwyUU0AznAL5wBmZIcA5JkTAJ5gCmTAUL9ggA7cvFbA4AXjgBtXnERwhmEFwBczPGDBkAbpgA2AYUMGuUAHIQYAeQDuQ81ahadEXVwAmTADRwO3BpM5mRQvnDAQmAArjDkGjIAutQ+8orKqkGueoYAitHm7ABi0FaOqMCiXEIwACoQANbV4QHqzCHQ4ZExcQnJVKnJmJSCIjD8rXAASlzk0Qbw0mgYOPhEJKHkADytELRw4gB8vAD0JwpwAHoA-LxAA)
 
 ```ts
 import { ExtractAbiErrors } from 'abitype'
 
-type Result = ExtractAbiErrors<typeof erc721Abi>
+const abi = [
+  { name: 'ApprovalCallerNotOwnerNorApproved', type: 'error', inputs: [] },
+  { name: 'ApprovalQueryForNonexistentToken', type: 'error', inputs: [] },
+] as const
+
+type Result = ExtractAbiErrors<typeof abi>
 ```
 
-### ExtractAbiEvent
+### `ExtractAbiEvent`
 
-Extracts `AbiEvent` with name from `Abi`
+Extracts `AbiEvent` with name from `Abi`.
+
+| Name         | Description    | Type                |
+| ------------ | -------------- | ------------------- |
+| `TAbi`       | ABI.           | `Abi`               |
+| `TEventName` | Name of event. | `string` (inferred) |
+| returns      | ABI Event.     | `AbiEvent`          |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwyAbgKYB28AvnAGZQQhwDkmRMAnmGSwFB9sECgGd47YHAC8cANp84iBYrgVMIMgC5WeMGEYlMAGxYAaZYq49tLMuSpmLcTBWGcQEAK4jtdYyLJzFThgCjBPGB85J0UkNQ0bCAB3CjIoMzgrLVZMABNcqDIREQzQ3LJUMlztDE8yOGog4MRVdWy2PQMqjKybPIKiktMQinLK6syoOoam4Li2mxgIAGtKAElcnu52z1CYACYAVgA2UtGKqpqp+sanAF0m29inePaAFSxROjTHYN7WOyUGC-FQuNweby+fyBJyhcKRbTyZotV42BhMLbWHL5QrFM5jS6TaZPZrzBKsJaY9r9XFDEYEia1G6zFRk9pLVYUDZUmy7KhHU7DMoXRnXGb3R7mO7OERwISiGACLJwABKRU8RngMjQGBw+CIpCBAB4shA6M4iMMWB8XCJvukAHx8AD0zpUAD0APx8IA)
 
 ```ts
 import { ExtractAbiEvent } from 'abitype'
 
-type Result = ExtractAbiEvent<typeof erc721Abi, 'Transfer'>
+const abi = [
+  {
+    name: 'Approval',
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'owner', type: 'address', indexed: true },
+      { name: 'approved', type: 'address', indexed: true },
+      { name: 'tokenId', type: 'uint256', indexed: true },
+    ],
+  },
+  {
+    name: 'Transfer',
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', type: 'address', indexed: true },
+      { name: 'to', type: 'address', indexed: true },
+      { name: 'tokenId', type: 'uint256', indexed: true },
+    ],
+  },
+] as const
+
+type Result = ExtractAbiEvent<typeof abi, 'Transfer'>
 ```
 
-### ExtractAbiEventNames
+### `ExtractAbiEventNames`
 
-Extracts all `AbiEvent` names from `Abi`
+Extracts all `AbiEvent` names from `Abi`.
+
+| Name    | Description      | Type                |
+| ------- | ---------------- | ------------------- |
+| `TAbi`  | ABI.             | `Abi`               |
+| returns | ABI Error names. | `string` (inferred) |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwyAbgKYB2MAcpiGQM5wC+cAZlBCHAOSZEwAnmDI8AUGOwQKDeP2BwAvHADaYuInUa4FOmQBcvPGDCcSmADY8ANFo1CRhnmXJUbduJgrTBICAFcGQzZLBjJbbThgCjB-GCDVDw0kXXonCAB3CjIoGzgHA15MABNiqEYGPOjislQyYsMMfzIWCMjEHT0nTBMzeryC7tLyhkrrKIoauob8qGbWpI7Uwp4YCABrSgBJYoHhFf9omAAmAFYANirJ2vrGuZbmNo0AXTbHrQQPZacAFSwZNg5dyRQa8FyUGDA7ReHx+QLBULhDzRWLxQxqdpLLq8DhcPaOIrDCpXKa3Wbzd6YlLY1YQfErEplYnjao3GZNB5PbTUtK8NabCg7elOQ5UM6XFnXaZ3Clc15ad7PTxMKQyGASApwABKjH8FngyjQGBw+CIpAhtHoDAAPAUIGxPEQAHxiAD0ru0AD0APxiIA)
 
 ```ts
 import { ExtractAbiEventNames } from 'abitype'
 
-type Result = ExtractAbiEventNames<typeof erc721Abi>
+const abi = [
+  {
+    name: 'Approval',
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'owner', type: 'address', indexed: true },
+      { name: 'approved', type: 'address', indexed: true },
+      { name: 'tokenId', type: 'uint256', indexed: true },
+    ],
+  },
+  {
+    name: 'Transfer',
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', type: 'address', indexed: true },
+      { name: 'to', type: 'address', indexed: true },
+      { name: 'tokenId', type: 'uint256', indexed: true },
+    ],
+  },
+] as const
+
+type Result = ExtractAbiEventNames<typeof abi>
 ```
 
-### ExtractAbiEvents
+### `ExtractAbiEvents`
 
-Extracts all `AbiEvent` types from `Abi`
+Extracts all `AbiEvent` types from `Abi`.
+
+| Name    | Description | Type               |
+| ------- | ----------- | ------------------ |
+| `TAbi`  | ABI.        | `Abi`              |
+| returns | ABI Events. | `AbiEvent` (union) |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwyAbgKYB2MAznAL5wBmUEIcA5JkTAJ5hnsAUIOwQK1eF2BwAvHADaguIiXK4FTCDIAuDnjBgWJTABt2AGlXLe-XezLkqFq3EwUxPEBACu1XY1NqMks1OGAKMG8aXUVQ5SQNLTsIAHcKMigLOBsdDkwAE3yoMmpqLPD8slQyfN0MbzJ6ELiEzVzOAyMarJy7AqKSsvMwikrq2uyoBqaXePU2uxgIAGtKAEl8nr5273CYACYAVgA2ctGqmrqpxrpm5QBdZtvVBBdE9oAVLHFGDOdQ3ocByUGD-NRuDxeXz+QLBFzhSLRBSzRDzJIcZisLa2PKFYqlM5jS6TabPOKo96LCDY9r9fFDEZEib1G53NStdHsJarCgbGl2XZUI6nYYVC7M64zUKPVTPe6uWiicQwYQ5OAAJRK3hM8DkaAwOHwRFIIOoAB4chBGK4iAA+QQAegdagAegB+QRAA)
 
 ```ts
 import { ExtractAbiEvents } from 'abitype'
 
-type Result = ExtractAbiEvents<typeof erc721Abi>
+const abi = [
+  {
+    name: 'Approval',
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'owner', type: 'address', indexed: true },
+      { name: 'approved', type: 'address', indexed: true },
+      { name: 'tokenId', type: 'uint256', indexed: true },
+    ],
+  },
+  {
+    name: 'Transfer',
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', type: 'address', indexed: true },
+      { name: 'to', type: 'address', indexed: true },
+      { name: 'tokenId', type: 'uint256', indexed: true },
+    ],
+  },
+] as const
+
+type Result = ExtractAbiEvents<typeof abi>
 ```
 
-### ExtractAbiFunction
+### `ExtractAbiFunction`
 
-Extracts `AbiFunction` with name from `Abi`
+Extracts `AbiFunction` with name from `Abi`.
+
+| Name            | Description       | Type                |
+| --------------- | ----------------- | ------------------- |
+| `TAbi`          | ABI.              | `Abi`               |
+| `TFunctionName` | Name of function. | `string` (inferred) |
+| returns         | ABI Function.     | `AbiFunction`       |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwAYgK4B2uwE5cAvnAGZQQhwDkmRMAnmAKbsAUEOw0AzvC7A4AXjgBtIXETKVccphD8AXBwKYANpkr8A8o3YAaNSt4C97RhSo1rtuJMwx+AWVIw0obAvI4AbsD8AO7u6nDA5GAB4noKSJrajhBR5PxQ1nD2uhyYACalUPzi4uz0ALo2cRABSTApiulaxewGxqYFRY6kCTAATACsAGy1dA1qdI2qcRnd4piM-AAqWOTiG1DELCCx6oMczpQw1OQnKl4+-oFEwaEc5DRgmDxchoKLKglWu0lHEVJ1MucjgM+N0yhUqjV6P91ODujAINCHCVypVqjNkWCNF1HOiANb8cgASVKmO6w3IYym+I8cyaLWSqVZSKEdTgmHEcDEuxgIiKcAASlVSIZ4PI0BgcPgiGRLtcADxFCCMPlEKz6IwmbDmSwAPiEAHpzeoAHoAfiEQA)
 
 ```ts
-import { AbiFunction } from 'abitype'
+import { ExtractAbiFunction } from 'abitype'
 
-type Result = ExtractAbiFunction<typeof erc721Abi, 'balanceOf'>
+const abi = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'owner', type: 'address' }],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'safeTransferFrom',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+] as const
+
+type Result = ExtractAbiFunction<typeof abi, 'balanceOf'>
 ```
 
-### ExtractAbiFunctionNames
+### `ExtractAbiFunctionNames`
 
-Extracts all `AbiFunction` names from `Abi`
+Extracts all `AbiFunction` names from `Abi`.
+
+| Name                  | Description           | Type                            |
+| --------------------- | --------------------- | ------------------------------- |
+| `TAbi`                | ABI.                  | `Abi`                           |
+| `TAbiStateMutibility` | ABI state mutability. | `AbiStateMutability` (optional) |
+| returns               | ABI Event names.      | `string` (inferred)             |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwAYgK4B2uwE5AcpiAKYDOcAvnAGZQQhwDkmIjACeYRvwBQk7DWbwhwOAF44AbUlxEmrXHINGALgEFMAG0yVGAeU78ANDq2jxx-pwpUaDp3HmYYRgBZUhhFM2BRNwA3YEYAdx9dOGByMFDmYzUkfSY3CHjyRigHOBcjAUwAEyqoFmZ+dgBdR2SIUPSYTPUcgzdTCytS8rdSVJgAJgBWADZGthadNlbtZNyK-mZMTkYAFSxyZh2oYh4QJN0RgQ9KGGpyC61-QJCwogiogXIaMEwRITMEhWWlSnW6GmSWl6eWuZ2GYg21Vq9XmwN00I2MAg8NclRqdWYDXYaKhej6AixAGtGOQAJJVHEbMbkSazVG+RZtDoZLKc4mSJpwTCsWSHGDScpwABKLFIZngqjQGBw+CIZFu93oTGYAB5yhBOEKiAA+SQAejNugAegB+SRAA)
 
 ```ts
 import { ExtractAbiFunctionNames } from 'abitype'
 
-type Result = ExtractAbiFunctionNames<typeof erc721Abi>
+const abi = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'owner', type: 'address' }],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'safeTransferFrom',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+] as const
+
+type Result = ExtractAbiFunctionNames<typeof abi>
 ```
 
-### ExtractAbiFunctions
+### `ExtractAbiFunctions`
 
-Extracts all `AbiFunction` types from `Abi`
+Extracts all `AbiFunction` types from `Abi`.
+
+| Name    | Description    | Type                  |
+| ------- | -------------- | --------------------- |
+| `TAbi`  | ABI.           | `Abi`                 |
+| returns | ABI Functions. | `AbiFunction` (union) |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwAYgK4B2uwE5AznAL5wBmUEIcA5JkTAJ5gAppwBQI7DVrwewOAF44AbRFxEK1XHKYQggFxcCmADaZKggPLNOAGnWr+Q-Z2YUqNG3bhTMMQQFlSGBkjYH4nADdgQQB3Dw04YHIwQNp9RSQtHScIaPJBKBs4Bz0uTAATMqhBWlpORgBdW3iIQOSYVKUM7RLOQxMzQuKnUkSYACYAVgA2OoZG9QYmtXjMntpMZkEAFSw6TahiNhA4jSGuF0oYanIT1W9fAKCiELCuchowTD4eI2El1USbQ6yniqi6WXOR0GAh65Uq1VqjH+GnBPRgEGhjlKFSqNVmyLBmm6TnRAGtBOQAJJlTE9EbkcbTfGeebNVopNKspEiepwTD0CR0GBiYpwABK1VIRngCjQGBw+CIZEu11oAB5ihBmHyiAA+EQAegNGgAegB+ERAA)
 
 ```ts
 import { ExtractAbiFunctions } from 'abitype'
 
-type Result = ExtractAbiFunctions<typeof erc721Abi>
+const abi = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'owner', type: 'address' }],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'safeTransferFrom',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+] as const
+
+type Result = ExtractAbiFunctions<typeof abi>
 ```
 
 By default, extracts all functions, but you can also filter by `AbiStateMutability`:
@@ -181,59 +457,111 @@ By default, extracts all functions, but you can also filter by `AbiStateMutabili
 type Result = ExtractAbiFunctions<typeof erc721Abi, 'view'>
 ```
 
-### IsAbi
+### `IsAbi`
 
-Checks if type is `Abi`
+Checks if type is `Abi`.
+
+| Name    | Description                                           | Type      |
+| ------- | ----------------------------------------------------- | --------- |
+| `TAbi`  | ABI.                                                  | `Abi`     |
+| returns | Boolean value. `true` if valid `Abi`, `false` if not. | `boolean` |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgSQM4EEBGw4F84BmUEIcA5AIbYwCeYApmQFBMDGEAdqvFTgLxwA2kziIRouBwoh6ALnKYKAGwodW9APIEyAGnGjaDeWQIBXNTGCdd+uNwox6AWVMxeS4LWMA3YPQDuNhJwwBxgrqjygkhSMsYQ-hz0ULpwhnLkFAAmWVD0qKhkeAC6esEQruEwkUIx0hlkiipqjDppdA2moTAATACsAGxFuKXiuGViwbENqBQE9AAqUKqo81AAYsQgQRLpxmYWVhw7ovaOLm7YHl7kHJxgFDRUSq22oVU1wsGidXHkRCRUntMjk8gVhhNgr8GjAIECOsZsrl8oU8JCJNDjLCANb0DjILLwozkLocXqDCG2UblSoRKLUtFMYpwCioODsLgwFjpOAAJXypiU8AEaCwwAAPOkIAQWdgAHxMAD0iokAD0APxMIA)
 
 ```ts
 import { IsAbi } from 'abitype'
 
-type Result = IsAbi<typeof erc721Abi>
+const abi = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'owner', type: 'address' }],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'safeTransferFrom',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+] as const
+
+type Result = IsAbi<typeof abi>
 ```
 
-### IsTypedData
+### `IsTypedData`
 
-Checks if type is `TypedData`
+Checks if type is `TypedData`.
+
+| Name         | Description                                                 | Type        |
+| ------------ | ----------------------------------------------------------- | ----------- |
+| `TTypedData` | EIP-712 Typed Data schema.                                  | `TypedData` |
+| returns      | Boolean value. `true` if valid `TypedData`, `false` if not. | `boolean`   |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgSQM4BUCeYCmATAEQEMYi4BfOAMyghDgHIiAjYGbHBgKC4GMIAdqnjtcqOAF5EXOHAAKOKKkEAuOAG0ZsxHAFEQONQz0GGAGjijDjYVGACA5gwpmtspCesMA7kQA2fjgw5pYcRkR4eFA4qKjO5K6yALqJcACyRMB+apraOp5GNHQhVkYKSoLxqe66+l4wECVhjOXKAlVu+XVG-AIwOH1xFqU2MHaOHcmulETivcI8VnAASjEArn7wUmhYuIQkRAA8VhBUoWIAfFwA9NfaAHoA-FxAA)
 
 ```ts
 import { IsTypedData } from 'abitype'
 
-type Result = IsTypedData<{
+const types = {
   Person: [
-    { name: 'name'; type: 'string' },
-    { name: 'wallet'; type: 'address' },
-  ]
+    { name: 'name', type: 'string' },
+    { name: 'wallet', type: 'address' },
+  ],
   Mail: [
-    { name: 'from'; type: 'Person' },
-    { name: 'to'; type: 'Person' },
-    { name: 'contents'; type: 'string' },
-  ]
-}>
+    { name: 'from', type: 'Person' },
+    { name: 'to', type: 'Person' },
+    { name: 'contents', type: 'string' },
+  ],
+} as const
+
+type Result = IsTypedData<typeof types>
 ```
 
-### TypedDataToPrimitiveTypes
+### `TypedDataToPrimitiveTypes`
 
 Converts [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) `TypedData` to corresponding TypeScript primitive type.
+
+| Name         | Description                          | Type                                   |
+| ------------ | ------------------------------------ | -------------------------------------- |
+| `TTypedData` | EIP-712 Typed Data schema.           | `TypedData`                            |
+| returns      | TypeScript representation of schema. | `{ [name: string]: TType }` (inferred) |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgFQJ5gKYBMAiBDGPZCABSlGBmADcM1MBnOAXzgDMoIQ4ByPAI0roMPAFCiAxhAB2DeDGFMAvIlFw4JDFAYyAXHADaa9YjjS8IDPp7nLPADRwFma3PLSA5jxb3j6pLZWvADueAA2YRgwDk7C1nhYWFAYDAzezL7qALqZcACyeMBh+kYmpoHWHFwxzkE8mtoy6bn+ZhZ1MBA1cbwNOtLNfuXt1lLSMBjjaY61rjDuXj7GOaKseExjcuK1cABKKQCuYfAq9Nj4hMRkFFS0ZwwAPLUQbLGMAHyiAPRfJgB6AH5REA)
 
 ```ts
 import { TypedDataToPrimitiveTypes } from 'abitype'
 
-type Result = TypedDataToPrimitiveTypes<{
+const types = {
   Person: [
-    { name: 'name'; type: 'string' },
-    { name: 'wallet'; type: 'address' },
-  ]
+    { name: 'name', type: 'string' },
+    { name: 'wallet', type: 'address' },
+  ],
   Mail: [
-    { name: 'from'; type: 'Person' },
-    { name: 'to'; type: 'Person' },
-    { name: 'contents'; type: 'string' },
-  ]
-}>
+    { name: 'from', type: 'Person' },
+    { name: 'to', type: 'Person' },
+    { name: 'contents', type: 'string' },
+  ],
+} as const
+
+type Result = TypedDataToPrimitiveTypes<typeof types>
 ```
 
 ## Types
 
-### Abi
+### `Abi`
 
 Type matching the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html#json)
 
@@ -241,7 +569,7 @@ Type matching the [Contract ABI Specification](https://docs.soliditylang.org/en/
 import { Abi } from 'abitype'
 ```
 
-### AbiError
+### `AbiError`
 
 ABI [Error](https://docs.soliditylang.org/en/latest/abi-spec.html#errors) type
 
@@ -249,7 +577,7 @@ ABI [Error](https://docs.soliditylang.org/en/latest/abi-spec.html#errors) type
 import { AbiError } from 'abitype'
 ```
 
-### AbiEvent
+### `AbiEvent`
 
 ABI [Event](https://docs.soliditylang.org/en/latest/abi-spec.html#events) type
 
@@ -257,7 +585,7 @@ ABI [Event](https://docs.soliditylang.org/en/latest/abi-spec.html#events) type
 import { AbiEvent } from 'abitype'
 ```
 
-### AbiFunction
+### `AbiFunction`
 
 ABI [Function](https://docs.soliditylang.org/en/latest/abi-spec.html#argument-encoding) type
 
@@ -265,7 +593,7 @@ ABI [Function](https://docs.soliditylang.org/en/latest/abi-spec.html#argument-en
 import { AbiFunction } from 'abitype'
 ```
 
-### AbiInternalType
+### `AbiInternalType`
 
 Representation used by Solidity compiler (e.g. `'string'`, `'int256'`, `'struct Foo'`)
 
@@ -273,7 +601,7 @@ Representation used by Solidity compiler (e.g. `'string'`, `'int256'`, `'struct 
 import { AbiInternalType } from 'abitype'
 ```
 
-### AbiParameter
+### `AbiParameter`
 
 `inputs` and `ouputs` item for ABI functions, events, and errors
 
@@ -281,7 +609,7 @@ import { AbiInternalType } from 'abitype'
 import { AbiParameter } from 'abitype'
 ```
 
-### AbiParameterKind
+### `AbiParameterKind`
 
 Kind of ABI parameter: `'inputs' | 'outputs'`
 
@@ -289,7 +617,7 @@ Kind of ABI parameter: `'inputs' | 'outputs'`
 import { AbiParameterKind } from 'abitype'
 ```
 
-### AbiStateMutability
+### `AbiStateMutability`
 
 ABI Function behavior
 
@@ -297,7 +625,7 @@ ABI Function behavior
 import { AbiStateMutability } from 'abitype'
 ```
 
-### AbiType
+### `AbiType`
 
 ABI canonical [types](https://docs.soliditylang.org/en/latest/abi-spec.html#json)
 
@@ -322,7 +650,7 @@ import {
 } from 'abitype'
 ```
 
-### TypedData
+### `TypedData`
 
 [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) Typed Data Specification
 
@@ -330,7 +658,7 @@ import {
 import { TypedData } from 'abitype'
 ```
 
-### TypedDataDomain
+### `TypedDataDomain`
 
 [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-domainseparator) Domain
 
@@ -338,7 +666,7 @@ import { TypedData } from 'abitype'
 import { TypedDataDomain } from 'abitype'
 ```
 
-### TypedDataParameter
+### `TypedDataParameter`
 
 Entry in `TypedData` type items
 
@@ -346,7 +674,7 @@ Entry in `TypedData` type items
 import { TypedDataParameter } from 'abitype'
 ```
 
-### TypedDataType
+### `TypedDataType`
 
 Subset of `AbiType` that excludes `tuple` and `function`
 
@@ -369,6 +697,10 @@ ABIType tries to strike a balance between type exhaustiveness and speed with sen
 | `IntType`             | `any`                           | `number`                                                              | TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48`.                               |
 | `StrictAbiType`       | `boolean`                       | `false`                                                               | When set, validates `AbiParameter`'s `type` against `AbiType`.                                           |
 
+> **Warning**
+>
+> When configuring `ArrayMaxDepth`, `FixedArrayMinLength`, and `FixedArrayMaxLength`, there are trade-offs. For example, choosing a non-false value for `ArrayMaxDepth` and increasing the range between `FixedArrayMinLength` and `FixedArrayMaxLength` will make your types more exhaustive, but will also slow down the compiler for type checking, autocomplete, etc.
+
 Configuration options are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). Just install `abitype` (make sure versions match) and extend the `Config` interface either directly in your code or in a `d.ts` file (e.g. `abi.d.ts`):
 
 ```ts
@@ -379,9 +711,7 @@ declare module 'abitype' {
 }
 ```
 
-> **Warning**
->
-> When configuring `ArrayMaxDepth`, `FixedArrayMinLength`, and `FixedArrayMaxLength`, there are trade-offs. For example, choosing a non-false value for `ArrayMaxDepth` and increasing the range between `FixedArrayMinLength` and `FixedArrayMaxLength` will make your types more exhaustive, but will also slow down the compiler for type checking, autocomplete, etc.
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgJQKYGcIBsBuqAmAwhAHYBmwA5nAL5xlQQhwDkAhgEbAwCeYqLAFCDe-OAFkehAK7oYTAEJUAkiRgAVPqjgBeOF0rA1cAGSJ6ECAC5WHNlBa1h+VAGMs97SAj5pWbexcogKIgnBwqAAekLBwRjCoUGRsrtrE5FSh4eFKlKoaWjaSMnKKKmqa-GFONMLBKBh+8HpomLgE6RSUANosufmVAgC6ggD0o9kAegD8gkA)
 
 ## Zod
 
@@ -389,6 +719,8 @@ ABIType exports the core types as [Zod](https://github.com/colinhacks/zod) schem
 
 ```ts
 npm install zod
+pnpm add zod
+yarn add zod
 ```
 
 Then, import and use schemas:
