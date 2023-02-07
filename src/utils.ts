@@ -28,6 +28,7 @@ import type { Merge, Tuple } from './types'
  * Does not include full array or tuple conversion. Use {@link AbiParameterToPrimitiveType} to fully convert arrays and tuples.
  *
  * @param TAbiType - {@link AbiType} to convert to TypeScript representation
+ * @param TAbiParameterType - Optional {@link AbiParameterType} to narrow by parameter type
  * @returns TypeScript primitive type
  */
 export type AbiTypeToPrimitiveType<
@@ -77,6 +78,7 @@ type BitsTypeLookup = {
  * Converts {@link AbiParameter} to corresponding TypeScript primitive type.
  *
  * @param TAbiParameter - {@link AbiParameter} to convert to TypeScript representation
+ * @param TAbiParameterType - Optional {@link AbiParameterType} to narrow by parameter type
  * @returns TypeScript primitive type
  */
 export type AbiParameterToPrimitiveType<
@@ -172,6 +174,7 @@ type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
  * Converts array of {@link AbiParameter} to corresponding TypeScript primitive types.
  *
  * @param TAbiParameters - Array of {@link AbiParameter} to convert to TypeScript representations
+ * @param TAbiParameterType - Optional {@link AbiParameterType} to narrow by parameter type
  * @returns Array of TypeScript primitive types
  */
 export type AbiParametersToPrimitiveTypes<
@@ -340,6 +343,7 @@ export type IsTypedData<TTypedData> = TTypedData extends TypedData
  * Converts {@link TTypedData} to corresponding TypeScript primitive types.
  *
  * @param TTypedData - {@link TypedData} to convert
+ * @param TAbiParameterType - Optional {@link AbiParameterType} to narrow by parameter type
  * @returns Union of TypeScript primitive types
  */
 // TODO: Check for recursive structs (e.g. add generic slot for recursion)

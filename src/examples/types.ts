@@ -55,7 +55,7 @@ export type GetArgs<
   TAbiFunction extends AbiFunction & { type: 'function' } = TAbi extends Abi
     ? ExtractAbiFunction<TAbi, TFunctionName>
     : AbiFunction & { type: 'function' },
-  TArgs = AbiParametersToPrimitiveTypes<TAbiFunction['inputs']>,
+  TArgs = AbiParametersToPrimitiveTypes<TAbiFunction['inputs'], 'inputs'>,
   FailedToParseArgs =
     | ([TArgs] extends [never] ? true : false)
     | (readonly unknown[] extends TArgs ? true : false),
@@ -100,7 +100,7 @@ export type GetReturnType<
         ? Name extends ''
           ? never
           : Name
-        : never]: AbiParameterToPrimitiveType<Output>
+        : never]: AbiParameterToPrimitiveType<Output, 'outputs'>
     }
 
 export type DeepPartial<

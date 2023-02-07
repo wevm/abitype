@@ -41,7 +41,7 @@ type GetListener<
   TAbiEvent extends AbiEvent = TAbi extends Abi
     ? ExtractAbiEvent<TAbi, TEventName>
     : AbiEvent,
-  TArgs = AbiParametersToPrimitiveTypes<TAbiEvent['inputs']>,
+  TArgs = AbiParametersToPrimitiveTypes<TAbiEvent['inputs'], 'inputs'>,
   FailedToParseArgs =
     | ([TArgs] extends [never] ? true : false)
     | (readonly unknown[] extends TArgs ? true : false),
