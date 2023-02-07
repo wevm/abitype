@@ -1,7 +1,7 @@
 import type {
   Abi,
   AbiParameter,
-  AbiParameterType,
+  AbiParameterKind,
   AbiStateMutability,
   AbiType,
   MBits,
@@ -28,25 +28,25 @@ import type { Merge, Tuple } from './types'
  * Does not include full array or tuple conversion. Use {@link AbiParameterToPrimitiveType} to fully convert arrays and tuples.
  *
  * @param TAbiType - {@link AbiType} to convert to TypeScript representation
- * @param TAbiParameterType - Optional {@link AbiParameterType} to narrow by parameter type
+ * @param TAbiParameterKind - Optional {@link AbiParameterKind} to narrow by parameter type
  * @returns TypeScript primitive type
  */
 export type AbiTypeToPrimitiveType<
   TAbiType extends AbiType,
-  TAbiParameterType extends AbiParameterType = AbiParameterType,
-> = PrimitiveTypeLookup<TAbiType, TAbiParameterType>[TAbiType]
+  TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
+> = PrimitiveTypeLookup<TAbiType, TAbiParameterKind>[TAbiType]
 
 // Using a map to look up types is faster, than nested conditional types
 // s/o https://twitter.com/SeaRyanC/status/1538971176357113858
 type PrimitiveTypeLookup<
   TAbiType extends AbiType,
-  TAbiParameterType extends AbiParameterType = AbiParameterType,
+  TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
 > = {
   [_ in SolidityAddress]: ResolvedConfig['AddressType']
 } & {
   [_ in SolidityBool]: boolean
 } & {
-  [_ in SolidityBytes]: ResolvedConfig['BytesType'][TAbiParameterType]
+  [_ in SolidityBytes]: ResolvedConfig['BytesType'][TAbiParameterKind]
 } & {
   [_ in SolidityFunction]: `${ResolvedConfig['AddressType']}${string}`
 } & {
@@ -78,16 +78,16 @@ type BitsTypeLookup = {
  * Converts {@link AbiParameter} to corresponding TypeScript primitive type.
  *
  * @param TAbiParameter - {@link AbiParameter} to convert to TypeScript representation
- * @param TAbiParameterType - Optional {@link AbiParameterType} to narrow by parameter type
+ * @param TAbiParameterKind - Optional {@link AbiParameterKind} to narrow by parameter type
  * @returns TypeScript primitive type
  */
 export type AbiParameterToPrimitiveType<
   TAbiParameter extends AbiParameter | { name: string; type: unknown },
-  TAbiParameterType extends AbiParameterType = AbiParameterType,
+  TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
 > =
   // 1. Check to see if type is basic (not tuple or array) and can be looked up immediately.
   TAbiParameter['type'] extends Exclude<AbiType, SolidityTuple | SolidityArray>
-    ? AbiTypeToPrimitiveType<TAbiParameter['type'], TAbiParameterType>
+    ? AbiTypeToPrimitiveType<TAbiParameter['type'], TAbiParameterKind>
     : // 2. Check if type is tuple and covert each component
     TAbiParameter extends {
         type: SolidityTuple
@@ -99,7 +99,7 @@ export type AbiParameterToPrimitiveType<
           ...{
             [K in keyof TComponents]: AbiParameterToPrimitiveType<
               TComponents[K],
-              TAbiParameterType
+              TAbiParameterKind
             >
           },
         ]
@@ -109,7 +109,7 @@ export type AbiParameterToPrimitiveType<
             name: string
           }
             ? Component['name']
-            : never]: AbiParameterToPrimitiveType<Component, TAbiParameterType>
+            : never]: AbiParameterToPrimitiveType<Component, TAbiParameterKind>
         }
     : // 3. Check if type is array.
     /**
@@ -139,13 +139,13 @@ export type AbiParameterToPrimitiveType<
         ? Tuple<
             AbiParameterToPrimitiveType<
               Merge<TAbiParameter, { type: Head }>,
-              TAbiParameterType
+              TAbiParameterKind
             >,
             SolidityFixedArraySizeLookup[Size]
           >
         : readonly AbiParameterToPrimitiveType<
             Merge<TAbiParameter, { type: Head }>,
-            TAbiParameterType
+            TAbiParameterKind
           >[]
       : never
     : // 4. If type is not basic, tuple, or array, we don't know what the type is.
@@ -174,19 +174,19 @@ type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
  * Converts array of {@link AbiParameter} to corresponding TypeScript primitive types.
  *
  * @param TAbiParameters - Array of {@link AbiParameter} to convert to TypeScript representations
- * @param TAbiParameterType - Optional {@link AbiParameterType} to narrow by parameter type
+ * @param TAbiParameterKind - Optional {@link AbiParameterKind} to narrow by parameter type
  * @returns Array of TypeScript primitive types
  */
 export type AbiParametersToPrimitiveTypes<
   TAbiParameters extends readonly AbiParameter[],
-  TAbiParameterType extends AbiParameterType = AbiParameterType,
+  TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
 > = {
   // TODO: Convert to labeled tuple so parameter names show up in autocomplete
   // e.g. [foo: string, bar: string]
   // https://github.com/microsoft/TypeScript/issues/44939
   [K in keyof TAbiParameters]: AbiParameterToPrimitiveType<
     TAbiParameters[K],
-    TAbiParameterType
+    TAbiParameterKind
   >
 }
 
@@ -343,13 +343,13 @@ export type IsTypedData<TTypedData> = TTypedData extends TypedData
  * Converts {@link TTypedData} to corresponding TypeScript primitive types.
  *
  * @param TTypedData - {@link TypedData} to convert
- * @param TAbiParameterType - Optional {@link AbiParameterType} to narrow by parameter type
+ * @param TAbiParameterKind - Optional {@link AbiParameterKind} to narrow by parameter type
  * @returns Union of TypeScript primitive types
  */
 // TODO: Check for recursive structs (e.g. add generic slot for recursion)
 export type TypedDataToPrimitiveTypes<
   TTypedData extends TypedData,
-  TAbiParameterType extends AbiParameterType = AbiParameterType,
+  TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
 > = {
   [K in keyof TTypedData]: {
     // Map over typed data values and turn into key-value pairs
@@ -371,10 +371,10 @@ export type TypedDataToPrimitiveTypes<
               >
             }
           >,
-          TAbiParameterType
+          TAbiParameterKind
         >
       : K2['type'] extends TypedDataType // 4. Known type to convert
-      ? AbiParameterToPrimitiveType<K2, TAbiParameterType>
+      ? AbiParameterToPrimitiveType<K2, TAbiParameterKind>
       : `Error: Cannot convert unknown type '${K2['type']}' to primitive type.`
   }
 }

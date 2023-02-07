@@ -110,7 +110,7 @@ export type AbiParameter = {
 
 export type AbiStateMutability = 'pure' | 'view' | 'nonpayable' | 'payable'
 
-export type AbiParameterType = 'inputs' | 'outputs'
+export type AbiParameterKind = 'inputs' | 'outputs'
 
 export type AbiFunction = {
   /**

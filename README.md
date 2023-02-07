@@ -281,12 +281,12 @@ import { AbiInternalType } from 'abitype'
 import { AbiParameter } from 'abitype'
 ```
 
-### AbiParameterType
+### AbiParameterKind
 
-Type of ABI parameter: `'inputs' | 'outputs'`
+Kind of ABI parameter: `'inputs' | 'outputs'`
 
 ```ts
-import { AbiParameterType } from 'abitype'
+import { AbiParameterKind } from 'abitype'
 ```
 
 ### AbiStateMutability
