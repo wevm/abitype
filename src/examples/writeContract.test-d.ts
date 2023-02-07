@@ -92,7 +92,7 @@ test('writeContract', () => {
         functionName: 'setSubnodeOwner',
         args: ['0xfoo', '0xbar', address],
       })
-      assertType<ResolvedConfig['BytesType']>(result)
+      assertType<ResolvedConfig['BytesType']['outputs']>(result)
     })
 
     test('tuple', () => {
