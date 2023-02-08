@@ -1,5 +1,22 @@
 # abitype
 
+## 0.4.0
+
+### Minor Changes
+
+- [#78](https://github.com/wagmi-dev/abitype/pull/78) [`0df9b94`](https://github.com/wagmi-dev/abitype/commit/0df9b9473cefa6ad0d0227eb9d8ed805e15c4ea6) Thanks [@Raiden1411](https://github.com/Raiden1411)! - **Breaking**: Changed `BytesType` configuration property to support ABI item inputs and outputs types. To keep the previous behavior set `BytesType` to the following:
+
+  ```ts
+  declare module 'abitype' {
+    BytesType: {
+      inputs: `0x${string}`
+      outputs: `0x${string}`
+    }
+  }
+  ```
+
+  `BytesType['inputs']` default is now `` `0x${string}` | Uint8Array `` instead of just `` `0x${string}` ``.
+
 ## 0.3.0
 
 ### Minor Changes
