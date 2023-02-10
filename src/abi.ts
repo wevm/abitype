@@ -176,7 +176,7 @@ export type TypedDataDomain = {
 // Subset of `AbiType` that excludes `tuple` and `function`
 export type TypedDataType = Exclude<
   AbiType,
-  SolidityFunction | SolidityTuple | SolidityArrayWithTuple
+  SolidityFunction | SolidityTuple | SolidityArrayWithTuple | 'int' | 'uint'
 >
 
 export type TypedDataParameter = {
