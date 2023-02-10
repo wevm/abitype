@@ -1,5 +1,11 @@
 # abitype
 
+## 0.4.1
+
+### Patch Changes
+
+- [#81](https://github.com/wagmi-dev/abitype/pull/81) [`9c437a4`](https://github.com/wagmi-dev/abitype/commit/9c437a45e0b4802a62e5eea2c48430ea3b4c8d8a) Thanks [@tmm](https://github.com/tmm)! - Removed `uint` and `int` from `TypedDataType` (not allowed in spec).
+
 ## 0.4.0
 
 ### Minor Changes
