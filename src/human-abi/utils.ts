@@ -54,7 +54,8 @@ export type AbiTypes = 'function' | 'event' | 'error'
 /**
  * Indexed argument helper
  */
-export type AbiIndexed = ' indexed '
+//export type AbiIndexed = ' indexed '
+export type Modifier = 'calldata' | 'indexed' | 'memory' | 'storage'
 
 /**
  * All types of mutability on function types
@@ -77,7 +78,7 @@ export type NamedArgs = `${UnnamedArgs}${WS}${string}`
 /**
  * All named solidity indexed argument types
  */
-export type NamedIndexedArgs = `${UnnamedArgs}${AbiIndexed}${string}`
+export type NamedIndexedArgs = `${UnnamedArgs}${Modifier}${string}`
 
 /**
  * Tuple type values
@@ -87,8 +88,13 @@ export type TupleValue = `(${string})${string}`
 /**
  * All possible abi argument values. Excluding tuples
  */
-export type AbiArgs = NamedArgs | NamedIndexedArgs | UnnamedArgs | '' | 'void'
-
+export type AbiArgs =
+  | NamedArgs
+  | NamedIndexedArgs
+  | UnnamedArgs
+  | ''
+  | 'void'
+  | `${string}${Modifier}${string}`
 /**
  * Array of all possible abi argument values. Excluding tuples
  */
@@ -201,3 +207,43 @@ export type ReOrderArray<
     ? [...TRemain, ...Rest, Head]
     : ReOrderArray<Rest, [...TRemain, Head]>
   : TRemain
+
+/**
+ * Splits a string by a given seperator.
+ *
+ * @param S - String to split
+ * @param SEP - String seperator
+ * @returns Array of splited string {@link S}
+ *
+ * @example
+ * type Result = Split<"Hello", "e">
+ * //    ^? "["H", "ello"]"
+ */
+export type Split<S extends string, SEP extends string> = string extends S
+  ? string[]
+  : S extends `${infer R}${SEP}${infer L}`
+  ? [Trim<R>, ...Split<L, SEP>]
+  : S extends `${SEP}`
+  ? []
+  : [Trim<S>]
+
+/**
+ * Removes the last element of an array of it is empty.
+ *
+ * @param T - Any array value
+ * @returns Array without the last element of it {@link T}
+ *
+ * @example
+ * type Result = PopLastIfEmpty<[1,2,3]>
+ * //    ^? "[1,2,3]"
+ * type Result = PopLastIfEmpty<["1", "2", ""]>
+ * //    ^? "[1,2]"
+ */
+export type PopLastIfEmpty<T extends any[]> = T extends [
+  ...infer Head extends any[],
+  infer L,
+]
+  ? L extends ''
+    ? Head
+    : T
+  : never

@@ -1,6 +1,7 @@
 import { assertType, test } from 'vitest'
 
 import type {
+  CreateStructObject,
   ExtractArgs,
   ExtractHAbiError,
   ExtractHAbiErrorNames,
@@ -11,6 +12,9 @@ import type {
   ExtractMutability,
   ExtractNames,
   ExtractReturn,
+  ExtractStructInternalType,
+  ExtractStructName,
+  ExtractStructType,
   ExtractTArgs,
   ExtractTupleInfo,
   ExtractTupleInternalType,
@@ -28,7 +32,7 @@ import type {
   ParseParams,
   isIndexed,
 } from './habi'
-import type { ReOrderArray, ReplaceAll } from './utils'
+import type { PopLastIfEmpty, ReOrderArray, ReplaceAll, Split } from './utils'
 
 const testAbi = [
   'function balanceOf(address owner) view returns (uint tokenId)',
@@ -829,4 +833,256 @@ test('Extract Abi Specs', () => {
       { name: 'balance', type: 'uint256', internalType: 'uint256' },
     ],
   })
+})
+
+test('Can extract structs', () => {
+  assertType<
+    CreateStructObject<
+      [
+        'function cenas()',
+        'struct Demo {bytes  x; address payable d;}',
+        'struct Voter {  uint weight;  bool voted;  address delegate; uint vote; }',
+        'struct NestedVoter {  Voter voter;  bool voted;  address delegate; uint vote; }',
+      ]
+    >
+  >({
+    Demo: ['bytes  x', 'address payable d'],
+    Voter: ['uint weight', 'bool voted', 'address delegate', 'uint vote'],
+    NestedVoter: ['Voter voter', 'bool voted', 'address delegate', 'uint vote'],
+  })
+
+  assertType<
+    CreateStructObject<
+      [
+        'struct Voter {  uint weight;  bool voted;  address delegate; uint vote; }',
+        'function call(Voter memory voter) returns (address, uint256)',
+      ]
+    >
+  >({
+    Voter: ['uint weight', 'bool voted', 'address delegate', 'uint vote'],
+  })
+})
+
+test('Can parse Struct', () => {
+  assertType<
+    ParseHumanAbi<
+      [
+        'struct Voter {  uint weight;  bool voted;  address delegate; uint vote; }',
+        'function call(Voter memory voter) returns (address, uint256)',
+      ]
+    >
+  >([
+    {
+      constant: false,
+      name: 'call',
+      payable: false,
+      stateMutability: 'nonpayable',
+      type: 'function',
+      inputs: [
+        {
+          name: 'voter',
+          type: 'tuple',
+          internalType: 'Struct Voter',
+          components: [
+            {
+              name: 'weight',
+              type: 'uint256',
+              internalType: 'uint256',
+            },
+            {
+              name: 'voted',
+              type: 'bool',
+              internalType: 'bool',
+            },
+            {
+              name: 'delegate',
+              type: 'address',
+              internalType: 'address',
+            },
+            {
+              name: 'vote',
+              type: 'uint256',
+              internalType: 'uint256',
+            },
+          ],
+        },
+      ],
+      outputs: [
+        {
+          name: '',
+          type: 'address',
+          internalType: 'address',
+        },
+        {
+          name: '',
+          type: 'uint256',
+          internalType: 'uint256',
+        },
+      ],
+    },
+  ])
+
+  test('Can parse nested structs', () => {
+    assertType<
+      ParseHumanAbi<
+        [
+          'struct Voter {  uint weight; }',
+          'struct NestedVoter {  Voter voter;  uint vote; }',
+          'struct NestedVoter2 {  NestedVoter[] voter;  Voter[10] votes;  uint vote; }',
+          'function call(NestedVoter2 memory voter) returns (address, uint256)',
+        ]
+      >
+    >([
+      {
+        constant: false,
+        payable: false,
+        name: 'call',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [
+          {
+            internalType: 'Struct NestedVoter2',
+            name: 'voter',
+            type: 'tuple',
+            components: [
+              {
+                internalType: 'Struct[] NestedVoter',
+                name: 'voter',
+                type: 'tuple[]',
+                components: [
+                  {
+                    name: 'voter',
+                    type: 'tuple',
+                    internalType: 'Struct Voter',
+                    components: [
+                      {
+                        name: 'weight',
+                        type: 'uint256',
+                        internalType: 'uint256',
+                      },
+                    ],
+                  },
+                  { name: 'vote', type: 'uint256', internalType: 'uint256' },
+                ],
+              },
+              {
+                internalType: 'Struct[10] Voter',
+                name: 'votes',
+                type: 'tuple[10]',
+                components: [
+                  {
+                    name: 'weight',
+                    type: 'uint256',
+                    internalType: 'uint256',
+                  },
+                ],
+              },
+              {
+                internalType: 'uint256',
+                name: 'vote',
+                type: 'uint256',
+              },
+            ],
+          },
+        ],
+        outputs: [
+          {
+            internalType: 'address',
+            name: '',
+            type: 'address',
+          },
+          { internalType: 'uint256', name: '', type: 'uint256' },
+        ],
+      },
+    ])
+  })
+
+  test('Can parse events structs', () => {
+    assertType<
+      ParseHumanAbi<
+        [
+          'struct Voter {  uint weight; }',
+          'event call(Voter indexed voter, address owner)',
+        ]
+      >
+    >([
+      {
+        name: 'call',
+        type: 'event',
+        anonymous: false,
+        inputs: [
+          {
+            name: 'voter',
+            indexed: true,
+            type: 'tuple',
+            internalType: 'Struct Voter',
+            components: [
+              {
+                name: 'weight',
+                type: 'uint256',
+                internalType: 'uint256',
+              },
+            ],
+          },
+          { name: 'owner', type: 'address', internalType: 'address' },
+        ],
+      },
+    ])
+  })
+
+  test('Can parse error structs', () => {
+    assertType<
+      ParseHumanAbi<
+        [
+          'struct Voter {  uint weight; }',
+          'error call(Voter voter, address owner)',
+        ]
+      >
+    >([
+      {
+        name: 'call',
+        type: 'error',
+        inputs: [
+          {
+            name: 'voter',
+            type: 'tuple',
+            internalType: 'Struct Voter',
+            components: [
+              {
+                name: 'weight',
+                type: 'uint256',
+                internalType: 'uint256',
+              },
+            ],
+          },
+          { name: 'owner', type: 'address', internalType: 'address' },
+        ],
+      },
+    ])
+  })
+})
+
+test('Extract Struct Name', () => {
+  assertType<ExtractStructName<'Voter[10]'>>('Voter')
+  assertType<ExtractStructName<'Voter[]'>>('Voter')
+  assertType<ExtractStructName<'Voter'>>('Voter')
+})
+
+test('Extract Struct Type', () => {
+  assertType<ExtractStructType<'Voter[10]'>>('tuple[10]')
+  assertType<ExtractStructType<'Voter[]'>>('tuple[]')
+  assertType<ExtractStructType<'Voter'>>('tuple')
+})
+
+test('Extract Struct internalType', () => {
+  assertType<ExtractStructInternalType<'Voter[10]'>>('Struct[10] Voter')
+  assertType<ExtractStructInternalType<'Voter[]'>>('Struct[] Voter')
+  assertType<ExtractStructInternalType<'Voter'>>('Struct Voter')
+})
+
+test('Utils', () => {
+  assertType<Split<'Hello World', ' '>>(['Hello', 'World'])
+  assertType<Split<'Hello World', 'l'>>(['He', '', 'o Wor', 'd'])
+  assertType<PopLastIfEmpty<[1, 2, 3]>>([1, 2, 3])
+  assertType<PopLastIfEmpty<['1', '2', '']>>(['1', '2'])
 })

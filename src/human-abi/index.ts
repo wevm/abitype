@@ -1,4 +1,5 @@
 export type {
+  CreateStructObject,
   ExtractArgs,
   ExtractHAbiError,
   ExtractHAbiErrorNames,
@@ -9,6 +10,9 @@ export type {
   ExtractMutability,
   ExtractNames,
   ExtractReturn,
+  ExtractStructInternalType,
+  ExtractStructName,
+  ExtractStructType,
   ExtractTArgs,
   ExtractTupleInfo,
   ExtractTupleInternalType,
