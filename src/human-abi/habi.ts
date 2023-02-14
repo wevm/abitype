@@ -16,6 +16,7 @@ import type {
   WS,
   hasTupleValue,
   isTupleValue,
+  isUnknown,
 } from './utils'
 
 /**
@@ -221,7 +222,7 @@ export type CreateStructObject<T extends HAbi> = T extends [
         [K in Trim<Name>]: PopLastIfEmpty<Split<Args, ';'>>
       } & CreateStructObject<Rest>
     : CreateStructObject<Rest>
-  : {}
+  : Record<string, unknown>
 
 /**
  * Extracts the struct names for a given argument
@@ -271,25 +272,23 @@ export type ExtractStructInternalType<T extends string> =
  * type Result = ParseArgs<["string world"]>
  * //    ^? "[{name: "hello", type: "string", internalType: "string"}]"
  *
- * type ResultStruct = ParseArgs<["Voter vote"], CreateStructObject<["struct Voter{uint numberOfVotes}"]>>
+ * type ResultStruct = ParseArgs<["Voter vote"], CreateStructObject<["struct Voter{uint numberOfVotes;}"]>>
  * //    ^? "[{name: "vote", type: "tuple", internalType: "Struct Voter", components:[{name: "numberOfVotes", type: "uint256", internalType: "uint256"}]}]"
  */
 export type ParseArgs<
   T extends AbiArgsType,
-  TObj extends Record<string, AbiArgsType> = {},
-> = T[0] extends ''
-  ? []
-  : T[0] extends 'void'
+  TObj extends Record<string, AbiArgsType | unknown> = Record<string, unknown>,
+> = T[0] extends '' | 'void'
   ? []
   : {
-      readonly [key in keyof T]: T[key] extends `${infer TType extends string}${WS}${infer TModifier extends Modifier}${WS}${infer TName extends string}`
-        ? ExtractStructName<Trim<TType>> extends keyof TObj
+      [key in keyof T]: T[key] extends `${infer TType extends string}${WS}${infer TModifier extends Modifier}${WS}${infer TName extends string}`
+        ? isUnknown<TObj[ExtractStructName<Trim<TType>>]> extends false
           ? {
               readonly internalType: ExtractStructInternalType<TType>
               readonly name: Trim<TName>
               readonly type: ExtractStructType<Trim<TType>>
               readonly components: ParseArgs<
-                TObj[ExtractStructName<Trim<TType>>],
+                Extract<TObj[ExtractStructName<Trim<TType>>], AbiArgsType>,
                 TObj
               >
             } & (TModifier extends 'indexed' ? { indexed: true } : unknown)
@@ -298,29 +297,29 @@ export type ParseArgs<
               readonly name: Trim<TName>
               readonly type: SolidityType<Trim<TType>>
             } & (TModifier extends 'indexed' ? { indexed: true } : unknown)
-        : T[key] extends `${infer TType_ extends string}${WS}${infer TName_ extends string}`
-        ? ExtractStructName<Trim<TType_>> extends keyof TObj
+        : T[key] extends `${infer Type}${WS}${infer Name}`
+        ? isUnknown<TObj[ExtractStructName<Trim<Type>>]> extends false
           ? {
-              readonly internalType: ExtractStructInternalType<TType_>
-              readonly name: Trim<TName_> extends Modifier ? '' : TName_
-              readonly type: ExtractStructType<Trim<TType_>>
+              readonly internalType: ExtractStructInternalType<Type>
+              readonly name: Trim<Name> extends Modifier ? '' : Name
+              readonly type: ExtractStructType<Trim<Type>>
               readonly components: ParseArgs<
-                TObj[ExtractStructName<Trim<TType_>>],
+                Extract<TObj[ExtractStructName<Trim<Type>>], AbiArgsType>,
                 TObj
               >
-            } & (TName_ extends 'indexed' ? { indexed: true } : unknown)
+            } & (Name extends 'indexed' ? { indexed: true } : unknown)
           : {
-              readonly internalType: SolidityType<Trim<TType_>>
-              readonly name: Trim<TName_>
-              readonly type: SolidityType<Trim<TType_>>
-            } & (TName_ extends 'indexed' ? { indexed: true } : unknown)
-        : ExtractStructName<Trim<T[key]>> extends keyof TObj
+              readonly internalType: SolidityType<Trim<Type>>
+              readonly name: Trim<Name>
+              readonly type: SolidityType<Trim<Type>>
+            } & (Name extends 'indexed' ? { indexed: true } : unknown)
+        : isUnknown<TObj[ExtractStructName<Trim<T[key]>>]> extends false
         ? {
             readonly internalType: ExtractStructInternalType<Trim<T[key]>>
             readonly name: ''
             readonly type: ExtractStructType<Trim<T[key]>>
             readonly components: ParseArgs<
-              TObj[ExtractStructName<Trim<T[key]>>],
+              Extract<TObj[ExtractStructName<Trim<T[key]>>], AbiArgsType>,
               TObj
             >
           }
@@ -465,7 +464,10 @@ export type ParseComponents<T extends AbiArgsTypeWithTuple> = T extends [never]
  */
 export type HandleArguments<
   T extends AbiArgsTypeWithTuple,
-  TStructObject extends Record<string, AbiArgsType> = {},
+  TStructObject extends Record<string, AbiArgsType | unknown> = Record<
+    string,
+    unknown
+  >,
 > = T extends [
   infer THead extends AbiArgsWithTuple,
   ...infer Rest extends AbiArgsTypeWithTuple,
@@ -490,7 +492,10 @@ export type HandleArguments<
  */
 export type ParseHAbiFunctions<
   T extends HAbi,
-  TStructObject extends Record<string, AbiArgsType> = {},
+  TStructObject extends Record<string, AbiArgsType | unknown> = Record<
+    string,
+    unknown
+  >,
 > = T extends [never]
   ? never
   : T extends ''
@@ -532,7 +537,10 @@ export type ParseHAbiFunctions<
  */
 export type ParseHAbiEvents<
   T extends HAbi,
-  TStructObject extends Record<string, AbiArgsType> = {},
+  TStructObject extends Record<string, AbiArgsType | unknown> = Record<
+    string,
+    unknown
+  >,
 > = T extends [never]
   ? never
   : T extends ['']
@@ -565,7 +573,10 @@ export type ParseHAbiEvents<
  */
 export type ParseHAbiErrors<
   T extends HAbi,
-  TStructObject extends Record<string, AbiArgsType> = {},
+  TStructObject extends Record<string, AbiArgsType | unknown> = Record<
+    string,
+    unknown
+  >,
 > = T extends [never]
   ? never
   : T extends ['']
@@ -597,7 +608,7 @@ export type ParseHumanAbi<
   HumanAbi extends HAbi,
   TStructObject extends Record<
     string,
-    AbiArgsType
+    AbiArgsType | unknown
   > = CreateStructObject<HumanAbi>,
 > = readonly [
   ...ParseHAbiErrors<HumanAbi, TStructObject>,

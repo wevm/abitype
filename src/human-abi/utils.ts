@@ -78,7 +78,7 @@ export type NamedArgs = `${UnnamedArgs}${WS}${string}`
 /**
  * All named solidity indexed argument types
  */
-export type NamedIndexedArgs = `${UnnamedArgs}${Modifier}${string}`
+export type NamedIndexedArgs = `${UnnamedArgs}${WS}${Modifier}${string}`
 
 /**
  * Tuple type values
@@ -95,6 +95,7 @@ export type AbiArgs =
   | ''
   | 'void'
   | `${string}${Modifier}${string}`
+  | `${string}${WS}${string}`
 /**
  * Array of all possible abi argument values. Excluding tuples
  */
@@ -247,3 +248,15 @@ export type PopLastIfEmpty<T extends any[]> = T extends [
     ? Head
     : T
   : never
+
+/**
+ * Checks where a given value is of type unknown
+ *
+ * @param T - Any value
+ * @returns true if unknown or false if not {@link T}
+ *
+ * @example
+ * type Result = isUnknown<"Hello">
+ * //    ^? false
+ */
+export type isUnknown<T> = unknown extends T ? true : false
