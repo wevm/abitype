@@ -79,6 +79,7 @@
     "lint": "eslint . --cache",
     "lint:fix": "pnpm lint --fix",
     "lint:format": "prettier --write",
+    "bench": "tsc --strict --noEmit --extendedDiagnostics",
     "prepare": "npx simple-git-hooks",
     "test": "vitest",
     "test:run": "vitest run",
