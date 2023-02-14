@@ -71,16 +71,6 @@ export type UnnamedArgs = Exclude<
 >
 
 /**
- * All named solidity argument types
- */
-export type NamedArgs = `${UnnamedArgs}${WS}${string}`
-
-/**
- * All named solidity indexed argument types
- */
-export type NamedIndexedArgs = `${UnnamedArgs}${WS}${Modifier}${string}`
-
-/**
  * Tuple type values
  */
 export type TupleValue = `(${string})${string}`
@@ -89,8 +79,6 @@ export type TupleValue = `(${string})${string}`
  * All possible abi argument values. Excluding tuples
  */
 export type AbiArgs =
-  | NamedArgs
-  | NamedIndexedArgs
   | UnnamedArgs
   | ''
   | 'void'
