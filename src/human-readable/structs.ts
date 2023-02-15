@@ -13,7 +13,10 @@ export type ParseStructProperties<
   ? ParseStructProperties<
       Tail,
       TStructs,
-      [...Result, ParseAbiParameter<Head, TStructs>]
+      [
+        ...Result,
+        ParseAbiParameter<Head, { AllowIndexed: false; Structs: TStructs }>,
+      ]
     >
   : Result
 

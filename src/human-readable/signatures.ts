@@ -4,10 +4,24 @@ type IsName<T extends string> = T extends '' | `${string}${' '}${string}`
   ? false
   : true
 
-export type IsErrorSignature<T extends string> =
-  T extends `error ${infer Name}(${string})` ? IsName<Name> : false
-export type IsEventSignature<T extends string> =
-  T extends `event ${infer Name}(${string})` ? IsName<Name> : false
+export type ErrorSignature<
+  TName extends string = string,
+  TParams extends string = string,
+> = `error ${TName}(${TParams})`
+export type IsErrorSignature<T extends string> = T extends ErrorSignature<
+  infer Name
+>
+  ? IsName<Name>
+  : false
+export type EventSignature<
+  TName extends string = string,
+  TParams extends string = string,
+> = `event ${TName}(${TParams})`
+export type IsEventSignature<T extends string> = T extends EventSignature<
+  infer Name
+>
+  ? IsName<Name>
+  : false
 
 export type IsFunctionSignature<T> =
   T extends `function ${infer Name}(${string}`
@@ -43,14 +57,13 @@ type ValidFunctionSignatures =
   | `function ${string}(${string}) ${AbiStateMutability} ${Returns}`
   | `function ${string}(${string}) ${Scope} ${AbiStateMutability}`
   | `function ${string}(${string}) ${Scope} ${AbiStateMutability} ${Returns}`
-// TODO: Doesn't cover all cases
-type MangledReturns =
-  | `r${string}eturns`
-  | `re${string}turns`
-  | `ret${string}urns`
-  | `retu${string}rns`
-  | `retur${string}ns`
-  | `return${string}s`
+type MangledReturns = Permutations<'returns'>
+type Permutations<T extends string> = T extends `${infer Head}${infer Tail}`
+  ?
+      | `${string}${Head}${Permutations<Tail>}`
+      | `${Head}${string}${Permutations<Tail>}`
+      | `${Head}${Permutations<Tail>}`
+  : T
 type InvalidFunctionParams =
   | `${string}${'returns' | MangledReturns} (${string}`
   | `${string}) ${'returns' | MangledReturns}${string}`
@@ -59,7 +72,8 @@ type InvalidFunctionParams =
 export type IsStructSignature<T extends string> =
   T extends `struct ${infer Name} {${string}}` ? IsName<Name> : false
 
-export type ConstructorSignature = `constructor(${string})`
+export type ConstructorSignature<TParams extends string = string> =
+  `constructor(${TParams})`
 export type FallbackSignature = 'fallback()'
 export type ReceiveSignature = 'receive() external payable'
 

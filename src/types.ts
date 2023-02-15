@@ -68,7 +68,8 @@ export type Merge<Object1, Object2> = Omit<Object1, keyof Object2> & Object2
  */
 export type Prettify<T> = {
   [K in keyof T]: T[K]
-} & object
+  // eslint-disable-next-line @typescript-eslint/ban-types
+} & {}
 
 /**
  * Creates range between two positive numbers using [tail recursion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html#tail-recursion-elimination-on-conditional-types).
