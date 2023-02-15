@@ -1,62 +1,74 @@
-import type { AbiType, SolidityArrayWithTuple, SolidityTuple } from '../abi'
 import type { Trim } from '../types'
 import type {
   ConstructorSignature,
-  FunctionSignatureWithReturn,
-  FunctionSignatureWithoutReturn,
-  IsConstructorSignature,
-  IsFallbackSignature,
+  FallbackSignature,
+  IsErrorSignature,
+  IsEventSignature,
   IsFunctionSignature,
-  IsReceiveSignature,
+  ReceiveSignature,
+  Signatures,
 } from './signatures'
+import type { ParseStructs } from './structs'
 
-// 1. Get params from signature
-// 2. Parse params into array
-// 3. Convert each param string to basic abi parameter
-// 4. Resolve types for each param to create full param (if inline tuple repeat steps 1-4)
+export type ParseAbi<
+  TSignatures extends Signatures<
+    TSignatures extends readonly string[] ? TSignatures : never
+  >,
+> = TSignatures extends infer Validated extends Signatures<
+  Validated extends readonly string[] ? Validated : never
+>
+  ? ParseStructs<Validated> extends infer Structs
+    ? {
+        [K in keyof Validated]: Validated[K] extends infer Signature extends string
+          ? ParseSignature<Signature, Structs>
+          : never
+      }
+    : never
+  : never
 
-export type ParseSignature<TSignature extends string> =
-  | (IsFunctionSignature<TSignature> extends true
-      ? TSignature extends FunctionSignatureWithReturn<
-          infer Name,
-          infer Params,
-          infer Return
-        >
-        ? {
-            name: Trim<Name>
-            type: 'function'
-            inputs: Trim<Params> extends '' ? [] : ParseParams<Trim<Params>>
-            outputs: Return extends `${string}returns (${infer Outputs})`
-              ? ParseParams<Trim<Outputs>>
-              : []
-          }
-        : TSignature extends FunctionSignatureWithoutReturn<
-            infer Name,
-            infer Params
-          >
-        ? {
-            name: Trim<Name>
-            type: 'function'
-            stateMutability: 'nonpayable'
-            inputs: ParseParams<Trim<Params>>
-            outputs: []
-          }
-        : never
-      : never)
-  | (IsConstructorSignature<TSignature> extends true
+export declare function parseAbi<
+  TSignatures extends Signatures<
+    TSignatures extends readonly string[] ? TSignatures : never
+  >,
+  // TODO: Add `Narrow<TSignatures>` support
+>(signatures: TSignatures): ParseAbi<TSignatures>
+
+// 1. Get params from signature (e.g. `function foo(uint256, uint256)` -> `uint256, uint256`)
+// 2. Parse params into array (e.g. `uint256, uint256` -> `['uint256', 'uint256']`)
+// 3. Convert each param string to basic abi parameter (e.g. `uint256` -> `{ type: 'uint256' }`)
+// 3a. If inline tuple repeat steps 1-3
+// Other: Handle `void` param (review other PR), remove unused utility types
+
+export type ParseSignature<
+  TSignature extends string,
+  TStructs extends StructLookup | unknown = unknown,
+> =
+  | (IsErrorSignature<TSignature> extends true
       ? {
-          type: 'constructor'
-          inputs: TSignature extends ConstructorSignature<infer Params>
-            ? ParseParams<Trim<Params>>
-            : []
+          type: 'error'
         }
       : never)
-  | (IsFallbackSignature<TSignature> extends true
+  | (IsEventSignature<TSignature> extends true
+      ? {
+          type: 'event'
+        }
+      : never)
+  | (IsFunctionSignature<TSignature> extends true
+      ? {
+          type: 'function'
+        }
+      : never)
+  | (TSignature extends ConstructorSignature
+      ? {
+          type: 'constructor'
+        }
+      : never)
+  | (TSignature extends FallbackSignature
       ? {
           type: 'fallback'
         }
       : never)
-  | (IsReceiveSignature<TSignature> extends true
+  | (TSignature extends ReceiveSignature
       ? {
           type: 'receive'
           stateMutability: 'payable'
@@ -87,88 +99,15 @@ export type ParseParams<
   : []
 type Pop<T extends ReadonlyArray<number>> = T extends [...infer R, any] ? R : []
 
-export type ParseAbiParameter<T extends string> =
-  T extends `(${string})${string}`
-    ? ParseComponents<[T]>
-    : T extends `${infer Type} indexed ${infer Name}`
-    ? { type: Trim<Type>; name: Trim<Name>; indexed: true }
-    : T extends `${infer Type} ${infer Name}`
-    ? { type: Trim<Type>; name: Trim<Name> }
-    : T extends `${infer Type}`
-    ? { type: Type }
-    : never
-
-type Result = ParseAbiParameter<'(string)[][] foo'>
-
-type ParseAbiParameters<T extends readonly string[]> = {
-  [K in keyof T]: ParseAbiParameter<T[K]>
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
-type UnnamedArgs = Exclude<AbiType, SolidityTuple | SolidityArrayWithTuple>
-type Modifier = 'calldata' | 'indexed' | 'memory' | 'storage'
-type AbiArgs =
-  | UnnamedArgs
-  | ''
-  | 'void'
-  | `${string}${Modifier}${string}`
-  | `${string} ${string}`
-type TupleValue = `(${string})${string}`
-type AbiArgsWithTuple = AbiArgs | TupleValue
-type AbiArgsTypeWithTuple = readonly AbiArgsWithTuple[]
-type IsIndexed<T extends string> = T extends `${string} indexed ${string}`
-  ? true
-  : unknown
-type ExtractTArgs<T extends string> =
-  T extends `(${infer Args})${ExtractTupleInfo<T>}`
-    ? Args
-    : T extends `(${infer Args}) ${ExtractTupleInfo<T>}`
-    ? Args
-    : ''
-// type Result = ExtractTArgs<'(string bar, address foo)[] foo'>
-type ExtractTupleInfo<T extends string> = T extends `${string})${infer Info}`
-  ? Info extends `${string})`
-    ? ''
-    : Info extends `${string})${infer TInfo}`
-    ? TInfo extends ''
-      ? Trim<Info>
-      : ExtractTupleInfo<Trim<TInfo>>
-    : Trim<Info>
-  : T
-type ExtractTupleType<T extends string> = T extends `[${infer K}]${string}`
-  ? `tuple[${K}]`
-  : 'tuple'
-type ExtractTupleName<T extends string> =
-  T extends `[${string}] indexed ${infer Name}`
-    ? Name
-    : T extends `[${string}]${infer Name}`
-    ? Trim<Name>
-    : T extends `indexed ${infer Name}`
-    ? Name
-    : T
-
-type ParseComponents<T extends AbiArgsTypeWithTuple> = T extends [never]
-  ? never
-  : T extends ['']
-  ? never
-  : T extends [
-      infer Head extends AbiArgsWithTuple,
-      ...infer Last extends AbiArgsTypeWithTuple,
-    ]
-  ? Head extends `(${string}`
-    ? [
-        {
-          type: ExtractTupleType<ExtractTupleInfo<Head>>
-          name: ExtractTupleName<ExtractTupleInfo<Head>>
-          // internalType: ExtractTupleInternalType<ExtractTupleInfo<Head>>
-          components: [
-            ...ParseComponents<[...ParseParams<ExtractTArgs<Head>>, ...Last]>,
-          ]
-        } & (IsIndexed<Head> extends true ? { indexed: true } : unknown),
-      ]
-    : [
-        ...ParseAbiParameters<[Exclude<Head, TupleValue>]>,
-        ...ParseComponents<Last>,
-      ]
-  : []
+export type ParseAbiParameter<
+  T extends string,
+  TStructs extends StructLookup | unknown = unknown, // TODO: Resolve structs
+> = T extends `(${string})${string}`
+  ? { type: 'TODO: tuple' }
+  : T extends `${infer Type} indexed ${infer Name}`
+  ? { type: Trim<Type>; name: Trim<Name>; indexed: true }
+  : T extends `${infer Type} ${infer Name}`
+  ? { type: Trim<Type>; name: Trim<Name> }
+  : T extends `${infer Type}`
+  ? { type: Type }
+  : never

@@ -1,78 +1,49 @@
 import { assertType, test } from 'vitest'
 
 import type {
-  IsConstructorSignature,
   IsErrorSignature,
   IsEventSignature,
-  IsFallbackSignature,
   IsFunctionSignature,
-  IsReceiveSignature,
   IsSignature,
   IsStructSignature,
 } from './signatures'
 
-test('FunctionSignature', () => {
+test('IsFunctionSignature', () => {
   // basic
   assertType<IsFunctionSignature<'function foo()'>>(true)
-
+  assertType<IsFunctionSignature<'function foo() returns (uint256)'>>(true)
+  assertType<IsFunctionSignature<'function foo() view'>>(true)
+  assertType<IsFunctionSignature<'function foo() public'>>(true)
+  // combinations
+  assertType<IsFunctionSignature<'function foo() view returns (uint256)'>>(true)
+  assertType<IsFunctionSignature<'function foo() public view'>>(true)
+  assertType<
+    IsFunctionSignature<'function foo() public view returns (uint256)'>
+  >(true)
   // params
-  assertType<IsFunctionSignature<'function foo(string bar)'>>(true)
-  assertType<IsFunctionSignature<'function foo(string bar, string baz)'>>(true)
-  assertType<IsFunctionSignature<'function foo(string bar, (string baz))'>>(
+  assertType<IsFunctionSignature<'function foo(uint256, uint256)'>>(true)
+  assertType<IsFunctionSignature<'function foo(uint256) returns (uint256)'>>(
     true,
   )
-
-  // return
-  assertType<IsFunctionSignature<'function foo() returns (string bar)'>>(true)
+  assertType<IsFunctionSignature<'function foo(uint256) view'>>(true)
+  assertType<IsFunctionSignature<'function foo(uint256) public'>>(true)
   assertType<
-    IsFunctionSignature<'function foo() public pure returns (string bar)'>
+    IsFunctionSignature<'function foo(uint256) view returns (uint256)'>
   >(true)
+  assertType<IsFunctionSignature<'function foo(uint256) public view'>>(true)
   assertType<
-    IsFunctionSignature<'function foo() returns (string bar, (string baz))'>
+    IsFunctionSignature<'function foo(uint256) public view returns (uint256)'>
   >(true)
 
   // invalid
   assertType<IsFunctionSignature<'function ()'>>(false)
+  assertType<IsFunctionSignature<'function foo() '>>(false)
+  assertType<IsFunctionSignature<'function foo()  public'>>(false)
+  assertType<IsFunctionSignature<'function foo() re turns (uint256)'>>(false)
   assertType<IsFunctionSignature<'foo()'>>(false)
-  assertType<IsFunctionSignature<'function foo(string bar'>>(false)
 })
 
-test('ConstructorSignature', () => {
-  // basic
-  assertType<IsConstructorSignature<'constructor()'>>(true)
-
-  // params
-  assertType<IsConstructorSignature<'constructor(string bar)'>>(true)
-  assertType<IsConstructorSignature<'constructor(string bar, string baz)'>>(
-    true,
-  )
-  assertType<IsConstructorSignature<'constructor(string bar, (string baz))'>>(
-    true,
-  )
-
-  // invalid
-  assertType<IsConstructorSignature<'constructor(string bar'>>(false)
-})
-
-test('FallbackSignature', () => {
-  // basic
-  assertType<IsFallbackSignature<'fallback()'>>(true)
-
-  // invalid
-  assertType<IsFallbackSignature<'fallback() foo'>>(false)
-})
-
-test('ReceiveSignature', () => {
-  // basic
-  assertType<IsReceiveSignature<'receive() external payable'>>(true)
-
-  // invalid
-  assertType<IsReceiveSignature<'receive() external'>>(false)
-  assertType<IsReceiveSignature<'receive() payable'>>(false)
-  assertType<IsReceiveSignature<'receive()'>>(false)
-})
-
-test('EventSignature', () => {
+test('IsEventSignature', () => {
   // basic
   assertType<IsEventSignature<'event Foo()'>>(true)
 
@@ -87,7 +58,7 @@ test('EventSignature', () => {
   assertType<IsEventSignature<'event Foo(string bar'>>(false)
 })
 
-test('ErrorSignature', () => {
+test('IsErrorSignature', () => {
   // basic
   assertType<IsErrorSignature<'error Foo()'>>(true)
 
@@ -119,7 +90,7 @@ test('IsStructSignature', () => {
   assertType<IsStructSignature<'struct Foo {string bar'>>(false)
 })
 
-test('Signature', () => {
+test('IsSignature', () => {
   // basic
   assertType<IsSignature<'function foo()'>>(true)
   assertType<IsSignature<'constructor()'>>(true)

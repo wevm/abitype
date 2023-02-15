@@ -1,32 +1,55 @@
 import type { AbiParameter } from '../abi'
 import type { Trim } from '../types'
-import type { StructSignature } from './signatures'
+import type { Signatures } from './signatures'
 import type { ParseAbiParameter } from './utils'
 
-export type StructMap = Record<string, readonly AbiParameter[]>
+export type StructLookup = Record<string, readonly AbiParameter[]>
 
 export type ParseStructProperties<
   T extends string,
-  TStructs extends StructMap | unknown = unknown,
-  Options extends { throwUnknownType: boolean } = { throwUnknownType: true },
+  TStructs extends StructLookup | unknown = unknown,
   Result extends any[] = [],
 > = Trim<T> extends `${infer Head};${infer Tail}`
   ? ParseStructProperties<
       Tail,
       TStructs,
-      Options,
-      [...Result, ParseAbiParameter<Head, TStructs, Options>]
+      [...Result, ParseAbiParameter<Head, TStructs>]
     >
   : Result
 
 export type ParseStruct<
   TSignature extends string,
-  TStructs extends StructMap | unknown = unknown,
-  Options extends { throwUnknownType: boolean } = { throwUnknownType: true },
-> = TSignature extends StructSignature<infer Name, infer Properties>
+  TStructs extends StructLookup | unknown = unknown,
+> = TSignature extends `struct ${infer Name} {${infer Properties}}`
   ? {
       name: Trim<Name>
-      components: ParseStructProperties<Properties, TStructs, Options>
+      components: ParseStructProperties<Properties, TStructs>
+    }
+  : never
+
+export type ParseStructs<
+  TSignatures extends Signatures<
+    TSignatures extends readonly string[] ? TSignatures : never
+  >,
+> = {
+  [Signature in TSignatures[number] as ParseStruct<
+    Signature extends string ? Signature : never
+  > extends infer Struct extends {
+    name: string
+  }
+    ? Struct['name']
+    : never]: ParseStruct<
+    Signature extends string ? Signature : never
+  >['components']
+} extends infer Structs extends Record<
+  string,
+  readonly (AbiParameter & { type: string })[]
+>
+  ? {
+      [StructName in keyof Structs]: ResolveStructs<
+        Structs[StructName],
+        Structs
+      >
     }
   : never
 
@@ -53,29 +76,3 @@ export type ResolveStructs<
       }
     : TAbiParameters[K]
 }
-
-export type ParseStructs<TSignatures extends readonly string[]> = {
-  [Signature in TSignatures[number] as ParseStruct<
-    Signature,
-    unknown,
-    { throwUnknownType: false }
-  > extends infer Struct extends {
-    name: string
-  }
-    ? Struct['name']
-    : never]: ParseStruct<
-    Signature,
-    unknown,
-    { throwUnknownType: false }
-  >['components']
-} extends infer Structs extends Record<
-  string,
-  readonly (AbiParameter & { type: string })[]
->
-  ? {
-      [StructName in keyof Structs]: ResolveStructs<
-        Structs[StructName],
-        Structs
-      >
-    }
-  : never
