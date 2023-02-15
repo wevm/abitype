@@ -1,21 +1,4 @@
 /**
- * @description Returns error if T contains whitespace.
- *
- * @example
- * type Result = AssertNoWhiteSpace<'foobarbaz'>
- * //   ^? type Result = true
- */
-export type AssertNoWhiteSpace<T extends string> =
-  Trim<T> extends infer Trimmed extends string
-    ? HasWhiteSpace<Trimmed> extends true
-      ? `Error: "${Trimmed}" contains whitespace"`
-      : Trimmed
-    : never
-type HasWhiteSpace<T extends string> = T extends `${string}${' '}${string}`
-  ? true
-  : false
-
-/**
  * Filters out all members of {@link T} that are {@link P}
  *
  * @param T - Items to filter
@@ -100,26 +83,6 @@ export type Range<
   : Result extends []
   ? Range<Start, Stop, [], [...Padding, 0]>
   : Range<Start, Stop, [...Result, Current], Padding>
-
-/**
- * @description Splits string by separator.
- *
- * @example
- * type Result = Split<'foo,bar,baz', ','>
- * //   ^? type Result = ["foo", "bar", "baz"]
- */
-export type Split<
-  T extends string,
-  Separator extends string,
-> = Separator extends ''
-  ? T extends `${infer F}${infer R}`
-    ? [F, ...Split<R, Separator>]
-    : []
-  : Separator extends T
-  ? T[]
-  : T extends `${infer F}${Separator}${infer R}`
-  ? [F, ...Split<R, Separator>]
-  : [T]
 
 /**
  * @description Trims empty space from type T.

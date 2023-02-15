@@ -5,6 +5,7 @@ import type {
   ParseAbiParameter,
   ParseParams,
   ParseSignature,
+  ParseTuple,
 } from './utils'
 
 test('ParseSignature', () => {
@@ -209,6 +210,157 @@ test('ParseParams', () => {
     '(bool loading, (string[][] names) cats)[] dog',
     'uint tokenId',
   ])
+})
+
+test('ParseTuple', () => {
+  type OptionsWithIndexed = { AllowIndexed: true; Structs: unknown }
+  type OptionsWithStructs = {
+    AllowIndexed: true
+    Structs: {
+      Foo: [{ type: 'address'; name: 'bar' }]
+    }
+  }
+
+  // basic tuples
+  assertType<ParseTuple<'(string)'>>({
+    type: 'tuple',
+    components: [{ type: 'string' }],
+  })
+  assertType<ParseTuple<'(string, string)'>>({
+    type: 'tuple',
+    components: [{ type: 'string' }, { type: 'string' }],
+  })
+  assertType<ParseTuple<'((string, string), string)'>>({
+    type: 'tuple',
+    components: [
+      { type: 'tuple', components: [{ type: 'string' }, { type: 'string' }] },
+      { type: 'string' },
+    ],
+  })
+  assertType<ParseTuple<'((string))'>>({
+    type: 'tuple',
+    components: [{ type: 'tuple', components: [{ type: 'string' }] }],
+  })
+  assertType<ParseTuple<'(((string)))'>>({
+    type: 'tuple',
+    components: [
+      {
+        type: 'tuple',
+        components: [{ type: 'tuple', components: [{ type: 'string' }] }],
+      },
+    ],
+  })
+  assertType<ParseTuple<'(string calldata)'>>({
+    type: 'tuple',
+    components: [{ type: 'string' }],
+  })
+  assertType<ParseTuple<'(string indexed)', OptionsWithIndexed>>({
+    type: 'tuple',
+    components: [{ type: 'string', indexed: true }],
+  })
+  assertType<ParseTuple<'(Foo)', OptionsWithStructs>>({
+    type: 'tuple',
+    components: [
+      { type: 'tuple', components: [{ type: 'address', name: 'bar' }] },
+    ],
+  })
+
+  // named tuple params
+  assertType<ParseTuple<'(string foo)'>>({
+    type: 'tuple',
+    components: [{ type: 'string', name: 'foo' }],
+  })
+  assertType<ParseTuple<'(string bar) foo'>>({
+    name: 'foo',
+    type: 'tuple',
+    components: [{ type: 'string', name: 'bar' }],
+  })
+  assertType<ParseTuple<'((string bar) foo)'>>({
+    type: 'tuple',
+    components: [
+      {
+        type: 'tuple',
+        name: 'foo',
+        components: [{ type: 'string', name: 'bar' }],
+      },
+    ],
+  })
+  assertType<ParseTuple<'(string calldata foo)'>>({
+    type: 'tuple',
+    components: [{ type: 'string', name: 'foo' }],
+  })
+  assertType<ParseTuple<'(string indexed foo)', OptionsWithIndexed>>({
+    type: 'tuple',
+    components: [{ type: 'string', indexed: true, name: 'foo' }],
+  })
+  assertType<ParseTuple<'(Foo)', OptionsWithStructs>>({
+    type: 'tuple',
+    components: [
+      { type: 'tuple', components: [{ type: 'address', name: 'bar' }] },
+    ],
+  })
+
+  // mixed basic and named tuple params
+  assertType<ParseTuple<'(string, string foo)'>>({
+    type: 'tuple',
+    components: [{ type: 'string' }, { type: 'string', name: 'foo' }],
+  })
+  assertType<ParseTuple<'(string, string bar) foo'>>({
+    name: 'foo',
+    type: 'tuple',
+    components: [{ type: 'string' }, { type: 'string', name: 'bar' }],
+  })
+  assertType<
+    ParseTuple<'(string indexed, string bar) indexed foo', OptionsWithIndexed>
+  >({
+    name: 'foo',
+    type: 'tuple',
+    components: [
+      { type: 'string', indexed: true },
+      { type: 'string', name: 'bar' },
+    ],
+    indexed: true,
+  })
+
+  // inline tuples of tuples
+  assertType<ParseTuple<'(string)[]'>>({
+    type: 'tuple[]',
+    components: [
+      {
+        type: 'tuple',
+        components: [{ type: 'string' }],
+      },
+    ],
+  })
+  assertType<ParseTuple<'(string, string)[]'>>({
+    type: 'tuple[]',
+    components: [
+      { type: 'tuple', components: [{ type: 'string' }, { type: 'string' }] },
+    ],
+  })
+  assertType<ParseTuple<'((string))[]'>>({
+    type: 'tuple[]',
+    components: [
+      {
+        type: 'tuple',
+        components: [{ type: 'tuple', components: [{ type: 'string' }] }],
+      },
+    ],
+  })
+  assertType<ParseTuple<'((string)[])[]'>>({
+    type: 'tuple[]',
+    components: [
+      {
+        type: 'tuple',
+        components: [
+          {
+            type: 'tuple[]',
+            components: [{ type: 'tuple', components: [{ type: 'string' }] }],
+          },
+        ],
+      },
+    ],
+  })
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

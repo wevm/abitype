@@ -1,4 +1,4 @@
-import type { AbiParameter } from '../abi'
+import type { AbiParameter, SolidityFixedArrayRange } from '../abi'
 import type { IsUnknown, Prettify, Trim } from '../types'
 import type {
   ConstructorSignature,
@@ -36,19 +36,14 @@ export declare function parseAbi<
   // TODO: Add `Narrow<TSignatures>` support
 >(signatures: TSignatures): ParseAbi<TSignatures>
 
-// 1. Get params from signature (e.g. `function foo(uint256, uint256)` -> `uint256, uint256`)
-// 2. Parse params into array (e.g. `uint256, uint256` -> `['uint256', 'uint256']`)
-// 3. Convert each param string to basic abi parameter (e.g. `uint256` -> `{ type: 'uint256' }`)
-// 3a. If inline tuple repeat steps 1-3
-
 // TODO
 // - [x] Struct lookup
 // - [x] modifiers (e.g. `indexed`)
 // - [ ] Tuple conversion
 // - [ ] Function signature
-// - [ ] `void` param
-// - [ ] Convert uint to uint256
+// - [ ] Function overloads
 // - [ ] Remove unused utility types
+// - [ ] internalType
 
 export type ParseSignature<
   TSignature extends string,
@@ -80,8 +75,11 @@ export type ParseSignature<
       : never)
   | (IsFunctionSignature<TSignature> extends true
       ? {
+          name: unknown
           type: 'function'
-          // TODO
+          stateMutability: unknown
+          inputs: unknown[]
+          outputs: unknown[]
         }
       : never)
   | (TSignature extends ConstructorSignature<infer Params>
@@ -120,7 +118,7 @@ export type ParseAbiParameter<
   T extends string,
   Options extends ParseOptions = DefaultParseOptions,
 > = T extends `(${string})${string}`
-  ? { type: 'TODO: tuple' }
+  ? ParseTuple<T>
   : // Convert string to basic AbiParameter (structs resolved yet)
   // Check for `${Type} ${Modifier} ${Name}` format (e.g. `uint256 indexed foo`)
   (
@@ -183,6 +181,64 @@ type Modifier<AllowIndexed extends boolean> = Exclude<
   'calldata' | 'indexed' | 'memory' | 'storage',
   AllowIndexed extends true ? '' : 'indexed'
 >
+
+export type ParseTuple<
+  T extends `(${string})${string}`,
+  Options extends ParseOptions = DefaultParseOptions,
+> =
+  // Basic tuples (e.g. `(string)`, `(string foo)`)
+  T extends `(${infer Params})`
+    ? {
+        type: 'tuple'
+        components: ParseAbiParameters<ParseParams<Params>, Options>
+      }
+    : // Tuples with name and/or modifier attached (e.g. `(string) foo`, `(string bar) foo`)
+    T extends `(${infer Params}) ${infer NameOrModifier}`
+    ? Prettify<
+        {
+          type: 'tuple'
+          components: ParseAbiParameters<ParseParams<Params>, Options>
+        } & (Trim<NameOrModifier> extends infer Trimmed
+          ? Trimmed extends `${infer Mod extends Modifier<
+              Options['AllowIndexed']
+            >} ${infer Name}`
+            ? { name: Trim<Name> } & (Mod extends 'indexed'
+                ? { indexed: true }
+                : object)
+            : { name: Trimmed }
+          : never)
+      >
+    : // Inline tuples of tuples (e.g. `(string)[]`, `(string)[5]`)
+    T extends `${infer Head}[${'' | `${SolidityFixedArrayRange}`}]`
+    ? T extends `${Head}[${infer Size}]`
+      ? {
+          type: `tuple[${Size}]`
+          components: ParseAbiParameters<ParseParams<Head>, Options>
+        }
+      : never
+    : // Inline tuples of tuples with name and/or modifier attached (e.g. `(string)[] foo`, `(string)[5] foo`)
+    T extends `(${infer Params})[${infer Tail}] ${infer NameOrModifier}`
+    ? Prettify<{
+        name: NameOrModifier
+        type: `tuple[${Tail}]`
+        components: ParseAbiParameters<ParseParams<Params>, Options>
+      }>
+    : never
+
+type Result = ParseTuple<'((string)[])[]'>
+//   ^?
+
+type Parse<T> = T extends `${infer Head}[${'' | `${SolidityFixedArrayRange}`}]`
+  ? T extends `${Head}[${infer Size}]`
+    ? { head: Head; size: Size }
+    : { head: Head }
+  : never
+
+type Foo = Parse<'((string)[])[]'>
+
+// type Res = ParseTuple<'((string bar)[] foo)[]'>
+// type Res = ParseTuple<'((string bar) foo)[]'>
+// type Res = ParseTuple<'((string bar) foo)[] bar'>
 
 export type ParseParams<
   T extends string,

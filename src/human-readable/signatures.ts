@@ -57,13 +57,14 @@ type ValidFunctionSignatures =
   | `function ${string}(${string}) ${AbiStateMutability} ${Returns}`
   | `function ${string}(${string}) ${Scope} ${AbiStateMutability}`
   | `function ${string}(${string}) ${Scope} ${AbiStateMutability} ${Returns}`
-type MangledReturns = Permutations<'returns'>
-type Permutations<T extends string> = T extends `${infer Head}${infer Tail}`
-  ?
-      | `${string}${Head}${Permutations<Tail>}`
-      | `${Head}${string}${Permutations<Tail>}`
-      | `${Head}${Permutations<Tail>}`
-  : T
+type MangledReturns =
+  // TODO: Make more exhaustive
+  | `r${string}eturns`
+  | `re${string}turns`
+  | `ret${string}urns`
+  | `retu${string}rns`
+  | `retur${string}ns`
+  | `return${string}s`
 type InvalidFunctionParams =
   | `${string}${'returns' | MangledReturns} (${string}`
   | `${string}) ${'returns' | MangledReturns}${string}`
