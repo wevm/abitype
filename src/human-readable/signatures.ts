@@ -23,6 +23,10 @@ export type IsEventSignature<T extends string> = T extends EventSignature<
   ? IsName<Name>
   : false
 
+export type FunctionSignature<
+  TName extends string = string,
+  TTail extends string = string,
+> = `function ${TName}(${TTail}`
 export type IsFunctionSignature<T> =
   T extends `function ${infer Name}(${string}`
     ? IsName<Name> extends true
@@ -36,7 +40,7 @@ export type IsFunctionSignature<T> =
         : false
       : false
     : false
-type Scope = 'public' | 'external'
+export type Scope = 'public' | 'external' // `internal` or `private` functions wouldn't make it to ABI so can ignore
 type Returns = `returns (${string})`
 // Almost all valid function signatures, except `function ${string}(${infer Params})` since `Params` can absorb returns
 type ValidFunctionSignatures =

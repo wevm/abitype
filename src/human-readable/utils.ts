@@ -1,14 +1,20 @@
-import type { AbiParameter, SolidityFixedArrayRange } from '../abi'
+import type {
+  AbiParameter,
+  AbiStateMutability,
+  SolidityFixedArrayRange,
+} from '../abi'
 import type { Filter, IsUnknown, Prettify, Trim } from '../types'
 import type {
   ConstructorSignature,
   ErrorSignature,
   EventSignature,
   FallbackSignature,
+  FunctionSignature,
   IsErrorSignature,
   IsEventSignature,
   IsFunctionSignature,
   ReceiveSignature,
+  Scope,
   Signatures,
 } from './signatures'
 import type { ParseStructs, StructLookup } from './structs'
@@ -32,11 +38,11 @@ export type ParseAbi<
   : never
 
 // TODO
-// - [ ] Function signatures (parse out params and returns, make sure function overloads work)
-// - [ ] Modifiers only allowed at top-level (e.g. `indexed`), extract out name/modifier parse logic
+// - [ ] Vitest typechecks not working
 // - [ ] TSDoc and comments
-// - [ ] ParseAbi work for string | readonly string[]
+// - [ ] ParseAbi work for `string | readonly string[]`
 // - [ ] Review signatures from contracts in the wild
+// - [ ] ParseAbiParams  https://wagmi-dev.slack.com/archives/C041LADTUJH/p1676325558652399
 
 export type ParseSignature<
   TSignature extends string,
@@ -49,7 +55,7 @@ export type ParseSignature<
             type: 'error'
             inputs: ParseAbiParameters<
               ParseParams<Params>,
-              { AllowIndexed: false; Structs: TStructs }
+              { Structs: TStructs }
             >
           }
         : never
@@ -61,27 +67,42 @@ export type ParseSignature<
             type: 'event'
             inputs: ParseAbiParameters<
               ParseParams<Params>,
-              { AllowIndexed: true; Structs: TStructs }
+              { Modifier: EventModifiers; Structs: TStructs }
             >
           }
         : never
       : never)
   | (IsFunctionSignature<TSignature> extends true
-      ? {
-          name: unknown
-          type: 'function'
-          stateMutability: unknown
-          inputs: unknown[]
-          outputs: unknown[]
-        }
+      ? TSignature extends FunctionSignature<infer Name, infer Tail>
+        ? {
+            name: Name
+            type: 'function'
+            stateMutability: ParseFunctionInputsAndStateMutability<TSignature>['StateMutability']
+            inputs: ParseAbiParameters<
+              ParseParams<
+                ParseFunctionInputsAndStateMutability<TSignature>['Inputs']
+              >,
+              {
+                Modifier: FunctionModifiers
+                Structs: TStructs
+              }
+            >
+            outputs: Tail extends `${string}returns (${infer Returns})`
+              ? ParseAbiParameters<
+                  ParseParams<Returns>,
+                  {
+                    Modifier: FunctionModifiers
+                    Structs: TStructs
+                  }
+                >
+              : []
+          }
+        : never
       : never)
   | (TSignature extends ConstructorSignature<infer Params>
       ? {
           type: 'constructor'
-          inputs: ParseAbiParameters<
-            ParseParams<Params>,
-            { AllowIndexed: false; Structs: TStructs }
-          >
+          inputs: ParseAbiParameters<ParseParams<Params>, { Structs: TStructs }>
         }
       : never)
   | (TSignature extends FallbackSignature
@@ -96,6 +117,23 @@ export type ParseSignature<
         }
       : never)
 
+type ParseFunctionInputsAndStateMutability<TSignature extends string> =
+  TSignature extends `${infer Head}returns (${string})`
+    ? ParseFunctionInputsAndStateMutability<Trim<Head>>
+    : TSignature extends `function ${string}(${infer Params})`
+    ? { Inputs: Params; StateMutability: 'nonpayable' }
+    : TSignature extends `function ${string}(${infer Params}) ${infer ScopeOrStateMutability extends
+        | Scope
+        | AbiStateMutability
+        | `${Scope} ${AbiStateMutability}`}`
+    ? {
+        Inputs: Params
+        StateMutability: ScopeOrStateMutability extends `${Scope} ${infer StateMutability extends AbiStateMutability}`
+          ? StateMutability
+          : ScopeOrStateMutability
+      }
+    : never
+
 export type ParseAbiParameters<
   T extends readonly string[],
   Options extends ParseOptions = DefaultParseOptions,
@@ -104,8 +142,11 @@ export type ParseAbiParameters<
   : {
       [K in keyof T]: ParseAbiParameter<T[K], Options>
     }
-type ParseOptions = { AllowIndexed: boolean; Structs: StructLookup | unknown }
-type DefaultParseOptions = { AllowIndexed: false; Structs: unknown }
+type ParseOptions = { Modifier?: Modifier; Structs?: StructLookup | unknown }
+type DefaultParseOptions = object
+type Modifier = 'calldata' | 'indexed' | 'memory' | 'storage'
+type FunctionModifiers = Exclude<Modifier, 'indexed'>
+type EventModifiers = Extract<Modifier, 'indexed'>
 
 export type ParseAbiParameter<
   T extends string,
@@ -113,27 +154,12 @@ export type ParseAbiParameter<
 > = T extends `(${string})${string}`
   ? ParseTuple<T, Options>
   : // Convert string to basic AbiParameter (structs resolved yet)
-  // Check for `${Type} ${Modifier} ${Name}` format (e.g. `uint256 indexed foo`)
+  // Check for `${Type} ${NameOrModifier}` format (e.g. `uint256 foo`, `uint256 indexed`, `uint256 indexed foo`)
   (
-      T extends `${infer Type} ${infer Mod extends Modifier<
-        Options['AllowIndexed']
-      >} ${infer Name}`
-        ? Prettify<
-            { type: Trim<Type>; name: Trim<Name> } & (Mod extends 'indexed'
-              ? { indexed: true }
-              : object)
-          >
-        : // Check for `${Type} ${NameOrModifier}` format (e.g. `uint256 foo`, `uint256 indexed`)
-        T extends `${infer Type} ${infer NameOrModifier}`
-        ? Trim<NameOrModifier> extends infer Trimmed
+      T extends `${infer Type} ${infer Tail}`
+        ? Trim<Tail> extends infer Trimmed extends string
           ? Prettify<
-              { type: Trim<Type> } & (Trimmed extends Modifier<false>
-                ? object
-                : Options['AllowIndexed'] extends true
-                ? Trimmed extends 'indexed'
-                  ? { indexed: true }
-                  : { name: Trimmed }
-                : { name: Trimmed })
+              { type: Trim<Type> } & SplitNameOrModifier<Trimmed, Options>
             >
           : never
         : // Must be `${Type}` format (e.g. `uint256`)
@@ -167,13 +193,9 @@ export type ParseAbiParameter<
           (Parameter['indexed'] extends true ? { indexed: true } : object)
       >
     : // Return existing parameter without modification
+      // TODO: Throw if struct (e.g. `{ type: 'Foo' }`) and name was not found in `Structs`
       Parameter
   : never
-
-type Modifier<AllowIndexed extends boolean> = Exclude<
-  'calldata' | 'indexed' | 'memory' | 'storage',
-  AllowIndexed extends true ? '' : 'indexed'
->
 
 export type ParseTuple<
   T extends `(${string})${string}`,
@@ -183,25 +205,34 @@ export type ParseTuple<
   T extends `(${infer Params})`
     ? {
         type: 'tuple'
-        components: ParseAbiParameters<ParseParams<Params>, Options>
+        components: ParseAbiParameters<
+          ParseParams<Params>,
+          Omit<Options, 'Modifier'>
+        >
       }
     : // Array or fixed-length array tuples (e.g. `(string)[]`, `(string)[5]`)
-    T extends `${infer Head}[${'' | `${SolidityFixedArrayRange}`}]`
-    ? T extends `${Head}[${infer Size}]`
+    T extends `(${infer Head})[${'' | `${SolidityFixedArrayRange}`}]`
+    ? T extends `(${Head})[${infer Size}]`
       ? {
           type: `tuple[${Size}]`
-          components: ParseAbiParameters<ParseParams<Head>, Options>
+          components: ParseAbiParameters<
+            ParseParams<Head>,
+            Omit<Options, 'Modifier'>
+          >
         }
       : never
     : // Array or fixed-length array tuples with name and/or modifier attached (e.g. `(string)[] foo`, `(string)[5] foo`)
-    T extends `${infer Head}[${
+    T extends `(${infer Head})[${
         | ''
         | `${SolidityFixedArrayRange}`}] ${infer NameOrModifier}`
-    ? T extends `${Head}[${infer Size}] ${NameOrModifier}`
+    ? T extends `(${Head})[${infer Size}] ${NameOrModifier}`
       ? Prettify<
           {
             type: `tuple[${Size}]`
-            components: ParseAbiParameters<ParseParams<Head>, Options>
+            components: ParseAbiParameters<
+              ParseParams<Head>,
+              Omit<Options, 'Modifier'>
+            >
           } & SplitNameOrModifier<NameOrModifier, Options>
         >
       : never
@@ -218,7 +249,7 @@ export type ParseTuple<
               type: 'tuple'
               components: ParseAbiParameters<
                 ParseParams<`${Params}) ${Parts['End']}`>,
-                Options
+                Omit<Options, 'Modifier'>
               >
             } & SplitNameOrModifier<Parts['NameOrModifier'], Options>
           >
@@ -226,7 +257,10 @@ export type ParseTuple<
       : Prettify<
           {
             type: 'tuple'
-            components: ParseAbiParameters<ParseParams<Params>, Options>
+            components: ParseAbiParameters<
+              ParseParams<Params>,
+              Omit<Options, 'Modifier'>
+            >
           } & SplitNameOrModifier<NameOrModifier, Options>
         >
     : never
@@ -236,12 +270,16 @@ type SplitNameOrModifier<
   T extends string,
   Options extends ParseOptions = DefaultParseOptions,
 > = Trim<T> extends infer Trimmed
-  ? Trimmed extends `${infer Mod extends Modifier<
-      Options['AllowIndexed']
-    >} ${infer Name}`
-    ? { name: Trim<Name> } & (Mod extends 'indexed'
+  ? Options extends { Modifier: Modifier }
+    ? Trimmed extends `${infer Mod extends Options['Modifier']} ${infer Name}`
+      ? { name: Trim<Name> } & (Mod extends 'indexed'
+          ? { indexed: true }
+          : object)
+      : Trimmed extends Options['Modifier']
+      ? Trimmed extends 'indexed'
         ? { indexed: true }
-        : object)
+        : object
+      : { name: Trimmed }
     : { name: Trimmed }
   : never
 

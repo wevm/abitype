@@ -7,9 +7,15 @@ import type {
   ParseTuple,
 } from './utils'
 
-test('ParseSignature', () => {
-  // TODO: functions
+type OptionsWithModifier = { Modifier: 'calldata'; Structs: unknown }
+type OptionsWithIndexed = { Modifier: 'indexed'; Structs: unknown }
+type OptionsWithStructs = {
+  Structs: {
+    Foo: [{ type: 'address'; name: 'bar' }]
+  }
+}
 
+test('ParseSignature', () => {
   type Structs = {
     Baz: [{ type: 'address'; name: 'baz' }]
   }
@@ -119,19 +125,193 @@ test('ParseSignature', () => {
     type: 'receive',
     stateMutability: 'payable',
   })
+
+  // Functions
+  assertType<ParseSignature<'function foo()'>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'nonpayable',
+    inputs: [],
+    outputs: [],
+  })
+
+  // inputs
+  assertType<ParseSignature<'function foo(string)'>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'nonpayable',
+    inputs: [{ type: 'string' }],
+    outputs: [],
+  })
+  assertType<ParseSignature<'function foo(string bar)'>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'nonpayable',
+    inputs: [{ type: 'string', name: 'bar' }],
+    outputs: [],
+  })
+  assertType<ParseSignature<'function foo(Baz bar)', Structs>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'nonpayable',
+    inputs: [
+      {
+        type: 'tuple',
+        name: 'bar',
+        components: [{ type: 'address', name: 'baz' }],
+      },
+    ],
+    outputs: [],
+  })
+  assertType<ParseSignature<'function foo(string bar) view'>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'view',
+    inputs: [{ type: 'string', name: 'bar' }],
+    outputs: [],
+  })
+  assertType<ParseSignature<'function foo(string bar) public payable'>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'payable',
+    inputs: [{ type: 'string', name: 'bar' }],
+    outputs: [],
+  })
+  assertType<ParseSignature<'function foo(string calldata)'>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'nonpayable',
+    inputs: [{ type: 'string' }],
+    outputs: [],
+  })
+
+  // outputs
+  assertType<ParseSignature<'function foo() returns (string)'>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'nonpayable',
+    inputs: [],
+    outputs: [{ type: 'string' }],
+  })
+  assertType<ParseSignature<'function foo() returns (string bar)'>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'nonpayable',
+    inputs: [],
+    outputs: [{ type: 'string', name: 'bar' }],
+  })
+  assertType<ParseSignature<'function foo() returns (Baz bar)', Structs>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'nonpayable',
+    inputs: [],
+    outputs: [
+      {
+        type: 'tuple',
+        name: 'bar',
+        components: [{ type: 'address', name: 'baz' }],
+      },
+    ],
+  })
+  assertType<ParseSignature<'function foo() view returns (string bar)'>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'string', name: 'bar' }],
+  })
+  assertType<
+    ParseSignature<'function foo() public payable returns (string bar)'>
+  >({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'payable',
+    inputs: [],
+    outputs: [{ type: 'string', name: 'bar' }],
+  })
+
+  // inputs and outputs
+  assertType<ParseSignature<'function foo(string) returns (string)'>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'nonpayable',
+    inputs: [{ type: 'string' }],
+    outputs: [{ type: 'string' }],
+  })
+  assertType<ParseSignature<'function foo(string bar) returns (string bar)'>>({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'nonpayable',
+    inputs: [{ type: 'string', name: 'bar' }],
+    outputs: [{ type: 'string', name: 'bar' }],
+  })
+  assertType<
+    ParseSignature<'function foo(Baz bar) returns (Baz bar)', Structs>
+  >({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'nonpayable',
+    inputs: [
+      {
+        type: 'tuple',
+        name: 'bar',
+        components: [{ type: 'address', name: 'baz' }],
+      },
+    ],
+    outputs: [
+      {
+        type: 'tuple',
+        name: 'bar',
+        components: [{ type: 'address', name: 'baz' }],
+      },
+    ],
+  })
+  assertType<
+    ParseSignature<'function foo(string bar) view returns (string bar)'>
+  >({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'view',
+    inputs: [{ type: 'string', name: 'bar' }],
+    outputs: [{ type: 'string', name: 'bar' }],
+  })
+  assertType<
+    ParseSignature<'function foo(string bar) public payable returns (string bar)'>
+  >({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'payable',
+    inputs: [{ type: 'string', name: 'bar' }],
+    outputs: [{ type: 'string', name: 'bar' }],
+  })
+
+  assertType<
+    ParseSignature<'function foo(((string)) calldata) returns (string, (string))'>
+  >({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'nonpayable',
+    inputs: [
+      {
+        type: 'tuple',
+        components: [{ type: 'tuple', components: [{ type: 'string' }] }],
+      },
+    ],
+    outputs: [
+      {
+        type: 'string',
+      },
+      {
+        type: 'tuple',
+        components: [{ type: 'string' }],
+      },
+    ],
+  })
 })
 
 test('ParseAbiParameter', () => {
-  type OptionsWithIndexed = { AllowIndexed: true; Structs: unknown }
-  type OptionsWithStructs = {
-    AllowIndexed: true
-    Structs: {
-      Foo: [{ type: 'address'; name: 'bar' }]
-    }
-  }
-
   // `${Type} ${Modifier} ${Name}` format
-  assertType<ParseAbiParameter<'string calldata foo'>>({
+  assertType<ParseAbiParameter<'string calldata foo', OptionsWithModifier>>({
     type: 'string',
     name: 'foo',
   })
@@ -140,24 +320,44 @@ test('ParseAbiParameter', () => {
     indexed: true,
     name: 'foo',
   })
-  assertType<ParseAbiParameter<'Foo calldata foo', OptionsWithStructs>>({
+  assertType<
+    ParseAbiParameter<
+      'Foo calldata foo',
+      OptionsWithModifier & OptionsWithStructs
+    >
+  >({
     type: 'tuple',
     name: 'foo',
     components: [{ type: 'address', name: 'bar' }],
   })
-  assertType<ParseAbiParameter<'Foo indexed foo', OptionsWithStructs>>({
+  assertType<
+    ParseAbiParameter<
+      'Foo indexed foo',
+      OptionsWithIndexed & OptionsWithStructs
+    >
+  >({
     type: 'tuple',
     indexed: true,
     name: 'foo',
     components: [{ type: 'address', name: 'bar' }],
   })
-  assertType<ParseAbiParameter<'Foo[][1] indexed foo', OptionsWithStructs>>({
+  assertType<
+    ParseAbiParameter<
+      'Foo[][1] indexed foo',
+      OptionsWithIndexed & OptionsWithStructs
+    >
+  >({
     name: 'foo',
     type: 'tuple[][1]',
     indexed: true,
     components: [{ type: 'address', name: 'bar' }],
   })
-  assertType<ParseAbiParameter<'Foo[][1] calldata foo', OptionsWithStructs>>({
+  assertType<
+    ParseAbiParameter<
+      'Foo[][1] calldata foo',
+      OptionsWithModifier & OptionsWithStructs
+    >
+  >({
     name: 'foo',
     type: 'tuple[][1]',
     components: [{ type: 'address', name: 'bar' }],
@@ -170,20 +370,24 @@ test('ParseAbiParameter', () => {
   })
   assertType<ParseAbiParameter<'string indexed'>>({
     type: 'string',
-    name: 'indexed', // `Options['AllowIndexed'] extends false` so name is `'indexed'`
+    name: 'indexed',
   })
-  assertType<ParseAbiParameter<'string calldata'>>({
+  assertType<ParseAbiParameter<'string calldata', OptionsWithModifier>>({
     type: 'string',
   })
   assertType<ParseAbiParameter<'string indexed', OptionsWithIndexed>>({
     type: 'string',
     indexed: true,
   })
-  assertType<ParseAbiParameter<'Foo calldata', OptionsWithStructs>>({
+  assertType<
+    ParseAbiParameter<'Foo calldata', OptionsWithModifier & OptionsWithStructs>
+  >({
     type: 'tuple',
     components: [{ type: 'address', name: 'bar' }],
   })
-  assertType<ParseAbiParameter<'Foo indexed', OptionsWithStructs>>({
+  assertType<
+    ParseAbiParameter<'Foo indexed', OptionsWithIndexed & OptionsWithStructs>
+  >({
     type: 'tuple',
     indexed: true,
     components: [{ type: 'address', name: 'bar' }],
@@ -196,12 +400,7 @@ test('ParseAbiParameter', () => {
   assertType<ParseAbiParameter<'(address bar)[1] foo', OptionsWithStructs>>({
     name: 'foo',
     type: 'tuple[1]',
-    components: [
-      {
-        type: 'tuple',
-        components: [{ type: 'address', name: 'bar' }],
-      },
-    ],
+    components: [{ type: 'address', name: 'bar' }],
   })
 
   // `${Type}` format
@@ -242,14 +441,6 @@ test('ParseParams', () => {
 })
 
 test('ParseTuple', () => {
-  type OptionsWithIndexed = { AllowIndexed: true; Structs: unknown }
-  type OptionsWithStructs = {
-    AllowIndexed: true
-    Structs: {
-      Foo: [{ type: 'address'; name: 'bar' }]
-    }
-  }
-
   // basic tuples
   assertType<ParseTuple<'(string)'>>({
     type: 'tuple',
@@ -281,11 +472,7 @@ test('ParseTuple', () => {
   })
   assertType<ParseTuple<'(string calldata)'>>({
     type: 'tuple',
-    components: [{ type: 'string' }],
-  })
-  assertType<ParseTuple<'(string indexed)', OptionsWithIndexed>>({
-    type: 'tuple',
-    components: [{ type: 'string', indexed: true }],
+    components: [{ type: 'string', name: 'calldata' }],
   })
   assertType<ParseTuple<'(Foo)', OptionsWithStructs>>({
     type: 'tuple',
@@ -314,20 +501,16 @@ test('ParseTuple', () => {
       },
     ],
   })
-  assertType<ParseTuple<'(string calldata foo)'>>({
-    type: 'tuple',
-    components: [{ type: 'string', name: 'foo' }],
-  })
-  assertType<ParseTuple<'(string indexed foo)', OptionsWithIndexed>>({
-    type: 'tuple',
-    components: [{ type: 'string', indexed: true, name: 'foo' }],
-  })
   assertType<ParseTuple<'(Foo) foo', OptionsWithStructs>>({
     type: 'tuple',
     name: 'foo',
     components: [
       { type: 'tuple', components: [{ type: 'address', name: 'bar' }] },
     ],
+  })
+  assertType<ParseTuple<'((string)) calldata', OptionsWithModifier>>({
+    type: 'tuple',
+    components: [{ type: 'tuple', components: [{ type: 'string' }] }],
   })
 
   // mixed basic and named tuple params
@@ -341,12 +524,12 @@ test('ParseTuple', () => {
     components: [{ type: 'string' }, { type: 'string', name: 'bar' }],
   })
   assertType<
-    ParseTuple<'(string indexed, string bar) indexed foo', OptionsWithIndexed>
+    ParseTuple<'(string baz, string bar) indexed foo', OptionsWithIndexed>
   >({
     name: 'foo',
     type: 'tuple',
     components: [
-      { type: 'string', indexed: true },
+      { type: 'string', name: 'baz' },
       { type: 'string', name: 'bar' },
     ],
     indexed: true,
@@ -355,39 +538,22 @@ test('ParseTuple', () => {
   // inline tuples of tuples
   assertType<ParseTuple<'(string)[]'>>({
     type: 'tuple[]',
-    components: [
-      {
-        type: 'tuple',
-        components: [{ type: 'string' }],
-      },
-    ],
+    components: [{ type: 'string' }],
   })
   assertType<ParseTuple<'(string, string)[]'>>({
     type: 'tuple[]',
-    components: [
-      { type: 'tuple', components: [{ type: 'string' }, { type: 'string' }] },
-    ],
+    components: [{ type: 'string' }, { type: 'string' }],
   })
   assertType<ParseTuple<'((string))[]'>>({
     type: 'tuple[]',
-    components: [
-      {
-        type: 'tuple',
-        components: [{ type: 'tuple', components: [{ type: 'string' }] }],
-      },
-    ],
+    components: [{ type: 'tuple', components: [{ type: 'string' }] }],
   })
   assertType<ParseTuple<'((string)[])[]'>>({
     type: 'tuple[]',
     components: [
       {
-        type: 'tuple',
-        components: [
-          {
-            type: 'tuple[]',
-            components: [{ type: 'tuple', components: [{ type: 'string' }] }],
-          },
-        ],
+        type: 'tuple[]',
+        components: [{ type: 'string' }],
       },
     ],
   })
@@ -396,22 +562,12 @@ test('ParseTuple', () => {
   assertType<ParseTuple<'(string)[] foo'>>({
     type: 'tuple[]',
     name: 'foo',
-    components: [
-      {
-        type: 'tuple',
-        components: [{ type: 'string' }],
-      },
-    ],
+    components: [{ type: 'string' }],
   })
   assertType<ParseTuple<'(string, string bar)[] foo'>>({
     type: 'tuple[]',
     name: 'foo',
-    components: [
-      {
-        type: 'tuple',
-        components: [{ type: 'string' }, { type: 'string', name: 'bar' }],
-      },
-    ],
+    components: [{ type: 'string' }, { type: 'string', name: 'bar' }],
   })
   assertType<ParseTuple<'((string baz) bar)[] foo'>>({
     type: 'tuple[]',
@@ -419,46 +575,31 @@ test('ParseTuple', () => {
     components: [
       {
         type: 'tuple',
-        components: [
-          {
-            type: 'tuple',
-            name: 'bar',
-            components: [{ type: 'string', name: 'baz' }],
-          },
-        ],
+        name: 'bar',
+        components: [{ type: 'string', name: 'baz' }],
       },
     ],
   })
-  assertType<ParseTuple<'((string)[])[] indexed foo', OptionsWithStructs>>({
+  assertType<
+    ParseTuple<
+      '((string)[])[] indexed foo',
+      OptionsWithIndexed & OptionsWithStructs
+    >
+  >({
     type: 'tuple[]',
     name: 'foo',
     indexed: true,
     components: [
       {
-        type: 'tuple',
-        components: [
-          {
-            type: 'tuple[]',
-            components: [
-              {
-                type: 'tuple',
-                components: [{ type: 'string' }],
-              },
-            ],
-          },
-        ],
+        type: 'tuple[]',
+        components: [{ type: 'string' }],
       },
     ],
   })
   assertType<ParseTuple<'((string) foo)[]'>>({
     type: 'tuple[]',
     components: [
-      {
-        type: 'tuple',
-        components: [
-          { type: 'tuple', name: 'foo', components: [{ type: 'string' }] },
-        ],
-      },
+      { type: 'tuple', name: 'foo', components: [{ type: 'string' }] },
     ],
   })
   assertType<ParseTuple<'(string) indexed bar', OptionsWithIndexed>>({
@@ -526,5 +667,12 @@ test('ParseTuple', () => {
         ],
       },
     ],
+  })
+
+  // Modifiers not converted inside tuples
+  assertType<ParseTuple<'(string indexed)[] foo', OptionsWithIndexed>>({
+    type: 'tuple[]',
+    name: 'foo',
+    components: [{ type: 'string', name: 'indexed' }],
   })
 })
