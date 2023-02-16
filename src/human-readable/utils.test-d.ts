@@ -1,7 +1,6 @@
 import { assertType, test } from 'vitest'
 
 import type {
-  ParseAbi,
   ParseAbiParameter,
   ParseParams,
   ParseSignature,
@@ -9,7 +8,7 @@ import type {
 } from './utils'
 
 test('ParseSignature', () => {
-  // TODO: functions and tuple params
+  // TODO: functions
 
   type Structs = {
     Baz: [{ type: 'address'; name: 'baz' }]
@@ -75,6 +74,18 @@ test('ParseSignature', () => {
       },
     ],
   })
+  assertType<ParseSignature<'event Foo((string) indexed bar)'>>({
+    type: 'event',
+    name: 'Foo',
+    inputs: [
+      {
+        type: 'tuple',
+        indexed: true,
+        name: 'bar',
+        components: [{ type: 'string' }],
+      },
+    ],
+  })
 
   // Constructor
   assertType<ParseSignature<'constructor()'>>({
@@ -93,6 +104,10 @@ test('ParseSignature', () => {
     type: 'constructor',
     inputs: [{ type: 'string', name: 'foo' }],
   })
+  assertType<ParseSignature<'constructor((string) foo)'>>({
+    type: 'constructor',
+    inputs: [{ type: 'tuple', name: 'foo', components: [{ type: 'string' }] }],
+  })
 
   // Fallback
   assertType<ParseSignature<'fallback()'>>({
@@ -107,8 +122,6 @@ test('ParseSignature', () => {
 })
 
 test('ParseAbiParameter', () => {
-  // TODO: tuples
-
   type OptionsWithIndexed = { AllowIndexed: true; Structs: unknown }
   type OptionsWithStructs = {
     AllowIndexed: true
@@ -180,6 +193,16 @@ test('ParseAbiParameter', () => {
     type: 'tuple[][1]',
     components: [{ type: 'address', name: 'bar' }],
   })
+  assertType<ParseAbiParameter<'(address bar)[1] foo', OptionsWithStructs>>({
+    name: 'foo',
+    type: 'tuple[1]',
+    components: [
+      {
+        type: 'tuple',
+        components: [{ type: 'address', name: 'bar' }],
+      },
+    ],
+  })
 
   // `${Type}` format
   assertType<ParseAbiParameter<'string'>>({
@@ -192,6 +215,12 @@ test('ParseAbiParameter', () => {
   assertType<ParseAbiParameter<'Foo[][1]', OptionsWithStructs>>({
     type: 'tuple[][1]',
     components: [{ type: 'address', name: 'bar' }],
+  })
+
+  // tuple format
+  assertType<ParseAbiParameter<'(string)'>>({
+    type: 'tuple',
+    components: [{ type: 'string' }],
   })
 })
 
@@ -293,8 +322,9 @@ test('ParseTuple', () => {
     type: 'tuple',
     components: [{ type: 'string', indexed: true, name: 'foo' }],
   })
-  assertType<ParseTuple<'(Foo)', OptionsWithStructs>>({
+  assertType<ParseTuple<'(Foo) foo', OptionsWithStructs>>({
     type: 'tuple',
+    name: 'foo',
     components: [
       { type: 'tuple', components: [{ type: 'address', name: 'bar' }] },
     ],
@@ -361,38 +391,140 @@ test('ParseTuple', () => {
       },
     ],
   })
+
+  // inline tuples of tuples with name and/or modifier attached
+  assertType<ParseTuple<'(string)[] foo'>>({
+    type: 'tuple[]',
+    name: 'foo',
+    components: [
+      {
+        type: 'tuple',
+        components: [{ type: 'string' }],
+      },
+    ],
+  })
+  assertType<ParseTuple<'(string, string bar)[] foo'>>({
+    type: 'tuple[]',
+    name: 'foo',
+    components: [
+      {
+        type: 'tuple',
+        components: [{ type: 'string' }, { type: 'string', name: 'bar' }],
+      },
+    ],
+  })
+  assertType<ParseTuple<'((string baz) bar)[] foo'>>({
+    type: 'tuple[]',
+    name: 'foo',
+    components: [
+      {
+        type: 'tuple',
+        components: [
+          {
+            type: 'tuple',
+            name: 'bar',
+            components: [{ type: 'string', name: 'baz' }],
+          },
+        ],
+      },
+    ],
+  })
+  assertType<ParseTuple<'((string)[])[] indexed foo', OptionsWithStructs>>({
+    type: 'tuple[]',
+    name: 'foo',
+    indexed: true,
+    components: [
+      {
+        type: 'tuple',
+        components: [
+          {
+            type: 'tuple[]',
+            components: [
+              {
+                type: 'tuple',
+                components: [{ type: 'string' }],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  })
+  assertType<ParseTuple<'((string) foo)[]'>>({
+    type: 'tuple[]',
+    components: [
+      {
+        type: 'tuple',
+        components: [
+          { type: 'tuple', name: 'foo', components: [{ type: 'string' }] },
+        ],
+      },
+    ],
+  })
+  assertType<ParseTuple<'(string) indexed bar', OptionsWithIndexed>>({
+    type: 'tuple',
+    name: 'bar',
+    indexed: true,
+    components: [{ type: 'string' }],
+  })
+
+  assertType<ParseTuple<'((((string))) bar)'>>({
+    type: 'tuple',
+    components: [
+      {
+        name: 'bar',
+        type: 'tuple',
+        components: [
+          {
+            type: 'tuple',
+            components: [
+              {
+                type: 'tuple',
+                components: [{ type: 'string' }],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  })
+  assertType<ParseTuple<'(((string) baz) bar) foo'>>({
+    type: 'tuple',
+    name: 'foo',
+    components: [
+      {
+        name: 'bar',
+        type: 'tuple',
+        components: [
+          {
+            name: 'baz',
+            type: 'tuple',
+            components: [{ type: 'string' }],
+          },
+        ],
+      },
+    ],
+  })
+  assertType<ParseTuple<'((((string) baz)) bar) foo'>>({
+    type: 'tuple',
+    name: 'foo',
+    components: [
+      {
+        name: 'bar',
+        type: 'tuple',
+        components: [
+          {
+            type: 'tuple',
+            components: [
+              {
+                name: 'baz',
+                type: 'tuple',
+                components: [{ type: 'string' }],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  })
 })
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type Result = ParseAbi<
-  // ^?
-  [
-    'event Foo(Foo indexed)',
-    'error Foo()',
-    'event Foo(address indexed bar)',
-    'struct Name { address bar; }',
-    'struct Foo { Name name; }',
-
-    'function foo()',
-    // basic
-    'function foo() returns (uint256)',
-    'function foo() view',
-    'function foo() public',
-    // combinations
-    'function foo() view returns (uint256)',
-    'function foo() public view',
-    'function foo() public view returns (uint256)',
-    // params
-    'function foo(uint256, uint256)',
-    'function foo(uint256) returns (uint256)',
-    'function foo(uint256) view',
-    'function foo(uint256) public',
-    'function foo(uint256) view returns (uint256)',
-    'function foo(uint256) public view',
-    'function foo(uint256) public view returns (uint256)',
-
-    'constructor(address bar)',
-    'fallback()',
-    'receive() external payable',
-  ]
->

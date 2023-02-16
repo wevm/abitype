@@ -1,5 +1,5 @@
 import type { AbiParameter, SolidityFixedArrayRange } from '../abi'
-import type { IsUnknown, Prettify, Trim } from '../types'
+import type { Filter, IsUnknown, Prettify, Trim } from '../types'
 import type {
   ConstructorSignature,
   ErrorSignature,
@@ -25,25 +25,18 @@ export type ParseAbi<
         [K in keyof Validated]: Validated[K] extends infer Signature extends string
           ? ParseSignature<Signature, Structs>
           : never
-      }
+      } extends infer Mapped extends readonly unknown[]
+      ? Filter<Mapped, never>
+      : never
     : never
   : never
 
-export declare function parseAbi<
-  TSignatures extends Signatures<
-    TSignatures extends readonly string[] ? TSignatures : never
-  >,
-  // TODO: Add `Narrow<TSignatures>` support
->(signatures: TSignatures): ParseAbi<TSignatures>
-
 // TODO
-// - [x] Struct lookup
-// - [x] modifiers (e.g. `indexed`)
-// - [ ] Tuple conversion
-// - [ ] Function signature
-// - [ ] Function overloads
-// - [ ] Remove unused utility types
-// - [ ] internalType
+// - [ ] Function signatures (parse out params and returns, make sure function overloads work)
+// - [ ] Modifiers only allowed at top-level (e.g. `indexed`), extract out name/modifier parse logic
+// - [ ] TSDoc and comments
+// - [ ] ParseAbi work for string | readonly string[]
+// - [ ] Review signatures from contracts in the wild
 
 export type ParseSignature<
   TSignature extends string,
@@ -118,7 +111,7 @@ export type ParseAbiParameter<
   T extends string,
   Options extends ParseOptions = DefaultParseOptions,
 > = T extends `(${string})${string}`
-  ? ParseTuple<T>
+  ? ParseTuple<T, Options>
   : // Convert string to basic AbiParameter (structs resolved yet)
   // Check for `${Type} ${Modifier} ${Name}` format (e.g. `uint256 indexed foo`)
   (
@@ -186,29 +179,13 @@ export type ParseTuple<
   T extends `(${string})${string}`,
   Options extends ParseOptions = DefaultParseOptions,
 > =
-  // Basic tuples (e.g. `(string)`, `(string foo)`)
+  // Tuples without name or modifier (e.g. `(string)`, `(string foo)`)
   T extends `(${infer Params})`
     ? {
         type: 'tuple'
         components: ParseAbiParameters<ParseParams<Params>, Options>
       }
-    : // Tuples with name and/or modifier attached (e.g. `(string) foo`, `(string bar) foo`)
-    T extends `(${infer Params}) ${infer NameOrModifier}`
-    ? Prettify<
-        {
-          type: 'tuple'
-          components: ParseAbiParameters<ParseParams<Params>, Options>
-        } & (Trim<NameOrModifier> extends infer Trimmed
-          ? Trimmed extends `${infer Mod extends Modifier<
-              Options['AllowIndexed']
-            >} ${infer Name}`
-            ? { name: Trim<Name> } & (Mod extends 'indexed'
-                ? { indexed: true }
-                : object)
-            : { name: Trimmed }
-          : never)
-      >
-    : // Inline tuples of tuples (e.g. `(string)[]`, `(string)[5]`)
+    : // Array or fixed-length array tuples (e.g. `(string)[]`, `(string)[5]`)
     T extends `${infer Head}[${'' | `${SolidityFixedArrayRange}`}]`
     ? T extends `${Head}[${infer Size}]`
       ? {
@@ -216,29 +193,68 @@ export type ParseTuple<
           components: ParseAbiParameters<ParseParams<Head>, Options>
         }
       : never
-    : // Inline tuples of tuples with name and/or modifier attached (e.g. `(string)[] foo`, `(string)[5] foo`)
-    T extends `(${infer Params})[${infer Tail}] ${infer NameOrModifier}`
-    ? Prettify<{
-        name: NameOrModifier
-        type: `tuple[${Tail}]`
-        components: ParseAbiParameters<ParseParams<Params>, Options>
-      }>
+    : // Array or fixed-length array tuples with name and/or modifier attached (e.g. `(string)[] foo`, `(string)[5] foo`)
+    T extends `${infer Head}[${
+        | ''
+        | `${SolidityFixedArrayRange}`}] ${infer NameOrModifier}`
+    ? T extends `${Head}[${infer Size}] ${NameOrModifier}`
+      ? Prettify<
+          {
+            type: `tuple[${Size}]`
+            components: ParseAbiParameters<ParseParams<Head>, Options>
+          } & SplitNameOrModifier<NameOrModifier, Options>
+        >
+      : never
+    : // Tuples with name and/or modifier attached (e.g. `(string) foo`, `(string bar) foo`)
+    T extends `(${infer Params}) ${infer NameOrModifier}`
+    ? // Check that `NameOrModifier` didn't get matched to `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)
+      NameOrModifier extends `${string}) ${string}`
+      ? UnwrapNameOrModifier<NameOrModifier> extends infer Parts extends {
+          NameOrModifier: string
+          End: string
+        }
+        ? Prettify<
+            {
+              type: 'tuple'
+              components: ParseAbiParameters<
+                ParseParams<`${Params}) ${Parts['End']}`>,
+                Options
+              >
+            } & SplitNameOrModifier<Parts['NameOrModifier'], Options>
+          >
+        : never
+      : Prettify<
+          {
+            type: 'tuple'
+            components: ParseAbiParameters<ParseParams<Params>, Options>
+          } & SplitNameOrModifier<NameOrModifier, Options>
+        >
     : never
 
-type Result = ParseTuple<'((string)[])[]'>
-//   ^?
-
-type Parse<T> = T extends `${infer Head}[${'' | `${SolidityFixedArrayRange}`}]`
-  ? T extends `${Head}[${infer Size}]`
-    ? { head: Head; size: Size }
-    : { head: Head }
+// Split name and modifier (e.g. `indexed foo` => `{ name: 'foo', indexed: true }`)
+type SplitNameOrModifier<
+  T extends string,
+  Options extends ParseOptions = DefaultParseOptions,
+> = Trim<T> extends infer Trimmed
+  ? Trimmed extends `${infer Mod extends Modifier<
+      Options['AllowIndexed']
+    >} ${infer Name}`
+    ? { name: Trim<Name> } & (Mod extends 'indexed'
+        ? { indexed: true }
+        : object)
+    : { name: Trimmed }
   : never
 
-type Foo = Parse<'((string)[])[]'>
-
-// type Res = ParseTuple<'((string bar)[] foo)[]'>
-// type Res = ParseTuple<'((string bar) foo)[]'>
-// type Res = ParseTuple<'((string bar) foo)[] bar'>
+// `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)
+type UnwrapNameOrModifier<
+  T extends string,
+  Current extends string = '',
+> = T extends `${infer Head}) ${infer Tail}`
+  ? UnwrapNameOrModifier<
+      Tail,
+      `${Current}${Current extends '' ? '' : ') '}${Head}`
+    >
+  : { End: Trim<Current>; NameOrModifier: Trim<T> }
 
 export type ParseParams<
   T extends string,
