@@ -93,6 +93,10 @@ test('ParseAbi', () => {
       ],
     },
   ])
+
+  assertType<ParseAbi<['function foo ()']>>([
+    'Error: Signature "function foo ()" is invalid at position 0',
+  ])
 })
 
 test('parseAbi', () => {
@@ -182,4 +186,9 @@ test('parseAbi', () => {
     'struct Foo { string name; }',
   ]
   expectTypeOf(parseAbi(abi2)).toEqualTypeOf<Abi>()
+
+  // @ts-expect-error Invalid signatures
+  expectTypeOf(parseAbi(['function foo ()'])).toEqualTypeOf<
+    readonly ['Error: Signature "function foo ()" is invalid at position 0']
+  >()
 })

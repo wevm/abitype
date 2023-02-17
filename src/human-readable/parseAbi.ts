@@ -5,6 +5,12 @@ import type { Signatures } from './signatures'
 import type { ParseStructs } from './structs'
 import type { ParseSignature } from './utils'
 
+// * TSDoc and comments
+// * https://www.craft.do/s/mARCBG8Y0TXqv0
+// * `parseAbiParameters`/`ParseAbiParameters` https://wagmi-dev.slack.com/archives/C041LADTUJH/p1676325558652399
+// * Allow whitespace in between keywords?
+// * Review signatures from contracts in the wild (check modifiers - do we need `'payable'` for params, etc.) https://docs.soliditylang.org/en/latest/contracts.html#state-mutability
+
 export type ParseAbi<
   TSignatures extends readonly string[] | readonly unknown[],
 > =
@@ -34,7 +40,18 @@ export type ParseAbi<
       : never
     : never
 
-export declare function parseAbi<
+/**
+ * @description Parses human-readable ABI into JSON ABI
+ * @param signatures - Human-readable ABI
+ * @returns JSON ABI
+ * @example
+ * const abi = parseAbi([
+ *  //   ^? const abi: readonly [{ name: "balanceOf"; type: "function"; stateMutability: "view"; inputs: [{...
+ *  'function balanceOf(address owner) view returns (uint256)',
+ *  'event Transfer(address indexed from, address indexed to, uint256 amount)',
+ * ])
+ */
+export function parseAbi<
   TSignatures extends readonly string[] | readonly unknown[],
 >(
   signatures: Narrow<TSignatures> &
@@ -45,4 +62,6 @@ export declare function parseAbi<
         >
       ? unknown
       : never),
-): ParseAbi<TSignatures>
+): ParseAbi<TSignatures> {
+  return signatures as ParseAbi<TSignatures>
+}

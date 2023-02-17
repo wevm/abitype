@@ -1,5 +1,6 @@
 import type { AbiParameter } from '../abi'
 import type { Trim } from '../types'
+import type { StructSignature } from './signatures'
 import type { ParseAbiParameter } from './utils'
 
 export type StructLookup = Record<string, readonly AbiParameter[]>
@@ -19,34 +20,33 @@ export type ParseStructProperties<
 export type ParseStruct<
   TSignature extends string,
   TStructs extends StructLookup | unknown = unknown,
-> = TSignature extends `struct ${infer Name} {${infer Properties}}`
+> = TSignature extends StructSignature<infer Name, infer Properties>
   ? {
       name: Trim<Name>
       components: ParseStructProperties<Properties, TStructs>
     }
   : never
 
-export type ParseStructs<TSignatures extends readonly string[]> = {
-  [Signature in TSignatures[number] as ParseStruct<
-    Signature extends string ? Signature : never
-  > extends infer Struct extends {
-    name: string
-  }
-    ? Struct['name']
-    : never]: ParseStruct<
-    Signature extends string ? Signature : never
-  >['components']
-} extends infer Structs extends Record<
-  string,
-  readonly (AbiParameter & { type: string })[]
->
-  ? {
-      [StructName in keyof Structs]: ResolveStructs<
-        Structs[StructName],
-        Structs
-      >
+export type ParseStructs<TSignatures extends readonly string[]> =
+  // Create "shallow" version of each struct (and filter out non-structs or invalid structs)
+  {
+    [Signature in TSignatures[number] as ParseStruct<Signature> extends infer Struct extends {
+      name: string
     }
-  : never
+      ? Struct['name']
+      : never]: ParseStruct<Signature>['components']
+  } extends infer Structs extends Record<
+    string,
+    readonly (AbiParameter & { type: string })[]
+  >
+    ? // Resolve nested structs inside each struct
+      {
+        [StructName in keyof Structs]: ResolveStructs<
+          Structs[StructName],
+          Structs
+        >
+      }
+    : never
 
 // TODO: Disallow recursive and self-referencing structs
 export type ResolveStructs<
@@ -54,13 +54,14 @@ export type ResolveStructs<
   TStructs extends Record<string, readonly (AbiParameter & { type: string })[]>,
 > = {
   [K in keyof TAbiParameters]: TAbiParameters[K]['type'] extends `${infer Head extends string &
-    keyof TStructs}[${infer Tail}]`
+    keyof TStructs}[${infer Tail}]` // Struct arrays (e.g. `type: 'Struct[]'`, `type: 'Struct[10]'`, `type: 'Struct[][]'`)
     ? {
         name: TAbiParameters[K]['name']
         type: `tuple[${Tail}]`
         components: ResolveStructs<TStructs[Head], TStructs>
       }
-    : TAbiParameters[K]['type'] extends keyof TStructs
+    : // Basic struct (e.g. `type: 'Struct'`)
+    TAbiParameters[K]['type'] extends keyof TStructs
     ? {
         name: TAbiParameters[K]['name']
         type: 'tuple'

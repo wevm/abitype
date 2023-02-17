@@ -6,6 +6,8 @@ import type {
   IsFunctionSignature,
   IsSignature,
   IsStructSignature,
+  Signature,
+  Signatures,
 } from './signatures'
 
 test('IsFunctionSignature', () => {
@@ -109,4 +111,18 @@ test('IsSignature', () => {
   assertType<IsSignature<'event ()'>>(false)
   assertType<IsSignature<'error ()'>>(false)
   assertType<IsSignature<'struct {}'>>(false)
+})
+
+test('Signature', () => {
+  assertType<Signature<'function foo()'>>('function foo()')
+  assertType<Signature<'function foo ()'>>(
+    'Error: Signature "function foo ()" is invalid',
+  )
+})
+
+test('Signatures', () => {
+  assertType<Signatures<['function foo()']>>(['function foo()'])
+  assertType<Signatures<['function foo ()']>>([
+    'Error: Signature "function foo ()" is invalid at position 0',
+  ])
 })

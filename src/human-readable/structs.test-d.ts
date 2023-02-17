@@ -56,6 +56,10 @@ test('ParseStructs', () => {
       },
     ],
   })
+
+  assertType<ParseStructs<['struct Person { Name name;']>>({})
+  assertType<ParseStructs<[]>>({})
+  assertType<ParseStructs<['function addPerson(Person person)']>>({})
 })
 
 test('ResolveStructs', () => {

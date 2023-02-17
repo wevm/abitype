@@ -74,8 +74,15 @@ type InvalidFunctionParams =
   | `${string}) ${'returns' | MangledReturns}${string}`
   | `${string})${string}${'returns' | MangledReturns}${string}(${string}`
 
-export type IsStructSignature<T extends string> =
-  T extends `struct ${infer Name} {${string}}` ? IsName<Name> : false
+export type StructSignature<
+  TName extends string = string,
+  TProperties extends string = string,
+> = `struct ${TName} {${TProperties}}`
+export type IsStructSignature<T extends string> = T extends StructSignature<
+  infer Name
+>
+  ? IsName<Name>
+  : false
 
 export type ConstructorSignature<TParams extends string = string> =
   `constructor(${TParams})`
