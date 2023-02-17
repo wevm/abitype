@@ -173,10 +173,10 @@ export type TypedDataDomain = {
   version?: string
 }
 
-// Subset of `AbiType` that excludes `tuple` and `function`
+// Subset of `AbiType` that excludes `tuple`, `function`, and dynamic aliases `int` and `uint`
 export type TypedDataType = Exclude<
   AbiType,
-  SolidityFunction | SolidityTuple | SolidityArrayWithTuple
+  SolidityFunction | SolidityTuple | SolidityArrayWithTuple | 'int' | 'uint'
 >
 
 export type TypedDataParameter = {
