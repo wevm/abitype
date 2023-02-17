@@ -15,6 +15,17 @@ type Result = ExtractAbiFunctions<typeof erc721Abi, 'payable'>
 
 Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions, variables, or your own types ([examples](/src/examples/)). No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
 
+## Table of Contents
+
+- [Install](#install)
+- [Usage](#usage)
+- [TL;DR](#tldr)
+- [Utilities](#utilities)
+- [Types](#types)
+- [Configuration](#configuration)
+- [Human-Readable ABI](#human-readable-abi)
+- [Zod](#zod)
+
 ## Install
 
 ```bash
@@ -712,6 +723,23 @@ declare module 'abitype' {
 ```
 
 [TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgJQKYGcIBsBuqAmAwhAHYBmwA5nAL5xlQQhwDkAhgEbAwCeYqLAFCDe-OAFkehAK7oYTAEJUAkiRgAVPqjgBeOF0rA1cAGSJ6ECAC5WHNlBa1h+VAGMs97SAj5pWbexcogKIgnBwqAAekLBwRjCoUGRsrtrE5FSh4eFKlKoaWjaSMnKKKmqa-GFONMLBKBh+8HpomLgE6RSUANosufmVAgC6ggD0o9kAegD8gkA)
+
+## Human-Readable ABI
+
+Human-Readable ABIs compress JSON ABIs into signatures that are nicer to read and write. For example:
+
+```ts
+const abi = [
+  'function balanceOf(address owner) view returns (uint256)',
+  'event Transfer(address indexed from, address indexed to, uint256 amount)',
+] as const
+```
+
+TODO: document
+
+- tuples/structs
+- utilities
+- types
 
 ## Zod
 
