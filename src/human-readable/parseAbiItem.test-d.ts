@@ -81,30 +81,30 @@ test('parseAbiItem', () => {
 
   // string
   expectTypeOf(parseAbiItem('function foo()')).toEqualTypeOf<{
-    name: 'foo'
-    type: 'function'
-    stateMutability: 'nonpayable'
-    inputs: []
-    outputs: []
+    readonly name: 'foo'
+    readonly type: 'function'
+    readonly stateMutability: 'nonpayable'
+    readonly inputs: readonly []
+    readonly outputs: readonly []
   }>()
   expectTypeOf(parseAbiItem('function foo((string), address)')).toEqualTypeOf<{
-    name: 'foo'
-    type: 'function'
-    stateMutability: 'nonpayable'
-    inputs: [
+    readonly name: 'foo'
+    readonly type: 'function'
+    readonly stateMutability: 'nonpayable'
+    readonly inputs: readonly [
       {
-        type: 'tuple'
-        components: [
+        readonly type: 'tuple'
+        readonly components: [
           {
-            type: 'string'
+            readonly type: 'string'
           },
         ]
       },
       {
-        type: 'address'
+        readonly type: 'address'
       },
     ]
-    outputs: []
+    readonly outputs: readonly []
   }>()
 
   expectTypeOf(

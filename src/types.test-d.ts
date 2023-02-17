@@ -1,6 +1,10 @@
 import { assertType, test } from 'vitest'
 
-import type { IsUnknown, Merge, Range, Tuple } from './types'
+import type { Filter, IsUnknown, Merge, Range, Trim, Tuple } from './types'
+
+test('Filter', () => {
+  assertType<Filter<[1, 'foo', false, 'baz'], boolean>>([1, 'foo', 'baz'])
+})
 
 test('IsUnknown', () => {
   assertType<IsUnknown<unknown>>(true)
@@ -23,6 +27,14 @@ test('Range', () => {
   assertType<Range<1, 0>>([])
   // @ts-expect-error Only positive ranges work
   assertType<Range<-2, 0>>([-2, -1, 0])
+})
+
+test('Trim', () => {
+  assertType<Trim<'foo bar baz                 '>>('foo bar baz')
+  assertType<Trim<'                 foo bar baz'>>('foo bar baz')
+  assertType<Trim<'                 foo bar baz                 '>>(
+    'foo bar baz',
+  )
 })
 
 test('Tuple', () => {

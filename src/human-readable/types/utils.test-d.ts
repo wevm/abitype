@@ -96,22 +96,27 @@ test('ParseSignature', () => {
   // Constructor
   assertType<ParseSignature<'constructor()'>>({
     type: 'constructor',
+    stateMutability: 'nonpayable',
     inputs: [],
   })
   assertType<ParseSignature<'constructor(string)'>>({
     type: 'constructor',
+    stateMutability: 'nonpayable',
     inputs: [{ type: 'string' }],
   })
   assertType<ParseSignature<'constructor(string foo)'>>({
     type: 'constructor',
+    stateMutability: 'nonpayable',
     inputs: [{ type: 'string', name: 'foo' }],
   })
   assertType<ParseSignature<'constructor(string foo)'>>({
     type: 'constructor',
+    stateMutability: 'nonpayable',
     inputs: [{ type: 'string', name: 'foo' }],
   })
   assertType<ParseSignature<'constructor((string) foo)'>>({
     type: 'constructor',
+    stateMutability: 'nonpayable',
     inputs: [{ type: 'tuple', name: 'foo', components: [{ type: 'string' }] }],
   })
 

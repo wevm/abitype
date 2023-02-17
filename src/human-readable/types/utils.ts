@@ -139,11 +139,14 @@ export type ParseAbiParameter<
       T extends `${infer Type} ${infer Tail}`
         ? Trim<Tail> extends infer Trimmed extends string
           ? Prettify<
-              { type: Trim<Type> } & SplitNameOrModifier<Trimmed, Options>
+              { readonly type: Trim<Type> } & SplitNameOrModifier<
+                Trimmed,
+                Options
+              >
             >
           : never
         : // Must be `${Type}` format (e.g. `uint256`)
-          { type: T }
+          { readonly type: T }
     ) extends infer Parameter extends AbiParameter & {
       type: string
       indexed?: boolean
@@ -153,24 +156,28 @@ export type ParseAbiParameter<
     Parameter['type'] extends keyof Options['Structs']
     ? Prettify<
         {
-          type: 'tuple'
-          components: Options['Structs'][Parameter['type']]
+          readonly type: 'tuple'
+          readonly components: Options['Structs'][Parameter['type']]
         } & (IsUnknown<Parameter['name']> extends false
-          ? { name: Parameter['name'] }
+          ? { readonly name: Parameter['name'] }
           : object) &
-          (Parameter['indexed'] extends true ? { indexed: true } : object)
+          (Parameter['indexed'] extends true
+            ? { readonly indexed: true }
+            : object)
       >
     : // Resolve tuple structs (e.g. `Foo[]`, `Foo[2]`, `Foo[][2]`, etc.)
     Parameter['type'] extends `${infer Type extends string &
         keyof Options['Structs']}[${infer Tail}]`
     ? Prettify<
         {
-          type: `tuple[${Tail}]`
-          components: Options['Structs'][Type]
+          readonly type: `tuple[${Tail}]`
+          readonly components: Options['Structs'][Type]
         } & (IsUnknown<Parameter['name']> extends false
-          ? { name: Parameter['name'] }
+          ? { readonly name: Parameter['name'] }
           : object) &
-          (Parameter['indexed'] extends true ? { indexed: true } : object)
+          (Parameter['indexed'] extends true
+            ? { readonly indexed: true }
+            : object)
       >
     : // Return existing parameter without modification
       // TODO: Bubble up error if struct (e.g. `{ type: 'Foo' }`) and name was not found in `Structs`
@@ -184,8 +191,8 @@ export type ParseTuple<
   // Tuples without name or modifier (e.g. `(string)`, `(string foo)`)
   T extends `(${infer Parameters})`
     ? {
-        type: 'tuple'
-        components: ParseAbiParameters<
+        readonly type: 'tuple'
+        readonly components: ParseAbiParameters<
           SplitParameters<Parameters>,
           Omit<Options, 'Modifier'>
         >
@@ -194,8 +201,8 @@ export type ParseTuple<
     T extends `(${infer Head})[${'' | `${SolidityFixedArrayRange}`}]`
     ? T extends `(${Head})[${infer Size}]`
       ? {
-          type: `tuple[${Size}]`
-          components: ParseAbiParameters<
+          readonly type: `tuple[${Size}]`
+          readonly components: ParseAbiParameters<
             SplitParameters<Head>,
             Omit<Options, 'Modifier'>
           >
@@ -208,8 +215,8 @@ export type ParseTuple<
     ? T extends `(${Head})[${infer Size}] ${NameOrModifier}`
       ? Prettify<
           {
-            type: `tuple[${Size}]`
-            components: ParseAbiParameters<
+            readonly type: `tuple[${Size}]`
+            readonly components: ParseAbiParameters<
               SplitParameters<Head>,
               Omit<Options, 'Modifier'>
             >
@@ -226,8 +233,8 @@ export type ParseTuple<
         }
         ? Prettify<
             {
-              type: 'tuple'
-              components: ParseAbiParameters<
+              readonly type: 'tuple'
+              readonly components: ParseAbiParameters<
                 SplitParameters<`${Parameters}) ${Parts['End']}`>,
                 Omit<Options, 'Modifier'>
               >
@@ -236,8 +243,8 @@ export type ParseTuple<
         : never
       : Prettify<
           {
-            type: 'tuple'
-            components: ParseAbiParameters<
+            readonly type: 'tuple'
+            readonly components: ParseAbiParameters<
               SplitParameters<Parameters>,
               Omit<Options, 'Modifier'>
             >
@@ -252,15 +259,15 @@ type SplitNameOrModifier<
 > = Trim<T> extends infer Trimmed
   ? Options extends { Modifier: Modifier }
     ? Trimmed extends `${infer Mod extends Options['Modifier']} ${infer Name}`
-      ? { name: Trim<Name> } & (Mod extends 'indexed'
-          ? { indexed: true }
+      ? { readonly name: Trim<Name> } & (Mod extends 'indexed'
+          ? { readonly indexed: true }
           : object)
       : Trimmed extends Options['Modifier']
       ? Trimmed extends 'indexed'
-        ? { indexed: true }
+        ? { readonly indexed: true }
         : object
-      : { name: Trimmed }
-    : { name: Trimmed }
+      : { readonly name: Trimmed }
+    : { readonly name: Trimmed }
   : never
 
 // `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)
