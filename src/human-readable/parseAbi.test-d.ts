@@ -4,8 +4,6 @@ import type { Abi } from '../abi'
 import type { ParseAbi } from './parseAbi'
 import { parseAbi } from './parseAbi'
 
-// TODO: Test massive ABI
-
 test('ParseAbi', () => {
   assertType<ParseAbi<[]>>([])
   assertType<ParseAbi<['struct Foo { string name; }']>>([])

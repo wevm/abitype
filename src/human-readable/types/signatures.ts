@@ -1,4 +1,4 @@
-import type { AbiStateMutability } from '../abi'
+import type { AbiStateMutability } from '../../abi'
 
 type IsName<T extends string> = T extends '' | `${string}${' '}${string}`
   ? false
@@ -6,8 +6,8 @@ type IsName<T extends string> = T extends '' | `${string}${' '}${string}`
 
 export type ErrorSignature<
   TName extends string = string,
-  TParams extends string = string,
-> = `error ${TName}(${TParams})`
+  TParameters extends string = string,
+> = `error ${TName}(${TParameters})`
 export type IsErrorSignature<T extends string> = T extends ErrorSignature<
   infer Name
 >
@@ -15,8 +15,8 @@ export type IsErrorSignature<T extends string> = T extends ErrorSignature<
   : false
 export type EventSignature<
   TName extends string = string,
-  TParams extends string = string,
-> = `event ${TName}(${TParams})`
+  TParameters extends string = string,
+> = `event ${TName}(${TParameters})`
 export type IsEventSignature<T extends string> = T extends EventSignature<
   infer Name
 >
@@ -32,9 +32,9 @@ export type IsFunctionSignature<T> =
     ? IsName<Name> extends true
       ? T extends ValidFunctionSignatures
         ? true
-        : // Check that `Params` is not absorbing other types
-        T extends `function ${string}(${infer Params})`
-        ? Params extends InvalidFunctionParams // `InvalidParams` is not exhaustive - no regex in TypeScript :(
+        : // Check that `Parameters` is not absorbing other types
+        T extends `function ${string}(${infer Parameters})`
+        ? Parameters extends InvalidFunctionParameters // `InvalidParameters` is not exhaustive - no regex in TypeScript :(
           ? false
           : true
         : false
@@ -42,7 +42,7 @@ export type IsFunctionSignature<T> =
     : false
 export type Scope = 'public' | 'external' // `internal` or `private` functions wouldn't make it to ABI so can ignore
 type Returns = `returns (${string})`
-// Almost all valid function signatures, except `function ${string}(${infer Params})` since `Params` can absorb returns
+// Almost all valid function signatures, except `function ${string}(${infer Parameters})` since `Parameters` can absorb returns
 type ValidFunctionSignatures =
   | `function ${string}()`
   // basic
@@ -54,7 +54,7 @@ type ValidFunctionSignatures =
   | `function ${string}() ${Scope} ${Returns}`
   | `function ${string}() ${Scope} ${AbiStateMutability}`
   | `function ${string}() ${Scope} ${AbiStateMutability} ${Returns}`
-  // params
+  // Parameters
   | `function ${string}(${string}) ${Returns}`
   | `function ${string}(${string}) ${AbiStateMutability}`
   | `function ${string}(${string}) ${Scope}`
@@ -62,14 +62,13 @@ type ValidFunctionSignatures =
   | `function ${string}(${string}) ${Scope} ${AbiStateMutability}`
   | `function ${string}(${string}) ${Scope} ${AbiStateMutability} ${Returns}`
 type MangledReturns =
-  // TODO: Make more exhaustive
   | `r${string}eturns`
   | `re${string}turns`
   | `ret${string}urns`
   | `retu${string}rns`
   | `retur${string}ns`
   | `return${string}s`
-type InvalidFunctionParams =
+type InvalidFunctionParameters =
   | `${string}${'returns' | MangledReturns} (${string}`
   | `${string}) ${'returns' | MangledReturns}${string}`
   | `${string})${string}${'returns' | MangledReturns}${string}(${string}`
@@ -84,8 +83,8 @@ export type IsStructSignature<T extends string> = T extends StructSignature<
   ? IsName<Name>
   : false
 
-export type ConstructorSignature<TParams extends string = string> =
-  `constructor(${TParams})`
+export type ConstructorSignature<TParameters extends string = string> =
+  `constructor(${TParameters})`
 export type FallbackSignature = 'fallback()'
 export type ReceiveSignature = 'receive() external payable'
 
@@ -114,3 +113,7 @@ export type Signature<
 export type Signatures<T extends readonly string[]> = {
   [K in keyof T]: Signature<T[K], K>
 }
+
+export type Modifier = 'calldata' | 'indexed' | 'memory' | 'storage'
+export type FunctionModifiers = Exclude<Modifier, 'indexed'>
+export type EventModifiers = Extract<Modifier, 'indexed'>

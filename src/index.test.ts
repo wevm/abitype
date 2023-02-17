@@ -6,6 +6,9 @@ it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
     [
       "parseAbi",
+      "parseAbiItem",
+      "parseAbiParameter",
+      "parseAbiParameters",
       "narrow",
     ]
   `)

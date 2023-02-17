@@ -1,15 +1,7 @@
 import type { Abi } from '../abi'
 import type { Narrow } from '../narrow'
 import type { Filter } from '../types'
-import type { Signatures } from './signatures'
-import type { ParseStructs } from './structs'
-import type { ParseSignature } from './utils'
-
-// * TSDoc and comments
-// * https://www.craft.do/s/mARCBG8Y0TXqv0
-// * `parseAbiParameters`/`ParseAbiParameters` https://wagmi-dev.slack.com/archives/C041LADTUJH/p1676325558652399
-// * Allow whitespace in between keywords?
-// * Review signatures from contracts in the wild (check modifiers - do we need `'payable'` for params, etc.) https://docs.soliditylang.org/en/latest/contracts.html#state-mutability
+import type { ParseSignature, ParseStructs, Signatures } from './types'
 
 export type ParseAbi<
   TSignatures extends readonly string[] | readonly unknown[],

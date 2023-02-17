@@ -5,7 +5,6 @@ import {
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
 } from '../../test'
-
 import type { Abi, Address } from '../abi'
 import type { ResolvedConfig } from '../config'
 import { readContract, readWagmiMintExample } from './readContract'

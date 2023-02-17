@@ -28,6 +28,7 @@ This guide is intended to help you get started with contributing. By following t
 This guide covers more advanced topics. Pick the topics based on your needs.
 
 7. [Versioning](#versioning)
+8. [Testing performance](#testing-performance)
 
 <br>
 
@@ -157,6 +158,20 @@ The first time a PR with a changeset is merged after a release, a new PR will au
 ### Creating a snapshot release
 
 If a PR has changesets, you can create a [snapshot release](https://github.com/changesets/changesets/blob/main/docs/snapshot-releases.md) by [manually dispatching](https://github.com/wagmi-dev/abitype/actions/workflows/snapshot.yml) the Snapshot workflow. This publishes a tagged version to npm with the PR branch name and timestamp.
+
+<div align="right">
+  <a href="#advanced-guide">&uarr; back to top</a></b>
+</div>
+
+## Testing performance
+
+Edit the `src/examples/trace/trace.ts` file to include whatever code you want to test and run TypeScript's [built-in tracing tool](https://github.com/microsoft/TypeScript/wiki/Performance-Tracing) with the following command:
+
+```bash
+pnpm trace
+```
+
+This outputs a `trace/trace.json` file. You can open that file in a trace analysis app, like [Perfetto](https://ui.perfetto.dev) or `chrome://tracing`.
 
 <div align="right">
   <a href="#advanced-guide">&uarr; back to top</a></b>

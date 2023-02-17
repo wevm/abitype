@@ -4,7 +4,7 @@ import type {
   ParseAbiParameter,
   ParseSignature,
   ParseTuple,
-  SplitParams,
+  SplitParameters,
 } from './utils'
 
 type OptionsWithModifier = { Modifier: 'calldata'; Structs: unknown }
@@ -424,15 +424,15 @@ test('ParseAbiParameter', () => {
 })
 
 test('ParseParams', () => {
-  assertType<SplitParams<''>>([])
-  assertType<SplitParams<'string'>>(['string'])
-  assertType<SplitParams<'string indexed foo'>>(['string indexed foo'])
-  assertType<SplitParams<'string foo, string bar'>>([
+  assertType<SplitParameters<''>>([])
+  assertType<SplitParameters<'string'>>(['string'])
+  assertType<SplitParameters<'string indexed foo'>>(['string indexed foo'])
+  assertType<SplitParameters<'string foo, string bar'>>([
     'string foo',
     'string bar',
   ])
   assertType<
-    SplitParams<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
+    SplitParameters<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
   >([
     'address owner',
     '(bool loading, (string[][] names) cats)[] dog',

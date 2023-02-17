@@ -1,5 +1,5 @@
-import type { AbiParameter } from '../abi'
-import type { Trim } from '../types'
+import type { AbiParameter } from '../../abi'
+import type { Trim } from '../../types'
 import type { StructSignature } from './signatures'
 import type { ParseAbiParameter } from './utils'
 

@@ -1,7 +1,6 @@
 import { assertType, test } from 'vitest'
 
 import { wagmiMintExampleAbi } from '../test'
-
 import type {
   Abi,
   AbiError,

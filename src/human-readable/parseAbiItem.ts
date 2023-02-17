@@ -1,9 +1,13 @@
 import type { Abi } from '../abi'
 import type { Narrow } from '../narrow'
 import type { Filter } from '../types'
-import type { IsSignature, Signature, Signatures } from './signatures'
-import type { ParseStructs } from './structs'
-import type { ParseSignature } from './utils'
+import type {
+  IsSignature,
+  ParseSignature,
+  ParseStructs,
+  Signature,
+  Signatures,
+} from './types'
 
 export type ParseAbiItem<
   T extends string | readonly string[] | readonly unknown[],
@@ -45,7 +49,7 @@ export type ParseAbiItem<
  * //    ^? const abiItem: { name: "balanceOf"; type: "function"; stateMutability: "view";...
  * @example
  * const abiItem = parseAbiItem([
- *  //   ^? const abiItem: readonly [{ name: "foo"; type: "function"; stateMutability:...
+ *  //   ^? const abiItem: { name: "foo"; type: "function"; stateMutability: "view"; inputs:...
  *  'function foo(Baz bar) view returns (string)',
  *  'struct Baz { string name; }',
  * ])
