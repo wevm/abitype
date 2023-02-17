@@ -9,12 +9,12 @@
  * type Result = Filter<['a', 'b', 'c'], 'b'>
  * //   ^? type Result = ['a', 'c']
  */
-export type Filter<T extends readonly unknown[], P> = T extends [
+export type Filter<T extends readonly unknown[], P> = T extends readonly [
   infer A,
   ...infer Rest,
 ]
-  ? [...([A] extends [P] ? [] : [A]), ...Filter<Rest, P>]
-  : []
+  ? readonly [...([A] extends [P] ? [] : [A]), ...Filter<Rest, P>]
+  : readonly []
 
 /**
  * Checks if {@link T} is `unknown`

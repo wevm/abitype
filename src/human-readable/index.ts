@@ -1,1 +1,2 @@
-export type { ParseAbi } from './utils'
+export type { ParseAbi } from './parseAbi'
+export { parseAbi } from './parseAbi'

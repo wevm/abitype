@@ -2,9 +2,9 @@ import { assertType, test } from 'vitest'
 
 import type {
   ParseAbiParameter,
-  ParseParams,
   ParseSignature,
   ParseTuple,
+  SplitParams,
 } from './utils'
 
 type OptionsWithModifier = { Modifier: 'calldata'; Structs: unknown }
@@ -424,15 +424,15 @@ test('ParseAbiParameter', () => {
 })
 
 test('ParseParams', () => {
-  assertType<ParseParams<''>>([])
-  assertType<ParseParams<'string'>>(['string'])
-  assertType<ParseParams<'string indexed foo'>>(['string indexed foo'])
-  assertType<ParseParams<'string foo, string bar'>>([
+  assertType<SplitParams<''>>([])
+  assertType<SplitParams<'string'>>(['string'])
+  assertType<SplitParams<'string indexed foo'>>(['string indexed foo'])
+  assertType<SplitParams<'string foo, string bar'>>([
     'string foo',
     'string bar',
   ])
   assertType<
-    ParseParams<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
+    SplitParams<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
   >([
     'address owner',
     '(bool loading, (string[][] names) cats)[] dog',

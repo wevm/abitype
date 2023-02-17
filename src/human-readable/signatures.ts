@@ -95,10 +95,15 @@ export type IsSignature<T extends string> =
     : true
   : false
 
-export type Signature<T extends string> = IsSignature<T> extends true
+export type Signature<
+  T extends string,
+  K extends string | unknown = unknown,
+> = IsSignature<T> extends true
   ? T
-  : never
+  : `Error: Signature "${T}" is invalid${K extends string
+      ? ` at position ${K}`
+      : ''}`
 
 export type Signatures<T extends readonly string[]> = {
-  [K in keyof T]: Signature<T[K]>
+  [K in keyof T]: Signature<T[K], K>
 }

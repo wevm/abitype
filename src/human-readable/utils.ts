@@ -3,7 +3,7 @@ import type {
   AbiStateMutability,
   SolidityFixedArrayRange,
 } from '../abi'
-import type { Filter, IsUnknown, Prettify, Trim } from '../types'
+import type { IsUnknown, Prettify, Trim } from '../types'
 import type {
   ConstructorSignature,
   ErrorSignature,
@@ -15,34 +15,8 @@ import type {
   IsFunctionSignature,
   ReceiveSignature,
   Scope,
-  Signatures,
 } from './signatures'
-import type { ParseStructs, StructLookup } from './structs'
-
-export type ParseAbi<
-  TSignatures extends Signatures<
-    TSignatures extends readonly string[] ? TSignatures : never
-  >,
-> = TSignatures extends infer Validated extends Signatures<
-  Validated extends readonly string[] ? Validated : never
->
-  ? ParseStructs<Validated> extends infer Structs
-    ? {
-        [K in keyof Validated]: Validated[K] extends infer Signature extends string
-          ? ParseSignature<Signature, Structs>
-          : never
-      } extends infer Mapped extends readonly unknown[]
-      ? Filter<Mapped, never>
-      : never
-    : never
-  : never
-
-// TODO
-// - [ ] Vitest typechecks not working
-// - [ ] TSDoc and comments
-// - [ ] ParseAbi work for `string | readonly string[]`
-// - [ ] Review signatures from contracts in the wild
-// - [ ] ParseAbiParams  https://wagmi-dev.slack.com/archives/C041LADTUJH/p1676325558652399
+import type { StructLookup } from './structs'
 
 export type ParseSignature<
   TSignature extends string,
@@ -54,7 +28,7 @@ export type ParseSignature<
             name: Name
             type: 'error'
             inputs: ParseAbiParameters<
-              ParseParams<Params>,
+              SplitParams<Params>,
               { Structs: TStructs }
             >
           }
@@ -66,7 +40,7 @@ export type ParseSignature<
             name: Name
             type: 'event'
             inputs: ParseAbiParameters<
-              ParseParams<Params>,
+              SplitParams<Params>,
               { Modifier: EventModifiers; Structs: TStructs }
             >
           }
@@ -79,7 +53,7 @@ export type ParseSignature<
             type: 'function'
             stateMutability: ParseFunctionInputsAndStateMutability<TSignature>['StateMutability']
             inputs: ParseAbiParameters<
-              ParseParams<
+              SplitParams<
                 ParseFunctionInputsAndStateMutability<TSignature>['Inputs']
               >,
               {
@@ -89,7 +63,7 @@ export type ParseSignature<
             >
             outputs: Tail extends `${string}returns (${infer Returns})`
               ? ParseAbiParameters<
-                  ParseParams<Returns>,
+                  SplitParams<Returns>,
                   {
                     Modifier: FunctionModifiers
                     Structs: TStructs
@@ -102,7 +76,7 @@ export type ParseSignature<
   | (TSignature extends ConstructorSignature<infer Params>
       ? {
           type: 'constructor'
-          inputs: ParseAbiParameters<ParseParams<Params>, { Structs: TStructs }>
+          inputs: ParseAbiParameters<SplitParams<Params>, { Structs: TStructs }>
         }
       : never)
   | (TSignature extends FallbackSignature
@@ -206,7 +180,7 @@ export type ParseTuple<
     ? {
         type: 'tuple'
         components: ParseAbiParameters<
-          ParseParams<Params>,
+          SplitParams<Params>,
           Omit<Options, 'Modifier'>
         >
       }
@@ -216,7 +190,7 @@ export type ParseTuple<
       ? {
           type: `tuple[${Size}]`
           components: ParseAbiParameters<
-            ParseParams<Head>,
+            SplitParams<Head>,
             Omit<Options, 'Modifier'>
           >
         }
@@ -230,7 +204,7 @@ export type ParseTuple<
           {
             type: `tuple[${Size}]`
             components: ParseAbiParameters<
-              ParseParams<Head>,
+              SplitParams<Head>,
               Omit<Options, 'Modifier'>
             >
           } & SplitNameOrModifier<NameOrModifier, Options>
@@ -248,7 +222,7 @@ export type ParseTuple<
             {
               type: 'tuple'
               components: ParseAbiParameters<
-                ParseParams<`${Params}) ${Parts['End']}`>,
+                SplitParams<`${Params}) ${Parts['End']}`>,
                 Omit<Options, 'Modifier'>
               >
             } & SplitNameOrModifier<Parts['NameOrModifier'], Options>
@@ -258,7 +232,7 @@ export type ParseTuple<
           {
             type: 'tuple'
             components: ParseAbiParameters<
-              ParseParams<Params>,
+              SplitParams<Params>,
               Omit<Options, 'Modifier'>
             >
           } & SplitNameOrModifier<NameOrModifier, Options>
@@ -294,7 +268,7 @@ type UnwrapNameOrModifier<
     >
   : { End: Trim<Current>; NameOrModifier: Trim<T> }
 
-export type ParseParams<
+export type SplitParams<
   T extends string,
   Result extends unknown[] = [],
   Current extends string = '',
@@ -306,16 +280,16 @@ export type ParseParams<
   : Depth['length'] extends 0
   ? T extends `${infer Head}${infer Tail}`
     ? Head extends ','
-      ? ParseParams<Tail, [...Result, Trim<Current>], ''>
+      ? SplitParams<Tail, [...Result, Trim<Current>], ''>
       : Head extends '('
-      ? ParseParams<Tail, Result, `${Current}${Head}`, [...Depth, 1]>
-      : ParseParams<Tail, Result, `${Current}${Head}`>
+      ? SplitParams<Tail, Result, `${Current}${Head}`, [...Depth, 1]>
+      : SplitParams<Tail, Result, `${Current}${Head}`>
     : []
   : T extends `${infer Char}${infer Rest}`
   ? Char extends '('
-    ? ParseParams<Rest, Result, `${Current}${Char}`, [...Depth, 1]>
+    ? SplitParams<Rest, Result, `${Current}${Char}`, [...Depth, 1]>
     : Char extends ')'
-    ? ParseParams<Rest, Result, `${Current}${Char}`, Pop<Depth>>
-    : ParseParams<Rest, Result, `${Current}${Char}`, Depth>
+    ? SplitParams<Rest, Result, `${Current}${Char}`, Pop<Depth>>
+    : SplitParams<Rest, Result, `${Current}${Char}`, Depth>
   : []
 type Pop<T extends ReadonlyArray<number>> = T extends [...infer R, any] ? R : []

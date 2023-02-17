@@ -29,6 +29,9 @@ export type {
 
 export type { Config, DefaultConfig, ResolvedConfig } from './config'
 
+export type { ParseAbi } from './human-readable'
+export { parseAbi } from './human-readable'
+
 export type { Narrow } from './narrow'
 export { narrow } from './narrow'
 
