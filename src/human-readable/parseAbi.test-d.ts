@@ -1,25 +1,24 @@
 import { assertType, expectTypeOf, test } from 'vitest'
 
+import type { Abi } from '../abi'
 import type { ParseAbi } from './parseAbi'
 import { parseAbi } from './parseAbi'
 
-const abi = [
-  'function foo()',
-  'function bar(Foo, bytes32)',
-  'struct Foo { string name; }',
-] as const
+// TODO: Test massive ABI
 
 test('ParseAbi', () => {
-  assertType<ParseAbi<typeof abi[0]>>([
-    {
-      name: 'foo',
-      type: 'function',
-      stateMutability: 'nonpayable',
-      inputs: [],
-      outputs: [],
-    },
-  ])
-  assertType<ParseAbi<typeof abi>>([
+  assertType<ParseAbi<[]>>([])
+  assertType<ParseAbi<['struct Foo { string name; }']>>([])
+
+  assertType<
+    ParseAbi<
+      [
+        'function foo()',
+        'function bar(Foo, bytes32)',
+        'struct Foo { string name; }',
+      ]
+    >
+  >([
     {
       name: 'foo',
       type: 'function',
@@ -48,10 +47,67 @@ test('ParseAbi', () => {
       outputs: [],
     },
   ])
+
+  assertType<
+    ParseAbi<
+      [
+        'function balanceOf(address owner) view returns (uint256)',
+        'event Transfer(address indexed from, address indexed to, uint256 amount)',
+      ]
+    >
+  >([
+    {
+      name: 'balanceOf',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [
+        {
+          name: 'owner',
+          type: 'address',
+        },
+      ],
+      outputs: [
+        {
+          type: 'uint256',
+        },
+      ],
+    },
+    {
+      name: 'Transfer',
+      type: 'event',
+      inputs: [
+        {
+          name: 'from',
+          type: 'address',
+          indexed: true,
+        },
+        {
+          name: 'to',
+          type: 'address',
+          indexed: true,
+        },
+        {
+          name: 'amount',
+          type: 'uint256',
+        },
+      ],
+    },
+  ])
 })
 
 test('parseAbi', () => {
-  expectTypeOf(parseAbi(abi[0])).toEqualTypeOf<
+  expectTypeOf(parseAbi([])).toEqualTypeOf<readonly []>()
+  expectTypeOf(parseAbi(['struct Foo { string name; }'])).toEqualTypeOf<
+    readonly []
+  >()
+
+  expectTypeOf(
+    parseAbi([
+      'function foo()',
+      'function bar(Foo, bytes32)',
+      'struct Foo { string name; }',
+    ]),
+  ).toEqualTypeOf<
     readonly [
       {
         name: 'foo'
@@ -60,8 +116,34 @@ test('parseAbi', () => {
         inputs: []
         outputs: []
       },
+      {
+        name: 'bar'
+        type: 'function'
+        stateMutability: 'nonpayable'
+        inputs: [
+          {
+            type: 'tuple'
+            components: [
+              {
+                name: 'name'
+                type: 'string'
+              },
+            ]
+          },
+          {
+            type: 'bytes32'
+          },
+        ]
+        outputs: []
+      },
     ]
   >()
+
+  const abi = [
+    'function foo()',
+    'function bar(Foo, bytes32)',
+    'struct Foo { string name; }',
+  ] as const
   expectTypeOf(parseAbi(abi)).toEqualTypeOf<
     readonly [
       {
@@ -94,18 +176,10 @@ test('parseAbi', () => {
     ]
   >()
 
-  expectTypeOf(
-    parseAbi('function foo ()'),
-  ).toEqualTypeOf<'Error: Signature "function foo ()" is invalid'>()
-
-  const data = parseAbi([
+  const abi2 = [
     'function foo()',
-    'function bar (Foo, bytes32)',
+    'function bar(Foo, bytes32)',
     'struct Foo { string name; }',
-  ])
-  expectTypeOf(data).toEqualTypeOf<
-    readonly [
-      'Error: Signature "function bar (Foo, bytes32)" is invalid at position 1',
-    ]
-  >()
+  ]
+  expectTypeOf(parseAbi(abi2)).toEqualTypeOf<Abi>()
 })

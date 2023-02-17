@@ -1,6 +1,5 @@
 import type { AbiParameter } from '../abi'
 import type { Trim } from '../types'
-import type { Signatures } from './signatures'
 import type { ParseAbiParameter } from './utils'
 
 export type StructLookup = Record<string, readonly AbiParameter[]>
@@ -27,11 +26,7 @@ export type ParseStruct<
     }
   : never
 
-export type ParseStructs<
-  TSignatures extends Signatures<
-    TSignatures extends readonly string[] ? TSignatures : never
-  >,
-> = {
+export type ParseStructs<TSignatures extends readonly string[]> = {
   [Signature in TSignatures[number] as ParseStruct<
     Signature extends string ? Signature : never
   > extends infer Struct extends {
