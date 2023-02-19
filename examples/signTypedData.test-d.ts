@@ -1,7 +1,6 @@
 import { test } from 'vitest'
 
-import type { TypedData } from '../abi'
-
+import type { TypedData } from '../src'
 import { signTypedData } from './signTypedData'
 
 test('signTypedData', () => {

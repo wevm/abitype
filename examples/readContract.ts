@@ -1,5 +1,5 @@
-import type { wagmiMintExampleAbi } from '../../test'
-import type { Abi } from '../abi'
+import type { Abi } from '../src'
+import type { wagmiMintExampleAbi } from '../test'
 import type { GetConfig, GetReturnType } from './types'
 
 export declare function readContract<

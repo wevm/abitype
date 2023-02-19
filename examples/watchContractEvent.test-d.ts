@@ -1,12 +1,11 @@
 import { assertType, test } from 'vitest'
 
+import type { Abi, ResolvedConfig } from '../src'
 import {
   address,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
-} from '../../test'
-import type { Abi } from '../abi'
-import type { ResolvedConfig } from '../config'
+} from '../test'
 import { watchContractEvent } from './watchContractEvent'
 
 test('watchContractEvent', () => {

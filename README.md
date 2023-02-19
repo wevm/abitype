@@ -13,7 +13,7 @@ const erc721Abi = [...] as const
 type Result = ExtractAbiFunctions<typeof erc721Abi, 'payable'>
 ```
 
-Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions, variables, or your own types ([examples](/src/examples/)). No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
+Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions, variables, or your own types ([examples](/examples)). No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
 
 ## Table of Contents
 

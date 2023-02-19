@@ -8,7 +8,7 @@ import type {
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
   Narrow,
-} from '../index'
+} from '../src'
 
 export type InferOptional<TType, TKeys extends keyof TType> = Partial<
   Pick<TType, TKeys>

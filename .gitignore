@@ -9,7 +9,7 @@ dist
 node_modules
 tsconfig.tsbuildinfo
 trace
-!src/examples/trace
+!examples/trace
 
 # local env files
 .env

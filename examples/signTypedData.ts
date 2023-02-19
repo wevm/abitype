@@ -1,6 +1,10 @@
-import type { Address, TypedData, TypedDataDomain } from '../abi'
-import type { Narrow } from '../narrow'
-import type { TypedDataToPrimitiveTypes } from '../utils'
+import type {
+  Address,
+  Narrow,
+  TypedData,
+  TypedDataDomain,
+  TypedDataToPrimitiveTypes,
+} from '../src'
 
 export declare function signTypedData<
   TTypedData extends TypedData | { [key: string]: unknown },

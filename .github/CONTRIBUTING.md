@@ -165,7 +165,7 @@ If a PR has changesets, you can create a [snapshot release](https://github.com/c
 
 ## Testing performance
 
-Edit the `src/examples/trace/trace.ts` file to include whatever code you want to test and run TypeScript's [built-in tracing tool](https://github.com/microsoft/TypeScript/wiki/Performance-Tracing) with the following command:
+Edit the `examples/trace/trace.ts` file to include whatever code you want to test and run TypeScript's [built-in tracing tool](https://github.com/microsoft/TypeScript/wiki/Performance-Tracing) with the following command:
 
 ```bash
 pnpm trace

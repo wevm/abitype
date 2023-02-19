@@ -10,3 +10,8 @@ export {
   wethAbi,
   customSolidityErrorsAbi,
 } from './abis'
+
+export {
+  nestedTupleArrayHumanReadableAbi,
+  wagmiMintExampleHumanReadableAbi,
+} from './human-readable'

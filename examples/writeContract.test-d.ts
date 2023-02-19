@@ -1,15 +1,16 @@
 import { assertType, test } from 'vitest'
 
+import type { Abi, ResolvedConfig } from '../src'
+import { parseAbi } from '../src'
 import {
   address,
   ensRegistryWithFallbackAbi,
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
   wagmiMintExampleAbi,
+  wagmiMintExampleHumanReadableAbi,
   writingEditionsFactoryAbi,
-} from '../../test'
-import type { Abi } from '../abi'
-import type { ResolvedConfig } from '../config'
+} from '../test'
 import { writeContract } from './writeContract'
 
 test('writeContract', () => {
@@ -227,6 +228,16 @@ test('writeContract', () => {
         args: ['bar'],
       })
       assertType<ResolvedConfig['AddressType']>(result)
+    })
+
+    test('human readable', () => {
+      const result = writeContract({
+        address,
+        abi: parseAbi(wagmiMintExampleHumanReadableAbi),
+        functionName: 'safeTransferFrom',
+        args: [address, address, 123n],
+      })
+      assertType<void>(result)
     })
   })
 })

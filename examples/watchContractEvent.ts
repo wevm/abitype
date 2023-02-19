@@ -1,10 +1,12 @@
-import type { Abi, AbiEvent, Address } from '../abi'
-import type { Narrow } from '../narrow'
 import type {
+  Abi,
+  AbiEvent,
   AbiParametersToPrimitiveTypes,
+  Address,
   ExtractAbiEvent,
   ExtractAbiEventNames,
-} from '../utils'
+  Narrow,
+} from '../src'
 
 export declare function watchContractEvent<
   TAbi extends Abi | readonly unknown[],

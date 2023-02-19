@@ -1,4 +1,4 @@
-import type { Abi } from '../abi'
+import type { Abi } from '../src'
 import type { GetConfig, GetReturnType } from './types'
 
 export declare function writeContract<
