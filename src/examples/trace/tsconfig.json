@@ -1,24 +1,4 @@
 {
-  "compilerOptions": {
-    "allowJs": false,
-    "downlevelIteration": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "lib": ["es2019", "es2017", "dom"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noEmit": true,
-    "noImplicitAny": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "target": "es2021",
-    "types": ["node"]
-  },
-  "exclude": ["node_modules", "dist"],
+  "extends": "../../../tsconfig.json",
   "include": ["trace.ts"]
 }

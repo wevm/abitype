@@ -1,4 +1,6 @@
 - Runtime implementations for `parse*(…)`
+- Docs
+- Separate entrypoint for human-readable ABI types/utils?
 
 Improvements to signature validation:
 
