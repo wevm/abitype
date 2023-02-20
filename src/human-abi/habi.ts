@@ -365,58 +365,6 @@ export type ParseParams<
   : []
 
 /**
- * Parse HAbi string arguments and return arguments.
- *
- * @param T - String to parse
- * @returns Array with the parsed abi values. Assumes values were extracted previously from {@link ExtractArgs}
- *
- * @example
- * type Result = ParseFunctionArgs<["string world"]>
- * //    ^? "[{name: "hello", type: "string", internalType: "string"}]"
- */
-// export type ParseArgss<T extends AbiArgsType> = T extends [never]
-//   ? never
-//   : T extends ['']
-//   ? []
-//   : T extends ['void']
-//   ? []
-//   : T extends [
-//       `${infer TType}${AbiIndexed}${infer TName}`,
-//       ...infer Rest extends AbiArgsType,
-//     ]
-//   ? [
-//       {
-//         readonly indexed: true
-//         readonly internalType: SolidityType<TType>
-//         readonly name: TName
-//         readonly type: SolidityType<TType>
-//       },
-//       ...ParseArgss<Rest>,
-//     ]
-//   : T extends [
-//       `${infer TType}${WS}${infer TName}`,
-//       ...infer Rest extends AbiArgsType,
-//     ]
-//   ? [
-//       {
-//         readonly type: SolidityType<TType>
-//         readonly name: TName
-//         readonly internalType: SolidityType<TType>
-//       },
-//       ...ParseArgss<Rest>,
-//     ]
-//   : T extends [`${infer TType}`, ...infer Rest extends AbiArgsType]
-//   ? [
-//       {
-//         readonly internalType: SolidityType<TType>
-//         readonly name: ''
-//         readonly type: SolidityType<TType>
-//       },
-//       ...ParseArgss<Rest>,
-//     ]
-//   : []
-
-/**
  * Parse HAbi tuple string arguments.
  *
  * @param T - String to parse
@@ -595,6 +543,71 @@ export type ParseHAbiErrors<
   : []
 
 /**
+ * Parses the HAbi type string into to proper abi representation. This one only works for constructor type strings
+ *
+ * @param T - String to parse. Must meet HAbi specs
+ * @returns Array with the parsed abi values.
+ *
+ * @example
+ * type Result = ParseHAbiConstructor<["constructor(string world)"]>
+ * //    ^? [{type: "constructor", stateMutability: "nonpayable", inputs:[{name: "world", type: "string", internalType: "string"}]}]
+ */
+export type ParseHAbiConstructor<
+  T extends HAbi,
+  TStructObject extends Record<string, AbiArgsType | unknown> = Record<
+    string,
+    unknown
+  >,
+> = T extends [never]
+  ? never
+  : T extends ['']
+  ? T
+  : T extends readonly [infer Head, ...infer Rest extends HAbi]
+  ? Head extends `constructor(${infer ConstParams})`
+    ? [
+        {
+          readonly type: 'constructor'
+          readonly stateMutability: 'nonpayable'
+          readonly inputs: ParseArgs<ParseParams<ConstParams>, TStructObject>
+        },
+        ...ParseHAbiConstructor<Rest, TStructObject>,
+      ]
+    : ParseHAbiConstructor<Rest, TStructObject>
+  : []
+
+/**
+ * Parses the HAbi type string into to proper abi representation. This one only works for constructor type strings
+ *
+ * @param T - String to parse. Must meet HAbi specs
+ * @returns Array with the parsed abi values.
+ *
+ * @example
+ * type Result = ParseHAbiConstructor<["constructor(string world)"]>
+ * //    ^? [{type: "constructor", stateMutability: "nonpayable", inputs:[{name: "world", type: "string", internalType: "string"}]}]
+ */
+export type ParseHAbiFallbacks<T extends HAbi> = T extends [never]
+  ? never
+  : T extends ['']
+  ? T
+  : T extends readonly [infer Head, ...infer Rest extends HAbi]
+  ? Head extends `fallback()`
+    ? [
+        {
+          readonly type: 'fallback'
+        },
+        ...ParseHAbiFallbacks<Rest>,
+      ]
+    : Head extends `receive() external payable`
+    ? [
+        {
+          readonly type: 'receive'
+          readonly stateMutability: 'payable'
+        },
+      ]
+    : ParseHAbiFallbacks<Rest>
+  : []
+
+/**
  * Parses all of the HAbi type string in to array of objects much like their abi representation
  *
  * @param HumanAbi - Array of strings that must meet HAbi specs
@@ -611,9 +624,11 @@ export type ParseHumanAbi<
     AbiArgsType | unknown
   > = CreateStructObject<HumanAbi>,
 > = readonly [
+  ...ParseHAbiConstructor<HumanAbi, TStructObject>,
   ...ParseHAbiErrors<HumanAbi, TStructObject>,
   ...ParseHAbiEvents<HumanAbi, TStructObject>,
   ...ParseHAbiFunctions<HumanAbi, TStructObject>,
+  ...ParseHAbiFallbacks<HumanAbi>,
 ]
 
 /**
@@ -624,6 +639,9 @@ export type HAbi = readonly (
   | `function${WS}${string}(${string})${WS}returns${WS}(${string})`
   | `${AbiTypes}${WS}${string}(${string})`
   | `${'s' | 'S'}truct${WS}${string}{${string}}`
+  | `constructor(${string})`
+  | 'fallback()'
+  | 'receive() external payable'
 )[]
 
 /**
