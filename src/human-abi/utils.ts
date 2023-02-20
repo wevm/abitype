@@ -248,3 +248,7 @@ export type PopLastIfEmpty<T extends any[]> = T extends [
  * //    ^? false
  */
 export type isUnknown<T> = unknown extends T ? true : false
+
+export type DeepReadonly<T> = {
+  readonly [P in keyof T]: keyof T[P] extends never ? T[P] : DeepReadonly<T[P]>
+}
