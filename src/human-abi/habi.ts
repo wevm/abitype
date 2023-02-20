@@ -9,12 +9,12 @@ import type {
   PopLastIfEmpty,
   ReOrderArray,
   ReplaceAll,
+  Scope,
   SolidityType,
   Split,
   Trim,
   TupleValue,
   WS,
-  hasTupleValue,
   isTupleValue,
   isUnknown,
 } from './utils'
@@ -49,23 +49,6 @@ export type ExtractNames<T extends string> =
   T extends `${AbiTypes}${WS}${infer TName}(${string})${string}` ? TName : never
 
 /**
- * Extract mutabiliy from HAbi string.
- *
- * @param T - String to extract values from
- * @returns Value extracted from the string in case of a match or 'nonpayable' in case it didn't
- *
- * @example
- * type Result = ExtractMutability<"function hello(string world) view returns(uint token)">
- * //    ^? "view"
- */
-export type ExtractMutability<T extends string> =
-  T extends `${AbiTypes}${WS}${string}(${string})${WS}${infer P}${WS}${string}`
-    ? P extends AbiMutability
-      ? P
-      : 'nonpayable'
-    : 'nonpayable'
-
-/**
  * Extract return values from HAbi string.
  *
  * @param T - String in the HAbi format
@@ -90,17 +73,42 @@ export type ExtractReturn<T extends string> =
  * type Result = ExtractArgs<"function hello(string world)">
  * //    ^? ["string world"]
  */
-export type ExtractArgs<T extends string> = hasTupleValue<T> extends true
-  ? T extends `${AbiTypes}${WS}${string}(${infer TName})${WS}${string}returns${string}`
-    ? ReOrderArray<ParseParams<ReplaceAll<TName, 'tuple', ''>>>
-    : T extends `${AbiTypes}${WS}${string}(${infer TNames})`
+export type ExtractArgs<T extends string> =
+  T extends `${AbiTypes}${WS}${string}(${infer TNames})`
     ? ReOrderArray<ParseParams<ReplaceAll<TNames, 'tuple', ''>>>
     : never
-  : T extends `${AbiTypes}${WS}${string}(${infer TName})${string}returns${string}`
-  ? ReOrderArray<ParseParams<ReplaceAll<TName, 'tuple', ''>>>
-  : T extends `${AbiTypes}${WS}${string}(${infer TNames})`
-  ? ReOrderArray<ParseParams<ReplaceAll<TNames, 'tuple', ''>>>
-  : never
+
+/**
+ * Extract mutabiliy or Inputs from HAbi function signature string.
+ *
+ * @param T - String to extract values from
+ * @returns Value extracted from the string in case of a match or 'nonpayable' in case it didn't
+ *
+ * @example
+ * type Result = ParseFunctionInputsAndStateMutability<"function hello(string world) view returns(uint token)">["stateMutability"]
+ * //    ^? "view"
+ * type Result = ParseFunctionInputsAndStateMutability<"function hello(string world) view returns(uint token)">["Inputs"]
+ * //    ^? "string world"
+ */
+export type ParseFunctionInputsAndStateMutability<TSignature extends string> =
+  TSignature extends `${infer Head}returns (${string})`
+    ? ParseFunctionInputsAndStateMutability<Trim<Head>>
+    : TSignature extends `function ${string}(${infer Parameters})`
+    ? {
+        Inputs: ReOrderArray<ParseParams<ReplaceAll<Parameters, 'tuple', ''>>>
+        StateMutability: 'nonpayable'
+      }
+    : TSignature extends `function ${string}(${infer Parameters}) ${infer ScopeOrStateMutability extends
+        | Scope
+        | AbiMutability
+        | `${Scope} ${AbiMutability}`}`
+    ? {
+        Inputs: ReOrderArray<ParseParams<ReplaceAll<Parameters, 'tuple', ''>>>
+        StateMutability: ScopeOrStateMutability extends `${Scope} ${infer StateMutability extends AbiMutability}`
+          ? StateMutability
+          : ScopeOrStateMutability
+      }
+    : never
 
 /**
  * Check if the string has `indexed` value in it.
@@ -452,20 +460,25 @@ export type ParseHAbiFunctions<
   ? Head extends `function${string}`
     ? [
         {
-          readonly constant: ExtractMutability<Head> extends 'view' | 'pure'
+          readonly constant: ParseFunctionInputsAndStateMutability<Head>['StateMutability'] extends
+            | 'view'
+            | 'pure'
             ? true
             : false
           readonly inputs: readonly [
-            ...HandleArguments<ExtractArgs<Head>, TStructObject>,
+            ...HandleArguments<
+              ParseFunctionInputsAndStateMutability<Head>['Inputs'],
+              TStructObject
+            >,
           ]
           readonly name: ExtractNames<Head>
           readonly outputs: readonly [
             ...HandleArguments<ExtractReturn<Head>, TStructObject>,
           ]
-          readonly payable: ExtractMutability<Head> extends 'payable'
+          readonly payable: ParseFunctionInputsAndStateMutability<Head>['StateMutability'] extends 'payable'
             ? true
             : false
-          readonly stateMutability: ExtractMutability<Head>
+          readonly stateMutability: ParseFunctionInputsAndStateMutability<Head>['StateMutability']
           readonly type: ExtractType<Head>
         },
         ...ParseHAbiFunctions<Rest, TStructObject>,

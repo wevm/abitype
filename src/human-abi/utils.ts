@@ -62,6 +62,7 @@ export type Modifier = 'calldata' | 'indexed' | 'memory' | 'storage'
  */
 export type AbiMutability = 'view' | 'pure' | 'payable' | 'nonpayable'
 
+export type Scope = 'public' | 'external'
 /**
  * All of the Solidity types excluding tuple types
  */

@@ -9,7 +9,6 @@ import type {
   ExtractHAbiEventNames,
   ExtractHAbiFunction,
   ExtractHAbiFunctionNames,
-  ExtractMutability,
   ExtractNames,
   ExtractReturn,
   ExtractStructInternalType,
@@ -25,6 +24,7 @@ import type {
   IsHAbi,
   ParseArgs,
   ParseComponents,
+  ParseFunctionInputsAndStateMutability,
   ParseHAbiConstructor,
   ParseHAbiErrors,
   ParseHAbiEvents,
@@ -98,31 +98,35 @@ test('Extract Names', () => {
 
 test('Extract Mutability', () => {
   test('View', () => {
-    assertType<ExtractMutability<FuncType>>('view')
+    assertType<
+      ParseFunctionInputsAndStateMutability<FuncType>['StateMutability']
+    >('view')
   })
 
   test('Non-Payable', () => {
-    assertType<ExtractMutability<'function balanceOf(address owner)'>>(
-      'nonpayable',
-    )
+    assertType<
+      ParseFunctionInputsAndStateMutability<'function balanceOf(address owner)'>['StateMutability']
+    >('nonpayable')
   })
 
   test('Payable', () => {
     assertType<
-      ExtractMutability<'function balanceOf(address owner) payable returns(uint256 tokenId)'>
+      ParseFunctionInputsAndStateMutability<'function balanceOf(address owner) payable returns (uint256 tokenId)'>['StateMutability']
     >('payable')
   })
 
   test('Pure', () => {
     assertType<
-      ExtractMutability<'function balanceOf(address owner) pure returns(uint256 tokenId)'>
+      ParseFunctionInputsAndStateMutability<'function balanceOf(address owner) pure returns (uint256 tokenId)'>['StateMutability']
     >('pure')
   })
 })
 
 test('ExtractArgs', () => {
   test('Function', () => {
-    assertType<ExtractArgs<FuncType>>(['address owner'])
+    assertType<ParseFunctionInputsAndStateMutability<FuncType>['Inputs']>([
+      'address owner',
+    ])
   })
 
   test('Event', () => {
@@ -274,7 +278,9 @@ test('IsHAbi', () => {
 
 test('HandleArguments', () => {
   test('Function', () => {
-    assertType<HandleArguments<ExtractArgs<FuncType>>>([
+    assertType<
+      HandleArguments<ParseFunctionInputsAndStateMutability<FuncType>['Inputs']>
+    >([
       {
         internalType: 'address',
         name: 'owner',
@@ -537,7 +543,9 @@ test('ParseEventArgs', () => {
 
 test('ParseFunctionArgs and Return', () => {
   test('Function Args', () => {
-    assertType<ParseArgs<ExtractArgs<FuncType>>>([
+    assertType<
+      ParseArgs<ParseFunctionInputsAndStateMutability<FuncType>['Inputs']>
+    >([
       {
         name: 'owner',
         type: 'address',
