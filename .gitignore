@@ -8,6 +8,8 @@ coverage
 dist
 node_modules
 tsconfig.tsbuildinfo
+trace
+!examples/trace
 
 # local env files
 .env

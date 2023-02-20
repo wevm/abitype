@@ -79,6 +79,8 @@
     "lint": "eslint . --cache",
     "lint:fix": "pnpm lint --fix",
     "lint:format": "prettier --write",
+    "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project src/examples/trace/tsconfig.json",
+    "bench": "tsc --strict --noEmit --extendedDiagnostics",
     "prepare": "npx simple-git-hooks",
     "test": "vitest",
     "test:run": "vitest run",
