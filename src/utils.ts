@@ -65,13 +65,13 @@ type PrimitiveTypeLookup<
 
 type GreaterThan48Bits = Exclude<MBits, 8 | 16 | 24 | 32 | 40 | 48 | ''>
 type LessThanOrEqualTo48Bits = Exclude<MBits, GreaterThan48Bits | ''>
-type DynamicBits = Exclude<MBits, GreaterThan48Bits | LessThanOrEqualTo48Bits>
+type NoBits = Exclude<MBits, GreaterThan48Bits | LessThanOrEqualTo48Bits>
 type BitsTypeLookup = {
   [_ in `${LessThanOrEqualTo48Bits}`]: ResolvedConfig['IntType']
 } & {
   [_ in `${GreaterThan48Bits}`]: ResolvedConfig['BigIntType']
 } & {
-  [_ in DynamicBits]: ResolvedConfig['IntType'] | ResolvedConfig['BigIntType']
+  [_ in NoBits]: ResolvedConfig['BigIntType']
 }
 
 /**
