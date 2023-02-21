@@ -101,6 +101,38 @@ export type AbiArgsWithTuple = AbiArgs | TupleValue
 export type AbiArgsTypeWithTuple = readonly AbiArgsWithTuple[]
 
 /**
+ * Abi error signature.
+ */
+export type ErrorSignature = `error ${string}(${string})`
+
+/**
+ * Abi event signature.
+ */
+export type EventSignature = `event ${string}(${string})`
+
+/**
+ * Abi constructor signature.
+ */
+export type ConstructorSignature = `constructor(${string})`
+
+/**
+ * Abi fallbacks signatures.
+ */
+export type FallbacksSignature = 'fallback()' | 'receive() external payable'
+
+/**
+ * Abi function signatures.
+ */
+export type FunctionSignature =
+  | `function ${string}(${string})`
+  | `function ${string}(${string}) ${Scope}`
+  | `function ${string}(${string}) ${AbiMutability}`
+  | `function ${string}(${string}) ${Scope} ${AbiMutability}`
+  | `function ${string}(${string}) returns (${string})`
+  | `function ${string}(${string}) ${Scope} returns (${string})`
+  | `function ${string}(${string}) ${AbiMutability} returns (${string})`
+  | `function ${string}(${string}) ${Scope} ${AbiMutability} returns (${string})`
+/**
  * Check if the a string has any "()". This is used after {@link ExtractArgs}
  *
  * @param T - String to check

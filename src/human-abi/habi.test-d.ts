@@ -30,6 +30,7 @@ import type {
   ParseHAbiEvents,
   ParseHAbiFallbacks,
   ParseHAbiFunctions,
+  ParseHAbiSignature,
   ParseHumanAbi,
   ParseParams,
   isIndexed,
@@ -1307,6 +1308,64 @@ test('Can parse Struct', () => {
       },
     ])
   })
+})
+
+test('Parse ABI signature', () => {
+  assertType<ParseHAbiSignature<'constructor(string hello)'>>([
+    {
+      type: 'constructor',
+      stateMutability: 'nonpayable',
+      inputs: [{ name: 'hello', type: 'string', internalType: 'string' }],
+    },
+  ])
+
+  assertType<ParseHAbiSignature<'fallback()'>>([{ type: 'fallback' }])
+  assertType<ParseHAbiSignature<'receive() external payable'>>([
+    { type: 'receive', stateMutability: 'payable' },
+  ])
+
+  assertType<
+    ParseHAbiSignature<'error InsufficientBalance(address account, uint balance)'>
+  >([
+    {
+      name: 'InsufficientBalance',
+      type: 'error',
+      inputs: [
+        { name: 'account', type: 'address', internalType: 'address' },
+        { name: 'balance', type: 'uint256', internalType: 'uint256' },
+      ],
+    },
+  ])
+
+  assertType<ParseHAbiSignature<EventType>>([
+    {
+      name: 'Transfer',
+      type: 'event',
+      anonymous: false,
+      inputs: [
+        {
+          name: 'from',
+          type: 'address',
+          internalType: 'address',
+          indexed: true,
+        },
+        { name: 'to', type: 'address', internalType: 'address', indexed: true },
+        { name: 'value', type: 'address', internalType: 'address' },
+      ],
+    },
+  ])
+
+  assertType<ParseHAbiSignature<FuncType>>([
+    {
+      name: 'balanceOf',
+      type: 'function',
+      payable: false,
+      constant: true,
+      stateMutability: 'view',
+      inputs: [{ name: 'owner', type: 'address', internalType: 'address' }],
+      outputs: [{ name: 'tokenId', type: 'uint256', internalType: 'uint256' }],
+    },
+  ])
 })
 
 test('Extract Struct Name', () => {

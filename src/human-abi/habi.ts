@@ -4,6 +4,11 @@ import type {
   AbiArgsWithTuple,
   AbiMutability,
   AbiTypes,
+  ConstructorSignature,
+  ErrorSignature,
+  EventSignature,
+  FallbacksSignature,
+  FunctionSignature,
   Modifier,
   Pop,
   PopLastIfEmpty,
@@ -621,6 +626,35 @@ export type ParseHAbiFallbacks<T extends HAbi> = T extends [never]
   : []
 
 /**
+ * Parse a single ABI signature. Works with any of the signatures in the ABI spec.
+ * Usefull if you want to get a quick abi representation of a given signature.
+ *
+ * @param TSignature - String to parse. Will error if not a valid signature
+ * @param TStructObject - Optional param if you want to parse with structs signatures
+ * @returns - Abi representation of the given signature
+ *
+ * @example
+ * type Result = ParseHAbiSignature<"event Hello(string indexed world)">
+ * //    ^? [{name: "Hello", type: "event", anonymous: false, inputs:[{name: "world", type: "string", internalType: "string"}]}]
+ */
+export type ParseHAbiSignature<
+  TSignature extends string,
+  TStructObject extends Record<string, AbiArgsType | unknown> = Record<
+    string,
+    unknown
+  >,
+> = TSignature extends ConstructorSignature
+  ? ParseHAbiConstructor<[TSignature], TStructObject>
+  : TSignature extends EventSignature
+  ? ParseHAbiEvents<[TSignature], TStructObject>
+  : TSignature extends ErrorSignature
+  ? ParseHAbiErrors<[TSignature], TStructObject>
+  : TSignature extends FunctionSignature
+  ? ParseHAbiFunctions<[TSignature], TStructObject>
+  : TSignature extends FallbacksSignature
+  ? ParseHAbiFallbacks<[TSignature]>
+  : `Error: String ${TSignature} is not a valid ABI signature`
+/**
  * Parses all of the HAbi type string in to array of objects much like their abi representation
  *
  * @param HumanAbi - Array of strings that must meet HAbi specs
@@ -648,13 +682,12 @@ export type ParseHumanAbi<
  * HAbi spec in order to properly parse the given array of strings
  */
 export type HAbi = readonly (
-  | `function${WS}${string}(${string})${WS}${AbiMutability}${WS}returns${WS}(${string})`
-  | `function${WS}${string}(${string})${WS}returns${WS}(${string})`
-  | `${AbiTypes}${WS}${string}(${string})`
+  | ErrorSignature
+  | EventSignature
   | `${'s' | 'S'}truct${WS}${string}{${string}}`
-  | `constructor(${string})`
-  | 'fallback()'
-  | 'receive() external payable'
+  | FunctionSignature
+  | ConstructorSignature
+  | FallbacksSignature
 )[]
 
 /**
