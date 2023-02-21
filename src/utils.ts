@@ -167,7 +167,7 @@ type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
       ? Head['name'] extends ''
         ? true
         : _HasUnnamedAbiParameter<Tail>
-      : false
+      : true
     : false
 
 /**

@@ -109,7 +109,7 @@ test('AbiParameterToPrimitiveType', () => {
   })
 
   test('bool', () => {
-    type Result = AbiParameterToPrimitiveType<{ name: ''; type: 'bool' }>
+    type Result = AbiParameterToPrimitiveType<{ type: 'bool' }>
     assertType<Result>(true)
     assertType<Result>(false)
   })
@@ -124,7 +124,6 @@ test('AbiParameterToPrimitiveType', () => {
 
   test('function', () => {
     type FunctionResult = AbiParameterToPrimitiveType<{
-      name: ''
       type: 'function'
     }>
     assertType<FunctionResult>(`${address}foo`)
@@ -132,7 +131,6 @@ test('AbiParameterToPrimitiveType', () => {
 
   test('string', () => {
     type Result = AbiParameterToPrimitiveType<{
-      name: ''
       type: 'string'
     }>
     assertType<Result>('foo')
@@ -225,6 +223,7 @@ test('AbiParameterToPrimitiveType', () => {
     type WithoutNamedParameterResult = AbiParameterToPrimitiveType<{
       components: [
         { name: ''; type: 'string' },
+        { type: 'string' },
         { name: 'symbol'; type: 'string' },
         { name: 'description'; type: 'string' },
         { name: 'imageURI'; type: 'string' },
@@ -241,6 +240,7 @@ test('AbiParameterToPrimitiveType', () => {
       type: 'tuple'
     }>
     assertType<WithoutNamedParameterResult>([
+      'Test',
       'Test',
       '$TEST',
       'Foo bar baz',
@@ -270,7 +270,6 @@ test('AbiParameterToPrimitiveType', () => {
   test('array', () => {
     test('dynamic', () => {
       type Result = AbiParameterToPrimitiveType<{
-        name: ''
         type: 'string[]'
       }>
       assertType<Result>(['foo', 'bar', 'baz'])
@@ -278,7 +277,6 @@ test('AbiParameterToPrimitiveType', () => {
 
     test('fixed', () => {
       type Result = AbiParameterToPrimitiveType<{
-        name: ''
         type: 'string[3]'
       }>
       assertType<Result>(['foo', 'bar', 'baz'])
@@ -329,7 +327,6 @@ test('AbiParameterToPrimitiveType', () => {
   test('2d array', () => {
     test('dynamic', () => {
       type Result = AbiParameterToPrimitiveType<{
-        name: ''
         type: 'string[][]'
       }>
       assertType<Result>([['foo'], ['bar'], ['baz']])
@@ -338,14 +335,12 @@ test('AbiParameterToPrimitiveType', () => {
     test('fixed', () => {
       assertType<
         AbiParameterToPrimitiveType<{
-          name: ''
           type: 'string[][3]'
         }>
       >([['foo'], ['bar'], ['baz']])
 
       assertType<
         AbiParameterToPrimitiveType<{
-          name: ''
           type: 'string[3][]'
         }>
       >([
@@ -355,7 +350,6 @@ test('AbiParameterToPrimitiveType', () => {
 
       assertType<
         AbiParameterToPrimitiveType<{
-          name: ''
           type: 'string[3][3]'
         }>
       >([
@@ -366,7 +360,6 @@ test('AbiParameterToPrimitiveType', () => {
 
       assertType<
         AbiParameterToPrimitiveType<{
-          name: ''
           type: 'string[3][3]'
         }>
         // @ts-expect-error not enough items
