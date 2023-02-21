@@ -253,6 +253,18 @@ test('AbiParameterToPrimitiveType', () => {
       123n,
       0,
     ])
+
+    type WithoutNamedParametersResult = AbiParameterToPrimitiveType<{
+      components: [{ type: 'string' }, { type: 'uint' }, { type: 'address' }]
+      internalType: 'struct IWritingEditions.WritingEdition'
+      name: 'edition'
+      type: 'tuple'
+    }>
+    assertType<WithoutNamedParametersResult>([
+      'Test',
+      5n,
+      '0x0000000000000000000000000000000000000000',
+    ])
   })
 
   test('number', () => {
