@@ -1,5 +1,11 @@
 export type {
   CreateStructObject,
+  ExtractHAbiError,
+  ExtractHAbiErrorNames,
+  ExtractHAbiEvent,
+  ExtractHAbiEventNames,
+  ExtractHAbiFunction,
+  ExtractHAbiFunctionNames,
   IsHAbi,
   HAbi,
   HandleArguments,
@@ -20,4 +26,5 @@ export {
   parseHumanAbiErrors,
   parseHumanAbiConstructor,
   parseHumanAbiFallbacks,
+  parseHumanAbiSignature,
 } from './parseMethods'

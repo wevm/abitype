@@ -9,3 +9,5 @@ export { parseHumanAbiErrors } from './parseHumanAbiErrors'
 export { parseHumanAbiConstructor } from './parseHumanAbiConstructor'
 
 export { parseHumanAbiFallbacks } from './parseHumanAbiFallbacks'
+
+export { parseHumanAbiSignature } from './parseHumanAbiSignature'
