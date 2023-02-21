@@ -62,10 +62,8 @@ test('AbiTypeToPrimitiveType', () => {
   })
 
   test('number', () => {
-    assertType<AbiTypeToPrimitiveType<'int'>>(1)
     assertType<AbiTypeToPrimitiveType<'int'>>(1n)
     assertType<AbiTypeToPrimitiveType<'int'>>(BigInt(1))
-    assertType<AbiTypeToPrimitiveType<'uint'>>(1)
     assertType<AbiTypeToPrimitiveType<'uint'>>(1n)
     assertType<AbiTypeToPrimitiveType<'uint'>>(BigInt(1))
 
@@ -169,7 +167,7 @@ test('AbiParameterToPrimitiveType', () => {
       description: 'Foo bar baz',
       imageURI: 'ipfs://hash',
       contentURI: 'arweave://digest',
-      price: 0.1,
+      price: 1n,
       limit: 100n,
       fundingRecipient: address,
       renderer: address,
@@ -248,7 +246,7 @@ test('AbiParameterToPrimitiveType', () => {
       'Foo bar baz',
       'ipfs://hash',
       'arweave://digest',
-      0.1,
+      1n,
       100n,
       address,
       address,
