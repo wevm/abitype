@@ -220,7 +220,7 @@ test('AbiParameterToPrimitiveType', () => {
       c: [{ x: 1n, y: { a: 'foo' } }],
     })
 
-    type WithoutNamedParameterResult = AbiParameterToPrimitiveType<{
+    type WithoutNamedComponentResult = AbiParameterToPrimitiveType<{
       components: [
         { name: ''; type: 'string' },
         { type: 'string' },
@@ -239,7 +239,7 @@ test('AbiParameterToPrimitiveType', () => {
       name: 'edition'
       type: 'tuple'
     }>
-    assertType<WithoutNamedParameterResult>([
+    assertType<WithoutNamedComponentResult>([
       'Test',
       'Test',
       '$TEST',
@@ -254,17 +254,25 @@ test('AbiParameterToPrimitiveType', () => {
       0,
     ])
 
-    type WithoutNamedParametersResult = AbiParameterToPrimitiveType<{
+    type WithoutNamedComponentsResult = AbiParameterToPrimitiveType<{
       components: [{ type: 'string' }, { type: 'uint' }, { type: 'address' }]
       internalType: 'struct IWritingEditions.WritingEdition'
       name: 'edition'
       type: 'tuple'
     }>
-    assertType<WithoutNamedParametersResult>([
+    assertType<WithoutNamedComponentsResult>([
       'Test',
       5n,
       '0x0000000000000000000000000000000000000000',
     ])
+
+    type WithoutComponentsResult = AbiParameterToPrimitiveType<{
+      components: []
+      internalType: 'struct IWritingEditions.WritingEdition'
+      name: 'edition'
+      type: 'tuple'
+    }>
+    assertType<WithoutComponentsResult>([])
   })
 
   test('number', () => {

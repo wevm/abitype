@@ -93,7 +93,9 @@ export type AbiParameterToPrimitiveType<
         type: SolidityTuple
         components: infer TComponents extends readonly AbiParameter[]
       }
-    ? _HasUnnamedAbiParameter<TComponents> extends true
+    ? TComponents extends readonly []
+      ? []
+      : _HasUnnamedAbiParameter<TComponents> extends true
       ? // Has unnamed tuple parameters so return as array
         readonly [
           ...{
