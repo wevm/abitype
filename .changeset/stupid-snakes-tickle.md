@@ -2,4 +2,4 @@
 'abitype': patch
 ---
 
-Fixed type for excluded `name` in `AbiParameter`.
+Fixed derived type of `AbiParameterToPrimitiveType` for tuples that have all unnamed components.
