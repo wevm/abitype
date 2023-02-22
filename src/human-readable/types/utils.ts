@@ -291,21 +291,17 @@ export type SplitParameters<
   Depth extends ReadonlyArray<number> = [],
 > = T extends ''
   ? Current extends ''
-    ? [...Result] // empty string was passed in to `ParseParameters`
+    ? [...Result] // empty string was passed in to `SplitParameters`
     : [...Result, Trim<Current>]
-  : Depth['length'] extends 0
-  ? T extends `${infer Head}${infer Tail}`
-    ? Head extends ','
+  : T extends `${infer Char}${infer Tail}`
+  ? Char extends ','
+    ? Depth['length'] extends 0
       ? SplitParameters<Tail, [...Result, Trim<Current>], ''>
-      : Head extends '('
-      ? SplitParameters<Tail, Result, `${Current}${Head}`, [...Depth, 1]>
-      : SplitParameters<Tail, Result, `${Current}${Head}`>
-    : []
-  : T extends `${infer Char}${infer Rest}`
-  ? Char extends '('
-    ? SplitParameters<Rest, Result, `${Current}${Char}`, [...Depth, 1]>
+      : SplitParameters<Tail, Result, `${Current}${Char}`, Depth>
+    : Char extends '('
+    ? SplitParameters<Tail, Result, `${Current}${Char}`, [...Depth, 1]>
     : Char extends ')'
-    ? SplitParameters<Rest, Result, `${Current}${Char}`, Pop<Depth>>
-    : SplitParameters<Rest, Result, `${Current}${Char}`, Depth>
+    ? SplitParameters<Tail, Result, `${Current}${Char}`, Pop<Depth>>
+    : SplitParameters<Tail, Result, `${Current}${Char}`, Depth>
   : []
 type Pop<T extends ReadonlyArray<number>> = T extends [...infer R, any] ? R : []

@@ -114,6 +114,7 @@ export type Signatures<T extends readonly string[]> = {
   [K in keyof T]: Signature<T[K], K>
 }
 
-export type Modifier = 'calldata' | 'indexed' | 'memory' | 'storage'
+export const modifiers = ['calldata', 'indexed', 'memory', 'storage'] as const
+export type Modifier = typeof modifiers[number]
 export type FunctionModifiers = Exclude<Modifier, 'indexed'>
 export type EventModifiers = Extract<Modifier, 'indexed'>

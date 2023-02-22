@@ -428,7 +428,7 @@ test('ParseAbiParameter', () => {
   })
 })
 
-test('ParseParams', () => {
+test('SplitParameters', () => {
   assertType<SplitParameters<''>>([])
   assertType<SplitParameters<'string'>>(['string'])
   assertType<SplitParameters<'string indexed foo'>>(['string indexed foo'])

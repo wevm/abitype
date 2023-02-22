@@ -1,12 +1,14 @@
 import type { AbiParameter } from '../abi'
 import type { Narrow } from '../narrow'
 import type { Filter } from '../types'
+import { parseAbiParameter as parseAbiParameter_ } from './runtime'
 import type {
   IsStructSignature,
   Modifier,
   ParseAbiParameter as ParseAbiParameter_,
   ParseStructs,
 } from './types'
+import { modifiers } from './types'
 
 export type ParseAbiParameter<
   T extends string | readonly string[] | readonly unknown[],
@@ -60,11 +62,8 @@ export function parseAbiParameter<
       ? unknown
       : never),
 ): ParseAbiParameter<T> {
-  if (typeof signatures === 'string') {
-    if (signatures === '') return undefined
-  }
-
-  if (signatures.length === 0) return undefined
+  if (typeof signatures === 'string')
+    return parseAbiParameter_(signatures, { modifiers }) as ParseAbiParameter<T>
 
   return signatures as ParseAbiParameter<T>
 }

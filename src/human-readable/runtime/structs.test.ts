@@ -49,7 +49,7 @@ test('parses basic structs', () => {
   `)
 })
 
-test('parsed and resolves nested structs', () => {
+test('parses and resolves nested structs', () => {
   expect(
     parseStructs([
       'struct Fulfillment { FulfillmentComponent[] offerComponents; FulfillmentComponent[] considerationComponents; }',
@@ -138,16 +138,18 @@ test('parsed and resolves nested structs', () => {
   `)
 })
 
-test.todo('struct does not exist when resolving', () => {
+test('struct does not exist when resolving', () => {
   expect(() =>
     parseStructs(['struct Foo { Bar bar; }']),
-  ).toThrowErrorMatchingInlineSnapshot()
+  ).toThrowErrorMatchingInlineSnapshot('"Invalid type \\"Bar\\""')
 })
 
-test.todo('throws if recursive structs are detected', () => {
+test('throws if recursive structs are detected', () => {
   expect(() =>
     parseStructs(['struct Foo { Bar bar; }', 'struct Bar { Foo foo; }']),
-  ).toThrowErrorMatchingInlineSnapshot()
+  ).toThrowErrorMatchingInlineSnapshot(
+    '"Circular reference detected: \\"Bar\\""',
+  )
 })
 
 test.todo('throws if property is missing semicolon', () => {

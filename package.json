@@ -57,6 +57,7 @@
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "ethers": "^6.0.5",
     "lint-staged": "^12.4.1",
     "prettier": "^2.8.1",
     "simple-git-hooks": "^2.8.1",
@@ -73,6 +74,7 @@
     "web3"
   ],
   "scripts": {
+    "bench": "vitest bench --no-threads",
     "build": "tsup",
     "changeset:release": "pnpm build && changeset publish",
     "changeset:version": "changeset version && pnpm install --lockfile-only",

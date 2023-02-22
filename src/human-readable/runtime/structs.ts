@@ -1,5 +1,6 @@
 import type { AbiParameter } from '../../abi'
 import type { StructLookup } from '../types'
+import { bytesRegex, integerRegex, isTupleRegex } from './regex'
 import { parseAbiParameter } from './utils'
 
 const structSignatureRegex =
@@ -37,30 +38,47 @@ export function parseStructs(signatures: string[]) {
   return resolvedStructs
 }
 
-// TODO: Make so this includes real Solidity types (e.g. `(u)?int(\d+)?`) instead of allowing all types (e.g. `[a-zA-Z0-9_]+?`)
-export const structTypeRegex =
-  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(\[\d*?\])+?)?$/
+const typeWithoutTupleRegex =
+  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?$/
 
 function resolveStructs(
   abiParameters: readonly (AbiParameter & { indexed?: true })[],
   structs: StructLookup,
+  ancestors = new Set<string>(),
 ) {
   const components: AbiParameter[] = []
   for (const abiParameter of abiParameters) {
-    if (!structTypeRegex.test(abiParameter.type)) components.push(abiParameter)
+    const isTuple = isTupleRegex.test(abiParameter.type)
+    if (isTuple) components.push(abiParameter)
     else {
-      const match = structTypeRegex.exec(abiParameter.type)
-      const groups = match?.groups as { type: string; array?: string }
-      if (groups && groups.type in structs) {
+      const groups = typeWithoutTupleRegex.exec(abiParameter.type)?.groups
+      const { array, type } = groups as { array?: string; type: string }
+      if (!type) throw new Error(`Invalid ABI parameter type "${type}"`)
+
+      if (type in structs) {
+        if (ancestors.has(type))
+          throw new Error(`Circular reference detected: "${type}"`)
+
         components.push({
-          type: `tuple${groups.array ?? ''}`,
-          components: resolveStructs(structs[groups.type] ?? [], structs),
-          ...(abiParameter.name ? { name: abiParameter.name } : {}),
-          ...(abiParameter.indexed ? { indexed: true } : {}),
+          ...abiParameter,
+          type: `tuple${array ?? ''}`,
+          components: resolveStructs(
+            structs[type] ?? [],
+            structs,
+            new Set([...ancestors, type]),
+          ),
         })
       } else {
-        // TODO: Throw if `abiParameter.type` is not a Solidity type at this point.
-        components.push(abiParameter)
+        if (
+          type === 'address' ||
+          type === 'bool' ||
+          type === 'function' ||
+          type === 'string' ||
+          bytesRegex.test(type) ||
+          integerRegex.test(type)
+        )
+          components.push(abiParameter)
+        else throw new Error(`Invalid type "${abiParameter.type}"`)
       }
     }
   }
