@@ -1,5 +1,15 @@
 # abitype
 
+## 0.5.0
+
+### Minor Changes
+
+- [#85](https://github.com/wagmi-dev/abitype/pull/85) [`7042ee8`](https://github.com/wagmi-dev/abitype/commit/7042ee8068be1ca36a21f20a34c9d32c5d51389a) Thanks [@jxom](https://github.com/jxom)! - **Breaking:** `uint` and `int` types now cast to `ResolvedConfig['BigIntType']` instead of `ResolvedConfig['IntType'] | ResolvedConfig['BigIntType']`.
+
+### Patch Changes
+
+- [#87](https://github.com/wagmi-dev/abitype/pull/87) [`00e5bd0`](https://github.com/wagmi-dev/abitype/commit/00e5bd05175f1f5f6ff4f4772a6db325c3462b16) Thanks [@jxom](https://github.com/jxom)! - Fixed derived type of `AbiParameterToPrimitiveType` for tuples that have all unnamed components.
+
 ## 0.4.1
 
 ### Patch Changes
