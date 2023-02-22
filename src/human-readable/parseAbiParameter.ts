@@ -48,7 +48,9 @@ export function parseAbiParameter<
   T extends string | readonly string[] | readonly unknown[],
 >(
   signatures: Narrow<T> &
-    (string[] extends T
+    (T extends readonly []
+      ? never
+      : string[] extends T
       ? unknown
       : T extends string
       ? T extends ''
@@ -58,5 +60,11 @@ export function parseAbiParameter<
       ? unknown
       : never),
 ): ParseAbiParameter<T> {
+  if (typeof signatures === 'string') {
+    if (signatures === '') return undefined
+  }
+
+  if (signatures.length === 0) return undefined
+
   return signatures as ParseAbiParameter<T>
 }

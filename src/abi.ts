@@ -1,5 +1,5 @@
 import type { ResolvedConfig } from './config'
-import type { Range } from './types'
+import type { Prettify, Range } from './types'
 
 export type Address = ResolvedConfig['AddressType']
 
@@ -95,54 +95,58 @@ export type AbiInternalType =
   | `enum ${string}`
   | `struct ${string}`
 
-export type AbiParameter = {
-  type: ResolvedAbiType
-  name?: string
-  /** Representation used by Solidity compiler */
-  internalType?: AbiInternalType
-} & (
-  | { type: Exclude<ResolvedAbiType, SolidityTuple | SolidityArrayWithTuple> }
-  | {
-      type: SolidityTuple | SolidityArrayWithTuple
-      components: readonly AbiParameter[]
-    }
-)
+export type AbiParameter = Prettify<
+  {
+    type: ResolvedAbiType
+    name?: string
+    /** Representation used by Solidity compiler */
+    internalType?: AbiInternalType
+  } & (
+    | { type: Exclude<ResolvedAbiType, SolidityTuple | SolidityArrayWithTuple> }
+    | {
+        type: SolidityTuple | SolidityArrayWithTuple
+        components: readonly AbiParameter[]
+      }
+  )
+>
 
 export type AbiStateMutability = 'pure' | 'view' | 'nonpayable' | 'payable'
 
 export type AbiParameterKind = 'inputs' | 'outputs'
 
-export type AbiFunction = {
-  /**
-   * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
-   * https://github.com/ethereum/solidity/issues/992
-   */
-  constant?: boolean
-  /**
-   * @deprecated Vyper used to provide gas estimates
-   * https://github.com/vyperlang/vyper/issues/2151
-   */
-  gas?: number
-  /**
-   * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
-   * https://github.com/ethereum/solidity/issues/992
-   */
-  payable?: boolean
-  stateMutability: AbiStateMutability
-} & (
-  | {
-      type: 'function'
-      inputs: readonly AbiParameter[]
-      name: string
-      outputs: readonly AbiParameter[]
-    }
-  | {
-      type: 'constructor'
-      inputs: readonly AbiParameter[]
-    }
-  | { type: 'fallback'; inputs?: [] }
-  | { type: 'receive'; stateMutability: 'payable' }
-)
+export type AbiFunction = Prettify<
+  {
+    /**
+     * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
+     * https://github.com/ethereum/solidity/issues/992
+     */
+    constant?: boolean
+    /**
+     * @deprecated Vyper used to provide gas estimates
+     * https://github.com/vyperlang/vyper/issues/2151
+     */
+    gas?: number
+    /**
+     * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
+     * https://github.com/ethereum/solidity/issues/992
+     */
+    payable?: boolean
+    stateMutability: AbiStateMutability
+  } & (
+    | {
+        type: 'function'
+        inputs: readonly AbiParameter[]
+        name: string
+        outputs: readonly AbiParameter[]
+      }
+    | {
+        type: 'constructor'
+        inputs: readonly AbiParameter[]
+      }
+    | { type: 'fallback'; inputs?: [] }
+    | { type: 'receive'; stateMutability: 'payable' }
+  )
+>
 
 export type AbiEvent = {
   type: 'event'
@@ -187,9 +191,11 @@ export type TypedDataParameter = {
 /**
  * [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) Typed Data Specification
  */
-export type TypedData = {
-  [key: string]: readonly TypedDataParameter[]
-} & {
-  // Disallow `TypedDataType` as key names (e.g. `address`)
-  [_ in TypedDataType]?: never
-}
+export type TypedData = Prettify<
+  {
+    [key: string]: readonly TypedDataParameter[]
+  } & {
+    // Disallow `TypedDataType` as key names (e.g. `address`)
+    [_ in TypedDataType]?: never
+  }
+>

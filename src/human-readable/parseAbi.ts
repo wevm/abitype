@@ -38,7 +38,7 @@ export type ParseAbi<
  * @returns JSON ABI
  * @example
  * const abi = parseAbi([
- *  //   ^? const abi: readonly [{ name: "balanceOf"; type: "function"; stateMutability: "view"; inputs: [{...
+ *  //   ^? const abi: readonly [{ name: "balanceOf"; type: "function"; stateMutability:...
  *  'function balanceOf(address owner) view returns (uint256)',
  *  'event Transfer(address indexed from, address indexed to, uint256 amount)',
  * ])

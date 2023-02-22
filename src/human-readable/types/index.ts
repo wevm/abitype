@@ -5,7 +5,7 @@ export type {
   Modifier,
   IsStructSignature,
 } from './signatures'
-export type { ParseStructs } from './structs'
+export type { ParseStructs, StructLookup } from './structs'
 export type {
   ParseSignature,
   ParseAbiParameter,

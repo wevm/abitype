@@ -133,7 +133,7 @@ export const wagmiMintExampleAbi = [
       },
       {
         indexed: true,
-        internalType: 'uint256',
+
         name: 'tokenId',
         type: 'uint256',
       },
@@ -175,10 +175,10 @@ export const wagmiMintExampleAbi = [
         name: 'from',
         type: 'address',
       },
-      { indexed: true, internalType: 'address', name: 'to', type: 'address' },
+      { indexed: true, name: 'to', type: 'address' },
       {
         indexed: true,
-        internalType: 'uint256',
+
         name: 'tokenId',
         type: 'uint256',
       },
@@ -188,8 +188,8 @@ export const wagmiMintExampleAbi = [
   },
   {
     inputs: [
-      { internalType: 'address', name: 'to', type: 'address' },
-      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
     ],
     name: 'approve',
     outputs: [],
@@ -197,23 +197,23 @@ export const wagmiMintExampleAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
+    inputs: [{ name: 'owner', type: 'address' }],
     name: 'balanceOf',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [{ name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
+    inputs: [{ name: 'tokenId', type: 'uint256' }],
     name: 'getApproved',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'address', name: 'owner', type: 'address' },
-      { internalType: 'address', name: 'operator', type: 'address' },
+      { name: 'owner', type: 'address' },
+      { name: 'operator', type: 'address' },
     ],
     name: 'isApprovedForAll',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
@@ -235,17 +235,17 @@ export const wagmiMintExampleAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
+    inputs: [{ name: 'tokenId', type: 'uint256' }],
     name: 'ownerOf',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'address', name: 'from', type: 'address' },
-      { internalType: 'address', name: 'to', type: 'address' },
-      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
     ],
     name: 'safeTransferFrom',
     outputs: [],
@@ -254,9 +254,9 @@ export const wagmiMintExampleAbi = [
   },
   {
     inputs: [
-      { internalType: 'address', name: 'from', type: 'address' },
-      { internalType: 'address', name: 'to', type: 'address' },
-      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
       { internalType: 'bytes', name: '_data', type: 'bytes' },
     ],
     name: 'safeTransferFrom',
@@ -266,7 +266,7 @@ export const wagmiMintExampleAbi = [
   },
   {
     inputs: [
-      { internalType: 'address', name: 'operator', type: 'address' },
+      { name: 'operator', type: 'address' },
       { internalType: 'bool', name: 'approved', type: 'bool' },
     ],
     name: 'setApprovalForAll',
@@ -289,7 +289,7 @@ export const wagmiMintExampleAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
+    inputs: [{ name: 'tokenId', type: 'uint256' }],
     name: 'tokenURI',
     outputs: [{ internalType: 'string', name: '', type: 'string' }],
     stateMutability: 'pure',
@@ -298,15 +298,15 @@ export const wagmiMintExampleAbi = [
   {
     inputs: [],
     name: 'totalSupply',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [{ name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'address', name: 'from', type: 'address' },
-      { internalType: 'address', name: 'to', type: 'address' },
-      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
     ],
     name: 'transferFrom',
     outputs: [],
@@ -322,13 +322,13 @@ export const wagmiMintExampleAbi = [
 export const writingEditionsFactoryAbi = [
   {
     inputs: [
-      { internalType: 'address', name: '_owner', type: 'address' },
+      { name: '_owner', type: 'address' },
       {
         internalType: 'address',
         name: '_treasuryConfiguration',
         type: 'address',
       },
-      { internalType: 'uint256', name: '_maxLimit', type: 'uint256' },
+      { name: '_maxLimit', type: 'uint256' },
       { internalType: 'bool', name: '_guardOn', type: 'bool' },
     ],
     stateMutability: 'nonpayable',
@@ -453,13 +453,13 @@ export const writingEditionsFactoryAbi = [
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'oldLimit',
         type: 'uint256',
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'newLimit',
         type: 'uint256',
       },
@@ -541,13 +541,13 @@ export const writingEditionsFactoryAbi = [
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'oldLimit',
         type: 'uint256',
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'newLimit',
         type: 'uint256',
       },
@@ -591,7 +591,7 @@ export const writingEditionsFactoryAbi = [
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'oldRoyaltyBPS',
         type: 'uint256',
       },
@@ -603,7 +603,7 @@ export const writingEditionsFactoryAbi = [
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'newRoyaltyBPS',
         type: 'uint256',
       },
@@ -620,11 +620,11 @@ export const writingEditionsFactoryAbi = [
         name: 'clone',
         type: 'address',
       },
-      { indexed: true, internalType: 'address', name: 'from', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'to', type: 'address' },
+      { indexed: true, name: 'from', type: 'address' },
+      { indexed: true, name: 'to', type: 'address' },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'tokenId',
         type: 'uint256',
       },
@@ -674,13 +674,13 @@ export const writingEditionsFactoryAbi = [
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'oldLimit',
         type: 'uint256',
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'newLimit',
         type: 'uint256',
       },
@@ -699,7 +699,7 @@ export const writingEditionsFactoryAbi = [
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'tokenId',
         type: 'uint256',
       },
@@ -711,7 +711,7 @@ export const writingEditionsFactoryAbi = [
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'price',
         type: 'uint256',
       },
@@ -728,14 +728,14 @@ export const writingEditionsFactoryAbi = [
   {
     inputs: [],
     name: 'CREATE_TYPEHASH',
-    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
+    outputs: [{ name: '', type: 'bytes32' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'DOMAIN_SEPARATOR',
-    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
+    outputs: [{ name: '', type: 'bytes32' }],
     stateMutability: 'view',
     type: 'function',
   },
@@ -776,15 +776,15 @@ export const writingEditionsFactoryAbi = [
           { internalType: 'string', name: 'description', type: 'string' },
           { internalType: 'string', name: 'imageURI', type: 'string' },
           { internalType: 'string', name: 'contentURI', type: 'string' },
-          { internalType: 'uint256', name: 'price', type: 'uint8' },
-          { internalType: 'uint256', name: 'limit', type: 'uint256' },
+          { name: 'price', type: 'uint8' },
+          { name: 'limit', type: 'uint256' },
           {
             internalType: 'address',
             name: 'fundingRecipient',
             type: 'address',
           },
-          { internalType: 'address', name: 'renderer', type: 'address' },
-          { internalType: 'uint256', name: 'nonce', type: 'uint256' },
+          { name: 'renderer', type: 'address' },
+          { name: 'nonce', type: 'uint256' },
           { internalType: 'uint16', name: 'fee', type: 'uint16' },
         ],
         internalType: 'struct IWritingEditions.WritingEdition',
@@ -793,13 +793,13 @@ export const writingEditionsFactoryAbi = [
       },
     ],
     name: 'create',
-    outputs: [{ internalType: 'address', name: 'clone', type: 'address' }],
+    outputs: [{ name: 'clone', type: 'address' }],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'address', name: 'owner', type: 'address' },
+      { name: 'owner', type: 'address' },
       {
         components: [
           { internalType: 'string', name: 'name', type: 'string' },
@@ -807,15 +807,15 @@ export const writingEditionsFactoryAbi = [
           { internalType: 'string', name: 'description', type: 'string' },
           { internalType: 'string', name: 'imageURI', type: 'string' },
           { internalType: 'string', name: 'contentURI', type: 'string' },
-          { internalType: 'uint256', name: 'price', type: 'uint256' },
-          { internalType: 'uint256', name: 'limit', type: 'uint256' },
+          { name: 'price', type: 'uint256' },
+          { name: 'limit', type: 'uint256' },
           {
             internalType: 'address',
             name: 'fundingRecipient',
             type: 'address',
           },
-          { internalType: 'address', name: 'renderer', type: 'address' },
-          { internalType: 'uint256', name: 'nonce', type: 'uint256' },
+          { name: 'renderer', type: 'address' },
+          { name: 'nonce', type: 'uint256' },
           { internalType: 'uint16', name: 'fee', type: 'uint16' },
         ],
         internalType: 'struct IWritingEditions.WritingEdition',
@@ -823,19 +823,19 @@ export const writingEditionsFactoryAbi = [
         type: 'tuple',
       },
       { internalType: 'uint8', name: 'v', type: 'uint8' },
-      { internalType: 'bytes32', name: 'r', type: 'bytes32' },
-      { internalType: 'bytes32', name: 's', type: 'bytes32' },
-      { internalType: 'address', name: 'tokenRecipient', type: 'address' },
+      { name: 'r', type: 'bytes32' },
+      { name: 's', type: 'bytes32' },
+      { name: 'tokenRecipient', type: 'address' },
       { internalType: 'string', name: 'message', type: 'string' },
     ],
     name: 'createWithSignature',
-    outputs: [{ internalType: 'address', name: 'clone', type: 'address' }],
+    outputs: [{ name: 'clone', type: 'address' }],
     stateMutability: 'payable',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'address', name: 'owner', type: 'address' },
+      { name: 'owner', type: 'address' },
       {
         components: [
           { internalType: 'string', name: 'name', type: 'string' },
@@ -843,15 +843,15 @@ export const writingEditionsFactoryAbi = [
           { internalType: 'string', name: 'description', type: 'string' },
           { internalType: 'string', name: 'imageURI', type: 'string' },
           { internalType: 'string', name: 'contentURI', type: 'string' },
-          { internalType: 'uint256', name: 'price', type: 'uint8' },
-          { internalType: 'uint256', name: 'limit', type: 'uint256' },
+          { name: 'price', type: 'uint8' },
+          { name: 'limit', type: 'uint256' },
           {
             internalType: 'address',
             name: 'fundingRecipient',
             type: 'address',
           },
-          { internalType: 'address', name: 'renderer', type: 'address' },
-          { internalType: 'uint256', name: 'nonce', type: 'uint256' },
+          { name: 'renderer', type: 'address' },
+          { name: 'nonce', type: 'uint256' },
           { internalType: 'uint16', name: 'fee', type: 'uint16' },
         ],
         internalType: 'struct IWritingEditions.WritingEdition',
@@ -860,7 +860,7 @@ export const writingEditionsFactoryAbi = [
       },
     ],
     name: 'getSalt',
-    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
+    outputs: [{ name: '', type: 'bytes32' }],
     stateMutability: 'view',
     type: 'function',
   },
@@ -874,7 +874,7 @@ export const writingEditionsFactoryAbi = [
   {
     inputs: [],
     name: 'implementation',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function',
   },
@@ -894,11 +894,11 @@ export const writingEditionsFactoryAbi = [
   },
   {
     inputs: [
-      { internalType: 'address', name: 'owner', type: 'address' },
-      { internalType: 'bytes32', name: 'salt', type: 'bytes32' },
+      { name: 'owner', type: 'address' },
+      { name: 'salt', type: 'bytes32' },
       { internalType: 'uint8', name: 'v', type: 'uint8' },
-      { internalType: 'bytes32', name: 'r', type: 'bytes32' },
-      { internalType: 'bytes32', name: 's', type: 'bytes32' },
+      { name: 'r', type: 'bytes32' },
+      { name: 's', type: 'bytes32' },
     ],
     name: 'isValid',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
@@ -908,42 +908,42 @@ export const writingEditionsFactoryAbi = [
   {
     inputs: [],
     name: 'maxLimit',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [{ name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'o11y',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'owner',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'address', name: '_implementation', type: 'address' },
-      { internalType: 'bytes32', name: 'salt', type: 'bytes32' },
+      { name: '_implementation', type: 'address' },
+      { name: 'salt', type: 'bytes32' },
     ],
     name: 'predictDeterministicAddress',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'address', name: 'clone', type: 'address' },
-      { internalType: 'address', name: 'tokenRecipient', type: 'address' },
+      { name: 'clone', type: 'address' },
+      { name: 'tokenRecipient', type: 'address' },
       { internalType: 'string', name: 'message', type: 'string' },
     ],
     name: 'purchaseThroughFactory',
-    outputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
+    outputs: [{ name: 'tokenId', type: 'uint256' }],
     stateMutability: 'payable',
     type: 'function',
   },
@@ -955,7 +955,7 @@ export const writingEditionsFactoryAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
+    inputs: [{ name: '', type: 'bytes32' }],
     name: 'salts',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
@@ -969,16 +969,14 @@ export const writingEditionsFactoryAbi = [
     type: 'function',
   },
   {
-    inputs: [
-      { internalType: 'address', name: '_implementation', type: 'address' },
-    ],
+    inputs: [{ name: '_implementation', type: 'address' }],
     name: 'setImplementation',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: '_maxLimit', type: 'uint256' }],
+    inputs: [{ name: '_maxLimit', type: 'uint256' }],
     name: 'setLimit',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -986,8 +984,8 @@ export const writingEditionsFactoryAbi = [
   },
   {
     inputs: [
-      { internalType: 'address', name: 'clone', type: 'address' },
-      { internalType: 'address', name: '_tributary', type: 'address' },
+      { name: 'clone', type: 'address' },
+      { name: '_tributary', type: 'address' },
     ],
     name: 'setTributary',
     outputs: [],
@@ -995,7 +993,7 @@ export const writingEditionsFactoryAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'address', name: 'nextOwner_', type: 'address' }],
+    inputs: [{ name: 'nextOwner_', type: 'address' }],
     name: 'transferOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -1004,7 +1002,7 @@ export const writingEditionsFactoryAbi = [
   {
     inputs: [],
     name: 'treasuryConfiguration',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function',
   },
@@ -1044,10 +1042,10 @@ export const ensRegistryWithFallbackAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'bytes32', name: 'node', type: 'bytes32' },
+      { indexed: true, name: 'node', type: 'bytes32' },
       {
         indexed: true,
-        internalType: 'bytes32',
+
         name: 'label',
         type: 'bytes32',
       },
@@ -1064,7 +1062,7 @@ export const ensRegistryWithFallbackAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'bytes32', name: 'node', type: 'bytes32' },
+      { indexed: true, name: 'node', type: 'bytes32' },
       {
         indexed: false,
         internalType: 'address',
@@ -1078,7 +1076,7 @@ export const ensRegistryWithFallbackAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'bytes32', name: 'node', type: 'bytes32' },
+      { indexed: true, name: 'node', type: 'bytes32' },
       { indexed: false, internalType: 'uint64', name: 'ttl', type: 'uint64' },
     ],
     name: 'NewTTL',
@@ -1087,7 +1085,7 @@ export const ensRegistryWithFallbackAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'bytes32', name: 'node', type: 'bytes32' },
+      { indexed: true, name: 'node', type: 'bytes32' },
       {
         indexed: false,
         internalType: 'address',
@@ -1101,8 +1099,8 @@ export const ensRegistryWithFallbackAbi = [
   {
     constant: true,
     inputs: [
-      { internalType: 'address', name: 'owner', type: 'address' },
-      { internalType: 'address', name: 'operator', type: 'address' },
+      { name: 'owner', type: 'address' },
+      { name: 'operator', type: 'address' },
     ],
     name: 'isApprovedForAll',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
@@ -1121,16 +1119,16 @@ export const ensRegistryWithFallbackAbi = [
   },
   {
     constant: true,
-    inputs: [{ internalType: 'bytes32', name: 'node', type: 'bytes32' }],
+    inputs: [{ name: 'node', type: 'bytes32' }],
     name: 'owner',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'address' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
   },
   {
     constant: true,
-    inputs: [{ internalType: 'bytes32', name: 'node', type: 'bytes32' }],
+    inputs: [{ name: 'node', type: 'bytes32' }],
     name: 'recordExists',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     payable: false,
@@ -1139,9 +1137,9 @@ export const ensRegistryWithFallbackAbi = [
   },
   {
     constant: true,
-    inputs: [{ internalType: 'bytes32', name: 'node', type: 'bytes32' }],
+    inputs: [{ name: 'node', type: 'bytes32' }],
     name: 'resolver',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'address' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
@@ -1161,7 +1159,7 @@ export const ensRegistryWithFallbackAbi = [
   {
     constant: false,
     inputs: [
-      { internalType: 'bytes32', name: 'node', type: 'bytes32' },
+      { name: 'node', type: 'bytes32' },
       { internalType: 'address', name: 'owner', type: 'address' },
     ],
     name: 'setOwner',
@@ -1173,7 +1171,7 @@ export const ensRegistryWithFallbackAbi = [
   {
     constant: false,
     inputs: [
-      { internalType: 'bytes32', name: 'node', type: 'bytes32' },
+      { name: 'node', type: 'bytes32' },
       { internalType: 'address', name: 'owner', type: 'address' },
       { internalType: 'address', name: 'resolver', type: 'address' },
       { internalType: 'uint64', name: 'ttl', type: 'uint64' },
@@ -1187,7 +1185,7 @@ export const ensRegistryWithFallbackAbi = [
   {
     constant: false,
     inputs: [
-      { internalType: 'bytes32', name: 'node', type: 'bytes32' },
+      { name: 'node', type: 'bytes32' },
       { internalType: 'address', name: 'resolver', type: 'address' },
     ],
     name: 'setResolver',
@@ -1199,12 +1197,12 @@ export const ensRegistryWithFallbackAbi = [
   {
     constant: false,
     inputs: [
-      { internalType: 'bytes32', name: 'node', type: 'bytes32' },
-      { internalType: 'bytes32', name: 'label', type: 'bytes32' },
+      { name: 'node', type: 'bytes32' },
+      { name: 'label', type: 'bytes32' },
       { internalType: 'address', name: 'owner', type: 'address' },
     ],
     name: 'setSubnodeOwner',
-    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
+    outputs: [{ name: '', type: 'bytes32' }],
     payable: false,
     stateMutability: 'nonpayable',
     type: 'function',
@@ -1212,8 +1210,8 @@ export const ensRegistryWithFallbackAbi = [
   {
     constant: false,
     inputs: [
-      { internalType: 'bytes32', name: 'node', type: 'bytes32' },
-      { internalType: 'bytes32', name: 'label', type: 'bytes32' },
+      { name: 'node', type: 'bytes32' },
+      { name: 'label', type: 'bytes32' },
       { internalType: 'address', name: 'owner', type: 'address' },
       { internalType: 'address', name: 'resolver', type: 'address' },
       { internalType: 'uint64', name: 'ttl', type: 'uint64' },
@@ -1227,7 +1225,7 @@ export const ensRegistryWithFallbackAbi = [
   {
     constant: false,
     inputs: [
-      { internalType: 'bytes32', name: 'node', type: 'bytes32' },
+      { name: 'node', type: 'bytes32' },
       { internalType: 'uint64', name: 'ttl', type: 'uint64' },
     ],
     name: 'setTTL',
@@ -1238,7 +1236,7 @@ export const ensRegistryWithFallbackAbi = [
   },
   {
     constant: true,
-    inputs: [{ internalType: 'bytes32', name: 'node', type: 'bytes32' }],
+    inputs: [{ name: 'node', type: 'bytes32' }],
     name: 'ttl',
     outputs: [{ internalType: 'uint64', name: '', type: 'uint64' }],
     payable: false,
@@ -1257,7 +1255,7 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: true,
-        internalType: 'uint256',
+
         name: 'nounId',
         type: 'uint256',
       },
@@ -1269,7 +1267,7 @@ export const nounsAuctionHouseAbi = [
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'value',
         type: 'uint256',
       },
@@ -1283,19 +1281,19 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: true,
-        internalType: 'uint256',
+
         name: 'nounId',
         type: 'uint256',
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'startTime',
         type: 'uint256',
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'endTime',
         type: 'uint256',
       },
@@ -1308,13 +1306,13 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: true,
-        internalType: 'uint256',
+
         name: 'nounId',
         type: 'uint256',
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'endTime',
         type: 'uint256',
       },
@@ -1327,7 +1325,7 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'minBidIncrementPercentage',
         type: 'uint256',
       },
@@ -1340,7 +1338,7 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'reservePrice',
         type: 'uint256',
       },
@@ -1353,7 +1351,7 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: true,
-        internalType: 'uint256',
+
         name: 'nounId',
         type: 'uint256',
       },
@@ -1365,7 +1363,7 @@ export const nounsAuctionHouseAbi = [
       },
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'amount',
         type: 'uint256',
       },
@@ -1378,7 +1376,7 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: false,
-        internalType: 'uint256',
+
         name: 'timeBuffer',
         type: 'uint256',
       },
@@ -1435,10 +1433,10 @@ export const nounsAuctionHouseAbi = [
     inputs: [],
     name: 'auction',
     outputs: [
-      { internalType: 'uint256', name: 'nounId', type: 'uint256' },
-      { internalType: 'uint256', name: 'amount', type: 'uint256' },
-      { internalType: 'uint256', name: 'startTime', type: 'uint256' },
-      { internalType: 'uint256', name: 'endTime', type: 'uint256' },
+      { name: 'nounId', type: 'uint256' },
+      { name: 'amount', type: 'uint256' },
+      { name: 'startTime', type: 'uint256' },
+      { name: 'endTime', type: 'uint256' },
       { internalType: 'address payable', name: 'bidder', type: 'address' },
       { internalType: 'bool', name: 'settled', type: 'bool' },
     ],
@@ -1446,7 +1444,7 @@ export const nounsAuctionHouseAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'nounId', type: 'uint256' }],
+    inputs: [{ name: 'nounId', type: 'uint256' }],
     name: 'createBid',
     outputs: [],
     stateMutability: 'payable',
@@ -1455,7 +1453,7 @@ export const nounsAuctionHouseAbi = [
   {
     inputs: [],
     name: 'duration',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [{ name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
@@ -1463,14 +1461,14 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       { internalType: 'contract INounsToken', name: '_nouns', type: 'address' },
       { internalType: 'address', name: '_weth', type: 'address' },
-      { internalType: 'uint256', name: '_timeBuffer', type: 'uint256' },
-      { internalType: 'uint256', name: '_reservePrice', type: 'uint256' },
+      { name: '_timeBuffer', type: 'uint256' },
+      { name: '_reservePrice', type: 'uint256' },
       {
         internalType: 'uint8',
         name: '_minBidIncrementPercentage',
         type: 'uint8',
       },
-      { internalType: 'uint256', name: '_duration', type: 'uint256' },
+      { name: '_duration', type: 'uint256' },
     ],
     name: 'initialize',
     outputs: [],
@@ -1524,7 +1522,7 @@ export const nounsAuctionHouseAbi = [
   {
     inputs: [],
     name: 'reservePrice',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [{ name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
@@ -1542,16 +1540,14 @@ export const nounsAuctionHouseAbi = [
     type: 'function',
   },
   {
-    inputs: [
-      { internalType: 'uint256', name: '_reservePrice', type: 'uint256' },
-    ],
+    inputs: [{ name: '_reservePrice', type: 'uint256' }],
     name: 'setReservePrice',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: '_timeBuffer', type: 'uint256' }],
+    inputs: [{ name: '_timeBuffer', type: 'uint256' }],
     name: 'setTimeBuffer',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -1574,7 +1570,7 @@ export const nounsAuctionHouseAbi = [
   {
     inputs: [],
     name: 'timeBuffer',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [{ name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
@@ -1710,6 +1706,1570 @@ export const ensAbi = [
       { indexed: false, name: 'ttl', type: 'uint64' },
     ],
     name: 'NewTTL',
+    type: 'event',
+  },
+] as const
+
+/**
+ * Seaport
+ * https://etherscan.io/address/0x00000000000001ad428e4906ae43d8f9852d0dd6
+ */
+export const seaportAbi = [
+  {
+    inputs: [{ name: 'conduitController', type: 'address' }],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          { name: 'offerer', type: 'address' },
+          { name: 'zone', type: 'address' },
+          {
+            components: [
+              { name: 'itemType', type: 'uint8' },
+              { name: 'token', type: 'address' },
+              {
+                name: 'identifierOrCriteria',
+                type: 'uint256',
+              },
+              { name: 'startAmount', type: 'uint256' },
+              { name: 'endAmount', type: 'uint256' },
+            ],
+
+            name: 'offer',
+            type: 'tuple[]',
+          },
+          {
+            components: [
+              { name: 'itemType', type: 'uint8' },
+              { name: 'token', type: 'address' },
+              {
+                name: 'identifierOrCriteria',
+                type: 'uint256',
+              },
+              { name: 'startAmount', type: 'uint256' },
+              { name: 'endAmount', type: 'uint256' },
+              {
+                name: 'recipient',
+                type: 'address',
+              },
+            ],
+
+            name: 'consideration',
+            type: 'tuple[]',
+          },
+          { name: 'orderType', type: 'uint8' },
+          { name: 'startTime', type: 'uint256' },
+          { name: 'endTime', type: 'uint256' },
+          { name: 'zoneHash', type: 'bytes32' },
+          { name: 'salt', type: 'uint256' },
+          { name: 'conduitKey', type: 'bytes32' },
+          { name: 'counter', type: 'uint256' },
+        ],
+        name: 'orders',
+        type: 'tuple[]',
+      },
+    ],
+    name: 'cancel',
+    outputs: [{ internalType: 'bool', name: 'cancelled', type: 'bool' }],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            components: [
+              { name: 'offerer', type: 'address' },
+              { name: 'zone', type: 'address' },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                ],
+
+                name: 'offer',
+                type: 'tuple[]',
+              },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'recipient',
+                    type: 'address',
+                  },
+                ],
+
+                name: 'consideration',
+                type: 'tuple[]',
+              },
+              {
+                name: 'orderType',
+                type: 'uint8',
+              },
+              { name: 'startTime', type: 'uint256' },
+              { name: 'endTime', type: 'uint256' },
+              { name: 'zoneHash', type: 'bytes32' },
+              { name: 'salt', type: 'uint256' },
+              { name: 'conduitKey', type: 'bytes32' },
+              {
+                name: 'totalOriginalConsiderationItems',
+                type: 'uint256',
+              },
+            ],
+            internalType: 'structOrderParameters',
+            name: 'parameters',
+            type: 'tuple',
+          },
+          { internalType: 'uint120', name: 'numerator', type: 'uint120' },
+          { internalType: 'uint120', name: 'denominator', type: 'uint120' },
+          { internalType: 'bytes', name: 'signature', type: 'bytes' },
+          { internalType: 'bytes', name: 'extraData', type: 'bytes' },
+        ],
+        internalType: 'structAdvancedOrder',
+        name: 'advancedOrder',
+        type: 'tuple',
+      },
+      {
+        components: [
+          { name: 'orderIndex', type: 'uint256' },
+          { internalType: 'enumSide', name: 'side', type: 'uint8' },
+          { name: 'index', type: 'uint256' },
+          { name: 'identifier', type: 'uint256' },
+          {
+            internalType: 'bytes32[]',
+            name: 'criteriaProof',
+            type: 'bytes32[]',
+          },
+        ],
+        internalType: 'structCriteriaResolver[]',
+        name: 'criteriaResolvers',
+        type: 'tuple[]',
+      },
+      { name: 'fulfillerConduitKey', type: 'bytes32' },
+      { name: 'recipient', type: 'address' },
+    ],
+    name: 'fulfillAdvancedOrder',
+    outputs: [{ internalType: 'bool', name: 'fulfilled', type: 'bool' }],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            components: [
+              { name: 'offerer', type: 'address' },
+              { name: 'zone', type: 'address' },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                ],
+
+                name: 'offer',
+                type: 'tuple[]',
+              },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'recipient',
+                    type: 'address',
+                  },
+                ],
+
+                name: 'consideration',
+                type: 'tuple[]',
+              },
+              {
+                name: 'orderType',
+                type: 'uint8',
+              },
+              { name: 'startTime', type: 'uint256' },
+              { name: 'endTime', type: 'uint256' },
+              { name: 'zoneHash', type: 'bytes32' },
+              { name: 'salt', type: 'uint256' },
+              { name: 'conduitKey', type: 'bytes32' },
+              {
+                name: 'totalOriginalConsiderationItems',
+                type: 'uint256',
+              },
+            ],
+            internalType: 'structOrderParameters',
+            name: 'parameters',
+            type: 'tuple',
+          },
+          { internalType: 'uint120', name: 'numerator', type: 'uint120' },
+          { internalType: 'uint120', name: 'denominator', type: 'uint120' },
+          { internalType: 'bytes', name: 'signature', type: 'bytes' },
+          { internalType: 'bytes', name: 'extraData', type: 'bytes' },
+        ],
+        internalType: 'structAdvancedOrder[]',
+        name: 'advancedOrders',
+        type: 'tuple[]',
+      },
+      {
+        components: [
+          { name: 'orderIndex', type: 'uint256' },
+          { internalType: 'enumSide', name: 'side', type: 'uint8' },
+          { name: 'index', type: 'uint256' },
+          { name: 'identifier', type: 'uint256' },
+          {
+            internalType: 'bytes32[]',
+            name: 'criteriaProof',
+            type: 'bytes32[]',
+          },
+        ],
+        internalType: 'structCriteriaResolver[]',
+        name: 'criteriaResolvers',
+        type: 'tuple[]',
+      },
+      {
+        components: [
+          { name: 'orderIndex', type: 'uint256' },
+          { name: 'itemIndex', type: 'uint256' },
+        ],
+        internalType: 'structFulfillmentComponent[][]',
+        name: 'offerFulfillments',
+        type: 'tuple[][]',
+      },
+      {
+        components: [
+          { name: 'orderIndex', type: 'uint256' },
+          { name: 'itemIndex', type: 'uint256' },
+        ],
+        internalType: 'structFulfillmentComponent[][]',
+        name: 'considerationFulfillments',
+        type: 'tuple[][]',
+      },
+      { name: 'fulfillerConduitKey', type: 'bytes32' },
+      { name: 'recipient', type: 'address' },
+      { name: 'maximumFulfilled', type: 'uint256' },
+    ],
+    name: 'fulfillAvailableAdvancedOrders',
+    outputs: [
+      { internalType: 'bool[]', name: 'availableOrders', type: 'bool[]' },
+      {
+        components: [
+          {
+            components: [
+              { name: 'itemType', type: 'uint8' },
+              { name: 'token', type: 'address' },
+              { name: 'identifier', type: 'uint256' },
+              { name: 'amount', type: 'uint256' },
+              {
+                name: 'recipient',
+                type: 'address',
+              },
+            ],
+            internalType: 'structReceivedItem',
+            name: 'item',
+            type: 'tuple',
+          },
+          { name: 'offerer', type: 'address' },
+          { name: 'conduitKey', type: 'bytes32' },
+        ],
+        internalType: 'structExecution[]',
+        name: 'executions',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            components: [
+              { name: 'offerer', type: 'address' },
+              { name: 'zone', type: 'address' },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                ],
+
+                name: 'offer',
+                type: 'tuple[]',
+              },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'recipient',
+                    type: 'address',
+                  },
+                ],
+
+                name: 'consideration',
+                type: 'tuple[]',
+              },
+              {
+                name: 'orderType',
+                type: 'uint8',
+              },
+              { name: 'startTime', type: 'uint256' },
+              { name: 'endTime', type: 'uint256' },
+              { name: 'zoneHash', type: 'bytes32' },
+              { name: 'salt', type: 'uint256' },
+              { name: 'conduitKey', type: 'bytes32' },
+              {
+                name: 'totalOriginalConsiderationItems',
+                type: 'uint256',
+              },
+            ],
+            internalType: 'structOrderParameters',
+            name: 'parameters',
+            type: 'tuple',
+          },
+          { internalType: 'bytes', name: 'signature', type: 'bytes' },
+        ],
+        internalType: 'structOrder[]',
+        name: 'orders',
+        type: 'tuple[]',
+      },
+      {
+        components: [
+          { name: 'orderIndex', type: 'uint256' },
+          { name: 'itemIndex', type: 'uint256' },
+        ],
+        internalType: 'structFulfillmentComponent[][]',
+        name: 'offerFulfillments',
+        type: 'tuple[][]',
+      },
+      {
+        components: [
+          { name: 'orderIndex', type: 'uint256' },
+          { name: 'itemIndex', type: 'uint256' },
+        ],
+        internalType: 'structFulfillmentComponent[][]',
+        name: 'considerationFulfillments',
+        type: 'tuple[][]',
+      },
+      { name: 'fulfillerConduitKey', type: 'bytes32' },
+      { name: 'maximumFulfilled', type: 'uint256' },
+    ],
+    name: 'fulfillAvailableOrders',
+    outputs: [
+      { internalType: 'bool[]', name: 'availableOrders', type: 'bool[]' },
+      {
+        components: [
+          {
+            components: [
+              { name: 'itemType', type: 'uint8' },
+              { name: 'token', type: 'address' },
+              { name: 'identifier', type: 'uint256' },
+              { name: 'amount', type: 'uint256' },
+              {
+                name: 'recipient',
+                type: 'address',
+              },
+            ],
+            internalType: 'structReceivedItem',
+            name: 'item',
+            type: 'tuple',
+          },
+          { name: 'offerer', type: 'address' },
+          { name: 'conduitKey', type: 'bytes32' },
+        ],
+        internalType: 'structExecution[]',
+        name: 'executions',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'considerationToken',
+            type: 'address',
+          },
+          {
+            name: 'considerationIdentifier',
+            type: 'uint256',
+          },
+          {
+            name: 'considerationAmount',
+            type: 'uint256',
+          },
+          { name: 'offerer', type: 'address' },
+          { name: 'zone', type: 'address' },
+          { name: 'offerToken', type: 'address' },
+          { name: 'offerIdentifier', type: 'uint256' },
+          { name: 'offerAmount', type: 'uint256' },
+          {
+            internalType: 'enumBasicOrderType',
+            name: 'basicOrderType',
+            type: 'uint8',
+          },
+          { name: 'startTime', type: 'uint256' },
+          { name: 'endTime', type: 'uint256' },
+          { name: 'zoneHash', type: 'bytes32' },
+          { name: 'salt', type: 'uint256' },
+          {
+            name: 'offererConduitKey',
+            type: 'bytes32',
+          },
+          {
+            name: 'fulfillerConduitKey',
+            type: 'bytes32',
+          },
+          {
+            name: 'totalOriginalAdditionalRecipients',
+            type: 'uint256',
+          },
+          {
+            components: [
+              { name: 'amount', type: 'uint256' },
+              {
+                name: 'recipient',
+                type: 'address',
+              },
+            ],
+            internalType: 'structAdditionalRecipient[]',
+            name: 'additionalRecipients',
+            type: 'tuple[]',
+          },
+          { internalType: 'bytes', name: 'signature', type: 'bytes' },
+        ],
+        internalType: 'structBasicOrderParameters',
+        name: 'parameters',
+        type: 'tuple',
+      },
+    ],
+    name: 'fulfillBasicOrder',
+    outputs: [{ internalType: 'bool', name: 'fulfilled', type: 'bool' }],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'considerationToken',
+            type: 'address',
+          },
+          {
+            name: 'considerationIdentifier',
+            type: 'uint256',
+          },
+          {
+            name: 'considerationAmount',
+            type: 'uint256',
+          },
+          { name: 'offerer', type: 'address' },
+          { name: 'zone', type: 'address' },
+          { name: 'offerToken', type: 'address' },
+          { name: 'offerIdentifier', type: 'uint256' },
+          { name: 'offerAmount', type: 'uint256' },
+          {
+            internalType: 'enumBasicOrderType',
+            name: 'basicOrderType',
+            type: 'uint8',
+          },
+          { name: 'startTime', type: 'uint256' },
+          { name: 'endTime', type: 'uint256' },
+          { name: 'zoneHash', type: 'bytes32' },
+          { name: 'salt', type: 'uint256' },
+          {
+            name: 'offererConduitKey',
+            type: 'bytes32',
+          },
+          {
+            name: 'fulfillerConduitKey',
+            type: 'bytes32',
+          },
+          {
+            name: 'totalOriginalAdditionalRecipients',
+            type: 'uint256',
+          },
+          {
+            components: [
+              { name: 'amount', type: 'uint256' },
+              {
+                name: 'recipient',
+                type: 'address',
+              },
+            ],
+            internalType: 'structAdditionalRecipient[]',
+            name: 'additionalRecipients',
+            type: 'tuple[]',
+          },
+          { internalType: 'bytes', name: 'signature', type: 'bytes' },
+        ],
+        internalType: 'structBasicOrderParameters',
+        name: 'parameters',
+        type: 'tuple',
+      },
+    ],
+    name: 'fulfillBasicOrder_efficient_6GL6yc',
+    outputs: [{ internalType: 'bool', name: 'fulfilled', type: 'bool' }],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            components: [
+              { name: 'offerer', type: 'address' },
+              { name: 'zone', type: 'address' },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                ],
+
+                name: 'offer',
+                type: 'tuple[]',
+              },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'recipient',
+                    type: 'address',
+                  },
+                ],
+
+                name: 'consideration',
+                type: 'tuple[]',
+              },
+              {
+                name: 'orderType',
+                type: 'uint8',
+              },
+              { name: 'startTime', type: 'uint256' },
+              { name: 'endTime', type: 'uint256' },
+              { name: 'zoneHash', type: 'bytes32' },
+              { name: 'salt', type: 'uint256' },
+              { name: 'conduitKey', type: 'bytes32' },
+              {
+                name: 'totalOriginalConsiderationItems',
+                type: 'uint256',
+              },
+            ],
+            internalType: 'structOrderParameters',
+            name: 'parameters',
+            type: 'tuple',
+          },
+          { internalType: 'bytes', name: 'signature', type: 'bytes' },
+        ],
+        internalType: 'structOrder',
+        name: 'order',
+        type: 'tuple',
+      },
+      { name: 'fulfillerConduitKey', type: 'bytes32' },
+    ],
+    name: 'fulfillOrder',
+    outputs: [{ internalType: 'bool', name: 'fulfilled', type: 'bool' }],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'contractOfferer', type: 'address' }],
+    name: 'getContractOffererNonce',
+    outputs: [{ name: 'nonce', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'offerer', type: 'address' }],
+    name: 'getCounter',
+    outputs: [{ name: 'counter', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          { name: 'offerer', type: 'address' },
+          { name: 'zone', type: 'address' },
+          {
+            components: [
+              { name: 'itemType', type: 'uint8' },
+              { name: 'token', type: 'address' },
+              {
+                name: 'identifierOrCriteria',
+                type: 'uint256',
+              },
+              { name: 'startAmount', type: 'uint256' },
+              { name: 'endAmount', type: 'uint256' },
+            ],
+
+            name: 'offer',
+            type: 'tuple[]',
+          },
+          {
+            components: [
+              { name: 'itemType', type: 'uint8' },
+              { name: 'token', type: 'address' },
+              {
+                name: 'identifierOrCriteria',
+                type: 'uint256',
+              },
+              { name: 'startAmount', type: 'uint256' },
+              { name: 'endAmount', type: 'uint256' },
+              {
+                name: 'recipient',
+                type: 'address',
+              },
+            ],
+
+            name: 'consideration',
+            type: 'tuple[]',
+          },
+          { name: 'orderType', type: 'uint8' },
+          { name: 'startTime', type: 'uint256' },
+          { name: 'endTime', type: 'uint256' },
+          { name: 'zoneHash', type: 'bytes32' },
+          { name: 'salt', type: 'uint256' },
+          { name: 'conduitKey', type: 'bytes32' },
+          { name: 'counter', type: 'uint256' },
+        ],
+        internalType: 'structOrderComponents',
+        name: 'order',
+        type: 'tuple',
+      },
+    ],
+    name: 'getOrderHash',
+    outputs: [{ name: 'orderHash', type: 'bytes32' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'orderHash', type: 'bytes32' }],
+    name: 'getOrderStatus',
+    outputs: [
+      { internalType: 'bool', name: 'isValidated', type: 'bool' },
+      { internalType: 'bool', name: 'isCancelled', type: 'bool' },
+      { name: 'totalFilled', type: 'uint256' },
+      { name: 'totalSize', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'incrementCounter',
+    outputs: [{ name: 'newCounter', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'information',
+    outputs: [
+      { internalType: 'string', name: 'version', type: 'string' },
+      { name: 'domainSeparator', type: 'bytes32' },
+      { name: 'conduitController', type: 'address' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            components: [
+              { name: 'offerer', type: 'address' },
+              { name: 'zone', type: 'address' },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                ],
+
+                name: 'offer',
+                type: 'tuple[]',
+              },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'recipient',
+                    type: 'address',
+                  },
+                ],
+
+                name: 'consideration',
+                type: 'tuple[]',
+              },
+              {
+                name: 'orderType',
+                type: 'uint8',
+              },
+              { name: 'startTime', type: 'uint256' },
+              { name: 'endTime', type: 'uint256' },
+              { name: 'zoneHash', type: 'bytes32' },
+              { name: 'salt', type: 'uint256' },
+              { name: 'conduitKey', type: 'bytes32' },
+              {
+                name: 'totalOriginalConsiderationItems',
+                type: 'uint256',
+              },
+            ],
+            internalType: 'structOrderParameters',
+            name: 'parameters',
+            type: 'tuple',
+          },
+          { internalType: 'uint120', name: 'numerator', type: 'uint120' },
+          { internalType: 'uint120', name: 'denominator', type: 'uint120' },
+          { internalType: 'bytes', name: 'signature', type: 'bytes' },
+          { internalType: 'bytes', name: 'extraData', type: 'bytes' },
+        ],
+        internalType: 'structAdvancedOrder[]',
+        name: 'orders',
+        type: 'tuple[]',
+      },
+      {
+        components: [
+          { name: 'orderIndex', type: 'uint256' },
+          { internalType: 'enumSide', name: 'side', type: 'uint8' },
+          { name: 'index', type: 'uint256' },
+          { name: 'identifier', type: 'uint256' },
+          {
+            internalType: 'bytes32[]',
+            name: 'criteriaProof',
+            type: 'bytes32[]',
+          },
+        ],
+        internalType: 'structCriteriaResolver[]',
+        name: 'criteriaResolvers',
+        type: 'tuple[]',
+      },
+      {
+        components: [
+          {
+            components: [
+              { name: 'orderIndex', type: 'uint256' },
+              { name: 'itemIndex', type: 'uint256' },
+            ],
+            internalType: 'structFulfillmentComponent[]',
+            name: 'offerComponents',
+            type: 'tuple[]',
+          },
+          {
+            components: [
+              { name: 'orderIndex', type: 'uint256' },
+              { name: 'itemIndex', type: 'uint256' },
+            ],
+            internalType: 'structFulfillmentComponent[]',
+            name: 'considerationComponents',
+            type: 'tuple[]',
+          },
+        ],
+        internalType: 'structFulfillment[]',
+        name: 'fulfillments',
+        type: 'tuple[]',
+      },
+      { name: 'recipient', type: 'address' },
+    ],
+    name: 'matchAdvancedOrders',
+    outputs: [
+      {
+        components: [
+          {
+            components: [
+              { name: 'itemType', type: 'uint8' },
+              { name: 'token', type: 'address' },
+              { name: 'identifier', type: 'uint256' },
+              { name: 'amount', type: 'uint256' },
+              {
+                name: 'recipient',
+                type: 'address',
+              },
+            ],
+            internalType: 'structReceivedItem',
+            name: 'item',
+            type: 'tuple',
+          },
+          { name: 'offerer', type: 'address' },
+          { name: 'conduitKey', type: 'bytes32' },
+        ],
+        internalType: 'structExecution[]',
+        name: 'executions',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            components: [
+              { name: 'offerer', type: 'address' },
+              { name: 'zone', type: 'address' },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                ],
+
+                name: 'offer',
+                type: 'tuple[]',
+              },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'recipient',
+                    type: 'address',
+                  },
+                ],
+
+                name: 'consideration',
+                type: 'tuple[]',
+              },
+              {
+                name: 'orderType',
+                type: 'uint8',
+              },
+              { name: 'startTime', type: 'uint256' },
+              { name: 'endTime', type: 'uint256' },
+              { name: 'zoneHash', type: 'bytes32' },
+              { name: 'salt', type: 'uint256' },
+              { name: 'conduitKey', type: 'bytes32' },
+              {
+                name: 'totalOriginalConsiderationItems',
+                type: 'uint256',
+              },
+            ],
+            internalType: 'structOrderParameters',
+            name: 'parameters',
+            type: 'tuple',
+          },
+          { internalType: 'bytes', name: 'signature', type: 'bytes' },
+        ],
+        internalType: 'structOrder[]',
+        name: 'orders',
+        type: 'tuple[]',
+      },
+      {
+        components: [
+          {
+            components: [
+              { name: 'orderIndex', type: 'uint256' },
+              { name: 'itemIndex', type: 'uint256' },
+            ],
+            internalType: 'structFulfillmentComponent[]',
+            name: 'offerComponents',
+            type: 'tuple[]',
+          },
+          {
+            components: [
+              { name: 'orderIndex', type: 'uint256' },
+              { name: 'itemIndex', type: 'uint256' },
+            ],
+            internalType: 'structFulfillmentComponent[]',
+            name: 'considerationComponents',
+            type: 'tuple[]',
+          },
+        ],
+        internalType: 'structFulfillment[]',
+        name: 'fulfillments',
+        type: 'tuple[]',
+      },
+    ],
+    name: 'matchOrders',
+    outputs: [
+      {
+        components: [
+          {
+            components: [
+              { name: 'itemType', type: 'uint8' },
+              { name: 'token', type: 'address' },
+              { name: 'identifier', type: 'uint256' },
+              { name: 'amount', type: 'uint256' },
+              {
+                name: 'recipient',
+                type: 'address',
+              },
+            ],
+            internalType: 'structReceivedItem',
+            name: 'item',
+            type: 'tuple',
+          },
+          { name: 'offerer', type: 'address' },
+          { name: 'conduitKey', type: 'bytes32' },
+        ],
+        internalType: 'structExecution[]',
+        name: 'executions',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'name',
+    outputs: [{ internalType: 'string', name: 'contractName', type: 'string' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            components: [
+              { name: 'offerer', type: 'address' },
+              { name: 'zone', type: 'address' },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                ],
+
+                name: 'offer',
+                type: 'tuple[]',
+              },
+              {
+                components: [
+                  {
+                    internalType: 'enumItemType',
+                    name: 'itemType',
+                    type: 'uint8',
+                  },
+                  { name: 'token', type: 'address' },
+                  {
+                    name: 'identifierOrCriteria',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'startAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'endAmount',
+                    type: 'uint256',
+                  },
+                  {
+                    name: 'recipient',
+                    type: 'address',
+                  },
+                ],
+
+                name: 'consideration',
+                type: 'tuple[]',
+              },
+              {
+                name: 'orderType',
+                type: 'uint8',
+              },
+              { name: 'startTime', type: 'uint256' },
+              { name: 'endTime', type: 'uint256' },
+              { name: 'zoneHash', type: 'bytes32' },
+              { name: 'salt', type: 'uint256' },
+              { name: 'conduitKey', type: 'bytes32' },
+              {
+                name: 'totalOriginalConsiderationItems',
+                type: 'uint256',
+              },
+            ],
+            internalType: 'structOrderParameters',
+            name: 'parameters',
+            type: 'tuple',
+          },
+          { internalType: 'bytes', name: 'signature', type: 'bytes' },
+        ],
+        internalType: 'structOrder[]',
+        name: 'orders',
+        type: 'tuple[]',
+      },
+    ],
+    name: 'validate',
+    outputs: [{ internalType: 'bool', name: 'validated', type: 'bool' }],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  { inputs: [], name: 'BadContractSignature', type: 'error' },
+  { inputs: [], name: 'BadFraction', type: 'error' },
+  {
+    inputs: [
+      { name: 'token', type: 'address' },
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    name: 'BadReturnValueFromERC20OnTransfer',
+    type: 'error',
+  },
+  {
+    inputs: [{ internalType: 'uint8', name: 'v', type: 'uint8' }],
+    name: 'BadSignatureV',
+    type: 'error',
+  },
+  { inputs: [], name: 'CannotCancelOrder', type: 'error' },
+  {
+    inputs: [],
+    name: 'ConsiderationCriteriaResolverOutOfRange',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'ConsiderationLengthNotEqualToTotalOriginal',
+    type: 'error',
+  },
+  {
+    inputs: [
+      { name: 'orderIndex', type: 'uint256' },
+      { name: 'considerationIndex', type: 'uint256' },
+      { name: 'shortfallAmount', type: 'uint256' },
+    ],
+    name: 'ConsiderationNotMet',
+    type: 'error',
+  },
+  { inputs: [], name: 'CriteriaNotEnabledForItem', type: 'error' },
+  {
+    inputs: [
+      { name: 'token', type: 'address' },
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { internalType: 'uint256[]', name: 'identifiers', type: 'uint256[]' },
+      { internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' },
+    ],
+    name: 'ERC1155BatchTransferGenericFailure',
+    type: 'error',
+  },
+  { inputs: [], name: 'InexactFraction', type: 'error' },
+  { inputs: [], name: 'InsufficientNativeTokensSupplied', type: 'error' },
+  { inputs: [], name: 'Invalid1155BatchTransferEncoding', type: 'error' },
+  { inputs: [], name: 'InvalidBasicOrderParameterEncoding', type: 'error' },
+  {
+    inputs: [{ name: 'conduit', type: 'address' }],
+    name: 'InvalidCallToConduit',
+    type: 'error',
+  },
+  {
+    inputs: [
+      { name: 'conduitKey', type: 'bytes32' },
+      { name: 'conduit', type: 'address' },
+    ],
+    name: 'InvalidConduit',
+    type: 'error',
+  },
+  {
+    inputs: [{ name: 'orderHash', type: 'bytes32' }],
+    name: 'InvalidContractOrder',
+    type: 'error',
+  },
+  {
+    inputs: [{ name: 'amount', type: 'uint256' }],
+    name: 'InvalidERC721TransferAmount',
+    type: 'error',
+  },
+  { inputs: [], name: 'InvalidFulfillmentComponentData', type: 'error' },
+  {
+    inputs: [{ name: 'value', type: 'uint256' }],
+    name: 'InvalidMsgValue',
+    type: 'error',
+  },
+  { inputs: [], name: 'InvalidNativeOfferItem', type: 'error' },
+  { inputs: [], name: 'InvalidProof', type: 'error' },
+  {
+    inputs: [{ name: 'orderHash', type: 'bytes32' }],
+    name: 'InvalidRestrictedOrder',
+    type: 'error',
+  },
+  { inputs: [], name: 'InvalidSignature', type: 'error' },
+  { inputs: [], name: 'InvalidSigner', type: 'error' },
+  {
+    inputs: [
+      { name: 'startTime', type: 'uint256' },
+      { name: 'endTime', type: 'uint256' },
+    ],
+    name: 'InvalidTime',
+    type: 'error',
+  },
+  {
+    inputs: [{ name: 'fulfillmentIndex', type: 'uint256' }],
+    name: 'MismatchedFulfillmentOfferAndConsiderationComponents',
+    type: 'error',
+  },
+  {
+    inputs: [{ internalType: 'enumSide', name: 'side', type: 'uint8' }],
+    name: 'MissingFulfillmentComponentOnAggregation',
+    type: 'error',
+  },
+  { inputs: [], name: 'MissingItemAmount', type: 'error' },
+  { inputs: [], name: 'MissingOriginalConsiderationItems', type: 'error' },
+  {
+    inputs: [
+      { name: 'account', type: 'address' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    name: 'NativeTokenTransferGenericFailure',
+    type: 'error',
+  },
+  {
+    inputs: [{ name: 'account', type: 'address' }],
+    name: 'NoContract',
+    type: 'error',
+  },
+  { inputs: [], name: 'NoReentrantCalls', type: 'error' },
+  { inputs: [], name: 'NoSpecifiedOrdersAvailable', type: 'error' },
+  {
+    inputs: [],
+    name: 'OfferAndConsiderationRequiredOnFulfillment',
+    type: 'error',
+  },
+  { inputs: [], name: 'OfferCriteriaResolverOutOfRange', type: 'error' },
+  {
+    inputs: [{ name: 'orderHash', type: 'bytes32' }],
+    name: 'OrderAlreadyFilled',
+    type: 'error',
+  },
+  {
+    inputs: [{ internalType: 'enumSide', name: 'side', type: 'uint8' }],
+    name: 'OrderCriteriaResolverOutOfRange',
+    type: 'error',
+  },
+  {
+    inputs: [{ name: 'orderHash', type: 'bytes32' }],
+    name: 'OrderIsCancelled',
+    type: 'error',
+  },
+  {
+    inputs: [{ name: 'orderHash', type: 'bytes32' }],
+    name: 'OrderPartiallyFilled',
+    type: 'error',
+  },
+  { inputs: [], name: 'PartialFillsNotEnabledForOrder', type: 'error' },
+  {
+    inputs: [
+      { name: 'token', type: 'address' },
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'identifier', type: 'uint256' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    name: 'TokenTransferGenericFailure',
+    type: 'error',
+  },
+  {
+    inputs: [
+      { name: 'orderIndex', type: 'uint256' },
+      { name: 'considerationIndex', type: 'uint256' },
+    ],
+    name: 'UnresolvedConsiderationCriteria',
+    type: 'error',
+  },
+  {
+    inputs: [
+      { name: 'orderIndex', type: 'uint256' },
+      { name: 'offerIndex', type: 'uint256' },
+    ],
+    name: 'UnresolvedOfferCriteria',
+    type: 'error',
+  },
+  { inputs: [], name: 'UnusedItemParameters', type: 'error' },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+
+        name: 'newCounter',
+        type: 'uint256',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'offerer',
+        type: 'address',
+      },
+    ],
+    name: 'CounterIncremented',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+
+        name: 'orderHash',
+        type: 'bytes32',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'offerer',
+        type: 'address',
+      },
+      { indexed: true, name: 'zone', type: 'address' },
+    ],
+    name: 'OrderCancelled',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+
+        name: 'orderHash',
+        type: 'bytes32',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'offerer',
+        type: 'address',
+      },
+      { indexed: true, name: 'zone', type: 'address' },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
+      },
+      {
+        components: [
+          { name: 'itemType', type: 'uint8' },
+          { name: 'token', type: 'address' },
+          { name: 'identifier', type: 'uint256' },
+          { name: 'amount', type: 'uint256' },
+        ],
+        indexed: false,
+        internalType: 'structSpentItem[]',
+        name: 'offer',
+        type: 'tuple[]',
+      },
+      {
+        components: [
+          { name: 'itemType', type: 'uint8' },
+          { name: 'token', type: 'address' },
+          { name: 'identifier', type: 'uint256' },
+          { name: 'amount', type: 'uint256' },
+          {
+            name: 'recipient',
+            type: 'address',
+          },
+        ],
+        indexed: false,
+        internalType: 'structReceivedItem[]',
+        name: 'consideration',
+        type: 'tuple[]',
+      },
+    ],
+    name: 'OrderFulfilled',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+
+        name: 'orderHash',
+        type: 'bytes32',
+      },
+      {
+        components: [
+          { name: 'offerer', type: 'address' },
+          { name: 'zone', type: 'address' },
+          {
+            components: [
+              { name: 'itemType', type: 'uint8' },
+              { name: 'token', type: 'address' },
+              {
+                name: 'identifierOrCriteria',
+                type: 'uint256',
+              },
+              { name: 'startAmount', type: 'uint256' },
+              { name: 'endAmount', type: 'uint256' },
+            ],
+
+            name: 'offer',
+            type: 'tuple[]',
+          },
+          {
+            components: [
+              { name: 'itemType', type: 'uint8' },
+              { name: 'token', type: 'address' },
+              {
+                name: 'identifierOrCriteria',
+                type: 'uint256',
+              },
+              { name: 'startAmount', type: 'uint256' },
+              { name: 'endAmount', type: 'uint256' },
+              {
+                name: 'recipient',
+                type: 'address',
+              },
+            ],
+
+            name: 'consideration',
+            type: 'tuple[]',
+          },
+          { name: 'orderType', type: 'uint8' },
+          { name: 'startTime', type: 'uint256' },
+          { name: 'endTime', type: 'uint256' },
+          { name: 'zoneHash', type: 'bytes32' },
+          { name: 'salt', type: 'uint256' },
+          { name: 'conduitKey', type: 'bytes32' },
+          {
+            name: 'totalOriginalConsiderationItems',
+            type: 'uint256',
+          },
+        ],
+        indexed: false,
+        internalType: 'structOrderParameters',
+        name: 'orderParameters',
+        type: 'tuple',
+      },
+    ],
+    name: 'OrderValidated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'bytes32[]',
+        name: 'orderHashes',
+        type: 'bytes32[]',
+      },
+    ],
+    name: 'OrdersMatched',
     type: 'event',
   },
 ] as const

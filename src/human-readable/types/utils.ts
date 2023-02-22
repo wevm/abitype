@@ -125,8 +125,11 @@ export type ParseAbiParameters<
         [K in keyof T]: ParseAbiParameter<T[K], Options>
       },
     ]
-type ParseOptions = { Modifier?: Modifier; Structs?: StructLookup | unknown }
-type DefaultParseOptions = object
+export type ParseOptions = {
+  Modifier?: Modifier
+  Structs?: StructLookup | unknown
+}
+export type DefaultParseOptions = object
 
 export type ParseAbiParameter<
   T extends string,
