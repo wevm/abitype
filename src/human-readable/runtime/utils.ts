@@ -57,7 +57,7 @@ export function splitParameters(
   result: string[] = [],
   current = '',
   depth = 0,
-): string[] {
+): readonly string[] {
   if (params === '') {
     if (current === '') return result
     return [...result, current.trim()]

@@ -1,16 +1,19 @@
 import type { AbiParameter } from '../../abi'
 import type { StructLookup } from '../types'
-import { bytesRegex, integerRegex, isTupleRegex } from './regex'
+import {
+  bytesRegex,
+  integerRegex,
+  isTupleRegex,
+  typeWithoutTupleRegex,
+} from './regex'
+import { isStructSignature, structSignatureRegex } from './signatures'
 import { parseAbiParameter } from './utils'
 
-const structSignatureRegex =
-  /^struct\s(?<name>[a-zA-Z0-9_]+)\s\{(?<properties>.*?)\}$/
-
-export function parseStructs(signatures: string[]) {
+export function parseStructs(signatures: readonly string[]) {
   const shallowStructs: StructLookup = {}
   // Create "shallow" version of each struct (and filter out non-structs or invalid structs)
   for (const signature of signatures) {
-    if (!structSignatureRegex.test(signature)) continue
+    if (!isStructSignature(signature)) continue
 
     const match = structSignatureRegex.exec(signature)
     const groups = match?.groups as { name: string; properties: string }
@@ -37,9 +40,6 @@ export function parseStructs(signatures: string[]) {
 
   return resolvedStructs
 }
-
-const typeWithoutTupleRegex =
-  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?$/
 
 function resolveStructs(
   abiParameters: readonly (AbiParameter & { indexed?: true })[],

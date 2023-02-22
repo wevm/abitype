@@ -594,7 +594,6 @@ test('Function', () => {
       assertType<ExtractAbiFunction<typeof wagmiMintExampleAbi, 'tokenURI'>>({
         inputs: [
           {
-            internalType: 'uint256',
             name: 'tokenId',
             type: 'uint256',
           },
@@ -619,9 +618,9 @@ test('Function', () => {
       >
       assertType<Result>({
         inputs: [
-          { internalType: 'address', name: 'from', type: 'address' },
-          { internalType: 'address', name: 'to', type: 'address' },
-          { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+          { name: 'from', type: 'address' },
+          { name: 'to', type: 'address' },
+          { name: 'tokenId', type: 'uint256' },
         ],
         name: 'safeTransferFrom',
         outputs: [],
@@ -630,9 +629,9 @@ test('Function', () => {
       })
       assertType<Result>({
         inputs: [
-          { internalType: 'address', name: 'from', type: 'address' },
-          { internalType: 'address', name: 'to', type: 'address' },
-          { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+          { name: 'from', type: 'address' },
+          { name: 'to', type: 'address' },
+          { name: 'tokenId', type: 'uint256' },
           { internalType: 'bytes', name: '_data', type: 'bytes' },
         ],
         name: 'safeTransferFrom',
@@ -675,13 +674,11 @@ test('Events', () => {
         },
         {
           indexed: true,
-          internalType: 'address',
           name: 'to',
           type: 'address',
         },
         {
           indexed: true,
-          internalType: 'uint256',
           name: 'tokenId',
           type: 'uint256',
         },

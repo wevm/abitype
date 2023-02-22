@@ -16,14 +16,14 @@ test('parseAbiParameter', () => {
     ]
   `)
 
-  // expect(() => parseAbiParameter([])).toThrowErrorMatchingInlineSnapshot()
+  // @ts-expect-error invalid signature type
+  expect(() => parseAbiParameter([])).toThrowErrorMatchingInlineSnapshot(
+    '"Failed to parse ABI parameter"',
+  )
 
-  // expect(parseAbiParameter(['struct Foo { string name; }']))
-  //   .toMatchInlineSnapshot(`
-  //   [
-  //     "struct Foo { string name; }",
-  //   ]
-  // `)
+  expect(() =>
+    parseAbiParameter(['struct Foo { string name; }']),
+  ).toThrowErrorMatchingInlineSnapshot('"Failed to parse ABI parameter"')
 })
 
 test.each([
@@ -66,4 +66,30 @@ test.each([
   },
 ])(`parseAbiParameter($signature)`, ({ signature, expected }) => {
   expect(parseAbiParameter(signature)).toEqual(expected)
+})
+
+test.each([
+  {
+    signatures: ['struct Foo { string bar; }', 'Foo'],
+    expected: { type: 'tuple', components: [{ name: 'bar', type: 'string' }] },
+  },
+  {
+    signatures: ['struct Foo { string bar; }', 'Foo foo'],
+    expected: {
+      type: 'tuple',
+      name: 'foo',
+      components: [{ name: 'bar', type: 'string' }],
+    },
+  },
+  {
+    signatures: ['struct Foo { string bar; }', 'Foo indexed foo'],
+    expected: {
+      type: 'tuple',
+      name: 'foo',
+      indexed: true,
+      components: [{ name: 'bar', type: 'string' }],
+    },
+  },
+])(`parseAbiParameter($signatures)`, ({ signatures, expected }) => {
+  expect(parseAbiParameter(signatures)).toEqual(expected)
 })

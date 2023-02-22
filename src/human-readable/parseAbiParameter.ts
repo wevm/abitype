@@ -1,7 +1,11 @@
 import type { AbiParameter } from '../abi'
 import type { Narrow } from '../narrow'
 import type { Filter } from '../types'
-import { parseAbiParameter as parseAbiParameter_ } from './runtime'
+import {
+  isStructSignature,
+  parseAbiParameter as parseAbiParameter_,
+  parseStructs,
+} from './runtime'
 import type {
   IsStructSignature,
   Modifier,
@@ -62,8 +66,20 @@ export function parseAbiParameter<
       ? unknown
       : never),
 ): ParseAbiParameter<T> {
+  let abiParameter
   if (typeof signatures === 'string')
-    return parseAbiParameter_(signatures, { modifiers }) as ParseAbiParameter<T>
+    abiParameter = parseAbiParameter_(signatures, {
+      modifiers,
+    }) as ParseAbiParameter<T>
+  else {
+    const structs = parseStructs(signatures as readonly string[])
+    for (const signature of signatures as readonly string[]) {
+      if (isStructSignature(signature)) continue
+      abiParameter = parseAbiParameter_(signature, { modifiers, structs })
+      break
+    }
+  }
 
-  return signatures as ParseAbiParameter<T>
+  if (!abiParameter) throw new Error('Failed to parse ABI parameter')
+  return abiParameter as ParseAbiParameter<T>
 }
