@@ -134,7 +134,7 @@ test('writeContract', () => {
         address,
         abi: nestedTupleArrayAbi,
         functionName: 'f',
-        args: [{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1, y: 1 }, 1n],
+        args: [{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1n, y: 1n }, 1n],
       })
       assertType<
         readonly {

@@ -65,13 +65,13 @@ type PrimitiveTypeLookup<
 
 type GreaterThan48Bits = Exclude<MBits, 8 | 16 | 24 | 32 | 40 | 48 | ''>
 type LessThanOrEqualTo48Bits = Exclude<MBits, GreaterThan48Bits | ''>
-type DynamicBits = Exclude<MBits, GreaterThan48Bits | LessThanOrEqualTo48Bits>
+type NoBits = Exclude<MBits, GreaterThan48Bits | LessThanOrEqualTo48Bits>
 type BitsTypeLookup = {
   [_ in `${LessThanOrEqualTo48Bits}`]: ResolvedConfig['IntType']
 } & {
   [_ in `${GreaterThan48Bits}`]: ResolvedConfig['BigIntType']
 } & {
-  [_ in DynamicBits]: ResolvedConfig['IntType'] | ResolvedConfig['BigIntType']
+  [_ in NoBits]: ResolvedConfig['BigIntType']
 }
 
 /**
@@ -93,7 +93,9 @@ export type AbiParameterToPrimitiveType<
         type: SolidityTuple
         components: infer TComponents extends readonly AbiParameter[]
       }
-    ? _HasUnnamedAbiParameter<TComponents> extends true
+    ? TComponents extends readonly []
+      ? []
+      : _HasUnnamedAbiParameter<TComponents> extends true
       ? // Has unnamed tuple parameters so return as array
         readonly [
           ...{
@@ -167,7 +169,7 @@ type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
       ? Head['name'] extends ''
         ? true
         : _HasUnnamedAbiParameter<Tail>
-      : false
+      : true
     : false
 
 /**
