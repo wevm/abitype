@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { parseAbiParameter, splitParameters } from './utils'
+import { parseAbiParameter, parseSignature, splitParameters } from './utils'
 
 test('empty string', () => {
   expect(() => parseAbiParameter('')).toThrowErrorMatchingInlineSnapshot(
@@ -166,4 +166,19 @@ test.each([
   },
 ])(`splitParameters($params)`, ({ params, expected }) => {
   expect(splitParameters(params)).toEqual(expected)
+})
+
+test.each([
+  {
+    signature: 'function foo()',
+    expected: {
+      name: 'foo',
+      type: 'function',
+      inputs: [],
+      outputs: [],
+      stateMutability: 'nonpayable',
+    },
+  },
+])(`parseSignature($signature)`, ({ signature, expected }) => {
+  expect(parseSignature(signature)).toEqual(expected)
 })

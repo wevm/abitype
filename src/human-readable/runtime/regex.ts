@@ -1,3 +1,8 @@
+export function execTyped<T>(regex: RegExp, string: string) {
+  const match = regex.exec(string)
+  return match?.groups as T | undefined
+}
+
 // `bytes<M>`: binary type of `M` bytes, `0 < M <= 32`
 // https://regexr.com/6va55
 export const bytesRegex = /^bytes([1-9]|1[0-9]|2[0-9]|3[0-2])?$/
@@ -11,3 +16,8 @@ export const isTupleRegex = /^\(.+?\).*?$/
 
 export const typeWithoutTupleRegex =
   /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?$/
+
+export const abiParameterWithoutTupleRegex =
+  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
+export const abiParameterWithTupleRegex =
+  /^\((?<type>.+?)\)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/

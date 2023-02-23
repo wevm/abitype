@@ -1,48 +1,155 @@
 import type { AbiParameter } from '../../abi'
 import type { Modifier, StructLookup } from '../types'
-import { isTupleRegex } from './regex'
+import {
+  abiParameterWithTupleRegex,
+  abiParameterWithoutTupleRegex,
+  execTyped,
+  isTupleRegex,
+} from './regex'
+import {
+  execConstructorSignature,
+  execErrorSignature,
+  execEventSignature,
+  execFunctionSignature,
+  isConstructorSignature,
+  isErrorSignature,
+  isEventSignature,
+  isFallbackSignature,
+  isFunctionSignature,
+  isReceiveSignature,
+} from './signatures'
+
+export function parseSignature(signature: string, structs: StructLookup = {}) {
+  if (isFunctionSignature(signature)) {
+    const match = execFunctionSignature(signature)
+    if (!match) throw new Error(`Invalid function signature "${signature}"`)
+    const inputParams = splitParameters(match.parameters)
+    const inputs = []
+    for (const param of inputParams) {
+      inputs.push(
+        parseAbiParameter(param, {
+          structs,
+          modifiers: ['calldata', 'memory', 'storage'],
+        }),
+      )
+    }
+
+    const outputs = []
+    if (match.returns) {
+      const outputParams = splitParameters(match.returns)
+      for (const param of outputParams) {
+        outputs.push(parseAbiParameter(param, { structs }))
+      }
+    }
+
+    return {
+      name: match.name,
+      type: 'function',
+      stateMutability: match.stateMutability ?? 'nonpayable',
+      inputs,
+      outputs,
+    }
+  }
+
+  if (isEventSignature(signature)) {
+    const match = execEventSignature(signature)
+    if (!match) throw new Error(`Invalid event signature "${signature}"`)
+    const params = splitParameters(match.parameters)
+    const abiParameters = []
+    for (const param of params) {
+      abiParameters.push(
+        parseAbiParameter(param, { structs, modifiers: ['indexed'] }),
+      )
+    }
+    return { name: match.name, type: 'event', inputs: abiParameters }
+  }
+
+  if (isErrorSignature(signature)) {
+    const match = execErrorSignature(signature)
+    if (!match) throw new Error(`Invalid error signature "${signature}"`)
+    const params = splitParameters(match.parameters)
+    const abiParameters = []
+    for (const param of params) {
+      abiParameters.push(parseAbiParameter(param, { structs }))
+    }
+    return { name: match.name, type: 'error', inputs: abiParameters }
+  }
+
+  if (isConstructorSignature(signature)) {
+    const match = execConstructorSignature(signature)
+    if (!match) throw new Error(`Invalid constructor signature "${signature}"`)
+    const params = splitParameters(match.parameters)
+    const abiParameters = []
+    for (const param of params) {
+      abiParameters.push(parseAbiParameter(param, { structs }))
+    }
+    return {
+      name: match.name,
+      type: 'constructor',
+      stateMutability: 'nonpayable',
+      inputs: abiParameters,
+    }
+  }
+
+  if (isFallbackSignature(signature)) return { type: 'fallback' }
+  if (isReceiveSignature(signature))
+    return {
+      type: 'receive',
+      stateMutability: 'payable',
+    }
+
+  throw new Error(`Unknown signature "${signature}"`)
+}
+
+const abiParameterCache = new Map<string, AbiParameter>()
 
 type ParseOptions = {
   modifiers?: Modifier | readonly Modifier[]
   structs?: StructLookup
 }
 
-const abiParameterCache = new Map<string, AbiParameter>()
-
 export function parseAbiParameter(param: string, options?: ParseOptions) {
   if (abiParameterCache.has(param)) return abiParameterCache.get(param)!
 
   const isTuple = isTupleRegex.test(param)
-  const groups = extractGroups(param, isTuple)
-  if (!groups) throw new Error(`Invalid ABI parameter "${param}"`)
+  const match = execTyped<{
+    array?: string
+    modifier?: string
+    name?: string
+    type: string
+  }>(
+    isTuple ? abiParameterWithTupleRegex : abiParameterWithoutTupleRegex,
+    param,
+  )
+  if (!match) throw new Error(`Invalid ABI parameter "${param}"`)
 
   // Check if `indexed` modifier exists, but is not allowed (e.g function parameters, struct properties)
   const hasIndexedModifier = options?.modifiers?.includes('indexed')
-  const isIndexed = groups.modifier === 'indexed'
+  const isIndexed = match.modifier === 'indexed'
   if (isIndexed && !hasIndexedModifier)
     throw new Error(`\`indexed\` not allowed in "${param}"`)
 
-  const name = groups.name ? { name: groups.name } : {}
+  const name = match.name ? { name: match.name } : {}
   const indexed = hasIndexedModifier && isIndexed ? { indexed: true } : {}
   const structs = options?.structs ?? {}
   let type: string
   let components = {}
   if (isTuple) {
     type = 'tuple'
-    const params = splitParameters(groups.type)
+    const params = splitParameters(match.type)
     const components_ = []
     for (const param of params) {
       // remove `modifiers` from `options` to prevent from being added to tuple components
       components_.push(parseAbiParameter(param, { structs: options?.structs }))
     }
     components = { components: components_ }
-  } else if (groups.type in structs) {
+  } else if (match.type in structs) {
     type = 'tuple'
-    components = { components: structs[groups.type] }
-  } else type = groups.type
+    components = { components: structs[match.type] }
+  } else type = match.type
 
   const abiParameter = {
-    type: `${type}${groups.array ?? ''}`,
+    type: `${type}${match.array ?? ''}`,
     ...name,
     ...indexed,
     ...components,
@@ -82,21 +189,4 @@ export function splitParameters(
   }
 
   return []
-}
-
-const abiParameterWithoutTupleRegex =
-  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
-const abiParameterWithTupleRegex =
-  /^\((?<type>.+?)\)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
-function extractGroups(param: string, isTuple: boolean) {
-  const regex = isTuple
-    ? abiParameterWithTupleRegex
-    : abiParameterWithoutTupleRegex
-  const match = regex.exec(param)
-  return match?.groups as {
-    array?: string
-    modifier?: string
-    name?: string
-    type: string
-  }
 }

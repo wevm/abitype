@@ -6,7 +6,7 @@ import {
   isTupleRegex,
   typeWithoutTupleRegex,
 } from './regex'
-import { isStructSignature, structSignatureRegex } from './signatures'
+import { execStructSignature, isStructSignature } from './signatures'
 import { parseAbiParameter } from './utils'
 
 export function parseStructs(signatures: readonly string[]) {
@@ -15,9 +15,9 @@ export function parseStructs(signatures: readonly string[]) {
   for (const signature of signatures) {
     if (!isStructSignature(signature)) continue
 
-    const match = structSignatureRegex.exec(signature)
-    const groups = match?.groups as { name: string; properties: string }
-    const properties = groups.properties.split(';')
+    const match = execStructSignature(signature)
+    if (!match) throw new Error(`Invalid struct signature "${signature}"`)
+    const properties = match.properties.split(';')
 
     const components: AbiParameter[] = []
     for (const property of properties) {
@@ -29,7 +29,7 @@ export function parseStructs(signatures: readonly string[]) {
 
     if (!components.length)
       throw new Error(`Invalid struct: no properties exist for "${signature}"`)
-    shallowStructs[groups.name] = components
+    shallowStructs[match.name] = components
   }
 
   const resolvedStructs: StructLookup = {}

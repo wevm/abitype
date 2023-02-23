@@ -1,6 +1,8 @@
 import type { Abi } from '../abi'
 import type { Narrow } from '../narrow'
 import type { Filter } from '../types'
+import { isStructSignature, parseStructs } from './runtime'
+import { parseSignature } from './runtime/utils'
 import type {
   IsSignature,
   ParseSignature,
@@ -58,7 +60,9 @@ export function parseAbiItem<
   T extends string | readonly string[] | readonly unknown[],
 >(
   signatures: Narrow<T> &
-    (string[] extends T
+    (T extends readonly []
+      ? never
+      : string[] extends T
       ? unknown
       : T extends string
       ? IsSignature<T> extends true
@@ -68,5 +72,18 @@ export function parseAbiItem<
       ? unknown
       : never),
 ): ParseAbiItem<T> {
-  return signatures as ParseAbiItem<T>
+  let abiItem
+  if (typeof signatures === 'string')
+    abiItem = parseSignature(signatures) as ParseAbiItem<T>
+  else {
+    const structs = parseStructs(signatures as readonly string[])
+    for (const signature of signatures as readonly string[]) {
+      if (isStructSignature(signature)) continue
+      abiItem = parseSignature(signature, structs)
+      break
+    }
+  }
+
+  if (!abiItem) throw new Error('Failed to parse ABI item')
+  return abiItem as ParseAbiItem<T>
 }

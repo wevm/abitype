@@ -1255,7 +1255,6 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: true,
-
         name: 'nounId',
         type: 'uint256',
       },
@@ -1267,7 +1266,6 @@ export const nounsAuctionHouseAbi = [
       },
       {
         indexed: false,
-
         name: 'value',
         type: 'uint256',
       },
@@ -1281,19 +1279,16 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: true,
-
         name: 'nounId',
         type: 'uint256',
       },
       {
         indexed: false,
-
         name: 'startTime',
         type: 'uint256',
       },
       {
         indexed: false,
-
         name: 'endTime',
         type: 'uint256',
       },
@@ -1306,13 +1301,11 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: true,
-
         name: 'nounId',
         type: 'uint256',
       },
       {
         indexed: false,
-
         name: 'endTime',
         type: 'uint256',
       },
@@ -1325,7 +1318,6 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: false,
-
         name: 'minBidIncrementPercentage',
         type: 'uint256',
       },
@@ -1338,7 +1330,6 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: false,
-
         name: 'reservePrice',
         type: 'uint256',
       },
@@ -1351,7 +1342,6 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: true,
-
         name: 'nounId',
         type: 'uint256',
       },
@@ -1363,7 +1353,6 @@ export const nounsAuctionHouseAbi = [
       },
       {
         indexed: false,
-
         name: 'amount',
         type: 'uint256',
       },
@@ -1376,7 +1365,6 @@ export const nounsAuctionHouseAbi = [
     inputs: [
       {
         indexed: false,
-
         name: 'timeBuffer',
         type: 'uint256',
       },
