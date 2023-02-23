@@ -84,7 +84,6 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
       abiParameters.push(parseAbiParameter(param, { structs }))
     }
     return {
-      name: match.name,
       type: 'constructor',
       stateMutability: 'nonpayable',
       inputs: abiParameters,

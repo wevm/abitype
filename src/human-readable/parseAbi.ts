@@ -1,6 +1,8 @@
 import type { Abi } from '../abi'
 import type { Narrow } from '../narrow'
 import type { Filter } from '../types'
+import { isStructSignature, parseStructs } from './runtime'
+import { parseSignature } from './runtime/utils'
 import type { ParseSignature, ParseStructs, Signatures } from './types'
 
 export type ParseAbi<
@@ -55,5 +57,11 @@ export function parseAbi<
       ? unknown
       : never),
 ): ParseAbi<TSignatures> {
-  return signatures as ParseAbi<TSignatures>
+  const structs = parseStructs(signatures as readonly string[])
+  const abi = []
+  for (const signature of signatures as readonly string[]) {
+    if (isStructSignature(signature)) continue
+    abi.push(parseSignature(signature, structs))
+  }
+  return abi as ParseAbi<TSignatures>
 }

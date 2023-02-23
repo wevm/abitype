@@ -1,11 +1,5 @@
-- parseAbiItem
-- parseAbiConstructor
-- parseAbiEvent
-- parseAbiError
-- parseAbiFallback
-- parseAbiFunction
-- parseAbi
 - Cache signatures
+- Error handling
 
 - Add seaport abi [https://docs.opensea.io/reference/seaport-interface](https://docs.opensea.io/reference/seaport-interface)
 - Separate entrypoint for human-readable ABI types/utils?

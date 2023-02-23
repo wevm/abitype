@@ -107,7 +107,7 @@ test('execStructSignature', () => {
 
 test('isConstructorSignature', () => {
   expect(isConstructorSignature('constructor(string)')).toMatchInlineSnapshot(
-    'false',
+    'true',
   )
   expect(isConstructorSignature('function name(string)')).toMatchInlineSnapshot(
     'false',
@@ -116,7 +116,11 @@ test('isConstructorSignature', () => {
 
 test('execConstructorSignature', () => {
   expect(execConstructorSignature('constructor(string)')).toMatchInlineSnapshot(
-    'undefined',
+    `
+    {
+      "parameters": "string",
+    }
+  `,
   )
   expect(
     execConstructorSignature('function name(string)'),

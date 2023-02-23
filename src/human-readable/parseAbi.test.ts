@@ -1,3 +1,12 @@
-import { test } from 'vitest'
+import { expect, test } from 'vitest'
 
-test.todo('parseAbi')
+import {
+  wagmiMintExampleAbi,
+  wagmiMintExampleHumanReadableAbi,
+} from '../../test'
+import { parseAbi } from './parseAbi'
+
+test('parseAbi', () => {
+  const res = parseAbi(wagmiMintExampleHumanReadableAbi)
+  expect(res).toEqual(wagmiMintExampleAbi)
+})

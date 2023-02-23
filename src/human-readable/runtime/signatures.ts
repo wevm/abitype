@@ -56,16 +56,12 @@ export function execStructSignature(signature: string) {
 }
 
 // https://regexr.com/78u01
-const constructorSignatureRegex =
-  /^constructor (?<name>[a-zA-Z0-9_]+)\((?<parameters>.*?)\)$/
+const constructorSignatureRegex = /^constructor\((?<parameters>.*?)\)$/
 export function isConstructorSignature(signature: string) {
   return constructorSignatureRegex.test(signature)
 }
 export function execConstructorSignature(signature: string) {
-  return execTyped<{ name: string; parameters: string }>(
-    constructorSignatureRegex,
-    signature,
-  )
+  return execTyped<{ parameters: string }>(constructorSignatureRegex, signature)
 }
 
 // https://regexr.com/78u18
