@@ -1392,3 +1392,23 @@ test('Utils', () => {
   assertType<PopLastIfEmpty<[1, 2, 3]>>([1, 2, 3])
   assertType<PopLastIfEmpty<['1', '2', '']>>(['1', '2'])
 })
+
+test('Circular reference', () => {
+  type struct = CreateStructObject<['struct Voter {Voter vote; uint weight;}']>
+
+  assertType<ParseArgs<['Voter voting'], struct>>([
+    {
+      name: 'voting',
+      type: 'tuple',
+      internalType: 'Struct Voter',
+      components: [
+        'Error: Circular reference on type "Voter" and name "vote"',
+        {
+          name: 'weight',
+          type: 'uint256',
+          internalType: 'uint256',
+        },
+      ],
+    },
+  ])
+})

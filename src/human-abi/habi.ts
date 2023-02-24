@@ -9,6 +9,7 @@ import type {
   EventSignature,
   FallbacksSignature,
   FunctionSignature,
+  Includes,
   Modifier,
   Pop,
   PopLastIfEmpty,
@@ -291,20 +292,26 @@ export type ExtractStructInternalType<T extends string> =
 export type ParseArgs<
   T extends AbiArgsType,
   TObj extends Record<string, AbiArgsType | unknown> = Record<string, unknown>,
+  TReferences extends readonly (keyof TObj)[] = [],
 > = T[0] extends '' | 'void'
   ? []
   : {
       [key in keyof T]: T[key] extends `${infer TType extends string}${WS}${infer TModifier extends Modifier}${WS}${infer TName extends string}`
         ? isUnknown<TObj[ExtractStructName<Trim<TType>>]> extends false
-          ? {
-              readonly internalType: ExtractStructInternalType<TType>
-              readonly name: Trim<TName>
-              readonly type: ExtractStructType<Trim<TType>>
-              readonly components: ParseArgs<
-                Extract<TObj[ExtractStructName<Trim<TType>>], AbiArgsType>,
-                TObj
-              >
-            } & (TModifier extends 'indexed' ? { indexed: true } : unknown)
+          ? Includes<TReferences, ExtractStructName<Trim<TType>>> extends true
+            ? `Error: Circular reference on type "${ExtractStructName<
+                Trim<TType>
+              >}" and name "${Trim<TName>}"`
+            : {
+                readonly internalType: ExtractStructInternalType<TType>
+                readonly name: Trim<TName>
+                readonly type: ExtractStructType<Trim<TType>>
+                readonly components: ParseArgs<
+                  Extract<TObj[ExtractStructName<Trim<TType>>], AbiArgsType>,
+                  TObj,
+                  [...TReferences, ExtractStructName<Trim<TType>>]
+                >
+              } & (TModifier extends 'indexed' ? { indexed: true } : unknown)
           : {
               readonly internalType: SolidityType<Trim<TType>>
               readonly name: Trim<TName>
@@ -312,30 +319,40 @@ export type ParseArgs<
             } & (TModifier extends 'indexed' ? { indexed: true } : unknown)
         : T[key] extends `${infer Type}${WS}${infer Name}`
         ? isUnknown<TObj[ExtractStructName<Trim<Type>>]> extends false
-          ? {
-              readonly internalType: ExtractStructInternalType<Type>
-              readonly name: Trim<Name> extends Modifier ? '' : Name
-              readonly type: ExtractStructType<Trim<Type>>
-              readonly components: ParseArgs<
-                Extract<TObj[ExtractStructName<Trim<Type>>], AbiArgsType>,
-                TObj
-              >
-            } & (Name extends 'indexed' ? { indexed: true } : unknown)
+          ? Includes<TReferences, ExtractStructName<Trim<Type>>> extends true
+            ? `Error: Circular reference on type "${ExtractStructName<
+                Trim<Type>
+              >}" and name "${Trim<Name>}"`
+            : {
+                readonly internalType: ExtractStructInternalType<Type>
+                readonly name: Trim<Name> extends Modifier ? '' : Name
+                readonly type: ExtractStructType<Trim<Type>>
+                readonly components: ParseArgs<
+                  Extract<TObj[ExtractStructName<Trim<Type>>], AbiArgsType>,
+                  TObj,
+                  [...TReferences, ExtractStructName<Trim<Type>>]
+                >
+              } & (Name extends 'indexed' ? { indexed: true } : unknown)
           : {
               readonly internalType: SolidityType<Trim<Type>>
               readonly name: Trim<Name>
               readonly type: SolidityType<Trim<Type>>
             } & (Name extends 'indexed' ? { indexed: true } : unknown)
         : isUnknown<TObj[ExtractStructName<Trim<T[key]>>]> extends false
-        ? {
-            readonly internalType: ExtractStructInternalType<Trim<T[key]>>
-            readonly name: ''
-            readonly type: ExtractStructType<Trim<T[key]>>
-            readonly components: ParseArgs<
-              Extract<TObj[ExtractStructName<Trim<T[key]>>], AbiArgsType>,
-              TObj
-            >
-          }
+        ? Includes<TReferences, ExtractStructName<Trim<T[key]>>> extends true
+          ? `Error: Circular reference on type "${ExtractStructName<
+              Trim<T[key]>
+            >}"`
+          : {
+              readonly internalType: ExtractStructInternalType<Trim<T[key]>>
+              readonly name: ''
+              readonly type: ExtractStructType<Trim<T[key]>>
+              readonly components: ParseArgs<
+                Extract<TObj[ExtractStructName<Trim<T[key]>>], AbiArgsType>,
+                TObj,
+                [...TReferences, ExtractStructName<Trim<T[key]>>]
+              >
+            }
         : {
             readonly internalType: SolidityType<T[key]>
             readonly name: ''

@@ -83,7 +83,7 @@ export type AbiArgs =
   | UnnamedArgs
   | ''
   | 'void'
-  | `${string}${Modifier}${string}`
+  | `${string}${WS}${Modifier}${WS}${string}`
   | `${string}${WS}${string}`
 /**
  * Array of all possible abi argument values. Excluding tuples
@@ -285,3 +285,18 @@ export type isUnknown<T> = unknown extends T ? true : false
 export type DeepReadonly<T> = {
   readonly [P in keyof T]: keyof T[P] extends never ? T[P] : DeepReadonly<T[P]>
 }
+
+type Equals<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y
+  ? 1
+  : 2
+  ? true
+  : false
+
+export type Includes<T extends readonly any[], TMatch> = T extends [
+  infer Head,
+  ...infer Rest,
+]
+  ? Equals<Head, TMatch> extends true
+    ? true
+    : Includes<Rest, TMatch>
+  : false
