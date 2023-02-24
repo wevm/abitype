@@ -55,4 +55,30 @@ test('ResolveStructs Circular Reference', () => {
       ],
     },
   ])
+
+  type ResultUnknow = ResolveStructs<
+    [{ type: 'Name'; name: 'name' }],
+    {
+      Person: [{ type: 'Name'; name: 'name' }]
+      Name: [{ type: 'Foo'; name: 'foo' }]
+      Foo: [{ type: 'Hello'; name: 'foo' }, { type: 'uint16'; name: 'baz' }]
+    }
+  >
+
+  assertType<ResultUnknow>([
+    {
+      type: 'tuple',
+      name: 'name',
+      components: [
+        {
+          type: 'tuple',
+          name: 'foo',
+          components: [
+            'Error: Unknow type found "Hello"', //{name: "foo", type: "Hello"},
+            { type: 'uint16', name: 'baz' },
+          ],
+        },
+      ],
+    },
+  ])
 })

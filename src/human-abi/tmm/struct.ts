@@ -1,4 +1,4 @@
-import type { AbiParameter } from '../../abi'
+import type { AbiParameter, AbiType } from '../../abi'
 
 type Equals<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y
   ? 1
@@ -48,5 +48,7 @@ export type ResolveStructs<
           [...TKeyReferences, TAbiParameters[K]['type']]
         >
       }
-    : TAbiParameters[K]
+    : TAbiParameters[K]['type'] extends AbiType
+    ? TAbiParameters[K]
+    : `Error: Unknow type found "${TAbiParameters[K]['type']}"`
 }
