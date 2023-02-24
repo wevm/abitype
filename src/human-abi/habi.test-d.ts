@@ -572,7 +572,7 @@ test('ParseHAbiErrors', () => {
       name: 'InsufficientBalance',
       type: 'error',
       inputs: [
-        { name: 'owner', type: 'account', internalType: 'account' },
+        "Error: Unknow type found 'account'", //{ name: 'owner', type: 'account', internalType: 'account' },
         { name: 'balance', type: 'uint256', internalType: 'uint256' },
       ],
     },
@@ -720,7 +720,7 @@ test('ParseHumanAbi', () => {
       name: 'InsufficientBalance',
       type: 'error',
       inputs: [
-        { name: 'owner', type: 'account', internalType: 'account' },
+        "Error: Unknow type found 'account'", //{ name: 'owner', type: 'account', internalType: 'account' },
         { name: 'balance', type: 'uint256', internalType: 'uint256' },
       ],
     },
@@ -861,7 +861,7 @@ test('ParseHumanAbi', () => {
         name: 'InsufficientBalance',
         type: 'error',
         inputs: [
-          { name: 'owner', type: 'account', internalType: 'account' },
+          "Error: Unknow type found 'account'", //{ name: 'owner', type: 'account', internalType: 'account' },
           { name: 'balance', type: 'uint256', internalType: 'uint256' },
         ],
       },
@@ -1077,7 +1077,7 @@ test('Extract Abi Specs', () => {
     name: 'InsufficientBalance',
     type: 'error',
     inputs: [
-      { name: 'owner', type: 'account', internalType: 'account' },
+      "Error: Unknow type found 'account'",
       { name: 'balance', type: 'uint256', internalType: 'uint256' },
     ],
   })
@@ -1402,7 +1402,7 @@ test('Circular reference', () => {
       type: 'tuple',
       internalType: 'Struct Voter',
       components: [
-        'Error: Circular reference on type "Voter" and name "vote"',
+        "Error: Circular reference on type 'Voter' and name 'vote'",
         {
           name: 'weight',
           type: 'uint256',

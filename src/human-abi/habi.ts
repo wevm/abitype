@@ -1,3 +1,4 @@
+import type { AbiType } from '../abi'
 import type {
   AbiArgsType,
   AbiArgsTypeWithTuple,
@@ -299,9 +300,9 @@ export type ParseArgs<
       [key in keyof T]: T[key] extends `${infer TType extends string}${WS}${infer TModifier extends Modifier}${WS}${infer TName extends string}`
         ? isUnknown<TObj[ExtractStructName<Trim<TType>>]> extends false
           ? Includes<TReferences, ExtractStructName<Trim<TType>>> extends true
-            ? `Error: Circular reference on type "${ExtractStructName<
+            ? `Error: Circular reference on type '${ExtractStructName<
                 Trim<TType>
-              >}" and name "${Trim<TName>}"`
+              >}' and name '${Trim<TName>}'`
             : {
                 readonly internalType: ExtractStructInternalType<TType>
                 readonly name: Trim<TName>
@@ -312,17 +313,19 @@ export type ParseArgs<
                   [...TReferences, ExtractStructName<Trim<TType>>]
                 >
               } & (TModifier extends 'indexed' ? { indexed: true } : unknown)
-          : {
+          : Trim<TType> extends AbiType
+          ? {
               readonly internalType: SolidityType<Trim<TType>>
               readonly name: Trim<TName>
               readonly type: SolidityType<Trim<TType>>
             } & (TModifier extends 'indexed' ? { indexed: true } : unknown)
+          : `Error: Unknow type found '${Trim<TType>}'`
         : T[key] extends `${infer Type}${WS}${infer Name}`
         ? isUnknown<TObj[ExtractStructName<Trim<Type>>]> extends false
           ? Includes<TReferences, ExtractStructName<Trim<Type>>> extends true
-            ? `Error: Circular reference on type "${ExtractStructName<
+            ? `Error: Circular reference on type '${ExtractStructName<
                 Trim<Type>
-              >}" and name "${Trim<Name>}"`
+              >}' and name '${Trim<Name>}'`
             : {
                 readonly internalType: ExtractStructInternalType<Type>
                 readonly name: Trim<Name> extends Modifier ? '' : Name
@@ -333,16 +336,18 @@ export type ParseArgs<
                   [...TReferences, ExtractStructName<Trim<Type>>]
                 >
               } & (Name extends 'indexed' ? { indexed: true } : unknown)
-          : {
+          : Trim<Type> extends AbiType
+          ? {
               readonly internalType: SolidityType<Trim<Type>>
               readonly name: Trim<Name>
               readonly type: SolidityType<Trim<Type>>
             } & (Name extends 'indexed' ? { indexed: true } : unknown)
+          : `Error: Unknow type found '${Trim<Type>}'`
         : isUnknown<TObj[ExtractStructName<Trim<T[key]>>]> extends false
         ? Includes<TReferences, ExtractStructName<Trim<T[key]>>> extends true
-          ? `Error: Circular reference on type "${ExtractStructName<
+          ? `Error: Circular reference on type '${ExtractStructName<
               Trim<T[key]>
-            >}"`
+            >}'`
           : {
               readonly internalType: ExtractStructInternalType<Trim<T[key]>>
               readonly name: ''
@@ -353,11 +358,13 @@ export type ParseArgs<
                 [...TReferences, ExtractStructName<Trim<T[key]>>]
               >
             }
-        : {
+        : Trim<T[key]> extends AbiType
+        ? {
             readonly internalType: SolidityType<T[key]>
             readonly name: ''
             readonly type: SolidityType<Trim<T[key]>>
           }
+        : `Error: Unknow type found '${Trim<T[key]>}'`
     }
 
 /**
