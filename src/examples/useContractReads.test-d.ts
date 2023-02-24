@@ -84,7 +84,7 @@ test('useContractReads', () => {
                 { a: 1, b: [2] },
                 { a: 1, b: [2] },
               ],
-              { x: 5, y: 6 },
+              { x: 5n, y: 6n },
               7n,
             ],
           },
@@ -111,7 +111,9 @@ test('useContractReads', () => {
           },
         ],
       })
-      assertType<{ data: [void, ResolvedConfig['BytesType']] }>(result)
+      assertType<{ data: [void, ResolvedConfig['BytesType']['outputs']] }>(
+        result,
+      )
     })
   })
 

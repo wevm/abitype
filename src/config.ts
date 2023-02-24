@@ -28,7 +28,12 @@ export interface DefaultConfig {
   /** TypeScript type to use for `address` values */
   AddressType: `0x${string}`
   /** TypeScript type to use for `bytes` values */
-  BytesType: `0x${string}`
+  BytesType: {
+    /** TypeScript type to use for `bytes` input values */
+    inputs: `0x${string}` | Uint8Array
+    /** TypeScript type to use for `bytes` output values */
+    outputs: `0x${string}`
+  }
   /** TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48` */
   BigIntType: bigint
   /** TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48` */
@@ -80,13 +85,15 @@ export interface ResolvedConfig {
   AddressType: IsUnknown<Config['AddressType']> extends true
     ? DefaultConfig['AddressType']
     : Config['AddressType']
+
   /**
    * TypeScript type to use for `bytes` values
-   * @default `0x${string}`
+   * @default { inputs: `0x${string}` | Uint8Array; outputs: `0x${string}` }
    */
-  BytesType: IsUnknown<Config['BytesType']> extends true
-    ? DefaultConfig['BytesType']
-    : Config['BytesType']
+  BytesType: Config['BytesType'] extends { inputs: unknown; outputs: unknown }
+    ? Config['BytesType']
+    : DefaultConfig['BytesType']
+
   /**
    * TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48`
    * @default bigint

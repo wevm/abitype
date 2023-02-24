@@ -44,6 +44,13 @@ test('AbiTypeToPrimitiveType', () => {
     assertType<AbiTypeToPrimitiveType<'bytes1'>>('0xfoo')
     assertType<AbiTypeToPrimitiveType<'bytes24'>>('0xfoo')
     assertType<AbiTypeToPrimitiveType<'bytes32'>>('0xfoo')
+    assertType<AbiTypeToPrimitiveType<'bytes24'>>(
+      new Uint8Array(Buffer.from('0xfoo')),
+    )
+    assertType<AbiTypeToPrimitiveType<'bytes', 'outputs'>>(
+      // @ts-expect-error `Uint8Array` only valid for bytes inputs
+      new Uint8Array(Buffer.from('0xfoo')),
+    )
   })
 
   test('function', () => {
@@ -55,10 +62,8 @@ test('AbiTypeToPrimitiveType', () => {
   })
 
   test('number', () => {
-    assertType<AbiTypeToPrimitiveType<'int'>>(1)
     assertType<AbiTypeToPrimitiveType<'int'>>(1n)
     assertType<AbiTypeToPrimitiveType<'int'>>(BigInt(1))
-    assertType<AbiTypeToPrimitiveType<'uint'>>(1)
     assertType<AbiTypeToPrimitiveType<'uint'>>(1n)
     assertType<AbiTypeToPrimitiveType<'uint'>>(BigInt(1))
 
@@ -104,7 +109,7 @@ test('AbiParameterToPrimitiveType', () => {
   })
 
   test('bool', () => {
-    type Result = AbiParameterToPrimitiveType<{ name: ''; type: 'bool' }>
+    type Result = AbiParameterToPrimitiveType<{ type: 'bool' }>
     assertType<Result>(true)
     assertType<Result>(false)
   })
@@ -119,7 +124,6 @@ test('AbiParameterToPrimitiveType', () => {
 
   test('function', () => {
     type FunctionResult = AbiParameterToPrimitiveType<{
-      name: ''
       type: 'function'
     }>
     assertType<FunctionResult>(`${address}foo`)
@@ -127,7 +131,6 @@ test('AbiParameterToPrimitiveType', () => {
 
   test('string', () => {
     type Result = AbiParameterToPrimitiveType<{
-      name: ''
       type: 'string'
     }>
     assertType<Result>('foo')
@@ -135,31 +138,34 @@ test('AbiParameterToPrimitiveType', () => {
   })
 
   test('tuple', () => {
-    type Result = AbiParameterToPrimitiveType<{
-      components: [
-        { name: 'name'; type: 'string' },
-        { name: 'symbol'; type: 'string' },
-        { name: 'description'; type: 'string' },
-        { name: 'imageURI'; type: 'string' },
-        { name: 'contentURI'; type: 'string' },
-        { name: 'price'; type: 'uint' },
-        { name: 'limit'; type: 'uint256' },
-        { name: 'fundingRecipient'; type: 'address' },
-        { name: 'renderer'; type: 'address' },
-        { name: 'nonce'; type: 'uint256' },
-        { name: 'fee'; type: 'uint16' },
-      ]
-      internalType: 'struct IWritingEditions.WritingEdition'
-      name: 'edition'
-      type: 'tuple'
-    }>
+    type Result = AbiParameterToPrimitiveType<
+      {
+        components: [
+          { name: 'name'; type: 'string' },
+          { name: 'symbol'; type: 'string' },
+          { name: 'description'; type: 'string' },
+          { name: 'imageURI'; type: 'string' },
+          { name: 'contentURI'; type: 'string' },
+          { name: 'price'; type: 'uint' },
+          { name: 'limit'; type: 'uint256' },
+          { name: 'fundingRecipient'; type: 'address' },
+          { name: 'renderer'; type: 'address' },
+          { name: 'nonce'; type: 'uint256' },
+          { name: 'fee'; type: 'uint16' },
+        ]
+        internalType: 'struct IWritingEditions.WritingEdition'
+        name: 'edition'
+        type: 'tuple'
+      },
+      'inputs'
+    >
     assertType<Result>({
       name: 'Test',
       symbol: '$TEST',
       description: 'Foo bar baz',
       imageURI: 'ipfs://hash',
       contentURI: 'arweave://digest',
-      price: 0.1,
+      price: 1n,
       limit: 100n,
       fundingRecipient: address,
       renderer: address,
@@ -214,9 +220,10 @@ test('AbiParameterToPrimitiveType', () => {
       c: [{ x: 1n, y: { a: 'foo' } }],
     })
 
-    type WithoutNamedParameterResult = AbiParameterToPrimitiveType<{
+    type WithoutNamedComponentResult = AbiParameterToPrimitiveType<{
       components: [
         { name: ''; type: 'string' },
+        { type: 'string' },
         { name: 'symbol'; type: 'string' },
         { name: 'description'; type: 'string' },
         { name: 'imageURI'; type: 'string' },
@@ -232,19 +239,40 @@ test('AbiParameterToPrimitiveType', () => {
       name: 'edition'
       type: 'tuple'
     }>
-    assertType<WithoutNamedParameterResult>([
+    assertType<WithoutNamedComponentResult>([
+      'Test',
       'Test',
       '$TEST',
       'Foo bar baz',
       'ipfs://hash',
       'arweave://digest',
-      0.1,
+      1n,
       100n,
       address,
       address,
       123n,
       0,
     ])
+
+    type WithoutNamedComponentsResult = AbiParameterToPrimitiveType<{
+      components: [{ type: 'string' }, { type: 'uint' }, { type: 'address' }]
+      internalType: 'struct IWritingEditions.WritingEdition'
+      name: 'edition'
+      type: 'tuple'
+    }>
+    assertType<WithoutNamedComponentsResult>([
+      'Test',
+      5n,
+      '0x0000000000000000000000000000000000000000',
+    ])
+
+    type WithoutComponentsResult = AbiParameterToPrimitiveType<{
+      components: []
+      internalType: 'struct IWritingEditions.WritingEdition'
+      name: 'edition'
+      type: 'tuple'
+    }>
+    assertType<WithoutComponentsResult>([])
   })
 
   test('number', () => {
@@ -262,7 +290,6 @@ test('AbiParameterToPrimitiveType', () => {
   test('array', () => {
     test('dynamic', () => {
       type Result = AbiParameterToPrimitiveType<{
-        name: ''
         type: 'string[]'
       }>
       assertType<Result>(['foo', 'bar', 'baz'])
@@ -270,7 +297,6 @@ test('AbiParameterToPrimitiveType', () => {
 
     test('fixed', () => {
       type Result = AbiParameterToPrimitiveType<{
-        name: ''
         type: 'string[3]'
       }>
       assertType<Result>(['foo', 'bar', 'baz'])
@@ -321,7 +347,6 @@ test('AbiParameterToPrimitiveType', () => {
   test('2d array', () => {
     test('dynamic', () => {
       type Result = AbiParameterToPrimitiveType<{
-        name: ''
         type: 'string[][]'
       }>
       assertType<Result>([['foo'], ['bar'], ['baz']])
@@ -330,14 +355,12 @@ test('AbiParameterToPrimitiveType', () => {
     test('fixed', () => {
       assertType<
         AbiParameterToPrimitiveType<{
-          name: ''
           type: 'string[][3]'
         }>
       >([['foo'], ['bar'], ['baz']])
 
       assertType<
         AbiParameterToPrimitiveType<{
-          name: ''
           type: 'string[3][]'
         }>
       >([
@@ -347,7 +370,6 @@ test('AbiParameterToPrimitiveType', () => {
 
       assertType<
         AbiParameterToPrimitiveType<{
-          name: ''
           type: 'string[3][3]'
         }>
       >([
@@ -358,7 +380,6 @@ test('AbiParameterToPrimitiveType', () => {
 
       assertType<
         AbiParameterToPrimitiveType<{
-          name: ''
           type: 'string[3][3]'
         }>
         // @ts-expect-error not enough items
@@ -388,6 +409,23 @@ test('AbiParameterToPrimitiveType', () => {
         [null, null],
       ])
     })
+  })
+
+  test('inputs and outputs types', () => {
+    const parameter = {
+      name: 'foo',
+      type: 'bytes32',
+    } as const
+    assertType<AbiParameterToPrimitiveType<typeof parameter, 'inputs'>>(
+      new Uint8Array(Buffer.from('0xfoo')),
+    )
+    assertType<AbiParameterToPrimitiveType<typeof parameter, 'outputs'>>(
+      '0xfoo',
+    )
+    assertType<AbiParameterToPrimitiveType<typeof parameter, 'outputs'>>(
+      // @ts-expect-error `Uint8Array` only valid for bytes inputs
+      new Uint8Array(Buffer.from('0xfoo')),
+    )
   })
 })
 
@@ -467,6 +505,25 @@ test('AbiParametersToPrimitiveTypes', () => {
         { x: 1n, y: 1n },
         { x: 1n, y: 1n },
       ],
+    ])
+  })
+
+  test('inputs and outputs types', () => {
+    const parameters = [
+      {
+        name: 'foo',
+        type: 'bytes32',
+      },
+    ] as const
+    assertType<AbiParametersToPrimitiveTypes<typeof parameters, 'inputs'>>([
+      new Uint8Array(Buffer.from('0xfoo')),
+    ])
+    assertType<AbiParametersToPrimitiveTypes<typeof parameters, 'outputs'>>([
+      '0xfoo',
+    ])
+    assertType<AbiParametersToPrimitiveTypes<typeof parameters, 'outputs'>>([
+      // @ts-expect-error `Uint8Array` only valid for bytes inputs
+      new Uint8Array(Buffer.from('0xfoo')),
     ])
   })
 })

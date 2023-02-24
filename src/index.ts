@@ -5,6 +5,7 @@ export type {
   AbiFunction,
   AbiInternalType,
   AbiParameter,
+  AbiParameterKind,
   AbiStateMutability,
   AbiType,
   Address,

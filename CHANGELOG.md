@@ -1,5 +1,38 @@
 # abitype
 
+## 0.5.0
+
+### Minor Changes
+
+- [#85](https://github.com/wagmi-dev/abitype/pull/85) [`7042ee8`](https://github.com/wagmi-dev/abitype/commit/7042ee8068be1ca36a21f20a34c9d32c5d51389a) Thanks [@jxom](https://github.com/jxom)! - **Breaking:** `uint` and `int` types now cast to `ResolvedConfig['BigIntType']` instead of `ResolvedConfig['IntType'] | ResolvedConfig['BigIntType']`.
+
+### Patch Changes
+
+- [#87](https://github.com/wagmi-dev/abitype/pull/87) [`00e5bd0`](https://github.com/wagmi-dev/abitype/commit/00e5bd05175f1f5f6ff4f4772a6db325c3462b16) Thanks [@jxom](https://github.com/jxom)! - Fixed derived type of `AbiParameterToPrimitiveType` for tuples that have all unnamed components.
+
+## 0.4.1
+
+### Patch Changes
+
+- [#81](https://github.com/wagmi-dev/abitype/pull/81) [`9c437a4`](https://github.com/wagmi-dev/abitype/commit/9c437a45e0b4802a62e5eea2c48430ea3b4c8d8a) Thanks [@tmm](https://github.com/tmm)! - Removed `uint` and `int` from `TypedDataType` (not allowed in spec).
+
+## 0.4.0
+
+### Minor Changes
+
+- [#78](https://github.com/wagmi-dev/abitype/pull/78) [`0df9b94`](https://github.com/wagmi-dev/abitype/commit/0df9b9473cefa6ad0d0227eb9d8ed805e15c4ea6) Thanks [@Raiden1411](https://github.com/Raiden1411)! - **Breaking**: Changed `BytesType` configuration property to support ABI item inputs and outputs types. To keep the previous behavior set `BytesType` to the following:
+
+  ```ts
+  declare module 'abitype' {
+    BytesType: {
+      inputs: `0x${string}`
+      outputs: `0x${string}`
+    }
+  }
+  ```
+
+  `BytesType['inputs']` default is now `` `0x${string}` | Uint8Array `` instead of just `` `0x${string}` ``.
+
 ## 0.3.0
 
 ### Minor Changes

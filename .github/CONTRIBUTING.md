@@ -89,7 +89,7 @@ After the install completes, [git hooks](https://github.com/toplenboren/simple-g
 
 ## Running tests
 
-Since ABIType is a type-only library, tests are run by checking types with the TypeScript compiler:
+Tests are run by checking types with the TypeScript compiler and [Vitest](https://vitest.dev/guide/testing-types.html):
 
 ```bash
 pnpm test
