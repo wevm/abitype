@@ -22,15 +22,6 @@ export type ParseAbi<
           ? Filter<Mapped, never>
           : never
         : never
-      : // Error with one or more signatures, let's display them as errors
-      Signatures<TSignatures> extends infer Errors
-      ? {
-          [K in keyof Errors]: Errors[K] extends `Error: ${string}`
-            ? Errors[K]
-            : never
-        } extends infer Mapped extends readonly unknown[]
-        ? Filter<Mapped, never>
-        : never
       : never
     : never
 
@@ -59,9 +50,11 @@ export function parseAbi<
 ): ParseAbi<TSignatures> {
   const structs = parseStructs(signatures as readonly string[])
   const abi = []
-  for (const signature of signatures as readonly string[]) {
+  const length = signatures.length
+  for (let i = 0; i < length; i++) {
+    const signature = (signatures as readonly string[])[i]!
     if (isStructSignature(signature)) continue
     abi.push(parseSignature(signature, structs))
   }
-  return abi as ParseAbi<TSignatures>
+  return abi as unknown as ParseAbi<TSignatures>
 }

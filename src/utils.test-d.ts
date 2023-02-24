@@ -1,6 +1,7 @@
 import { assertType, test } from 'vitest'
 
-import { address } from '../test'
+import type { Abi } from './abi'
+import { address } from './test'
 import type {
   customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
@@ -9,8 +10,7 @@ import type {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
-} from '../test'
-import type { Abi } from './abi'
+} from './test'
 import type {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
@@ -599,13 +599,7 @@ test('Function', () => {
           },
         ],
         name: 'tokenURI',
-        outputs: [
-          {
-            internalType: 'string',
-            name: '',
-            type: 'string',
-          },
-        ],
+        outputs: [{ type: 'string' }],
         stateMutability: 'pure',
         type: 'function',
       })
@@ -632,7 +626,7 @@ test('Function', () => {
           { name: 'from', type: 'address' },
           { name: 'to', type: 'address' },
           { name: 'tokenId', type: 'uint256' },
-          { internalType: 'bytes', name: '_data', type: 'bytes' },
+          { name: '_data', type: 'bytes' },
         ],
         name: 'safeTransferFrom',
         outputs: [],
@@ -664,11 +658,9 @@ test('Events', () => {
 
   test('ExtractAbiEvent', () => {
     assertType<ExtractAbiEvent<typeof wagmiMintExampleAbi, 'Transfer'>>({
-      anonymous: false,
       inputs: [
         {
           indexed: true,
-          internalType: 'address',
           name: 'from',
           type: 'address',
         },

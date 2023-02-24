@@ -1,8 +1,13 @@
 import { assertType, test } from 'vitest'
 
+import type { seaportHumanReadableAbi } from '../test'
+import type { IsAbi } from '../utils'
 import type { ParseAbi } from './parseAbi'
 
 test('ParseAbi', () => {
+  type SeaportAbi = ParseAbi<typeof seaportHumanReadableAbi>
+  assertType<IsAbi<SeaportAbi>>(true)
+
   assertType<ParseAbi<[]>>([])
   assertType<ParseAbi<['struct Foo { string name; }']>>([])
 
@@ -90,7 +95,7 @@ test('ParseAbi', () => {
     },
   ])
 
-  assertType<ParseAbi<['function foo ()']>>([
-    'Error: Signature "function foo ()" is invalid at position 0',
-  ])
+  // assertType<ParseAbi<['function foo ()']>>([
+  //   'Error: Signature "function foo ()" is invalid at position 0',
+  // ])
 })

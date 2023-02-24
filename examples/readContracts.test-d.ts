@@ -7,7 +7,7 @@ import {
   nounsAuctionHouseAbi,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
-} from '../test'
+} from '../src/test'
 import { readContracts } from './readContracts'
 
 test('readContracts', () => {

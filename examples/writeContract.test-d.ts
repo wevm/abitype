@@ -10,7 +10,7 @@ import {
   wagmiMintExampleAbi,
   wagmiMintExampleHumanReadableAbi,
   writingEditionsFactoryAbi,
-} from '../test'
+} from '../src/test'
 import { writeContract } from './writeContract'
 
 test('writeContract', () => {

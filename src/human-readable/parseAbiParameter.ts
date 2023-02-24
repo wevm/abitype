@@ -18,7 +18,7 @@ export type ParseAbiParameter<
   T extends string | readonly string[] | readonly unknown[],
 > = T extends string
   ? T extends ''
-    ? undefined
+    ? never
     : ParseAbiParameter_<T, { Modifier: Modifier }>
   : string[] extends T
   ? AbiParameter // Return generic AbiParameter item since type was no inferrable
@@ -73,7 +73,9 @@ export function parseAbiParameter<
     }) as ParseAbiParameter<T>
   else {
     const structs = parseStructs(signatures as readonly string[])
-    for (const signature of signatures as readonly string[]) {
+    const length = signatures.length
+    for (let i = 0; i < length; i++) {
+      const signature = (signatures as readonly string[])[i]!
       if (isStructSignature(signature)) continue
       abiParameter = parseAbiParameter_(signature, { modifiers, structs })
       break

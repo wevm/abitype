@@ -111,7 +111,9 @@ type ParseFunctionInputsAndStateMutability<TSignature extends string> =
         Inputs: Parameters
         StateMutability: ScopeOrStateMutability extends `${Scope} ${infer StateMutability extends AbiStateMutability}`
           ? StateMutability
-          : ScopeOrStateMutability
+          : ScopeOrStateMutability extends AbiStateMutability
+          ? ScopeOrStateMutability
+          : 'nonpayable'
       }
     : never
 

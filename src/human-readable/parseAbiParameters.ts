@@ -36,7 +36,7 @@ export type ParseAbiParameters<
       } extends infer Mapped extends readonly unknown[]
       ? Filter<Mapped, never>[0] extends infer Parameters
         ? Parameters extends undefined
-          ? []
+          ? never
           : Parameters
         : never
       : never
@@ -76,17 +76,21 @@ export function parseAbiParameters<
   const abiParameters = []
   if (typeof signatures === 'string') {
     const parameters = splitParameters(signatures)
-    for (const parameter of parameters) {
-      abiParameters.push(parseAbiParameter_(parameter, { modifiers }))
+    const length = parameters.length
+    for (let i = 0; i < length; i++) {
+      abiParameters.push(parseAbiParameter_(parameters[i]!, { modifiers }))
     }
   } else {
     const structs = parseStructs(signatures as readonly string[])
-    for (const signature of signatures as readonly string[]) {
+    const length = signatures.length
+    for (let i = 0; i < length; i++) {
+      const signature = (signatures as readonly string[])[i]!
       if (isStructSignature(signature)) continue
       const parameters = splitParameters(signature)
-      for (const parameter of parameters) {
+      const length = parameters.length
+      for (let k = 0; k < length; k++) {
         abiParameters.push(
-          parseAbiParameter_(parameter, { modifiers, structs }),
+          parseAbiParameter_(parameters[k]!, { modifiers, structs }),
         )
       }
     }

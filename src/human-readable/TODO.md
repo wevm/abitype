@@ -1,10 +1,9 @@
-- Cache signatures
-- Error handling
-
-- Add seaport abi [https://docs.opensea.io/reference/seaport-interface](https://docs.opensea.io/reference/seaport-interface)
-- Separate entrypoint for human-readable ABI types/utils?
+- Error handling: parseAbiParameter, parseAbiParameters, parseAbiItem, circular structs
+- Loads of tests
+- tsup entrypoints script
+- Add TSDoc
+- Check if Zod updates needed
 - Docs with vitepress
-- Add TSDoc to parse utils
 
 Improvements to signature validation:
 

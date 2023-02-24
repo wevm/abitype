@@ -9,8 +9,7 @@ import {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
-} from '../../test'
-
+} from '../test'
 import { Abi } from './zod'
 
 describe('AbiSchema', () => {

@@ -2,7 +2,7 @@ import { FormatTypes, Interface as InterfaceV5 } from '@ethersproject/abi'
 import { Interface } from 'ethers'
 import { bench, describe } from 'vitest'
 
-import { wagmiMintExampleHumanReadableAbi } from '../../test'
+import { wagmiMintExampleHumanReadableAbi } from '../test'
 import { parseAbi } from './parseAbi'
 
 describe('Parse ABI', () => {

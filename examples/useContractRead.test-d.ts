@@ -5,7 +5,7 @@ import {
   address,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
-} from '../test'
+} from '../src/test'
 import { useContractRead, useWagmiMintExampleRead } from './useContractRead'
 
 test('useContractRead', () => {

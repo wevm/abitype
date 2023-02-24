@@ -23,6 +23,14 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./human-readable": {
+      "types": "./dist/human-readable/index.d.ts",
+      "default": "./dist/human-readable/index.js"
+    },
+    "./test": {
+      "types": "./dist/test/index.d.ts",
+      "default": "./dist/test/index.js"
+    },
     "./zod": {
       "types": "./dist/zod/index.d.ts",
       "default": "./dist/zod/index.js"

@@ -59,6 +59,7 @@ type ValidFunctionSignatures =
   | `function ${string}(${string}) ${AbiStateMutability}`
   | `function ${string}(${string}) ${Scope}`
   | `function ${string}(${string}) ${AbiStateMutability} ${Returns}`
+  | `function ${string}(${string}) ${Scope} ${Returns}`
   | `function ${string}(${string}) ${Scope} ${AbiStateMutability}`
   | `function ${string}(${string}) ${Scope} ${AbiStateMutability} ${Returns}`
 type MangledReturns =

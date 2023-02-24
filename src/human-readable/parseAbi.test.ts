@@ -1,12 +1,8 @@
 import { expect, test } from 'vitest'
 
-import {
-  wagmiMintExampleAbi,
-  wagmiMintExampleHumanReadableAbi,
-} from '../../test'
+import { seaportHumanReadableAbi } from '../test'
 import { parseAbi } from './parseAbi'
 
 test('parseAbi', () => {
-  const res = parseAbi(wagmiMintExampleHumanReadableAbi)
-  expect(res).toEqual(wagmiMintExampleAbi)
+  expect(parseAbi(seaportHumanReadableAbi)).toMatchSnapshot()
 })

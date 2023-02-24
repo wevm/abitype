@@ -7,7 +7,7 @@ import {
   wagmiMintExampleAbi,
   wagmiMintExampleHumanReadableAbi,
   writingEditionsFactoryAbi,
-} from '../test'
+} from '../src/test'
 import { readContract, readWagmiMintExample } from './readContract'
 
 test('readContract', () => {

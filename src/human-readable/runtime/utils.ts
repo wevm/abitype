@@ -25,9 +25,10 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
     if (!match) throw new Error(`Invalid function signature "${signature}"`)
     const inputParams = splitParameters(match.parameters)
     const inputs = []
-    for (const param of inputParams) {
+    const inputLength = inputParams.length
+    for (let i = 0; i < inputLength; i++) {
       inputs.push(
-        parseAbiParameter(param, {
+        parseAbiParameter(inputParams[i]!, {
           structs,
           modifiers: ['calldata', 'memory', 'storage'],
         }),
@@ -37,8 +38,9 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
     const outputs = []
     if (match.returns) {
       const outputParams = splitParameters(match.returns)
-      for (const param of outputParams) {
-        outputs.push(parseAbiParameter(param, { structs }))
+      const outputLength = outputParams.length
+      for (let i = 0; i < outputLength; i++) {
+        outputs.push(parseAbiParameter(outputParams[i]!, { structs }))
       }
     }
 
@@ -56,9 +58,10 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
     if (!match) throw new Error(`Invalid event signature "${signature}"`)
     const params = splitParameters(match.parameters)
     const abiParameters = []
-    for (const param of params) {
+    const length = params.length
+    for (let i = 0; i < length; i++) {
       abiParameters.push(
-        parseAbiParameter(param, { structs, modifiers: ['indexed'] }),
+        parseAbiParameter(params[i]!, { structs, modifiers: ['indexed'] }),
       )
     }
     return { name: match.name, type: 'event', inputs: abiParameters }
@@ -69,8 +72,9 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
     if (!match) throw new Error(`Invalid error signature "${signature}"`)
     const params = splitParameters(match.parameters)
     const abiParameters = []
-    for (const param of params) {
-      abiParameters.push(parseAbiParameter(param, { structs }))
+    const length = params.length
+    for (let i = 0; i < length; i++) {
+      abiParameters.push(parseAbiParameter(params[i]!, { structs }))
     }
     return { name: match.name, type: 'error', inputs: abiParameters }
   }
@@ -80,8 +84,9 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
     if (!match) throw new Error(`Invalid constructor signature "${signature}"`)
     const params = splitParameters(match.parameters)
     const abiParameters = []
-    for (const param of params) {
-      abiParameters.push(parseAbiParameter(param, { structs }))
+    const length = params.length
+    for (let i = 0; i < length; i++) {
+      abiParameters.push(parseAbiParameter(params[i]!, { structs }))
     }
     return {
       type: 'constructor',
@@ -137,9 +142,12 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     type = 'tuple'
     const params = splitParameters(match.type)
     const components_ = []
-    for (const param of params) {
+    const length = params.length
+    for (let i = 0; i < length; i++) {
       // remove `modifiers` from `options` to prevent from being added to tuple components
-      components_.push(parseAbiParameter(param, { structs: options?.structs }))
+      components_.push(
+        parseAbiParameter(params[i]!, { structs: options?.structs }),
+      )
     }
     components = { components: components_ }
   } else if (match.type in structs) {

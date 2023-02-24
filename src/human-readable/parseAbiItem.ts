@@ -16,7 +16,7 @@ export type ParseAbiItem<
 > = T extends string
   ? T extends Signature<T> // Validate signature
     ? ParseSignature<T>
-    : Signature<T> // Return error for invalid signature
+    : never
   : string[] extends T
   ? Abi[number] // Return generic Abi item since type was no inferrable
   : T extends readonly string[]
@@ -29,15 +29,6 @@ export type ParseAbiItem<
         } extends infer Mapped extends readonly unknown[]
         ? Filter<Mapped, never>[0]
         : never
-      : never
-    : // Error with one or more signatures, let's display them as errors
-    Signatures<T> extends infer Errors
-    ? {
-        [K in keyof Errors]: Errors[K] extends `Error: ${string}`
-          ? Errors[K]
-          : never
-      } extends infer Mapped extends readonly unknown[]
-      ? Filter<Mapped, never>[0]
       : never
     : never
   : never
@@ -77,7 +68,9 @@ export function parseAbiItem<
     abiItem = parseSignature(signatures) as ParseAbiItem<T>
   else {
     const structs = parseStructs(signatures as readonly string[])
-    for (const signature of signatures as readonly string[]) {
+    const length = signatures.length
+    for (let i = 0; i < length; i++) {
+      const signature = (signatures as readonly string[])[i]!
       if (isStructSignature(signature)) continue
       abiItem = parseSignature(signature, structs)
       break

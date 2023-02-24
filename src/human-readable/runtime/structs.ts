@@ -10,9 +10,11 @@ import { execStructSignature, isStructSignature } from './signatures'
 import { parseAbiParameter } from './utils'
 
 export function parseStructs(signatures: readonly string[]) {
-  const shallowStructs: StructLookup = {}
   // Create "shallow" version of each struct (and filter out non-structs or invalid structs)
-  for (const signature of signatures) {
+  const shallowStructs: StructLookup = {}
+  const signaturesLength = signatures.length
+  for (let i = 0; i < signaturesLength; i++) {
+    const signature = signatures[i]!
     if (!isStructSignature(signature)) continue
 
     const match = execStructSignature(signature)
@@ -20,7 +22,9 @@ export function parseStructs(signatures: readonly string[]) {
     const properties = match.properties.split(';')
 
     const components: AbiParameter[] = []
-    for (const property of properties) {
+    const propertiesLength = properties.length
+    for (let k = 0; k < propertiesLength; k++) {
+      const property = properties[k]!
       const trimmed = property.trim()
       if (!trimmed) continue
       const abiParameter = parseAbiParameter(trimmed)
@@ -32,9 +36,12 @@ export function parseStructs(signatures: readonly string[]) {
     shallowStructs[match.name] = components
   }
 
-  const resolvedStructs: StructLookup = {}
   // Resolve nested structs inside each parameter
-  for (const [name, parameters] of Object.entries(shallowStructs)) {
+  const resolvedStructs: StructLookup = {}
+  const entries = Object.entries(shallowStructs)
+  const entriesLength = entries.length
+  for (let i = 0; i < entriesLength; i++) {
+    const [name, parameters] = entries[i]!
     resolvedStructs[name] = resolveStructs(parameters, shallowStructs)
   }
 
@@ -47,7 +54,9 @@ function resolveStructs(
   ancestors = new Set<string>(),
 ) {
   const components: AbiParameter[] = []
-  for (const abiParameter of abiParameters) {
+  const length = abiParameters.length
+  for (let i = 0; i < length; i++) {
+    const abiParameter = abiParameters[i]!
     const isTuple = isTupleRegex.test(abiParameter.type)
     if (isTuple) components.push(abiParameter)
     else {

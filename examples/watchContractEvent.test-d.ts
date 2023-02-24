@@ -5,7 +5,7 @@ import {
   address,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
-} from '../test'
+} from '../src/test'
 import { watchContractEvent } from './watchContractEvent'
 
 test('watchContractEvent', () => {
