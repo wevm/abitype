@@ -1,4 +1,0 @@
-{
-  "type": "module",
-  "main": "../dist/human-readable/index.js"
-}

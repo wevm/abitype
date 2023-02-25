@@ -1,6 +1,6 @@
 import { assertType, test } from 'vitest'
 
-import type { ResolvedConfig } from '../'
+import type { ResolvedConfig } from '../src'
 import {
   address,
   nestedTupleArrayAbi,

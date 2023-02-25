@@ -8,7 +8,6 @@ export default defineConfig({
   dts: true,
   entry: [
     'src/index.ts',
-    'src/human-readable/index.ts',
     'src/test/index.ts',
     'src/zod/index.ts',
     'src/config.ts',

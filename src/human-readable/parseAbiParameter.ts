@@ -47,7 +47,11 @@ export type ParseAbiParameter<
             : ParseAbiParameter_<T[K], { Modifier: Modifier; Structs: Structs }>
           : never
       } extends infer Mapped extends readonly unknown[]
-      ? Filter<Mapped, never>[0]
+      ? Filter<Mapped, never>[0] extends infer Result
+        ? Result extends undefined
+          ? never
+          : Result
+        : never
       : never
     : never
   : never

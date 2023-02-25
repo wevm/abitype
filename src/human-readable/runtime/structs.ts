@@ -1,11 +1,12 @@
 import type { AbiParameter } from '../../abi'
-import type { StructLookup } from '../types'
 import {
   bytesRegex,
+  execTyped,
   integerRegex,
   isTupleRegex,
   typeWithoutTupleRegex,
-} from './regex'
+} from '../../regex'
+import type { StructLookup } from '../types'
 import { execStructSignature, isStructSignature } from './signatures'
 import { parseAbiParameter } from './utils'
 
@@ -60,10 +61,14 @@ function resolveStructs(
     const isTuple = isTupleRegex.test(abiParameter.type)
     if (isTuple) components.push(abiParameter)
     else {
-      const groups = typeWithoutTupleRegex.exec(abiParameter.type)?.groups
-      const { array, type } = groups as { array?: string; type: string }
-      if (!type) throw new Error(`Invalid ABI parameter type "${type}"`)
+      const match = execTyped<{ array?: string; type: string }>(
+        typeWithoutTupleRegex,
+        abiParameter.type,
+      )
+      if (!match?.type)
+        throw new Error(`Invalid ABI parameter type "${abiParameter.type}"`)
 
+      const { array, type } = match
       if (type in structs) {
         if (ancestors.has(type))
           throw new Error(`Circular reference detected: "${type}"`)

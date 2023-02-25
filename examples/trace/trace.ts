@@ -1,4 +1,4 @@
-import { parseAbi } from '../../src/human-readable'
+import { parseAbi } from '../../src'
 import { readContract } from '../readContract'
 
 const result = readContract({

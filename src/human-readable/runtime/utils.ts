@@ -1,11 +1,6 @@
 import type { AbiParameter } from '../../abi'
+import { execTyped, isTupleRegex } from '../../regex'
 import type { Modifier, StructLookup } from '../types'
-import {
-  abiParameterWithTupleRegex,
-  abiParameterWithoutTupleRegex,
-  execTyped,
-  isTupleRegex,
-} from './regex'
 import {
   execConstructorSignature,
   execErrorSignature,
@@ -111,6 +106,11 @@ type ParseOptions = {
   modifiers?: Modifier | readonly Modifier[]
   structs?: StructLookup
 }
+
+const abiParameterWithoutTupleRegex =
+  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
+const abiParameterWithTupleRegex =
+  /^\((?<type>.+?)\)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
 
 export function parseAbiParameter(param: string, options?: ParseOptions) {
   if (abiParameterCache.has(param)) return abiParameterCache.get(param)!

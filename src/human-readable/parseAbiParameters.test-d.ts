@@ -1,11 +1,13 @@
-import { assertType, test } from 'vitest'
+import { assertType, expectTypeOf, test } from 'vitest'
 
 import type { ParseAbiParameters } from './parseAbiParameters'
 
 test('ParseAbiParameters', () => {
-  assertType<ParseAbiParameters<''>>([])
-  assertType<ParseAbiParameters<[]>>([])
-  assertType<ParseAbiParameters<['struct Foo { string name; }']>>([])
+  expectTypeOf<ParseAbiParameters<''>>().toEqualTypeOf<never>()
+  expectTypeOf<ParseAbiParameters<[]>>().toEqualTypeOf<never>()
+  expectTypeOf<
+    ParseAbiParameters<['struct Foo { string name; }']>
+  >().toEqualTypeOf<never>()
 
   // string
   assertType<ParseAbiParameters<'address from, address to, uint256 amount'>>([
@@ -71,8 +73,6 @@ test('ParseAbiParameters', () => {
         },
       ],
     },
-    {
-      type: 'bytes32',
-    },
+    { type: 'bytes32' },
   ])
 })

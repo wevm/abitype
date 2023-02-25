@@ -5,9 +5,11 @@ import type { ParseAbiItem } from './parseAbiItem'
 import { parseAbiItem } from './parseAbiItem'
 
 test('ParseAbiItem', () => {
-  assertType<ParseAbiItem<''>>('Error: Signature "" is invalid')
-  assertType<ParseAbiItem<[]>>(undefined)
-  assertType<ParseAbiItem<['struct Foo { string name; }']>>(undefined)
+  expectTypeOf<ParseAbiItem<''>>().toEqualTypeOf<never>()
+  expectTypeOf<ParseAbiItem<['']>>().toEqualTypeOf<never>()
+  expectTypeOf<
+    ParseAbiItem<['struct Foo { string name; }']>
+  >().toEqualTypeOf<never>()
 
   // string
   assertType<ParseAbiItem<'function foo()'>>({
@@ -69,15 +71,15 @@ test('ParseAbiItem', () => {
     ],
   })
 
-  assertType<ParseAbiItem<['function foo ()']>>(
-    'Error: Signature "function foo ()" is invalid at position 0',
-  )
+  expectTypeOf<ParseAbiItem<['function foo ()']>>().toEqualTypeOf<never>()
 })
 
 test('parseAbiItem', () => {
-  expectTypeOf(parseAbiItem([])).toEqualTypeOf<undefined>()
-  const res = parseAbiItem(['struct Foo { string name; }'])
-  assertType<typeof res>(undefined)
+  // @ts-expect-error empty array not allowed
+  expectTypeOf(parseAbiItem([])).toEqualTypeOf<never>()
+  expectTypeOf(
+    parseAbiItem(['struct Foo { string name; }']),
+  ).toEqualTypeOf<never>()
 
   // string
   expectTypeOf(parseAbiItem('function foo()')).toEqualTypeOf<{
@@ -110,7 +112,7 @@ test('parseAbiItem', () => {
   expectTypeOf(
     // @ts-expect-error invalid signature
     parseAbiItem(''),
-  ).toEqualTypeOf<'Error: Signature "" is invalid'>()
+  ).toEqualTypeOf<never>()
 
   // Array
   const res2 = parseAbiItem([
@@ -146,8 +148,5 @@ test('parseAbiItem', () => {
   expectTypeOf(parseAbiItem(abi2)).toEqualTypeOf<Abi[number]>()
 
   // @ts-expect-error invalid signature
-  const res3 = parseAbiItem(['function foo ()'])
-  assertType<typeof res3>(
-    'Error: Signature "function foo ()" is invalid at position 0',
-  )
+  expectTypeOf(parseAbiItem(['function foo ()'])).toEqualTypeOf<never>()
 })

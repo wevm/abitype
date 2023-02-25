@@ -16,8 +16,3 @@ export const isTupleRegex = /^\(.+?\).*?$/
 
 export const typeWithoutTupleRegex =
   /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?$/
-
-export const abiParameterWithoutTupleRegex =
-  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
-export const abiParameterWithTupleRegex =
-  /^\((?<type>.+?)\)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/

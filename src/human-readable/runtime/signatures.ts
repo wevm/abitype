@@ -1,5 +1,5 @@
 import type { AbiStateMutability } from '../../abi'
-import { execTyped } from './regex'
+import { execTyped } from '../../regex'
 
 // https://regexr.com/78tsr
 const errorSignatureRegex =

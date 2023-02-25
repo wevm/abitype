@@ -34,30 +34,34 @@ import { modifiers } from './types'
  */
 export type ParseAbiParameters<
   T extends string | readonly string[] | readonly unknown[],
-> = T extends string
-  ? ParseAbiParameters_<SplitParams<T>, { Modifier: Modifier }>
-  : string[] extends T
-  ? AbiParameter // Return generic AbiParameter item since type was no inferrable
-  : T extends readonly string[]
-  ? ParseStructs<T> extends infer Structs
-    ? {
-        [K in keyof T]: T[K] extends string
-          ? IsStructSignature<T[K]> extends true
-            ? never
-            : ParseAbiParameters_<
-                SplitParams<T[K]>,
-                { Modifier: Modifier; Structs: Structs }
-              >
+> =
+  | (T extends string
+      ? T extends ''
+        ? never
+        : ParseAbiParameters_<SplitParams<T>, { Modifier: Modifier }>
+      : never)
+  // Return generic AbiParameter item since type was not inferrable
+  | (string[] extends T ? AbiParameter : never)
+  | (T extends readonly string[]
+      ? ParseStructs<T> extends infer Structs
+        ? {
+            [K in keyof T]: T[K] extends string
+              ? IsStructSignature<T[K]> extends true // filter out structs
+                ? never
+                : ParseAbiParameters_<
+                    SplitParams<T[K]>,
+                    { Modifier: Modifier; Structs: Structs }
+                  >
+              : never
+          } extends infer Mapped extends readonly unknown[]
+          ? Filter<Mapped, never>[0] extends infer Result
+            ? Result extends undefined
+              ? never
+              : Result
+            : never
           : never
-      } extends infer Mapped extends readonly unknown[]
-      ? Filter<Mapped, never>[0] extends infer Parameters
-        ? Parameters extends undefined
-          ? never
-          : Parameters
         : never
-      : never
-    : never
-  : never
+      : never)
 
 /**
  * Parses human-readable ABI parameters into {@link AbiParameter}s
@@ -92,7 +96,7 @@ export function parseAbiParameters<
       ? unknown
       : never),
 ): ParseAbiParameters<T> {
-  const abiParameters = []
+  const abiParameters: AbiParameter[] = []
   if (typeof signatures === 'string') {
     const parameters = splitParameters(signatures)
     const length = parameters.length

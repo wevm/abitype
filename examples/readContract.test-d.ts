@@ -1,7 +1,7 @@
 import { assertType, test } from 'vitest'
 
-import type { Abi, Address, ResolvedConfig } from '../'
-import { parseAbi } from '../src/human-readable'
+import type { Abi, Address, ResolvedConfig } from '../src'
+import { parseAbi } from '../src'
 import {
   address,
   wagmiMintExampleAbi,
