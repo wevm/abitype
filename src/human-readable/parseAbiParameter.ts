@@ -14,6 +14,22 @@ import type {
 } from './types'
 import { modifiers } from './types'
 
+/**
+ * Parses human-readable ABI parameter into {@link AbiParameter}
+ *
+ * @param T - Human-readable ABI parameter
+ * @returns Parsed {@link AbiParameter}
+ *
+ * @example
+ * type Result = ParseAbiParameter<'address from'>
+ * //   ^? type Result = { type: "address"; name: "from"; }
+ *
+ * @example
+ * type Result = ParseAbiParameter<
+ *   // ^? type Result = { type: "tuple"; components: [{ type: "string"; name:...
+ *   ['Baz bar', 'struct Baz { string name; }']
+ * >
+ */
 export type ParseAbiParameter<
   T extends string | readonly string[] | readonly unknown[],
 > = T extends string
@@ -37,17 +53,20 @@ export type ParseAbiParameter<
   : never
 
 /**
- * @description Parses human-readable ABI parameter into JSON format
+ * Parses human-readable ABI parameter into {@link AbiParameter}
+ *
  * @param signature - Human-readable ABI parameter
- * @returns JSON ABI parameter
+ * @returns Parsed {@link AbiParameter}
+ *
  * @example
  * const abiParameter = parseAbiParameter('address from')
  * //    ^? const abiParameter: { type: "address"; name: "from"; }
+ *
  * @example
  * const abiParameter = parseAbiParameter([
- *  //   ^? const abiParameter: { type: "tuple"; components: [{ type: "string"; name:...
- *  'Baz bar',
- *  'struct Baz { string name; }',
+ *   //  ^? const abiParameter: { type: "tuple"; components: [{ type: "string"; name:...
+ *   'Baz bar',
+ *   'struct Baz { string name; }',
  * ])
  */
 export function parseAbiParameter<

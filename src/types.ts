@@ -40,7 +40,7 @@ export type IsUnknown<T> = unknown extends T ? true : false
  *
  * @example
  * type Result = Merge<{ foo: string }, { foo: number; bar: string }>
- * //   ^? { foo: number; bar: string }
+ * //   ^? type Result = { foo: number; bar: string }
  */
 export type Merge<Object1, Object2> = Omit<Object1, keyof Object2> & Object2
 
@@ -50,7 +50,7 @@ export type Merge<Object1, Object2> = Omit<Object1, keyof Object2> & Object2
  * @link https://twitter.com/mattpocockuk/status/1622730173446557697?s=20&t=NdpAcmEFXY01xkqU3KO0Mg
  * @example
  * type Result = Prettify<{ a: string } | { b: string } | { c: number, d: bigint }>
- * //   ^? { a: string; b: string; c: number; d: bigint }
+ * //   ^? type Result = { a: string; b: string; c: number; d: bigint }
  */
 export type Prettify<T> = {
   [K in keyof T]: T[K]
@@ -66,7 +66,7 @@ export type Prettify<T> = {
  *
  * @example
  * type Result = Range<1, 3>
- * //   ^? [1, 2, 3]
+ * //   ^? type Result = [1, 2, 3]
  */
 // From [Type Challenges](https://github.com/type-challenges/type-challenges/issues/11625)
 export type Range<
@@ -118,7 +118,7 @@ type TrimRight<T, Chars extends string = ' '> = T extends `${infer R}${Chars}`
  *
  * @example
  * type Result = Tuple<string, 2>
- * //   ^? [string, string]
+ * //   ^? type Result = [string, string]
  */
 // https://github.com/Microsoft/TypeScript/issues/26223#issuecomment-674500430
 export type Tuple<Type, Size extends number> = Size extends Size

@@ -5,6 +5,21 @@ import { isStructSignature, parseStructs } from './runtime'
 import { parseSignature } from './runtime/utils'
 import type { ParseSignature, ParseStructs, Signatures } from './types'
 
+/**
+ * Parses human-readable ABI into JSON {@link Abi}
+ *
+ * @param TSignatures - Human-readable ABI
+ * @returns Parsed {@link Abi}
+ *
+ * @example
+ * type Result = ParseAbi<
+ *   // ^? type Result = readonly [{ name: "balanceOf"; type: "function"; stateMutability:...
+ *   [
+ *     'function balanceOf(address owner) view returns (uint256)',
+ *     'event Transfer(address indexed from, address indexed to, uint256 amount)',
+ *   ]
+ * >
+ */
 export type ParseAbi<
   TSignatures extends readonly string[] | readonly unknown[],
 > =
@@ -26,14 +41,16 @@ export type ParseAbi<
     : never
 
 /**
- * @description Parses human-readable ABI into JSON ABI
+ * Parses human-readable ABI into JSON {@link Abi}
+ *
  * @param signatures - Human-readable ABI
- * @returns JSON ABI
+ * @returns Parsed {@link Abi}
+ *
  * @example
  * const abi = parseAbi([
- *  //   ^? const abi: readonly [{ name: "balanceOf"; type: "function"; stateMutability:...
- *  'function balanceOf(address owner) view returns (uint256)',
- *  'event Transfer(address indexed from, address indexed to, uint256 amount)',
+ *   //  ^? const abi: readonly [{ name: "balanceOf"; type: "function"; stateMutability:...
+ *   'function balanceOf(address owner) view returns (uint256)',
+ *   'event Transfer(address indexed from, address indexed to, uint256 amount)',
  * ])
  */
 export function parseAbi<

@@ -1,7 +1,7 @@
 import { assertType, test } from 'vitest'
 
-import type { Abi, ResolvedConfig } from '../src'
-import { parseAbi } from '../src'
+import type { Abi, ResolvedConfig } from '../'
+import { parseAbi } from '../src/human-readable'
 import {
   address,
   ensRegistryWithFallbackAbi,

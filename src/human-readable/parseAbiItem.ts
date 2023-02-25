@@ -11,20 +11,36 @@ import type {
   Signatures,
 } from './types'
 
+/**
+ * Parses human-readable ABI item (e.g. error, event, function) into {@link Abi} item
+ *
+ * @param TSignature - Human-readable ABI item
+ * @returns Parsed {@link Abi} item
+ *
+ * @example
+ * type Result = ParseAbiItem<'function balanceOf(address owner) view returns (uint256)'>
+ * //   ^? type Result = { name: "balanceOf"; type: "function"; stateMutability: "view";...
+ *
+ * @example
+ * type Result = ParseAbiItem<
+ *   // ^? type Result = { name: "foo"; type: "function"; stateMutability: "view"; inputs:...
+ *   ['function foo(Baz bar) view returns (string)', 'struct Baz { string name; }']
+ * >
+ */
 export type ParseAbiItem<
-  T extends string | readonly string[] | readonly unknown[],
-> = T extends string
-  ? T extends Signature<T> // Validate signature
-    ? ParseSignature<T>
+  TSignature extends string | readonly string[] | readonly unknown[],
+> = TSignature extends string
+  ? TSignature extends Signature<TSignature> // Validate signature
+    ? ParseSignature<TSignature>
     : never
-  : string[] extends T
+  : string[] extends TSignature
   ? Abi[number] // Return generic Abi item since type was no inferrable
-  : T extends readonly string[]
-  ? T extends Signatures<T> // Validate signatures
-    ? ParseStructs<T> extends infer Structs
+  : TSignature extends readonly string[]
+  ? TSignature extends Signatures<TSignature> // Validate signatures
+    ? ParseStructs<TSignature> extends infer Structs
       ? {
-          [K in keyof T]: T[K] extends string
-            ? ParseSignature<T[K], Structs>
+          [K in keyof TSignature]: TSignature[K] extends string
+            ? ParseSignature<TSignature[K], Structs>
             : never
         } extends infer Mapped extends readonly unknown[]
         ? Filter<Mapped, never>[0]
@@ -34,38 +50,43 @@ export type ParseAbiItem<
   : never
 
 /**
- * @description Parses human-readable ABI item into JSON format
+ * Parses human-readable ABI item (e.g. error, event, function) into {@link Abi} item
+ *
  * @param signatures - Human-readable ABI item
- * @returns JSON ABI item
+ * @returns Parsed {@link Abi} item
+ *
  * @example
  * const abiItem = parseAbiItem('function balanceOf(address owner) view returns (uint256)')
  * //    ^? const abiItem: { name: "balanceOf"; type: "function"; stateMutability: "view";...
+ *
  * @example
  * const abiItem = parseAbiItem([
- *  //   ^? const abiItem: { name: "foo"; type: "function"; stateMutability: "view"; inputs:...
- *  'function foo(Baz bar) view returns (string)',
- *  'struct Baz { string name; }',
+ *   //  ^? const abiItem: { name: "foo"; type: "function"; stateMutability: "view"; inputs:...
+ *   'function foo(Baz bar) view returns (string)',
+ *   'struct Baz { string name; }',
  * ])
  */
 export function parseAbiItem<
-  T extends string | readonly string[] | readonly unknown[],
+  TSignature extends string | readonly string[] | readonly unknown[],
 >(
-  signatures: Narrow<T> &
-    (T extends readonly []
+  signatures: Narrow<TSignature> &
+    (TSignature extends readonly []
       ? never
-      : string[] extends T
+      : string[] extends TSignature
       ? unknown
-      : T extends string
-      ? IsSignature<T> extends true
+      : TSignature extends string
+      ? IsSignature<TSignature> extends true
         ? unknown
         : never
-      : T extends Signatures<T extends readonly string[] ? T : never>
+      : TSignature extends Signatures<
+          TSignature extends readonly string[] ? TSignature : never
+        >
       ? unknown
       : never),
-): ParseAbiItem<T> {
+): ParseAbiItem<TSignature> {
   let abiItem
   if (typeof signatures === 'string')
-    abiItem = parseSignature(signatures) as ParseAbiItem<T>
+    abiItem = parseSignature(signatures) as ParseAbiItem<TSignature>
   else {
     const structs = parseStructs(signatures as readonly string[])
     const length = signatures.length
@@ -78,5 +99,5 @@ export function parseAbiItem<
   }
 
   if (!abiItem) throw new Error('Failed to parse ABI item')
-  return abiItem as ParseAbiItem<T>
+  return abiItem as ParseAbiItem<TSignature>
 }

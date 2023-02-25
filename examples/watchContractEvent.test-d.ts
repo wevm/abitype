@@ -1,6 +1,6 @@
 import { assertType, test } from 'vitest'
 
-import type { Abi, ResolvedConfig } from '../src'
+import type { Abi, ResolvedConfig } from '../'
 import {
   address,
   wagmiMintExampleAbi,

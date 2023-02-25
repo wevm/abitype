@@ -95,7 +95,7 @@
     "test:run": "vitest run",
     "test:typecheck": "vitest typecheck",
     "test:update": "vitest --update",
-    "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project src/examples/trace/tsconfig.json",
+    "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project examples/trace/tsconfig.json",
     "typecheck": "tsc --noEmit"
   },
   "simple-git-hooks": {
