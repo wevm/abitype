@@ -13,14 +13,6 @@ test('no structs', () => {
   ).toMatchInlineSnapshot('{}')
 })
 
-test('no properties', () => {
-  expect(() =>
-    parseStructs(['struct Foo {}']),
-  ).toThrowErrorMatchingInlineSnapshot(
-    '"Invalid struct: no properties exist for \\"struct Foo {}\\""',
-  )
-})
-
 test('parses basic structs', () => {
   expect(
     parseStructs([
@@ -142,17 +134,43 @@ test('parses and resolves nested structs', () => {
   `)
 })
 
-test('struct does not exist when resolving', () => {
+test('no properties', () => {
   expect(() =>
-    parseStructs(['struct Foo { Bar bar; }']),
-  ).toThrowErrorMatchingInlineSnapshot('"Invalid type \\"Bar\\""')
+    parseStructs(['struct Foo {}']),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid struct signature.
+
+    No properties exist.
+
+    Details: struct Foo {}
+    Version: abitype@0.5.0"
+  `,
+  )
+})
+
+test('struct does not exist when resolving', () => {
+  expect(() => parseStructs(['struct Foo { Bar bar; }']))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unknown type.
+
+      Type \\"Bar\\" is not a valid ABI type. Perhaps you forgot to include a struct signature?
+
+      Version: abitype@0.5.0"
+    `)
 })
 
 test('throws if recursive structs are detected', () => {
   expect(() =>
     parseStructs(['struct Foo { Bar bar; }', 'struct Bar { Foo foo; }']),
   ).toThrowErrorMatchingInlineSnapshot(
-    '"Circular reference detected: \\"Bar\\""',
+    `
+    "Circular reference detected.
+
+    Struct \\"Bar\\" is a circular reference.
+
+    Version: abitype@0.5.0"
+  `,
   )
 })
 

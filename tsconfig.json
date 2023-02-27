@@ -4,8 +4,7 @@
     "downlevelIteration": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "lib": ["es2019", "es2017", "dom"],
-    "module": "commonjs",
+    "module": "ESNext",
     "moduleResolution": "node",
     "noEmit": true,
     "noImplicitAny": true,
@@ -16,7 +15,7 @@
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
-    "target": "es2021",
+    "target": "ESNext",
     "types": ["node"]
   },
   "exclude": ["node_modules", "dist"],

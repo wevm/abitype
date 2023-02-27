@@ -5,15 +5,37 @@ import { parseAbiParameters } from './parseAbiParameters'
 test('parseAbiParameters', () => {
   // @ts-expect-error invalid signature type
   expect(() => parseAbiParameters('')).toThrowErrorMatchingInlineSnapshot(
-    '"Failed to parse ABI parameter"',
+    `
+    "Failed to parse ABI Item.
+
+    Docs: https://abitype.dev/todo
+    Details: parseAbiParameters(\\"\\")
+    Version: abitype@0.5.0"
+  `,
   )
   // @ts-expect-error invalid signature type
   expect(() => parseAbiParameters([])).toThrowErrorMatchingInlineSnapshot(
-    '"Failed to parse ABI parameter"',
+    `
+    "Failed to parse ABI Item.
+
+    Docs: https://abitype.dev/todo
+    Details: parseAbiParameters([])
+    Version: abitype@0.5.0"
+  `,
   )
   expect(() =>
     parseAbiParameters(['struct Foo { string name; }']),
-  ).toThrowErrorMatchingInlineSnapshot('"Failed to parse ABI parameter"')
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Failed to parse ABI Item.
+
+    Docs: https://abitype.dev/todo
+    Details: parseAbiParameters([
+      \\"struct Foo { string name; }\\"
+    ])
+    Version: abitype@0.5.0"
+  `,
+  )
 
   expect(parseAbiParameters('address from')).toMatchInlineSnapshot(`
     [

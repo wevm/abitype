@@ -1,5 +1,6 @@
 import type { AbiParameter } from '../../abi'
 import { execTyped, isTupleRegex } from '../../regex'
+import { BaseError } from '../errors'
 import type { Modifier, StructLookup } from '../types'
 import {
   execConstructorSignature,
@@ -17,7 +18,10 @@ import {
 export function parseSignature(signature: string, structs: StructLookup = {}) {
   if (isFunctionSignature(signature)) {
     const match = execFunctionSignature(signature)
-    if (!match) throw new Error(`Invalid function signature "${signature}"`)
+    if (!match)
+      throw new BaseError('Invalid function signature.', {
+        details: signature,
+      })
     const inputParams = splitParameters(match.parameters)
     const inputs = []
     const inputLength = inputParams.length
@@ -50,7 +54,10 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
 
   if (isEventSignature(signature)) {
     const match = execEventSignature(signature)
-    if (!match) throw new Error(`Invalid event signature "${signature}"`)
+    if (!match)
+      throw new BaseError('Invalid event signature.', {
+        details: signature,
+      })
     const params = splitParameters(match.parameters)
     const abiParameters = []
     const length = params.length
@@ -68,7 +75,10 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
 
   if (isErrorSignature(signature)) {
     const match = execErrorSignature(signature)
-    if (!match) throw new Error(`Invalid error signature "${signature}"`)
+    if (!match)
+      throw new BaseError('Invalid error signature.', {
+        details: signature,
+      })
     const params = splitParameters(match.parameters)
     const abiParameters = []
     const length = params.length
@@ -80,7 +90,10 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
 
   if (isConstructorSignature(signature)) {
     const match = execConstructorSignature(signature)
-    if (!match) throw new Error(`Invalid constructor signature "${signature}"`)
+    if (!match)
+      throw new BaseError('Invalid constructor signature.', {
+        details: signature,
+      })
     const params = splitParameters(match.parameters)
     const abiParameters = []
     const length = params.length
@@ -101,7 +114,9 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
       stateMutability: 'payable',
     }
 
-  throw new Error(`Unknown signature "${signature}"`)
+  throw new BaseError('Unknown signature.', {
+    details: signature,
+  })
 }
 
 const abiParameterCache = new Map<string, AbiParameter>()
@@ -131,13 +146,18 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     isTuple ? abiParameterWithTupleRegex : abiParameterWithoutTupleRegex,
     param,
   )
-  if (!match) throw new Error(`Invalid ABI parameter "${param}"`)
+  if (!match)
+    throw new BaseError('Invalid ABI parameter.', {
+      details: param,
+    })
 
   // Check if `indexed` modifier exists, but is not allowed (e.g function parameters, struct properties)
   const hasIndexedModifier = options?.modifiers?.includes('indexed') ?? false
   const isIndexed = match.modifier === 'indexed'
   if (isIndexed && !hasIndexedModifier)
-    throw new Error(`\`indexed\` not allowed in "${param}"`)
+    throw new BaseError('`indexed` keyword not allowed in param.', {
+      details: param,
+    })
 
   const name = match.name ? { name: match.name } : {}
   const indexed = hasIndexedModifier && isIndexed ? { indexed: true } : {}

@@ -1,4 +1,18 @@
 /**
+ * Prints custom error message
+ *
+ * @param T - Error message
+ * @returns Custom error message
+ *
+ * @example
+ * type Result = Error<'Custom error message'>
+ * //   ^? type Result = 'Error: Custom error message'
+ */
+export type Error<T extends string | string[]> = `Error: ${T extends string
+  ? T
+  : T[number]}`
+
+/**
  * Filters out all members of {@link T} that are {@link P}
  *
  * @param T - Items to filter

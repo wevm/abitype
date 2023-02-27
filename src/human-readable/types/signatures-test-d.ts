@@ -72,6 +72,7 @@ test('IsFunctionSignature', () => {
   assertType<IsFunctionSignature<'function foo() '>>(false)
   assertType<IsFunctionSignature<'function foo()  public'>>(false)
   assertType<IsFunctionSignature<'function foo() re turns (uint256)'>>(false)
+  assertType<IsFunctionSignature<'function foo() re tur ns (uint256)'>>(false)
   assertType<IsFunctionSignature<'foo()'>>(false)
 })
 

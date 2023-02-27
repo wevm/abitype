@@ -1,14 +1,35 @@
-import { assertType, test } from 'vitest'
+import { assertType, expectTypeOf, test } from 'vitest'
 
-import type { Filter, IsUnknown, Merge, Range, Trim, Tuple } from './types'
+import type {
+  Error,
+  Filter,
+  IsUnknown,
+  Merge,
+  Range,
+  Trim,
+  Tuple,
+} from './types'
+
+test('Error', () => {
+  expectTypeOf<
+    Error<'Custom error message'>
+  >().toEqualTypeOf<'Error: Custom error message'>()
+  expectTypeOf<
+    Error<['Custom error message', 'Another custom message']>
+  >().toEqualTypeOf<
+    'Error: Custom error message' | 'Error: Another custom message'
+  >()
+})
 
 test('Filter', () => {
-  assertType<Filter<[1, 'foo', false, 'baz'], boolean>>([1, 'foo', 'baz'])
+  expectTypeOf<Filter<[1, 'foo', false, 'baz'], boolean>>().toEqualTypeOf<
+    readonly [1, 'foo', 'baz']
+  >()
 })
 
 test('IsUnknown', () => {
-  assertType<IsUnknown<unknown>>(true)
-  assertType<IsUnknown<number | bigint>>(false)
+  expectTypeOf<IsUnknown<unknown>>().toEqualTypeOf<true>()
+  expectTypeOf<IsUnknown<number | bigint>>().toEqualTypeOf<false>()
 })
 
 test('Merge', () => {
@@ -38,6 +59,8 @@ test('Trim', () => {
 })
 
 test('Tuple', () => {
-  assertType<Tuple<string, 2>>(['foo', 'bar'])
-  assertType<Tuple<string | number, 2>>(['foo', 1])
+  expectTypeOf<Tuple<string, 2>>().toEqualTypeOf<readonly [string, string]>()
+  expectTypeOf<Tuple<string | number, 2>>().toEqualTypeOf<
+    readonly [string | number, string | number]
+  >()
 })

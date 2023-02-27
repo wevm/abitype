@@ -1,6 +1,7 @@
 import type { Abi } from '../abi'
 import type { Narrow } from '../narrow'
 import type { Filter } from '../types'
+import { BaseError } from './errors'
 import { isStructSignature, parseStructs } from './runtime'
 import { parseSignature } from './runtime/utils'
 import type {
@@ -102,6 +103,10 @@ export function parseAbiItem<
     }
   }
 
-  if (!abiItem) throw new Error('Failed to parse ABI item')
+  if (!abiItem)
+    throw new BaseError('Failed to parse ABI Item.', {
+      details: `parseAbiItem(${JSON.stringify(signatures, null, 2)})`,
+      docsPath: '/todo',
+    })
   return abiItem as ParseAbiItem<TSignature>
 }

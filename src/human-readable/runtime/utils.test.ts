@@ -84,13 +84,40 @@ test.each([
 
 test('invalid signature', () => {
   expect(() => parseSignature('')).toThrowErrorMatchingInlineSnapshot(
-    '"Unknown signature \\"\\""',
+    `
+    "Unknown signature.
+
+    Version: abitype@0.5.0"
+  `,
+  )
+  expect(() =>
+    parseSignature('method foo(string) (address)'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Unknown signature.
+
+    Details: method foo(string) (address)
+    Version: abitype@0.5.0"
+  `,
   )
 })
 
 test('empty string', () => {
   expect(() => parseAbiParameter('')).toThrowErrorMatchingInlineSnapshot(
-    '"Invalid ABI parameter \\"\\""',
+    `
+    "Invalid ABI parameter.
+
+    Version: abitype@0.5.0"
+  `,
+  )
+
+  expect(() => parseAbiParameter('foo ,')).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+
+    Details: foo ,
+    Version: abitype@0.5.0"
+  `,
   )
 })
 
@@ -98,7 +125,12 @@ test('indexed not allowed', () => {
   expect(() =>
     parseAbiParameter('string indexed foo'),
   ).toThrowErrorMatchingInlineSnapshot(
-    '"`indexed` not allowed in \\"string indexed foo\\""',
+    `
+    "\`indexed\` keyword not allowed in param.
+
+    Details: string indexed foo
+    Version: abitype@0.5.0"
+  `,
   )
 })
 

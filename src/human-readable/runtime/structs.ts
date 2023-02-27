@@ -6,6 +6,7 @@ import {
   isTupleRegex,
   typeWithoutTupleRegex,
 } from '../../regex'
+import { BaseError } from '../errors'
 import type { StructLookup } from '../types'
 import { execStructSignature, isStructSignature } from './signatures'
 import { parseAbiParameter } from './utils'
@@ -19,7 +20,10 @@ export function parseStructs(signatures: readonly string[]) {
     if (!isStructSignature(signature)) continue
 
     const match = execStructSignature(signature)
-    if (!match) throw new Error(`Invalid struct signature "${signature}"`)
+    if (!match)
+      throw new BaseError('Invalid struct signature.', {
+        details: signature,
+      })
     const properties = match.properties.split(';')
 
     const components: AbiParameter[] = []
@@ -33,7 +37,10 @@ export function parseStructs(signatures: readonly string[]) {
     }
 
     if (!components.length)
-      throw new Error(`Invalid struct: no properties exist for "${signature}"`)
+      throw new BaseError('Invalid struct signature.', {
+        details: signature,
+        metaMessages: ['No properties exist.'],
+      })
     shallowStructs[match.name] = components
   }
 
@@ -66,12 +73,17 @@ function resolveStructs(
         abiParameter.type,
       )
       if (!match?.type)
-        throw new Error(`Invalid ABI parameter type "${abiParameter.type}"`)
+        throw new BaseError('Invalid ABI parameter.', {
+          details: JSON.stringify(abiParameter, null, 2),
+          metaMessages: ['ABI parameter type is invalid.'],
+        })
 
       const { array, type } = match
       if (type in structs) {
         if (ancestors.has(type))
-          throw new Error(`Circular reference detected: "${type}"`)
+          throw new BaseError('Circular reference detected.', {
+            metaMessages: [`Struct "${type}" is a circular reference.`],
+          })
 
         components.push({
           ...abiParameter,
@@ -92,7 +104,12 @@ function resolveStructs(
           integerRegex.test(type)
         )
           components.push(abiParameter)
-        else throw new Error(`Invalid type "${abiParameter.type}"`)
+        else
+          throw new BaseError('Unknown type.', {
+            metaMessages: [
+              `Type "${type}" is not a valid ABI type. Perhaps you forgot to include a struct signature?`,
+            ],
+          })
       }
     }
   }

@@ -5,15 +5,35 @@ import { parseAbiItem } from './parseAbiItem'
 test('parseAbiItem', () => {
   // @ts-expect-error invalid signature type
   expect(() => parseAbiItem('')).toThrowErrorMatchingInlineSnapshot(
-    '"Unknown signature \\"\\""',
+    `
+    "Unknown signature.
+
+    Version: abitype@0.5.0"
+  `,
   )
   // @ts-expect-error invalid signature type
   expect(() => parseAbiItem([])).toThrowErrorMatchingInlineSnapshot(
-    '"Failed to parse ABI item"',
+    `
+    "Failed to parse ABI Item.
+
+    Docs: https://abitype.dev/todo
+    Details: parseAbiItem([])
+    Version: abitype@0.5.0"
+  `,
   )
   expect(() =>
     parseAbiItem(['struct Foo { string name; }']),
-  ).toThrowErrorMatchingInlineSnapshot('"Failed to parse ABI item"')
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Failed to parse ABI Item.
+
+    Docs: https://abitype.dev/todo
+    Details: parseAbiItem([
+      \\"struct Foo { string name; }\\"
+    ])
+    Version: abitype@0.5.0"
+  `,
+  )
 })
 
 test.each([

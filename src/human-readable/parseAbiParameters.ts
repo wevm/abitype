@@ -1,6 +1,7 @@
 import type { AbiParameter } from '../abi'
 import type { Narrow } from '../narrow'
 import type { Filter } from '../types'
+import { BaseError } from './errors'
 import {
   isStructSignature,
   parseAbiParameter as parseAbiParameter_,
@@ -120,6 +121,9 @@ export function parseAbiParameters<
   }
 
   if (abiParameters.length === 0)
-    throw new Error('Failed to parse ABI parameter')
+    throw new BaseError('Failed to parse ABI Item.', {
+      details: `parseAbiParameters(${JSON.stringify(signatures, null, 2)})`,
+      docsPath: '/todo',
+    })
   return abiParameters as ParseAbiParameters<T>
 }

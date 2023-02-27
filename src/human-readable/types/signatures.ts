@@ -1,4 +1,5 @@
 import type { AbiStateMutability } from '../../abi'
+import type { Error } from '../../types'
 
 type IsName<T extends string> = T extends '' | `${string}${' '}${string}`
   ? false
@@ -32,9 +33,9 @@ export type IsFunctionSignature<T> =
     ? IsName<Name> extends true
       ? T extends ValidFunctionSignatures
         ? true
-        : // Check that `Parameters` is not absorbing other types
+        : // Check that `Parameters` is not absorbing other types (e.g. `returns`)
         T extends `function ${string}(${infer Parameters})`
-        ? Parameters extends InvalidFunctionParameters // `InvalidParameters` is not exhaustive - no regex in TypeScript :(
+        ? Parameters extends InvalidFunctionParameters
           ? false
           : true
         : false
@@ -62,17 +63,6 @@ type ValidFunctionSignatures =
   | `function ${string}(${string}) ${Scope} ${Returns}`
   | `function ${string}(${string}) ${Scope} ${AbiStateMutability}`
   | `function ${string}(${string}) ${Scope} ${AbiStateMutability} ${Returns}`
-type MangledReturns =
-  | `r${string}eturns`
-  | `re${string}turns`
-  | `ret${string}urns`
-  | `retu${string}rns`
-  | `retur${string}ns`
-  | `return${string}s`
-type InvalidFunctionParameters =
-  | `${string}${'returns' | MangledReturns} (${string}`
-  | `${string}) ${'returns' | MangledReturns}${string}`
-  | `${string})${string}${'returns' | MangledReturns}${string}(${string}`
 
 export type StructSignature<
   TName extends string = string,
@@ -89,6 +79,8 @@ export type ConstructorSignature<TParameters extends string = string> =
 export type FallbackSignature = 'fallback()'
 export type ReceiveSignature = 'receive() external payable'
 
+// TODO: Maybe use this for signature validation one day
+// https://twitter.com/devanshj__/status/1610423724708343808
 export type IsSignature<T extends string> =
   | (IsErrorSignature<T> extends true ? true : never)
   | (IsEventSignature<T> extends true ? true : never)
@@ -107,9 +99,9 @@ export type Signature<
   K extends string | unknown = unknown,
 > = IsSignature<T> extends true
   ? T
-  : `Error: Signature "${T}" is invalid${K extends string
+  : Error<`Signature "${T}" is invalid${K extends string
       ? ` at position ${K}`
-      : ''}`
+      : ''}`>
 
 export type Signatures<T extends readonly string[]> = {
   [K in keyof T]: Signature<T[K], K>
@@ -119,3 +111,76 @@ export const modifiers = ['calldata', 'indexed', 'memory', 'storage'] as const
 export type Modifier = typeof modifiers[number]
 export type FunctionModifiers = Exclude<Modifier, 'indexed'>
 export type EventModifiers = Extract<Modifier, 'indexed'>
+
+// Template string inference can abosrb `returns`:
+// type Result = `function foo(string) return s (uint256)` extends `function ${string}(${infer Parameters})` ? Parameters : never
+// //   ^? type Result = "string ) return s (uint256"
+// So we need to validate against `returns` keyword with all combinations of whitespace
+type InvalidFunctionParameters =
+  | `${string}${MangledReturns} (${string}`
+  | `${string}) ${MangledReturns}${string}`
+  | `${string})${string}${MangledReturns}${string}(${string}`
+// r_e_t_u_r_n_s
+type MangledReturns =
+  // Single
+  | `r${string}eturns`
+  | `re${string}turns`
+  | `ret${string}urns`
+  | `retu${string}rns`
+  | `retur${string}ns`
+  | `return${string}s`
+  // Double
+  // `r_e*`
+  | `r${string}e${string}turns`
+  | `r${string}et${string}urns`
+  | `r${string}etu${string}rns`
+  | `r${string}etur${string}ns`
+  | `r${string}eturn${string}s`
+  // `re_t*`
+  | `re${string}t${string}urns`
+  | `re${string}tu${string}rns`
+  | `re${string}tur${string}ns`
+  | `re${string}turn${string}s`
+  // `ret_u*`
+  | `ret${string}u${string}rns`
+  | `ret${string}ur${string}ns`
+  | `ret${string}urn${string}s`
+  // `retu_r*`
+  | `retu${string}r${string}ns`
+  | `retu${string}rn${string}s`
+  // `retur_n*`
+  | `retur${string}n${string}s`
+  // Triple
+  // `r_e_t*`
+  | `r${string}e${string}t${string}urns`
+  | `r${string}e${string}tu${string}rns`
+  | `r${string}e${string}tur${string}ns`
+  | `r${string}e${string}turn${string}s`
+  // `re_t_u*`
+  | `re${string}t${string}u${string}rns`
+  | `re${string}t${string}ur${string}ns`
+  | `re${string}t${string}urn${string}s`
+  // `ret_u_r*`
+  | `ret${string}u${string}r${string}ns`
+  | `ret${string}u${string}rn${string}s`
+  // `retu_r_n*`
+  | `retu${string}r${string}n${string}s`
+  // Quadruple
+  // `r_e_t_u*`
+  | `r${string}e${string}t${string}u${string}rns`
+  | `r${string}e${string}t${string}ur${string}ns`
+  | `r${string}e${string}t${string}urn${string}s`
+  // `re_t_u_r*`
+  | `re${string}t${string}u${string}r${string}ns`
+  | `re${string}t${string}u${string}rn${string}s`
+  // `ret_u_r_n*`
+  | `ret${string}u${string}r${string}n${string}s`
+  // Quintuple
+  // `r_e_t_u_r*`
+  | `r${string}e${string}t${string}u${string}r${string}ns`
+  | `r${string}e${string}t${string}u${string}rn${string}s`
+  // `re_t_u_r_n*`
+  | `re${string}t${string}u${string}r${string}n${string}s`
+  // Sextuple
+  // `r_e_t_u_r_n_s`
+  | `r${string}e${string}t${string}u${string}r${string}n${string}s`
