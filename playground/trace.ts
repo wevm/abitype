@@ -1,7 +1,7 @@
 import { parseAbi } from 'abitype'
 import { seaportHumanReadableAbi } from 'abitype/test'
 
-import { readContract } from '../readContract'
+import { readContract } from '../examples/readContract'
 
 // open trace in https://ui.perfetto.dev
 const result = readContract({

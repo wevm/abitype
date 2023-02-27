@@ -19,6 +19,25 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./test": {
+      "types": "./dist/test/index.d.ts",
+      "default": "./dist/test/index.js"
+    },
+    "./zod": {
+      "types": "./dist/zod/index.d.ts",
+      "default": "./dist/zod/index.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "default": "./dist/config.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "/test",
     "/zod",
@@ -73,6 +92,9 @@
     "changeset:release": "pnpm build && changeset publish",
     "changeset:version": "changeset version && pnpm install --lockfile-only",
     "dev": "DEV=true tsup",
+    "docs:dev": "pnpm -r --filter site  dev",
+    "docs:build": "pnpm -r --filter site  build",
+    "docs:preview": "pnpm -r --filter site  preview",
     "lint": "eslint . --cache",
     "lint:fix": "pnpm lint --fix",
     "lint:format": "prettier --write",
@@ -82,7 +104,7 @@
     "test:run": "vitest run",
     "test:typecheck": "vitest typecheck",
     "test:update": "vitest --update",
-    "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project examples/trace/tsconfig.json",
+    "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project playground/tsconfig.json",
     "typecheck": "tsc --noEmit"
   },
   "simple-git-hooks": {
@@ -99,24 +121,5 @@
   "packageManager": "pnpm@7.5.0",
   "engines": {
     "pnpm": ">=7"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./test": {
-      "types": "./dist/test/index.d.ts",
-      "default": "./dist/test/index.js"
-    },
-    "./zod": {
-      "types": "./dist/zod/index.d.ts",
-      "default": "./dist/zod/index.js"
-    },
-    "./config": {
-      "types": "./dist/config.d.ts",
-      "default": "./dist/config.js"
-    },
-    "./package.json": "./package.json"
   }
 }

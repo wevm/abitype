@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "allowJs": false,
+    "baseUrl": ".",
     "downlevelIteration": true,
     "esModuleInterop": true,
     "isolatedModules": true,
@@ -11,6 +12,11 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "paths": {
+      "abitype": ["src"],
+      "abitype/test": ["src/test"],
+      "abitype/zod": ["src/zod"]
+    },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,5 +25,5 @@
     "types": ["node"]
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["examples", "scripts", "src", "*.ts"]
+  "include": ["examples", "playground", "scripts", "src", "*.ts"]
 }

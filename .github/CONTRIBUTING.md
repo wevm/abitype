@@ -82,7 +82,7 @@ Once in the project's root directory, run the following command to install the p
 pnpm install
 ```
 
-After the install completes, [git hooks](https://github.com/toplenboren/simple-git-hooks) are set up.
+After the install completes, pnpm links packages across the project for development and [git hooks](https://github.com/toplenboren/simple-git-hooks) are set up.
 
 <div align="right">
   <a href="#basic-guide">&uarr; back to top</a></b>
@@ -90,10 +90,11 @@ After the install completes, [git hooks](https://github.com/toplenboren/simple-g
 
 ## Running tests
 
-Tests are run by checking types with the TypeScript compiler and [Vitest](https://vitest.dev/guide/testing-types.html):
+Tests are run with [Vitest](https://vitest.dev/guide/testing-types.html):
 
 ```bash
 pnpm test
+pnpm test:typecheck
 ```
 
 <div align="right">
@@ -102,7 +103,11 @@ pnpm test
 
 ## Writing documentation
 
-Documentation lives in the README.md file and in code using [TSDoc](https://tsdoc.org). If you think something is unclear or could be explained better, you are welcome to open a pull request.
+Documentation lives in the `site` directory and in code using [TSDoc](https://tsdoc.org). If you think something is unclear or could be explained better, you are welcome to open a pull request. To run the docs site, run the following command:
+
+```bash
+pnpm docs:dev
+```
 
 <div align="right">
   <a href="#basic-guide">&uarr; back to top</a></b>
@@ -165,7 +170,7 @@ If a PR has changesets, you can create a [snapshot release](https://github.com/c
 
 ## Testing performance
 
-Edit the `examples/trace/trace.ts` file to include whatever code you want to test and run TypeScript's [built-in tracing tool](https://github.com/microsoft/TypeScript/wiki/Performance-Tracing) with the following command:
+Edit the `playground/trace.ts` file to include whatever code you want to test and run TypeScript's [built-in tracing tool](https://github.com/microsoft/TypeScript/wiki/Performance-Tracing) with the following command:
 
 ```bash
 pnpm trace
