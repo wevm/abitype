@@ -5,11 +5,12 @@ import { getConfig } from './scripts/tsup'
 
 export default defineConfig(
   getConfig({
+    dev: process.env.DEV === 'true',
     entry: [
       'src/index.ts',
+      'src/config.ts',
       'src/test/index.ts',
       'src/zod/index.ts',
-      'src/config.ts',
     ],
     external: [...Object.keys(packageJson.peerDependencies)],
   }),

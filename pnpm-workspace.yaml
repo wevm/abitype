@@ -2,4 +2,5 @@ prefer-workspace-packages: true
 packages:
   - '.'
   - 'examples'
+  - 'playground'
   - 'site'

@@ -5,8 +5,7 @@
     "sourceType": "module",
     "project": [
       "./tsconfig.json",
-      "./site/tsconfig.json",
-      "./examples/*/tsconfig.json"
+      "./site/tsconfig.json"
     ]
   },
   "plugins": ["@typescript-eslint", "import"],

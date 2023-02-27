@@ -28,7 +28,7 @@ importers:
       tsup: ^6.6.3
       typescript: ^4.9.4
       vitest: ^0.26.3
-      zod: ^3.20.2
+      zod: ^3.20.6
     devDependencies:
       '@changesets/changelog-github': 0.4.8
       '@changesets/cli': 2.26.0
@@ -54,9 +54,15 @@ importers:
       tsup: 6.6.3_typescript@4.9.4
       typescript: 4.9.4
       vitest: 0.26.3
-      zod: 3.20.2
+      zod: 3.20.6
 
   examples:
+    specifiers:
+      abitype: workspace:*
+    devDependencies:
+      abitype: link:..
+
+  playground:
     specifiers:
       abitype: workspace:*
     devDependencies:
@@ -4832,6 +4838,6 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /zod/3.20.2:
-    resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
+  /zod/3.20.6:
+    resolution: {integrity: sha512-oyu0m54SGCtzh6EClBVqDDlAYRz4jrVtKwQ7ZnsEmMI9HnzuZFj8QFwAY1M5uniIYACdGvv0PBWPF2kO0aNofA==}
     dev: true

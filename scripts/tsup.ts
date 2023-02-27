@@ -23,6 +23,7 @@ export function getConfig({ dev, noExport, ...options }: GetConfig): Options {
     const entry: string[] = options.entry ?? []
     return {
       clean: true,
+      dts: false,
       // Only need to generate one file with tsup for development since we will create links in `onSuccess`
       entry: [entry[0] as string],
       format: [(process.env.FORMAT as Format) ?? 'esm'],
