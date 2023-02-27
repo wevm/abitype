@@ -564,6 +564,43 @@ test('ParseFunctionArgs and Return', () => {
       },
     ])
   })
+
+  type structTwo = CreateStructObject<
+    ['struct Voter {address owner; uint weight;}']
+  >
+
+  assertType<ParseArgs<['Voter[][] voting', 'Voter[][] test'], structTwo>>([
+    {
+      name: 'voting',
+      type: 'tuple[][]',
+      internalType: 'Struct[][] Voter',
+      components: [
+        {
+          name: 'owner',
+          type: 'address',
+          internalType: 'address',
+        },
+        { name: 'weight', type: 'uint256', internalType: 'uint256' },
+      ],
+    },
+    {
+      name: 'test',
+      type: 'tuple[][]',
+      internalType: 'Struct[][] Voter',
+      components: [
+        {
+          name: 'owner',
+          type: 'address',
+          internalType: 'address',
+        },
+        {
+          name: 'weight',
+          type: 'uint256',
+          internalType: 'uint256',
+        },
+      ],
+    },
+  ])
 })
 
 test('ParseHAbiErrors', () => {
@@ -1411,4 +1448,8 @@ test('Circular reference', () => {
       ],
     },
   ])
+
+  // type cenas = CreateStructObject<["struct Voter{(address coisas); uint cenas}"]>
+
+  // assertType<HandleArguments<["Voter lolada"], cenas>>()
 })
