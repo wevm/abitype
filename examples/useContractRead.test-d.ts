@@ -1,11 +1,11 @@
-import { assertType, test } from 'vitest'
-
-import type { Abi, Address, ResolvedConfig } from '../src'
+import type { Abi, Address, ResolvedConfig } from 'abitype'
 import {
   address,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
-} from '../src/test'
+} from 'abitype/test'
+import { assertType, test } from 'vitest'
+
 import { useContractRead, useWagmiMintExampleRead } from './useContractRead'
 
 test('useContractRead', () => {

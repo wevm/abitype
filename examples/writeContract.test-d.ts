@@ -1,7 +1,5 @@
-import { assertType, test } from 'vitest'
-
-import type { Abi, ResolvedConfig } from '../src'
-import { parseAbi } from '../src'
+import type { Abi, ResolvedConfig } from 'abitype'
+import { parseAbi } from 'abitype'
 import {
   address,
   ensRegistryWithFallbackAbi,
@@ -10,7 +8,9 @@ import {
   wagmiMintExampleAbi,
   wagmiMintExampleHumanReadableAbi,
   writingEditionsFactoryAbi,
-} from '../src/test'
+} from 'abitype/test'
+import { assertType, test } from 'vitest'
+
 import { writeContract } from './writeContract'
 
 test('writeContract', () => {

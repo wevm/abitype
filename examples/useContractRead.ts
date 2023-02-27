@@ -1,5 +1,6 @@
-import type { Abi } from '../src'
-import type { wagmiMintExampleAbi } from '../src/test'
+import type { Abi } from 'abitype'
+import type { wagmiMintExampleAbi } from 'abitype/test'
+
 import type { ReadContractConfig } from './readContract'
 import type { GetReturnType, InferOptional } from './types'
 

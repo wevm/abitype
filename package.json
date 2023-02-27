@@ -18,25 +18,12 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./test": {
-      "types": "./dist/test/index.d.ts",
-      "default": "./dist/test/index.js"
-    },
-    "./zod": {
-      "types": "./dist/zod/index.d.ts",
-      "default": "./dist/zod/index.js"
-    },
-    "./package.json": "./package.json"
-  },
   "sideEffects": false,
   "files": [
-    "/dist",
-    "/zod"
+    "/test",
+    "/zod",
+    "/config",
+    "/dist"
   ],
   "peerDependencies": {
     "typescript": ">=4.9.4",
@@ -52,6 +39,7 @@
     "@changesets/cli": "^2.26.0",
     "@ethersproject/abi": "^5.7.0",
     "@types/eslint": "^8.4.10",
+    "@types/fs-extra": "^11.0.1",
     "@types/node": "17.0.21",
     "@types/prettier": "^2.7.2",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
@@ -63,6 +51,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
     "ethers": "^6.0.5",
+    "fs-extra": "^11.1.0",
     "lint-staged": "^12.4.1",
     "prettier": "^2.8.1",
     "simple-git-hooks": "^2.8.1",
@@ -83,9 +72,11 @@
     "build": "tsup",
     "changeset:release": "pnpm build && changeset publish",
     "changeset:version": "changeset version && pnpm install --lockfile-only",
+    "dev": "DEV=true tsup",
     "lint": "eslint . --cache",
     "lint:fix": "pnpm lint --fix",
     "lint:format": "prettier --write",
+    "postinstall": "pnpm dev",
     "prepare": "npx simple-git-hooks",
     "test": "vitest",
     "test:run": "vitest run",
@@ -108,5 +99,24 @@
   "packageManager": "pnpm@7.5.0",
   "engines": {
     "pnpm": ">=7"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./test": {
+      "types": "./dist/test/index.d.ts",
+      "default": "./dist/test/index.js"
+    },
+    "./zod": {
+      "types": "./dist/zod/index.d.ts",
+      "default": "./dist/zod/index.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "default": "./dist/config.js"
+    },
+    "./package.json": "./package.json"
   }
 }

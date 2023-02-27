@@ -1,4 +1,5 @@
-import type { Abi } from '../src'
+import type { Abi } from 'abitype'
+
 import type { Contract, GetConfig, GetReturnType } from './types'
 
 export declare function readContracts<

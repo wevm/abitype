@@ -4,7 +4,7 @@ import type {
   TypedData,
   TypedDataDomain,
   TypedDataToPrimitiveTypes,
-} from '../src'
+} from 'abitype'
 
 export declare function signTypedData<
   TTypedData extends TypedData | { [key: string]: unknown },

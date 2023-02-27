@@ -6,7 +6,7 @@ import type {
   ExtractAbiEvent,
   ExtractAbiEventNames,
   Narrow,
-} from '../src'
+} from 'abitype'
 
 export declare function watchContractEvent<
   TAbi extends Abi | readonly unknown[],

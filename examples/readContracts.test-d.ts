@@ -1,13 +1,13 @@
-import { assertType, test } from 'vitest'
-
-import type { ResolvedConfig } from '../src'
+import type { ResolvedConfig } from 'abitype'
 import {
   address,
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
-} from '../src/test'
+} from 'abitype/test'
+import { assertType, test } from 'vitest'
+
 import { readContracts } from './readContracts'
 
 test('readContracts', () => {

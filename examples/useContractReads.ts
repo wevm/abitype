@@ -1,4 +1,5 @@
-import type { Abi } from '../src'
+import type { Abi } from 'abitype'
+
 import type { ReadContractsConfig, ReadContractsResult } from './readContracts'
 import type { Contract, DeepPartial } from './types'
 
