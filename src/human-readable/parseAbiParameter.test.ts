@@ -7,23 +7,22 @@ test('parseAbiParameter', () => {
   expect(() => parseAbiParameter('')).toThrowErrorMatchingInlineSnapshot(
     '"Invalid ABI parameter \\"\\""',
   )
-  expect([parseAbiParameter('address from')]).toMatchInlineSnapshot(`
-    [
-      {
-        "name": "from",
-        "type": "address",
-      },
-    ]
-  `)
-
   // @ts-expect-error invalid signature type
   expect(() => parseAbiParameter([])).toThrowErrorMatchingInlineSnapshot(
     '"Failed to parse ABI parameter"',
   )
-
   expect(() =>
     parseAbiParameter(['struct Foo { string name; }']),
   ).toThrowErrorMatchingInlineSnapshot('"Failed to parse ABI parameter"')
+
+  expect([parseAbiParameter('address from')]).toMatchInlineSnapshot(`
+  [
+    {
+      "name": "from",
+      "type": "address",
+    },
+  ]
+`)
 })
 
 test.each([

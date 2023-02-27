@@ -1,28 +1,12 @@
-import { assertType, test } from 'vitest'
+import { assertType, expectTypeOf, test } from 'vitest'
 
 import type {
   ParseStruct,
   ParseStructProperties,
   ParseStructs,
   ResolveStructs,
+  StructLookup,
 } from './structs'
-
-test('ParseStructProperties', () => {
-  assertType<ParseStructProperties<'string foo; string bar;'>>([
-    { type: 'string', name: 'foo' },
-    { type: 'string', name: 'bar' },
-  ])
-})
-
-test('ParseStruct', () => {
-  assertType<ParseStruct<'struct Foo { string foo; string bar; }'>>({
-    name: 'Foo',
-    components: [
-      { type: 'string', name: 'foo' },
-      { type: 'string', name: 'bar' },
-    ],
-  })
-})
 
 test('ParseStructs', () => {
   type Result = ParseStructs<
@@ -62,6 +46,19 @@ test('ParseStructs', () => {
   assertType<ParseStructs<['function addPerson(Person person)']>>({})
 })
 
+test('ParseStruct', () => {
+  assertType<ParseStruct<'struct Foo { string foo; string bar; }'>>({
+    name: 'Foo',
+    components: [
+      { type: 'string', name: 'foo' },
+      { type: 'string', name: 'bar' },
+    ],
+  })
+
+  expectTypeOf<ParseStruct<''>>().toEqualTypeOf<never>()
+  expectTypeOf<ParseStruct<'function foo()'>>().toEqualTypeOf<never>()
+})
+
 test('ResolveStructs', () => {
   type Result = ResolveStructs<
     [{ type: 'Name'; name: 'name' }],
@@ -87,4 +84,44 @@ test('ResolveStructs', () => {
       ],
     },
   ])
+
+  expectTypeOf<ResolveStructs<[], StructLookup>>().toEqualTypeOf<[]>()
+  expectTypeOf<
+    ResolveStructs<
+      [{ type: 'Foo[]'; name: 'foo' }],
+      { Foo: [{ type: 'string'; name: 'bar' }] }
+    >
+  >().toEqualTypeOf<
+    [
+      {
+        name: 'foo'
+        type: 'tuple[]'
+        components: [
+          {
+            type: 'string'
+            name: 'bar'
+          },
+        ]
+      },
+    ]
+  >()
+})
+
+test('ParseStructProperties', () => {
+  assertType<ParseStructProperties<'string;'>>([{ type: 'string' }])
+  assertType<ParseStructProperties<'string foo;'>>([
+    { type: 'string', name: 'foo' },
+  ])
+  assertType<ParseStructProperties<'string; string;'>>([
+    { type: 'string' },
+    { type: 'string' },
+  ])
+  assertType<ParseStructProperties<'string foo; string bar;'>>([
+    { type: 'string', name: 'foo' },
+    { type: 'string', name: 'bar' },
+  ])
+
+  assertType<ParseStructProperties<''>>([])
+  assertType<ParseStructProperties<'string'>>([])
+  assertType<ParseStructProperties<'string; string'>>([{ type: 'string' }])
 })

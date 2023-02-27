@@ -34,4 +34,15 @@ test('ParseAbiParameter', () => {
       },
     ],
   })
+
+  expectTypeOf<ParseAbiParameter<'(string bar) foo'>>().toEqualTypeOf<{
+    readonly type: 'tuple'
+    readonly components: readonly [
+      {
+        readonly type: 'string'
+        readonly name: 'bar'
+      },
+    ]
+    readonly name: 'foo'
+  }>()
 })

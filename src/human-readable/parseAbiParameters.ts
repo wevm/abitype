@@ -12,7 +12,7 @@ import type {
   Modifier,
   ParseAbiParameters as ParseAbiParameters_,
   ParseStructs,
-  SplitParams,
+  SplitParameters,
 } from './types'
 import { modifiers } from './types'
 
@@ -38,7 +38,7 @@ export type ParseAbiParameters<
   | (T extends string
       ? T extends ''
         ? never
-        : ParseAbiParameters_<SplitParams<T>, { Modifier: Modifier }>
+        : ParseAbiParameters_<SplitParameters<T>, { Modifier: Modifier }>
       : never)
   // Return generic AbiParameter item since type was not inferrable
   | (string[] extends T ? AbiParameter : never)
@@ -49,7 +49,7 @@ export type ParseAbiParameters<
               ? IsStructSignature<T[K]> extends true // filter out structs
                 ? never
                 : ParseAbiParameters_<
-                    SplitParams<T[K]>,
+                    SplitParameters<T[K]>,
                     { Modifier: Modifier; Structs: Structs }
                   >
               : never

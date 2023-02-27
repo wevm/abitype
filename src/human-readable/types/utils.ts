@@ -54,10 +54,10 @@ export type ParseSignature<
         ? {
             readonly name: Name
             readonly type: 'function'
-            readonly stateMutability: ParseFunctionInputsAndStateMutability<TSignature>['StateMutability']
+            readonly stateMutability: _ParseFunctionParametersAndStateMutability<TSignature>['StateMutability']
             readonly inputs: ParseAbiParameters<
               SplitParameters<
-                ParseFunctionInputsAndStateMutability<TSignature>['Inputs']
+                _ParseFunctionParametersAndStateMutability<TSignature>['Inputs']
               >,
               {
                 Modifier: FunctionModifiers
@@ -98,24 +98,11 @@ export type ParseSignature<
         }
       : never)
 
-type ParseFunctionInputsAndStateMutability<TSignature extends string> =
-  TSignature extends `${infer Head}returns (${string})`
-    ? ParseFunctionInputsAndStateMutability<Trim<Head>>
-    : TSignature extends `function ${string}(${infer Parameters})`
-    ? { Inputs: Parameters; StateMutability: 'nonpayable' }
-    : TSignature extends `function ${string}(${infer Parameters}) ${infer ScopeOrStateMutability extends
-        | Scope
-        | AbiStateMutability
-        | `${Scope} ${AbiStateMutability}`}`
-    ? {
-        Inputs: Parameters
-        StateMutability: ScopeOrStateMutability extends `${Scope} ${infer StateMutability extends AbiStateMutability}`
-          ? StateMutability
-          : ScopeOrStateMutability extends AbiStateMutability
-          ? ScopeOrStateMutability
-          : 'nonpayable'
-      }
-    : never
+export type ParseOptions = {
+  Modifier?: Modifier
+  Structs?: StructLookup | unknown
+}
+export type DefaultParseOptions = object
 
 export type ParseAbiParameters<
   T extends readonly string[],
@@ -127,24 +114,19 @@ export type ParseAbiParameters<
         [K in keyof T]: ParseAbiParameter<T[K], Options>
       },
     ]
-export type ParseOptions = {
-  Modifier?: Modifier
-  Structs?: StructLookup | unknown
-}
-export type DefaultParseOptions = object
 
 export type ParseAbiParameter<
   T extends string,
   Options extends ParseOptions = DefaultParseOptions,
 > = T extends `(${string})${string}`
-  ? ParseTuple<T, Options>
+  ? _ParseTuple<T, Options>
   : // Convert string to basic AbiParameter (structs resolved yet)
   // Check for `${Type} ${NameOrModifier}` format (e.g. `uint256 foo`, `uint256 indexed`, `uint256 indexed foo`)
   (
       T extends `${infer Type} ${infer Tail}`
         ? Trim<Tail> extends infer Trimmed extends string
           ? Prettify<
-              { readonly type: Trim<Type> } & SplitNameOrModifier<
+              { readonly type: Trim<Type> } & _SplitNameOrModifier<
                 Trimmed,
                 Options
               >
@@ -189,7 +171,49 @@ export type ParseAbiParameter<
       Parameter
   : never
 
-export type ParseTuple<
+export type SplitParameters<
+  T extends string,
+  Result extends unknown[] = [],
+  Current extends string = '',
+  Depth extends ReadonlyArray<number> = [],
+> = T extends ''
+  ? Current extends ''
+    ? [...Result] // empty string was passed in to `SplitParameters`
+    : [...Result, Trim<Current>]
+  : T extends `${infer Char}${infer Tail}`
+  ? Char extends ','
+    ? Depth['length'] extends 0
+      ? SplitParameters<Tail, [...Result, Trim<Current>], ''>
+      : SplitParameters<Tail, Result, `${Current}${Char}`, Depth>
+    : Char extends '('
+    ? SplitParameters<Tail, Result, `${Current}${Char}`, [...Depth, 1]>
+    : Char extends ')'
+    ? SplitParameters<Tail, Result, `${Current}${Char}`, Pop<Depth>>
+    : SplitParameters<Tail, Result, `${Current}${Char}`, Depth>
+  : []
+type Pop<T extends ReadonlyArray<number>> = T extends [...infer R, any] ? R : []
+
+export type _ParseFunctionParametersAndStateMutability<
+  TSignature extends string,
+> = TSignature extends `${infer Head}returns (${string})`
+  ? _ParseFunctionParametersAndStateMutability<Trim<Head>>
+  : TSignature extends `function ${string}(${infer Parameters})`
+  ? { Inputs: Parameters; StateMutability: 'nonpayable' }
+  : TSignature extends `function ${string}(${infer Parameters}) ${infer ScopeOrStateMutability extends
+      | Scope
+      | AbiStateMutability
+      | `${Scope} ${AbiStateMutability}`}`
+  ? {
+      Inputs: Parameters
+      StateMutability: ScopeOrStateMutability extends `${Scope} ${infer StateMutability extends AbiStateMutability}`
+        ? StateMutability
+        : ScopeOrStateMutability extends AbiStateMutability
+        ? ScopeOrStateMutability
+        : 'nonpayable'
+    }
+  : never
+
+export type _ParseTuple<
   T extends `(${string})${string}`,
   Options extends ParseOptions = DefaultParseOptions,
 > =
@@ -225,14 +249,14 @@ export type ParseTuple<
               SplitParameters<Head>,
               Omit<Options, 'Modifier'>
             >
-          } & SplitNameOrModifier<NameOrModifier, Options>
+          } & _SplitNameOrModifier<NameOrModifier, Options>
         >
       : never
     : // Tuples with name and/or modifier attached (e.g. `(string) foo`, `(string bar) foo`)
     T extends `(${infer Parameters}) ${infer NameOrModifier}`
     ? // Check that `NameOrModifier` didn't get matched to `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)
       NameOrModifier extends `${string}) ${string}`
-      ? UnwrapNameOrModifier<NameOrModifier> extends infer Parts extends {
+      ? _UnwrapNameOrModifier<NameOrModifier> extends infer Parts extends {
           NameOrModifier: string
           End: string
         }
@@ -243,7 +267,7 @@ export type ParseTuple<
                 SplitParameters<`${Parameters}) ${Parts['End']}`>,
                 Omit<Options, 'Modifier'>
               >
-            } & SplitNameOrModifier<Parts['NameOrModifier'], Options>
+            } & _SplitNameOrModifier<Parts['NameOrModifier'], Options>
           >
         : never
       : Prettify<
@@ -253,12 +277,12 @@ export type ParseTuple<
               SplitParameters<Parameters>,
               Omit<Options, 'Modifier'>
             >
-          } & SplitNameOrModifier<NameOrModifier, Options>
+          } & _SplitNameOrModifier<NameOrModifier, Options>
         >
     : never
 
 // Split name and modifier (e.g. `indexed foo` => `{ name: 'foo', indexed: true }`)
-type SplitNameOrModifier<
+export type _SplitNameOrModifier<
   T extends string,
   Options extends ParseOptions = DefaultParseOptions,
 > = Trim<T> extends infer Trimmed
@@ -276,34 +300,12 @@ type SplitNameOrModifier<
   : never
 
 // `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)
-type UnwrapNameOrModifier<
+export type _UnwrapNameOrModifier<
   T extends string,
   Current extends string = '',
 > = T extends `${infer Head}) ${infer Tail}`
-  ? UnwrapNameOrModifier<
+  ? _UnwrapNameOrModifier<
       Tail,
       `${Current}${Current extends '' ? '' : ') '}${Head}`
     >
   : { End: Trim<Current>; NameOrModifier: Trim<T> }
-
-export type SplitParameters<
-  T extends string,
-  Result extends unknown[] = [],
-  Current extends string = '',
-  Depth extends ReadonlyArray<number> = [],
-> = T extends ''
-  ? Current extends ''
-    ? [...Result] // empty string was passed in to `SplitParameters`
-    : [...Result, Trim<Current>]
-  : T extends `${infer Char}${infer Tail}`
-  ? Char extends ','
-    ? Depth['length'] extends 0
-      ? SplitParameters<Tail, [...Result, Trim<Current>], ''>
-      : SplitParameters<Tail, Result, `${Current}${Char}`, Depth>
-    : Char extends '('
-    ? SplitParameters<Tail, Result, `${Current}${Char}`, [...Depth, 1]>
-    : Char extends ')'
-    ? SplitParameters<Tail, Result, `${Current}${Char}`, Pop<Depth>>
-    : SplitParameters<Tail, Result, `${Current}${Char}`, Depth>
-  : []
-type Pop<T extends ReadonlyArray<number>> = T extends [...infer R, any] ? R : []

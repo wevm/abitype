@@ -56,7 +56,11 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
     const length = params.length
     for (let i = 0; i < length; i++) {
       abiParameters.push(
-        parseAbiParameter(params[i]!, { structs, modifiers: ['indexed'] }),
+        parseAbiParameter(params[i]!, {
+          structs,
+          modifiers: ['indexed'],
+          type: 'event',
+        }),
       )
     }
     return { name: match.name, type: 'event', inputs: abiParameters }
@@ -101,19 +105,21 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
 }
 
 const abiParameterCache = new Map<string, AbiParameter>()
-
-type ParseOptions = {
-  modifiers?: Modifier | readonly Modifier[]
-  structs?: StructLookup
-}
-
 const abiParameterWithoutTupleRegex =
   /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
 const abiParameterWithTupleRegex =
   /^\((?<type>.+?)\)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
 
+type ParseOptions = {
+  modifiers?: Modifier | readonly Modifier[]
+  structs?: StructLookup
+  type?: 'constructor' | 'error' | 'event' | 'function'
+}
+
 export function parseAbiParameter(param: string, options?: ParseOptions) {
-  if (abiParameterCache.has(param)) return abiParameterCache.get(param)!
+  // optional namespace cache by `type`
+  const paramKey = `${options?.type ?? ''}${param}`
+  if (abiParameterCache.has(paramKey)) return abiParameterCache.get(paramKey)!
 
   const isTuple = isTupleRegex.test(param)
   const match = execTyped<{
@@ -128,7 +134,7 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
   if (!match) throw new Error(`Invalid ABI parameter "${param}"`)
 
   // Check if `indexed` modifier exists, but is not allowed (e.g function parameters, struct properties)
-  const hasIndexedModifier = options?.modifiers?.includes('indexed')
+  const hasIndexedModifier = options?.modifiers?.includes('indexed') ?? false
   const isIndexed = match.modifier === 'indexed'
   if (isIndexed && !hasIndexedModifier)
     throw new Error(`\`indexed\` not allowed in "${param}"`)
@@ -161,7 +167,7 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     ...indexed,
     ...components,
   }
-  abiParameterCache.set(param, abiParameter)
+  abiParameterCache.set(paramKey, abiParameter)
   return abiParameter
 }
 

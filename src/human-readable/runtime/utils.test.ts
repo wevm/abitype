@@ -2,9 +2,103 @@ import { expect, test } from 'vitest'
 
 import { parseAbiParameter, parseSignature, splitParameters } from './utils'
 
+const baseFunctionExpected = {
+  name: 'foo',
+  type: 'function',
+  inputs: [],
+  outputs: [],
+  stateMutability: 'nonpayable',
+}
+const baseEventExpected = {
+  name: 'Foo',
+  type: 'event',
+  inputs: [],
+}
+
+test.each([
+  {
+    signature: 'function foo()',
+    expected: baseFunctionExpected,
+  },
+  {
+    signature: 'function foo(string)',
+    expected: {
+      ...baseFunctionExpected,
+      inputs: [{ type: 'string' }],
+    },
+  },
+  {
+    signature: 'function foo(string) view',
+    expected: {
+      ...baseFunctionExpected,
+      inputs: [{ type: 'string' }],
+      stateMutability: 'view',
+    },
+  },
+  {
+    signature: 'function foo(string) public view',
+    expected: {
+      ...baseFunctionExpected,
+      inputs: [{ type: 'string' }],
+      stateMutability: 'view',
+    },
+  },
+  {
+    signature: 'function foo(string) public view returns (string)',
+    expected: {
+      ...baseFunctionExpected,
+      inputs: [{ type: 'string' }],
+      outputs: [{ type: 'string' }],
+      stateMutability: 'view',
+    },
+  },
+  {
+    signature: 'event Foo()',
+    expected: baseEventExpected,
+  },
+  {
+    signature: 'event Foo(string indexed)',
+    expected: {
+      ...baseEventExpected,
+      inputs: [{ type: 'string', indexed: true }],
+    },
+  },
+  {
+    signature: 'event Foo(string indexed foo)',
+    expected: {
+      ...baseEventExpected,
+      inputs: [{ type: 'string', indexed: true, name: 'foo' }],
+    },
+  },
+  {
+    signature: 'error Foo(string foo)',
+    expected: {
+      name: 'Foo',
+      type: 'error',
+      inputs: [{ type: 'string', name: 'foo' }],
+    },
+  },
+])(`parseSignature($signature)`, ({ signature, expected }) => {
+  expect(parseSignature(signature)).toEqual(expected)
+})
+
+test('invalid signature', () => {
+  expect(() => parseSignature('')).toThrowErrorMatchingInlineSnapshot(
+    '"Unknown signature \\"\\""',
+  )
+})
+
 test('empty string', () => {
   expect(() => parseAbiParameter('')).toThrowErrorMatchingInlineSnapshot(
     '"Invalid ABI parameter \\"\\""',
+  )
+})
+
+test('indexed not allowed', () => {
+  expect(() =>
+    parseAbiParameter('string indexed foo'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    '"`indexed` not allowed in \\"string indexed foo\\""',
   )
 })
 
@@ -166,19 +260,4 @@ test.each([
   },
 ])(`splitParameters($params)`, ({ params, expected }) => {
   expect(splitParameters(params)).toEqual(expected)
-})
-
-test.each([
-  {
-    signature: 'function foo()',
-    expected: {
-      name: 'foo',
-      type: 'function',
-      inputs: [],
-      outputs: [],
-      stateMutability: 'nonpayable',
-    },
-  },
-])(`parseSignature($signature)`, ({ signature, expected }) => {
-  expect(parseSignature(signature)).toEqual(expected)
 })

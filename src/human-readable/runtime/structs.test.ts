@@ -3,10 +3,14 @@ import { expect, test } from 'vitest'
 import { parseStructs } from './structs'
 
 test('no structs', () => {
+  expect(parseStructs([])).toMatchInlineSnapshot('{}')
   expect(parseStructs([''])).toMatchInlineSnapshot('{}')
   expect(parseStructs(['function foo()', 'event Foo()'])).toMatchInlineSnapshot(
     '{}',
   )
+  expect(
+    parseStructs(['function addPerson(Person person)']),
+  ).toMatchInlineSnapshot('{}')
 })
 
 test('no properties', () => {

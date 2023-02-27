@@ -5,28 +5,6 @@ import type { ParseAbiParameter } from './utils'
 
 export type StructLookup = Record<string, readonly AbiParameter[]>
 
-export type ParseStructProperties<
-  T extends string,
-  TStructs extends StructLookup | unknown = unknown,
-  Result extends any[] = [],
-> = Trim<T> extends `${infer Head};${infer Tail}`
-  ? ParseStructProperties<
-      Tail,
-      TStructs,
-      [...Result, ParseAbiParameter<Head, { Structs: TStructs }>]
-    >
-  : Result
-
-export type ParseStruct<
-  TSignature extends string,
-  TStructs extends StructLookup | unknown = unknown,
-> = TSignature extends StructSignature<infer Name, infer Properties>
-  ? {
-      name: Trim<Name>
-      components: ParseStructProperties<Properties, TStructs>
-    }
-  : never
-
 export type ParseStructs<TSignatures extends readonly string[]> =
   // Create "shallow" version of each struct (and filter out non-structs or invalid structs)
   {
@@ -47,6 +25,16 @@ export type ParseStructs<TSignatures extends readonly string[]> =
         >
       }
     : never
+
+export type ParseStruct<
+  TSignature extends string,
+  TStructs extends StructLookup | unknown = unknown,
+> = TSignature extends StructSignature<infer Name, infer Properties>
+  ? {
+      name: Trim<Name>
+      components: ParseStructProperties<Properties, TStructs>
+    }
+  : never
 
 // TODO: Disallow recursive and self-referencing structs
 export type ResolveStructs<
@@ -72,3 +60,15 @@ export type ResolveStructs<
       }
     : TAbiParameters[K]
 }
+
+export type ParseStructProperties<
+  T extends string,
+  TStructs extends StructLookup | unknown = unknown,
+  Result extends any[] = [],
+> = Trim<T> extends `${infer Head};${infer Tail}`
+  ? ParseStructProperties<
+      Tail,
+      TStructs,
+      [...Result, ParseAbiParameter<Head, { Structs: TStructs }>]
+    >
+  : Result

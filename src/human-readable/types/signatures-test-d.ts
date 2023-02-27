@@ -10,6 +10,36 @@ import type {
   Signatures,
 } from './signatures'
 
+test('IsErrorSignature', () => {
+  // basic
+  assertType<IsErrorSignature<'error Foo()'>>(true)
+
+  // params
+  assertType<IsErrorSignature<'error Foo(string bar)'>>(true)
+  assertType<IsErrorSignature<'error Foo(string bar, string baz)'>>(true)
+  assertType<IsErrorSignature<'error Foo(string bar, (string baz))'>>(true)
+
+  // invalid
+  assertType<IsErrorSignature<'error ()'>>(false)
+  assertType<IsErrorSignature<'Foo()'>>(false)
+  assertType<IsErrorSignature<'error Foo(string bar'>>(false)
+})
+
+test('IsEventSignature', () => {
+  // basic
+  assertType<IsEventSignature<'event Foo()'>>(true)
+
+  // params
+  assertType<IsEventSignature<'event Foo(string bar)'>>(true)
+  assertType<IsEventSignature<'event Foo(string bar, string baz)'>>(true)
+  assertType<IsEventSignature<'event Foo(string bar, (string baz))'>>(true)
+
+  // invalid
+  assertType<IsEventSignature<'event ()'>>(false)
+  assertType<IsEventSignature<'Foo()'>>(false)
+  assertType<IsEventSignature<'event Foo(string bar'>>(false)
+})
+
 test('IsFunctionSignature', () => {
   // basic
   assertType<IsFunctionSignature<'function foo()'>>(true)
@@ -43,36 +73,6 @@ test('IsFunctionSignature', () => {
   assertType<IsFunctionSignature<'function foo()  public'>>(false)
   assertType<IsFunctionSignature<'function foo() re turns (uint256)'>>(false)
   assertType<IsFunctionSignature<'foo()'>>(false)
-})
-
-test('IsEventSignature', () => {
-  // basic
-  assertType<IsEventSignature<'event Foo()'>>(true)
-
-  // params
-  assertType<IsEventSignature<'event Foo(string bar)'>>(true)
-  assertType<IsEventSignature<'event Foo(string bar, string baz)'>>(true)
-  assertType<IsEventSignature<'event Foo(string bar, (string baz))'>>(true)
-
-  // invalid
-  assertType<IsEventSignature<'event ()'>>(false)
-  assertType<IsEventSignature<'Foo()'>>(false)
-  assertType<IsEventSignature<'event Foo(string bar'>>(false)
-})
-
-test('IsErrorSignature', () => {
-  // basic
-  assertType<IsErrorSignature<'error Foo()'>>(true)
-
-  // params
-  assertType<IsErrorSignature<'error Foo(string bar)'>>(true)
-  assertType<IsErrorSignature<'error Foo(string bar, string baz)'>>(true)
-  assertType<IsErrorSignature<'error Foo(string bar, (string baz))'>>(true)
-
-  // invalid
-  assertType<IsErrorSignature<'error ()'>>(false)
-  assertType<IsErrorSignature<'Foo()'>>(false)
-  assertType<IsErrorSignature<'error Foo(string bar'>>(false)
 })
 
 test('IsStructSignature', () => {

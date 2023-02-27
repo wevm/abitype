@@ -1,10 +1,14 @@
-import { assertType, test } from 'vitest'
+import { assertType, expectTypeOf, test } from 'vitest'
 
 import type {
   ParseAbiParameter,
+  ParseAbiParameters,
   ParseSignature,
-  ParseTuple,
   SplitParameters,
+  _ParseFunctionParametersAndStateMutability,
+  _ParseTuple,
+  _SplitNameOrModifier,
+  _UnwrapNameOrModifier,
 } from './utils'
 
 type OptionsWithModifier = { Modifier: 'calldata'; Structs: unknown }
@@ -314,6 +318,17 @@ test('ParseSignature', () => {
   })
 })
 
+test('ParseAbiParameters', () => {
+  expectTypeOf<ParseAbiParameters<[]>>().toEqualTypeOf<readonly []>()
+  expectTypeOf<ParseAbiParameters<['']>>().toEqualTypeOf<readonly []>()
+  expectTypeOf<ParseAbiParameters<['string']>>().toEqualTypeOf<
+    readonly [{ readonly type: 'string' }]
+  >()
+  expectTypeOf<ParseAbiParameters<['string', 'string']>>().toEqualTypeOf<
+    readonly [{ readonly type: 'string' }, { readonly type: 'string' }]
+  >()
+})
+
 test('ParseAbiParameter', () => {
   // `${Type} ${Modifier} ${Name}` format
   assertType<ParseAbiParameter<'string calldata foo', OptionsWithModifier>>({
@@ -426,11 +441,23 @@ test('ParseAbiParameter', () => {
     type: 'tuple',
     components: [{ type: 'string' }],
   })
+  assertType<ParseAbiParameter<'(string, string)'>>({
+    type: 'tuple',
+    components: [{ type: 'string' }, { type: 'string' }],
+  })
+  assertType<ParseAbiParameter<'(string, (string))'>>({
+    type: 'tuple',
+    components: [
+      { type: 'string' },
+      { type: 'tuple', components: [{ type: 'string' }] },
+    ],
+  })
 })
 
 test('SplitParameters', () => {
   assertType<SplitParameters<''>>([])
   assertType<SplitParameters<'string'>>(['string'])
+  assertType<SplitParameters<'string, string'>>(['string', 'string'])
   assertType<SplitParameters<'string indexed foo'>>(['string indexed foo'])
   assertType<SplitParameters<'string foo, string bar'>>([
     'string foo',
@@ -445,28 +472,58 @@ test('SplitParameters', () => {
   ])
 })
 
-test('ParseTuple', () => {
+test('_ParseFunctionParametersAndStateMutability', () => {
+  expectTypeOf<
+    _ParseFunctionParametersAndStateMutability<'function foo()'>
+  >().toEqualTypeOf<{
+    Inputs: ''
+    StateMutability: 'nonpayable'
+  }>()
+
+  expectTypeOf<
+    _ParseFunctionParametersAndStateMutability<'function foo(string bar)'>
+  >().toEqualTypeOf<{
+    Inputs: 'string bar'
+    StateMutability: 'nonpayable'
+  }>()
+
+  expectTypeOf<
+    _ParseFunctionParametersAndStateMutability<'function foo() view'>
+  >().toEqualTypeOf<{
+    Inputs: ''
+    StateMutability: 'view'
+  }>()
+
+  expectTypeOf<
+    _ParseFunctionParametersAndStateMutability<'function foo(string bar) view'>
+  >().toEqualTypeOf<{
+    Inputs: 'string bar'
+    StateMutability: 'view'
+  }>()
+})
+
+test('_ParseTuple', () => {
   // basic tuples
-  assertType<ParseTuple<'(string)'>>({
+  assertType<_ParseTuple<'(string)'>>({
     type: 'tuple',
     components: [{ type: 'string' }],
   })
-  assertType<ParseTuple<'(string, string)'>>({
+  assertType<_ParseTuple<'(string, string)'>>({
     type: 'tuple',
     components: [{ type: 'string' }, { type: 'string' }],
   })
-  assertType<ParseTuple<'((string, string), string)'>>({
+  assertType<_ParseTuple<'((string, string), string)'>>({
     type: 'tuple',
     components: [
       { type: 'tuple', components: [{ type: 'string' }, { type: 'string' }] },
       { type: 'string' },
     ],
   })
-  assertType<ParseTuple<'((string))'>>({
+  assertType<_ParseTuple<'((string))'>>({
     type: 'tuple',
     components: [{ type: 'tuple', components: [{ type: 'string' }] }],
   })
-  assertType<ParseTuple<'(((string)))'>>({
+  assertType<_ParseTuple<'(((string)))'>>({
     type: 'tuple',
     components: [
       {
@@ -475,11 +532,11 @@ test('ParseTuple', () => {
       },
     ],
   })
-  assertType<ParseTuple<'(string calldata)'>>({
+  assertType<_ParseTuple<'(string calldata)'>>({
     type: 'tuple',
     components: [{ type: 'string', name: 'calldata' }],
   })
-  assertType<ParseTuple<'(Foo)', OptionsWithStructs>>({
+  assertType<_ParseTuple<'(Foo)', OptionsWithStructs>>({
     type: 'tuple',
     components: [
       { type: 'tuple', components: [{ type: 'address', name: 'bar' }] },
@@ -487,16 +544,16 @@ test('ParseTuple', () => {
   })
 
   // named tuple params
-  assertType<ParseTuple<'(string foo)'>>({
+  assertType<_ParseTuple<'(string foo)'>>({
     type: 'tuple',
     components: [{ type: 'string', name: 'foo' }],
   })
-  assertType<ParseTuple<'(string bar) foo'>>({
+  assertType<_ParseTuple<'(string bar) foo'>>({
     name: 'foo',
     type: 'tuple',
     components: [{ type: 'string', name: 'bar' }],
   })
-  assertType<ParseTuple<'((string bar) foo)'>>({
+  assertType<_ParseTuple<'((string bar) foo)'>>({
     type: 'tuple',
     components: [
       {
@@ -506,30 +563,30 @@ test('ParseTuple', () => {
       },
     ],
   })
-  assertType<ParseTuple<'(Foo) foo', OptionsWithStructs>>({
+  assertType<_ParseTuple<'(Foo) foo', OptionsWithStructs>>({
     type: 'tuple',
     name: 'foo',
     components: [
       { type: 'tuple', components: [{ type: 'address', name: 'bar' }] },
     ],
   })
-  assertType<ParseTuple<'((string)) calldata', OptionsWithModifier>>({
+  assertType<_ParseTuple<'((string)) calldata', OptionsWithModifier>>({
     type: 'tuple',
     components: [{ type: 'tuple', components: [{ type: 'string' }] }],
   })
 
   // mixed basic and named tuple params
-  assertType<ParseTuple<'(string, string foo)'>>({
+  assertType<_ParseTuple<'(string, string foo)'>>({
     type: 'tuple',
     components: [{ type: 'string' }, { type: 'string', name: 'foo' }],
   })
-  assertType<ParseTuple<'(string, string bar) foo'>>({
+  assertType<_ParseTuple<'(string, string bar) foo'>>({
     name: 'foo',
     type: 'tuple',
     components: [{ type: 'string' }, { type: 'string', name: 'bar' }],
   })
   assertType<
-    ParseTuple<'(string baz, string bar) indexed foo', OptionsWithIndexed>
+    _ParseTuple<'(string baz, string bar) indexed foo', OptionsWithIndexed>
   >({
     name: 'foo',
     type: 'tuple',
@@ -541,19 +598,19 @@ test('ParseTuple', () => {
   })
 
   // inline tuples of tuples
-  assertType<ParseTuple<'(string)[]'>>({
+  assertType<_ParseTuple<'(string)[]'>>({
     type: 'tuple[]',
     components: [{ type: 'string' }],
   })
-  assertType<ParseTuple<'(string, string)[]'>>({
+  assertType<_ParseTuple<'(string, string)[]'>>({
     type: 'tuple[]',
     components: [{ type: 'string' }, { type: 'string' }],
   })
-  assertType<ParseTuple<'((string))[]'>>({
+  assertType<_ParseTuple<'((string))[]'>>({
     type: 'tuple[]',
     components: [{ type: 'tuple', components: [{ type: 'string' }] }],
   })
-  assertType<ParseTuple<'((string)[])[]'>>({
+  assertType<_ParseTuple<'((string)[])[]'>>({
     type: 'tuple[]',
     components: [
       {
@@ -564,17 +621,17 @@ test('ParseTuple', () => {
   })
 
   // inline tuples of tuples with name and/or modifier attached
-  assertType<ParseTuple<'(string)[] foo'>>({
+  assertType<_ParseTuple<'(string)[] foo'>>({
     type: 'tuple[]',
     name: 'foo',
     components: [{ type: 'string' }],
   })
-  assertType<ParseTuple<'(string, string bar)[] foo'>>({
+  assertType<_ParseTuple<'(string, string bar)[] foo'>>({
     type: 'tuple[]',
     name: 'foo',
     components: [{ type: 'string' }, { type: 'string', name: 'bar' }],
   })
-  assertType<ParseTuple<'((string baz) bar)[] foo'>>({
+  assertType<_ParseTuple<'((string baz) bar)[] foo'>>({
     type: 'tuple[]',
     name: 'foo',
     components: [
@@ -586,7 +643,7 @@ test('ParseTuple', () => {
     ],
   })
   assertType<
-    ParseTuple<
+    _ParseTuple<
       '((string)[])[] indexed foo',
       OptionsWithIndexed & OptionsWithStructs
     >
@@ -601,20 +658,20 @@ test('ParseTuple', () => {
       },
     ],
   })
-  assertType<ParseTuple<'((string) foo)[]'>>({
+  assertType<_ParseTuple<'((string) foo)[]'>>({
     type: 'tuple[]',
     components: [
       { type: 'tuple', name: 'foo', components: [{ type: 'string' }] },
     ],
   })
-  assertType<ParseTuple<'(string) indexed bar', OptionsWithIndexed>>({
+  assertType<_ParseTuple<'(string) indexed bar', OptionsWithIndexed>>({
     type: 'tuple',
     name: 'bar',
     indexed: true,
     components: [{ type: 'string' }],
   })
 
-  assertType<ParseTuple<'((((string))) bar)'>>({
+  assertType<_ParseTuple<'((((string))) bar)'>>({
     type: 'tuple',
     components: [
       {
@@ -634,7 +691,7 @@ test('ParseTuple', () => {
       },
     ],
   })
-  assertType<ParseTuple<'(((string) baz) bar) foo'>>({
+  assertType<_ParseTuple<'(((string) baz) bar) foo'>>({
     type: 'tuple',
     name: 'foo',
     components: [
@@ -651,7 +708,7 @@ test('ParseTuple', () => {
       },
     ],
   })
-  assertType<ParseTuple<'((((string) baz)) bar) foo'>>({
+  assertType<_ParseTuple<'((((string) baz)) bar) foo'>>({
     type: 'tuple',
     name: 'foo',
     components: [
@@ -675,9 +732,41 @@ test('ParseTuple', () => {
   })
 
   // Modifiers not converted inside tuples
-  assertType<ParseTuple<'(string indexed)[] foo', OptionsWithIndexed>>({
+  assertType<_ParseTuple<'(string indexed)[] foo', OptionsWithIndexed>>({
     type: 'tuple[]',
     name: 'foo',
     components: [{ type: 'string', name: 'indexed' }],
   })
+})
+
+test('_SplitNameOrModifier', () => {
+  expectTypeOf<_SplitNameOrModifier<'foo'>>().toEqualTypeOf<{
+    readonly name: 'foo'
+  }>()
+  expectTypeOf<
+    _SplitNameOrModifier<'indexed foo', { Modifier: 'indexed' }>
+  >().toEqualTypeOf<{
+    readonly name: 'foo'
+    readonly indexed: true
+  }>()
+  expectTypeOf<
+    _SplitNameOrModifier<'calldata foo', { Modifier: 'calldata' }>
+  >().toEqualTypeOf<{
+    readonly name: 'foo'
+  }>()
+})
+
+test('_UnwrapNameOrModifier', () => {
+  expectTypeOf<_UnwrapNameOrModifier<'bar) foo'>>().toEqualTypeOf<{
+    End: 'bar'
+    NameOrModifier: 'foo'
+  }>()
+  expectTypeOf<_UnwrapNameOrModifier<'baz) bar) foo'>>().toEqualTypeOf<{
+    End: 'baz) bar'
+    NameOrModifier: 'foo'
+  }>()
+  expectTypeOf<_UnwrapNameOrModifier<'string) calldata foo'>>().toEqualTypeOf<{
+    End: 'string'
+    NameOrModifier: 'calldata foo'
+  }>()
 })

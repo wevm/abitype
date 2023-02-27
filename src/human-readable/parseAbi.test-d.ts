@@ -1,4 +1,4 @@
-import { assertType, test } from 'vitest'
+import { assertType, expectTypeOf, test } from 'vitest'
 
 import type { seaportHumanReadableAbi } from '../test'
 import type { IsAbi } from '../utils'
@@ -95,7 +95,5 @@ test('ParseAbi', () => {
     },
   ])
 
-  // assertType<ParseAbi<['function foo ()']>>([
-  //   'Error: Signature "function foo ()" is invalid at position 0',
-  // ])
+  expectTypeOf<ParseAbi<['function foo ()']>>().toEqualTypeOf<never>()
 })
