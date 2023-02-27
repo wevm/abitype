@@ -42,10 +42,14 @@ jobs:
             node_modules
             examples/node_modules
             playground/node_modules
+            test
+            zod
           key: modules-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Install Dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: pnpm i
+        run: pnpm i --ignore-scripts
+      - name: Link packages
+        run: pnpm dev
 
   lint:
     name: Lint
@@ -73,6 +77,8 @@ jobs:
             node_modules
             examples/node_modules
             playground/node_modules
+            test
+            zod
           key: modules-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Lint code
         run: pnpm lint
@@ -103,6 +109,8 @@ jobs:
             node_modules
             examples/node_modules
             playground/node_modules
+            test
+            zod
           key: modules-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Build
         run: pnpm build
@@ -133,6 +141,8 @@ jobs:
             node_modules
             examples/node_modules
             playground/node_modules
+            test
+            zod
           key: modules-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Test
         run: pnpm test

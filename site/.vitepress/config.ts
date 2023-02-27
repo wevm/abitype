@@ -30,8 +30,8 @@ export default defineConfig({
       copyright: 'Copyright © 2023-PRESENT weth, LLC  ',
     },
     nav: [
-      { text: 'Guide', link: '/guide/' },
-      { text: 'API', link: '/api/types/' },
+      { text: 'Guide', link: '/guide' },
+      { text: 'API', link: '/api' },
       {
         text: `v${version}`,
         items: [
@@ -51,31 +51,37 @@ export default defineConfig({
       '/': [
         {
           text: 'Guide',
+          collapsed: false,
           items: [
             {
-              text: 'Why ABIType',
-              link: '/guide/why',
+              text: 'What is ABIType?',
+              link: '/',
             },
             {
               text: 'Getting Started',
-              link: '/guide/',
-            },
-            {
-              text: 'Features',
-              link: '/guide/features',
+              link: '/getting-started',
             },
             {
               text: 'Comparisons',
               link: '/guide/comparisons',
             },
+            {
+              text: 'Walkthrough',
+              link: '/guide/walkthrough',
+            },
           ]
         },
         {
           text: 'API',
+          collapsed: false,
           items: [
             {
+              text: 'Configuration',
+              link: '/api/config',
+            },
+            {
               text: 'Types',
-              link: '/api/types',
+              link: '/api',
             },
             {
               text: 'Utilities',
@@ -86,12 +92,12 @@ export default defineConfig({
               link: '/api/human',
             },
             {
-              text: 'Zod',
-              link: '/api/zod',
+              text: 'Test Entrypoint',
+              link: '/api/test',
             },
             {
-              text: 'Config',
-              link: '/api/config',
+              text: 'Zod Entrypoint',
+              link: '/api/zod',
             },
           ],
         },
