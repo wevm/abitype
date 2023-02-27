@@ -38,6 +38,7 @@ jobs:
         id: cache-node-modules
         with:
           path: |
+            config
             dist
             node_modules
             examples/node_modules
@@ -73,6 +74,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
+            config
             dist
             node_modules
             examples/node_modules
@@ -105,6 +107,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
+            config
             dist
             node_modules
             examples/node_modules
@@ -137,6 +140,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
+            config
             dist
             node_modules
             examples/node_modules

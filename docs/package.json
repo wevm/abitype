@@ -1,5 +1,5 @@
 {
-  "name": "site",
+  "name": "docs",
   "private": true,
   "scripts": {
     "dev": "vitepress dev",
@@ -9,5 +9,8 @@
   "devDependencies": {
     "vitepress": "1.0.0-alpha.48",
     "vue": "^3.2.47"
+  },
+  "dependencies": {
+    "markdown-it-footnote": "^3.0.3"
   }
 }

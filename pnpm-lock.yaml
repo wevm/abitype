@@ -56,6 +56,17 @@ importers:
       vitest: 0.26.3
       zod: 3.20.6
 
+  docs:
+    specifiers:
+      markdown-it-footnote: ^3.0.3
+      vitepress: 1.0.0-alpha.48
+      vue: ^3.2.47
+    dependencies:
+      markdown-it-footnote: 3.0.3
+    devDependencies:
+      vitepress: 1.0.0-alpha.48
+      vue: 3.2.47
+
   examples:
     specifiers:
       abitype: workspace:*
@@ -67,14 +78,6 @@ importers:
       abitype: workspace:*
     devDependencies:
       abitype: link:..
-
-  site:
-    specifiers:
-      vitepress: 1.0.0-alpha.48
-      vue: ^3.2.47
-    devDependencies:
-      vitepress: 1.0.0-alpha.48
-      vue: 3.2.47
 
 packages:
 
@@ -3292,6 +3295,10 @@ packages:
     resolution: {integrity: sha512-hdN1wVrZbb29eBGiGjJbeP8JbKjq1urkHJ/LIP/NY48MZ1QVXUsQBV1G1zvYFHn1XE06cwjBsOI2K3Ulnj1YXQ==}
     engines: {node: '>=8'}
     dev: true
+
+  /markdown-it-footnote/3.0.3:
+    resolution: {integrity: sha512-YZMSuCGVZAjzKMn+xqIco9d1cLGxbELHZ9do/TSYVzraooV8ypsppKNmUJ0fVH5ljkCInQAtFpm8Rb3eXSrt5w==}
+    dev: false
 
   /meow/6.1.1:
     resolution: {integrity: sha512-3YffViIt2QWgTy6Pale5QpopX/IvU3LPL03jOTqp6pGj3VjesdO/U8CuHMKpnQr4shCNCM5fd5XFFvIIl6JBHg==}

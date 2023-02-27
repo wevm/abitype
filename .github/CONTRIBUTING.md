@@ -103,7 +103,7 @@ pnpm test:typecheck
 
 ## Writing documentation
 
-Documentation lives in the `site` directory and in code using [TSDoc](https://tsdoc.org). If you think something is unclear or could be explained better, you are welcome to open a pull request. To run the docs site, run the following command:
+Documentation lives in the `docs` directory and in code using [TSDoc](https://tsdoc.org). If you think something is unclear or could be explained better, you are welcome to open a pull request. To run the docs site, run the following command:
 
 ```bash
 pnpm docs:dev

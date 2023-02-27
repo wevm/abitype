@@ -11,16 +11,15 @@ export default defineConfig({
       dark: 'vitesse-dark',
     },
     config: async (md) => {
-      // use more markdown-it plugins!
-      // md.use(require('markdown-it-shiki-twoslash'))
-    }
+      md.use(require('markdown-it-footnote'))
+    },
   },
   themeConfig: {
-    // algolia: {
-    //   appId: 'B2GGTJJMD3',
-    //   apiKey: '42f4bd06fd3343c9a742128af056bdf5',
-    //   indexName: 'abitype',
-    // },
+    algolia: {
+      appId: 'B2GGTJJMD3',
+      apiKey: '42f4bd06fd3343c9a742128af056bdf5',
+      indexName: 'abitype',
+    },
     editLink: {
       pattern: 'https://github.com/wagmi-dev/abitype/edit/main/site/:path',
       text: 'Suggest changes to this page',
@@ -30,8 +29,8 @@ export default defineConfig({
       copyright: 'Copyright © 2023-PRESENT weth, LLC  ',
     },
     nav: [
-      { text: 'Guide', link: '/guide' },
-      { text: 'API', link: '/api' },
+      { text: 'Guide', link: '/' },
+      { text: 'API', link: '/api/config' },
       {
         text: `v${version}`,
         items: [
@@ -51,53 +50,56 @@ export default defineConfig({
       '/': [
         {
           text: 'Guide',
-          collapsed: false,
           items: [
             {
-              text: 'What is ABIType?',
+              text: 'What is ABIType? 🚧',
               link: '/',
             },
             {
               text: 'Getting Started',
-              link: '/getting-started',
+              link: '/guide/getting-started',
             },
             {
-              text: 'Comparisons',
+              text: 'Comparisons 🚧',
               link: '/guide/comparisons',
             },
             {
               text: 'Walkthrough',
               link: '/guide/walkthrough',
             },
-          ]
+          ],
         },
         {
           text: 'API',
-          collapsed: false,
           items: [
             {
-              text: 'Configuration',
-              link: '/api/config',
-            },
-            {
               text: 'Types',
-              link: '/api',
+              link: '/api/types',
             },
             {
               text: 'Utilities',
               link: '/api/utilities',
             },
             {
-              text: 'Human-Readable',
+              text: 'Human-Readable 🚧',
               link: '/api/human',
             },
             {
-              text: 'Test Entrypoint',
+              text: 'Test 🚧',
               link: '/api/test',
             },
             {
-              text: 'Zod Entrypoint',
+              text: 'Zod',
               link: '/api/zod',
+            },
+          ],
+        },
+        {
+          text: 'Config',
+          items: [
+            {
+              text: 'Reference',
+              link: '/config',
             },
           ],
         },
