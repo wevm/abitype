@@ -24,6 +24,7 @@ test('parseHumanAbiFallbacks runtime', () => {
   ).toMatchInlineSnapshot(`
 [
   {
+    "stateMutability": "nonpayable",
     "type": "fallback",
   },
   {

@@ -1,3 +1,4 @@
+import type { AbiFunction } from '../../abi'
 import type { Narrow } from '../../narrow'
 import type { HAbi, ParseHAbiFallbacks } from '../habi'
 import type { FallbacksSignature } from '../utils'
@@ -23,10 +24,11 @@ export function parseHumanAbiFallbacks<THAbi extends HAbi>(
   return abiObjects as ParseHAbiFallbacks<THAbi>
 }
 
-export function parseHumanAbiFallback(signature: string) {
+export function parseHumanAbiFallback(signature: string): AbiFunction {
   if (fallbackRegex.test(signature))
     return {
       type: 'fallback',
+      stateMutability: 'nonpayable',
     }
 
   if (receiveRegex.test(signature)) {
