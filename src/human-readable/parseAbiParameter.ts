@@ -18,7 +18,7 @@ import { modifiers } from './types'
 /**
  * Parses human-readable ABI parameter into {@link AbiParameter}
  *
- * @param T - Human-readable ABI parameter
+ * @param TParam - Human-readable ABI parameter
  * @returns Parsed {@link AbiParameter}
  *
  * @example
@@ -32,20 +32,23 @@ import { modifiers } from './types'
  * >
  */
 export type ParseAbiParameter<
-  T extends string | readonly string[] | readonly unknown[],
-> = T extends string
-  ? T extends ''
+  TParam extends string | readonly string[] | readonly unknown[],
+> = TParam extends string
+  ? TParam extends ''
     ? never
-    : ParseAbiParameter_<T, { Modifier: Modifier }>
-  : string[] extends T
+    : ParseAbiParameter_<TParam, { Modifier: Modifier }>
+  : string[] extends TParam
   ? AbiParameter // Return generic AbiParameter item since type was no inferrable
-  : T extends readonly string[]
-  ? ParseStructs<T> extends infer Structs
+  : TParam extends readonly string[]
+  ? ParseStructs<TParam> extends infer Structs
     ? {
-        [K in keyof T]: T[K] extends string
-          ? IsStructSignature<T[K]> extends true
+        [K in keyof TParam]: TParam[K] extends string
+          ? IsStructSignature<TParam[K]> extends true
             ? never
-            : ParseAbiParameter_<T[K], { Modifier: Modifier; Structs: Structs }>
+            : ParseAbiParameter_<
+                TParam[K],
+                { Modifier: Modifier; Structs: Structs }
+              >
           : never
       } extends infer Mapped extends readonly unknown[]
       ? Filter<Mapped, never>[0] extends infer Result
@@ -60,7 +63,7 @@ export type ParseAbiParameter<
 /**
  * Parses human-readable ABI parameter into {@link AbiParameter}
  *
- * @param signature - Human-readable ABI parameter
+ * @param param - Human-readable ABI parameter
  * @returns Parsed {@link AbiParameter}
  *
  * @example
@@ -75,31 +78,31 @@ export type ParseAbiParameter<
  * ])
  */
 export function parseAbiParameter<
-  T extends string | readonly string[] | readonly unknown[],
+  TParam extends string | readonly string[] | readonly unknown[],
 >(
-  signatures: Narrow<T> &
-    (T extends readonly []
+  param: Narrow<TParam> &
+    (TParam extends readonly []
       ? never
-      : string[] extends T
+      : string[] extends TParam
       ? unknown
-      : T extends string
-      ? T extends ''
+      : TParam extends string
+      ? TParam extends ''
         ? never
         : unknown
-      : T extends readonly string[]
+      : TParam extends readonly string[]
       ? unknown
       : never),
-): ParseAbiParameter<T> {
+): ParseAbiParameter<TParam> {
   let abiParameter
-  if (typeof signatures === 'string')
-    abiParameter = parseAbiParameter_(signatures, {
+  if (typeof param === 'string')
+    abiParameter = parseAbiParameter_(param, {
       modifiers,
-    }) as ParseAbiParameter<T>
+    }) as ParseAbiParameter<TParam>
   else {
-    const structs = parseStructs(signatures as readonly string[])
-    const length = signatures.length
+    const structs = parseStructs(param as readonly string[])
+    const length = param.length
     for (let i = 0; i < length; i++) {
-      const signature = (signatures as readonly string[])[i]!
+      const signature = (param as readonly string[])[i]!
       if (isStructSignature(signature)) continue
       abiParameter = parseAbiParameter_(signature, { modifiers, structs })
       break
@@ -108,8 +111,8 @@ export function parseAbiParameter<
 
   if (!abiParameter)
     throw new BaseError('Failed to parse ABI Item.', {
-      details: `parseAbiParameter(${JSON.stringify(signatures, null, 2)})`,
+      details: `parseAbiParameter(${JSON.stringify(param, null, 2)})`,
       docsPath: '/todo',
     })
-  return abiParameter as ParseAbiParameter<T>
+  return abiParameter as ParseAbiParameter<TParam>
 }

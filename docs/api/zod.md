@@ -1,6 +1,6 @@
 # Zod
 
-ABIType exports the [core types](/api/types) as [Zod](https://github.com/colinhacks/zod) schemas from the `abitype/zod` entrypoint.
+ABIType exports the [core types](/api/types) as [Zod](https://github.com/colinhacks/zod) schemas from the `'abitype/zod'` entrypoint.
 
 ## Install
 
@@ -35,7 +35,7 @@ const result = await fetch(
 const abi = Abi.parse(result)
 ```
 
-## Exports
+## Schemas
 
 ```ts
 export {
@@ -55,5 +55,5 @@ export {
   SolidityInt,
   SolidityString,
   SolidityTuple,
-} from './zod'
+} from 'abitype/zod'
 ```

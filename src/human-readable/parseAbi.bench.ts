@@ -1,22 +1,36 @@
-import { FormatTypes, Interface as InterfaceV5 } from '@ethersproject/abi'
+import { Interface as InterfaceV5 } from '@ethersproject/abi'
 import { Interface } from 'ethers'
 import { bench, describe } from 'vitest'
 
-import { wagmiMintExampleHumanReadableAbi } from '../test'
 import { parseAbi } from './parseAbi'
 
 describe('Parse ABI', () => {
   bench('abitype', () => {
-    parseAbi(wagmiMintExampleHumanReadableAbi)
+    parseAbi([
+      'function name((string name, uint256 age) foo, uint256 tokenId)',
+      'event Foo(address indexed bar)',
+    ])
   })
 
-  bench('ethers@6', () => {
-    const iface = new Interface(wagmiMintExampleHumanReadableAbi)
-    iface.formatJson()
+  bench('abitype (struct)', () => {
+    parseAbi([
+      'struct Foo { string name; uint256 age }',
+      'function name(Foo foo, uint256 tokenId)',
+      'event Foo(address indexed bar)',
+    ])
   })
 
   bench('ethers@5', () => {
-    const iface = new InterfaceV5(wagmiMintExampleHumanReadableAbi)
-    iface.format(FormatTypes.json)
+    new InterfaceV5([
+      'function name((string name, uint256 age) foo, uint256 tokenId)',
+      'event Foo(address indexed bar)',
+    ]).fragments
+  })
+
+  bench('ethers@6', () => {
+    new Interface([
+      'function name((string name, uint256 age) foo, uint256 tokenId)',
+      'event Foo(address indexed bar)',
+    ]).fragments
   })
 })

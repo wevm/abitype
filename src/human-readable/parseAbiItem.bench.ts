@@ -52,3 +52,23 @@ describe('Parse ABI event', () => {
     FragmentV5.from(basic)
   })
 })
+
+describe('comparison', () => {
+  bench('abitype', () => {
+    parseAbiItem(
+      'function name((string name, uint256 age) foo, uint256 tokenId)',
+    )
+  })
+
+  bench('ethers@5', () => {
+    FragmentV5.from(
+      'function name(tuple(string name, uint256 age) foo, uint256 tokenId)',
+    )
+  })
+
+  bench('ethers@6', () => {
+    Fragment.from(
+      'function name(tuple(string name, uint256 age) foo, uint256 tokenId)',
+    )
+  })
+})

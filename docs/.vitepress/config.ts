@@ -1,8 +1,10 @@
 import { defineConfig } from 'vitepress'
 import { version } from '../../package.json'
+import { markdownItShikiTwoslashSetup } from 'markdown-it-shiki-twoslash'
 
 export default defineConfig({
   description: 'Just playing around.',
+  ignoreDeadLinks: true, // TODO: Turn off for prod
   lang: 'en-US',
   lastUpdated: true,
   markdown: {
@@ -30,7 +32,7 @@ export default defineConfig({
     },
     nav: [
       { text: 'Guide', link: '/' },
-      { text: 'API', link: '/api/config' },
+      { text: 'API', link: '/api/types' },
       {
         text: `v${version}`,
         items: [
@@ -60,12 +62,12 @@ export default defineConfig({
               link: '/guide/getting-started',
             },
             {
-              text: 'Comparisons 🚧',
-              link: '/guide/comparisons',
-            },
-            {
               text: 'Walkthrough',
               link: '/guide/walkthrough',
+            },
+            {
+              text: 'Comparisons',
+              link: '/guide/comparisons',
             },
           ],
         },
@@ -81,7 +83,7 @@ export default defineConfig({
               link: '/api/utilities',
             },
             {
-              text: 'Human-Readable 🚧',
+              text: 'Human-Readable',
               link: '/api/human',
             },
             {

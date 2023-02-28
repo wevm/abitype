@@ -20,7 +20,7 @@ import { modifiers } from './types'
 /**
  * Parses human-readable ABI parameters into {@link AbiParameter}s
  *
- * @param T - Human-readable ABI parameters
+ * @param TParams - Human-readable ABI parameters
  * @returns Parsed {@link AbiParameter}s
  *
  * @example
@@ -34,23 +34,23 @@ import { modifiers } from './types'
  * >
  */
 export type ParseAbiParameters<
-  T extends string | readonly string[] | readonly unknown[],
+  TParams extends string | readonly string[] | readonly unknown[],
 > =
-  | (T extends string
-      ? T extends ''
+  | (TParams extends string
+      ? TParams extends ''
         ? never
-        : ParseAbiParameters_<SplitParameters<T>, { Modifier: Modifier }>
+        : ParseAbiParameters_<SplitParameters<TParams>, { Modifier: Modifier }>
       : never)
   // Return generic AbiParameter item since type was not inferrable
-  | (string[] extends T ? AbiParameter : never)
-  | (T extends readonly string[]
-      ? ParseStructs<T> extends infer Structs
+  | (string[] extends TParams ? AbiParameter : never)
+  | (TParams extends readonly string[]
+      ? ParseStructs<TParams> extends infer Structs
         ? {
-            [K in keyof T]: T[K] extends string
-              ? IsStructSignature<T[K]> extends true // filter out structs
+            [K in keyof TParams]: TParams[K] extends string
+              ? IsStructSignature<TParams[K]> extends true // filter out structs
                 ? never
                 : ParseAbiParameters_<
-                    SplitParameters<T[K]>,
+                    SplitParameters<TParams[K]>,
                     { Modifier: Modifier; Structs: Structs }
                   >
               : never
@@ -67,7 +67,7 @@ export type ParseAbiParameters<
 /**
  * Parses human-readable ABI parameters into {@link AbiParameter}s
  *
- * @param signatures - Human-readable ABI parameters
+ * @param params - Human-readable ABI parameters
  * @returns Parsed {@link AbiParameter}s
  *
  * @example
@@ -82,33 +82,33 @@ export type ParseAbiParameters<
  * ])
  */
 export function parseAbiParameters<
-  T extends string | readonly string[] | readonly unknown[],
+  TParams extends string | readonly string[] | readonly unknown[],
 >(
-  signatures: Narrow<T> &
-    (T extends readonly []
+  params: Narrow<TParams> &
+    (TParams extends readonly []
       ? never
-      : string[] extends T
+      : string[] extends TParams
       ? unknown
-      : T extends string
-      ? T extends ''
+      : TParams extends string
+      ? TParams extends ''
         ? never
         : unknown
-      : T extends readonly string[]
+      : TParams extends readonly string[]
       ? unknown
       : never),
-): ParseAbiParameters<T> {
+): ParseAbiParameters<TParams> {
   const abiParameters: AbiParameter[] = []
-  if (typeof signatures === 'string') {
-    const parameters = splitParameters(signatures)
+  if (typeof params === 'string') {
+    const parameters = splitParameters(params)
     const length = parameters.length
     for (let i = 0; i < length; i++) {
       abiParameters.push(parseAbiParameter_(parameters[i]!, { modifiers }))
     }
   } else {
-    const structs = parseStructs(signatures as readonly string[])
-    const length = signatures.length
+    const structs = parseStructs(params as readonly string[])
+    const length = params.length
     for (let i = 0; i < length; i++) {
-      const signature = (signatures as readonly string[])[i]!
+      const signature = (params as readonly string[])[i]!
       if (isStructSignature(signature)) continue
       const parameters = splitParameters(signature)
       const length = parameters.length
@@ -122,8 +122,8 @@ export function parseAbiParameters<
 
   if (abiParameters.length === 0)
     throw new BaseError('Failed to parse ABI Item.', {
-      details: `parseAbiParameters(${JSON.stringify(signatures, null, 2)})`,
+      details: `parseAbiParameters(${JSON.stringify(params, null, 2)})`,
       docsPath: '/todo',
     })
-  return abiParameters as ParseAbiParameters<T>
+  return abiParameters as ParseAbiParameters<TParams>
 }

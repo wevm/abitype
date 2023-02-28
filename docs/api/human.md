@@ -2,7 +2,9 @@
 
 Human-Readable ABIs compress [JSON ABIs](https://docs.soliditylang.org/en/latest/abi-spec.html#json) into signatures that are nicer to read and less verbose to write. For example:
 
-```ts
+::: code-group
+
+```ts [human-readable.ts]
 const abi = [
   'constructor()',
   'function balanceOf(address owner) view returns (uint256)',
@@ -10,6 +12,43 @@ const abi = [
   'error ApprovalCallerNotOwnerNorApproved()',
 ] as const
 ```
+
+```ts [abi.ts]
+const abi = [
+  {
+    inputs: [],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  },
+  {
+    inputs: [{ name: 'owner', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        name: 'from',
+        type: 'address',
+        indexed: true,
+      },
+      { name: 'to', type: 'address', indexed: true },
+      {
+        name: 'tokenId',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'Transfer',
+    type: 'event',
+  },
+  { inputs: [], name: 'ApprovalCallerNotOwnerNorApproved', type: 'error' },
+] as const
+```
+
+:::
 
 ## Signature Types
 
@@ -152,19 +191,116 @@ Some additional rules that apply to human-readable ABIs:
 
 ## Types
 
-export type {
-ParseAbi,
-ParseAbiItem,
-ParseAbiParameter,
-ParseAbiParameters,
-} from './human-readable'
+Types for parsing human-readable ABIs.
+
+### `ParseAbi`
+
+Parses human-readable ABI into JSON [`Abi`](/api/types#abi).
+
+| Name          | Description                    | Type              |
+| ------------- | ------------------------------ | ----------------- |
+| `TSignatures` | Human-Readable ABI.            | `string[]`        |
+| returns       | Parsed [`Abi`](/api/types#abi) | `TAbi` (inferred) |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgBQIZQM4FMCCAjYOAXzgDMoIQ4ByVAmATzC2oChXHm4AlLDAVwA28ALwp02fMAA8rOHAD0CuAD0A-HE5YefIaLhQsqACYQAdoIZwA2kjOoQWAFxwARHlSDUZgMZYA8qSuANyaTM5upPy+MMDmIXAYMKgwWACy-MkEgsCMTgB0hXI2xfLUUTFxZnAeXr4BpAAUJsaGGBhwEADuZlhQAJRwAG7AWF0GWDD8UGYdjfzAZjAATACsAGz91AA0pTRYQ1hLcAAqUN4YpH3Nxq18HYvGWAAeWMZkFCDbcC1tD2ZPV7vGAQb4LJZrdY-EAQaIwLa7eQAXVYAD4gA)
+
+```ts
+import { ParseAbi } from 'abitype'
+
+type Result = ParseAbi<
+  // ^? type Result = readonly [{ name: "balanceOf"; type: "function"; stateMutability:...
+  [
+    'function balanceOf(address owner) view returns (uint256)',
+    'event Transfer(address indexed from, address indexed to, uint256 amount)',
+  ]
+>
+```
+
+### `ParseAbiItem`
+
+Parses human-readable ABI item (e.g. error, event, function) into ABI item.
+
+| Name         | Description              | Type                  |
+| ------------ | ------------------------ | --------------------- |
+| `TSignature` | Human-Readable ABI item. | `string[]`            |
+| returns      | Parsed ABI item          | `TAbiItem` (inferred) |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgBQIZQM4FMCCAjYASRixDgF84AzKCMgclQJgE8wt6AoT19uAJSwYArgBt4AXk5w4AellwAegH44vLAKFjJiOADtUILAC44AIjypRqPQGMsAeSpmA3GrYnzVYXZjAIeq5wGDCoJACywqEEosCspmYAbsBYAO6uAHRZ0ijo2PhEJCAAPPTevv56cJbWdo5UABSoACbNUEIYcBCpelhQAJRwyWlw7TDCUHqdDcLAejAATACsAGz99AB83OqaIuJwErmYuATEpMU58kqqO4J7OkgGRglUEBBB6i8+tn4BQSFhLCRaLAWLxczDdJuOZgKIYYxZDI5ADaZW+vyqrwgDQAQqgAF7VdCDSGjLDjSbTEJQOYAc3WABo4PRqcIfnA8YSkNS6fpDFg3OR6ABdTgbIA)
+
+```ts
+import { ParseAbiItem } from 'abitype'
+
+type Result =
+  // ^? type Result = { name: "balanceOf"; type: "function"; stateMutability: "view";...
+  ParseAbiItem<'function balanceOf(address owner) view returns (uint256)'>
+
+type Result = ParseAbiItem<
+  // ^? type Result = { name: "foo"; type: "function"; stateMutability: "view"; inputs:...
+  ['function foo(Baz bar) view returns (string)', 'struct Baz { string name; }']
+>
+```
+
+### `ParseAbiParameter`
+
+Parses human-readable ABI parameter into [`AbiParameter`](/api/types#abiparameter).
+
+| Name     | Description                                      | Type                       |
+| -------- | ------------------------------------------------ | -------------------------- |
+| `TParam` | Human-Readable ABI parameter.                    | `string \| string[]`       |
+| returns  | Parsed [`AbiParameter`](/api/types#abiparameter) | `TAbiParameter` (inferred) |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgBQIZQM4FMCCAjYNKVELGLKOAXzgDMoIQ4ByVAmATzC2YChfO3OACUsGAK4AbeAF4U6bPkLoSZCgB5WAEy1QxGOgxDMAfLwD05uNYB6AfjiCsIsVNmJHXLAC44AIlQdPQwMPwBuOAA7VV8-ekZw6n4nFwlpODkiRQIiVXIodV5rSzh7TyFRNPckJ1iYcTBJLESAY0ZISKxImAxfAG0ar1iMGChgSIBzROjSbwA6BaK4PuYAIVQALzg8dGYAGhYRqHEW+HWtpCPxiajVCKpmAF1eEyA)
+
+```ts
+import { ParseAbiParameter } from 'abitype'
+
+type Result = ParseAbiParameter<'address from'>
+//   ^? type Result = { type: "address"; name: "from"; }
+
+type Result = ParseAbiParameter<
+  // ^? type Result = { type: "tuple"; components: [{ type: "string"; name:...
+  ['Baz bar', 'struct Baz { string name; }']
+>
+```
+
+### `ParseAbiParameters`
+
+Parses human-readable ABI parameters into [`AbiParameter`s](/api/types#abiparameter).
+
+| Name      | Description                                       | Type                         |
+| --------- | ------------------------------------------------- | ---------------------------- |
+| `TParams` | Human-Readable ABI parameters.                    | `string \| string[]`         |
+| returns   | Parsed [`AbiParameter`s](/api/types#abiparameter) | `TAbiParameter[]` (inferred) |
+
+#### Example
+
+[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgBQIZQM4FMCCAjYNKVELGLTOAXzgDMoIQ4ByVAmATzC2YChfO3OACUsGAK4AbeAF4U6bPkLoSZChgA8rACbaoYjHQYgANHFS79GQzAhnxwAHYwATAFYAbOZARxz5gB8vAD0wXDhAHoA-HCCWCJiUjAAXHAA2khxqQBEFnoG2QDccI6qOfSMRdRmmVxYOXlWGEUAdG38cQkS0nByRIoERKrkmBq84aFw0bF1XUmpGTPcOTDiYJJYVQDGjJCOWM4YC7XLcNkYMFBOAOZVpaTJbS3j6cwAQqgAXnB46MxmzAuUHEW3gH2+SCBNxKqmKVGYAF1eAEgA)
+
+```ts
+import { ParseAbiParameters } from 'abitype'
+
+type Result = ParseAbiParameters<'address from, address to, uint256 amount'>
+//   ^? type Result: [{ type: "address"; name: "from"; }, { type: "address";...
+
+type Result = ParseAbiParameters<
+  // ^? type Result: [{ type: "tuple"; components: [{ type: "string"; name:...
+  ['Baz bar', 'struct Baz { string name; }']
+>
+```
 
 ## Utilities
 
-export {
-parseAbiParameter,
-parseAbiParameters,
-} from './human-readable'
+Runtime functions for parsing human-readable ABIs.
+
+::: warning
+These functions throw errors for invalid inputs. Make sure you handle errors appropriately.
+:::
 
 ### `parseAbi`
 
@@ -176,8 +312,6 @@ Parses human-readable ABI into JSON [`Abi`](/api/types#abi).
 | returns      | Parsed [`Abi`](/api/types#abi) | `TAbi` (inferred) |
 
 #### Example
-
-[TypeScript Playground]()
 
 ```ts
 import { parseAbi } from 'abitype'
@@ -200,8 +334,6 @@ Parses human-readable ABI item (e.g. error, event, function) into ABI item.
 
 #### Example
 
-[TypeScript Playground]()
-
 ```ts
 import { parseAbiItem } from 'abitype'
 
@@ -219,16 +351,14 @@ const abiItem = parseAbiItem([
 
 ### `parseAbiParameter`
 
-Parses human-readable ABI parameter into [`AbiParameter`](/api/types#abi-parameter).
+Parses human-readable ABI parameter into [`AbiParameter`](/api/types#abiparameter).
 
-| Name         | Description                                       | Type                       |
-| ------------ | ------------------------------------------------- | -------------------------- |
-| `signatures` | Human-Readable ABI parameter.                     | `string \| string[]`       |
-| returns      | Parsed [`AbiParameter`](/api/types#abi-parameter) | `TAbiParameter` (inferred) |
+| Name        | Description                                      | Type                       |
+| ----------- | ------------------------------------------------ | -------------------------- |
+| `signature` | Human-Readable ABI parameter.                    | `string \| string[]`       |
+| returns     | Parsed [`AbiParameter`](/api/types#abiparameter) | `TAbiParameter` (inferred) |
 
 #### Example
-
-[TypeScript Playground]()
 
 ```ts
 import { parseAbiParameter } from 'abitype'
@@ -245,16 +375,14 @@ const abiParameter = parseAbiParameter([
 
 ### `parseAbiParameters`
 
-Parses human-readable ABI parameters into [`AbiParameter`s](/api/types#abi-parameter).
+Parses human-readable ABI parameters into [`AbiParameter`s](/api/types#abiparameter).
 
-| Name         | Description                                        | Type                         |
-| ------------ | -------------------------------------------------- | ---------------------------- |
-| `signatures` | Human-Readable ABI parameters.                     | `string \| string[]`         |
-| returns      | Parsed [`AbiParameter`s](/api/types#abi-parameter) | `TAbiParameter`[] (inferred) |
+| Name     | Description                                       | Type                         |
+| -------- | ------------------------------------------------- | ---------------------------- |
+| `params` | Human-Readable ABI parameters.                    | `string \| string[]`         |
+| returns  | Parsed [`AbiParameter`s](/api/types#abiparameter) | `TAbiParameter[]` (inferred) |
 
 #### Example
-
-[TypeScript Playground]()
 
 ```ts
 import { parseAbiParameters } from 'abitype'

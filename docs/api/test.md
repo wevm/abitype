@@ -1,6 +1,6 @@
 # Test
 
-ABIType exports some test utilities and constants to make playing around and testing your code easier.
+ABIType exports some test utilities and constants to make playing around and testing your code easier via the `'abitype/test'` entrypoint.
 
 ## Constants
 

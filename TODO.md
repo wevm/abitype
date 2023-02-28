@@ -7,11 +7,9 @@
 
 ### Docs
 
-- Benchmarks
-- Recommend installing twoslash
-- Docs with vitepress
-- README
+- twoslash
+- What is ABIType?
 - Logo
-- Vercel site
-- Brand colors
+- README
 - Algolia docsearch
+- Meta

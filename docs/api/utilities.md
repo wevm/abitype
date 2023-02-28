@@ -64,9 +64,9 @@ Converts `AbiType` to corresponding TypeScript primitive type.
 | `TAbiParameterKind` | Kind to narrow by parameter type.                 | `AbiParameterKind` (optional) |
 | returns             | TypeScript primitive type.                        | `TType` (inferred)            |
 
-> **Note**
->
-> Does not include full array or tuple conversion. Use [`AbiParameterToPrimitiveType`](#abiparametertoprimitivetype) to fully convert array and tuple types.
+::: info NOTE
+Does not include full array or tuple conversion. Use [`AbiParameterToPrimitiveType`](#abiparametertoprimitivetype) to fully convert array and tuple types.
+:::
 
 #### Example
 

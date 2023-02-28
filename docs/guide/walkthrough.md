@@ -20,52 +20,62 @@ declare function readContract(config: {
 
 The function accepts a `config` object which includes the ABI, function name, and arguments. The return type is `unknown` since we don't know what the function will return quite yet.[^2] Next, let's call the function using the following values:
 
-```ts
+::: code-group
+
+```ts [readContract.ts]
+import { abi } from './abi'
+
 const res = readContract({
   //  ^? const res: unknown
-  abi: [
-    {
-      name: 'balanceOf',
-      type: 'function',
-      stateMutability: 'view',
-      inputs: [{ name: 'owner', type: 'address' }],
-      outputs: [{ name: 'balance', type: 'uint256' }],
-    },
-    {
-      name: 'balanceOf',
-      type: 'function',
-      stateMutability: 'view',
-      inputs: [
-        { name: 'owner', type: 'address' },
-        { name: 'collectionId', type: 'uint256' },
-      ],
-      outputs: [{ name: 'balance', type: 'uint256' }],
-    },
-    {
-      name: 'tokenURI',
-      type: 'function',
-      stateMutability: 'pure',
-      inputs: [{ name: 'id', type: 'uint256' }],
-      outputs: [{ name: 'uri', type: 'string' }],
-    },
-    {
-      name: 'safeTransferFrom',
-      type: 'function',
-      stateMutability: 'nonpayable',
-      inputs: [
-        { name: 'from', type: 'address' },
-        { name: 'to', type: 'address' },
-        { name: 'tokenId', type: 'uint256' },
-      ],
-      outputs: [],
-    },
-  ] as const,
+  abi,
   functionName: 'balanceOf',
   // ^? (property) functionName: string
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
   // ^? (property) args: readonly unknown[]
 })
 ```
+
+```ts [abi.ts]
+const abi = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'owner', type: 'address' }],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'owner', type: 'address' },
+      { name: 'collectionId', type: 'uint256' },
+    ],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'tokenURI',
+    type: 'function',
+    stateMutability: 'pure',
+    inputs: [{ name: 'id', type: 'uint256' }],
+    outputs: [{ name: 'uri', type: 'string' }],
+  },
+  {
+    name: 'safeTransferFrom',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+] as const
+```
+
+:::
 
 ## Adding inference to `functionName`
 
