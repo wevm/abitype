@@ -19,6 +19,7 @@ import type {
   Scope,
   SolidityType,
   Split,
+  StructSignature,
   Trim,
   TupleValue,
   WS,
@@ -708,7 +709,7 @@ export type ParseHumanAbi<
 export type HAbi = readonly (
   | ErrorSignature
   | EventSignature
-  | `${'s' | 'S'}truct${WS}${string}{${string}}`
+  | StructSignature
   | FunctionSignature
   | ConstructorSignature
   | FallbacksSignature

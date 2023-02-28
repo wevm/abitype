@@ -5,7 +5,7 @@ export const fallbackRegex = new SafeRegExp('fallback\\(\\)')
 export const receiveRegex = new SafeRegExp('receive\\(\\) external payable')
 
 export const constructorRegex = new SafeRegExp(
-  'constructor\\((?<parameters>.+)\\)',
+  '^constructor\\((?<parameters>.*?)\\)?(?<mutability>payable{1})?$',
   'i',
 )
 
@@ -20,3 +20,23 @@ export const parametersWithTupleRegex = new SafeRegExp(
 )
 
 export const isTuple = new SafeRegExp('^\\(.+?\\).*?$', 'i')
+
+export const structRegex = new SafeRegExp(
+  '^[sS]truct\\s(?<name>[a-zA-Z0-9_]+){(?<parameters>.*?)}$',
+  'i',
+)
+
+export const errorRegex = new SafeRegExp(
+  '^error\\s(?<name>[a-zA-Z0-9_]+)\\((?<parameters>.*?)\\)$',
+  'i',
+)
+
+export const eventRegex = new SafeRegExp(
+  '^event\\s(?<name>[a-zA-Z0-9_]+)\\((?<parameters>.*?)\\)$',
+  'i',
+)
+
+export const functionRegex = new SafeRegExp(
+  '^function\\s(?<name>[a-zA-Z0-9_]+)\\((?<parameters>.*?)\\)(?:\\s(external|public{1}))?(?:\\s(?<mutability>view|pure|payable{1}))?(?:\\sreturns\\s\\((?<returnParameters>.*?)\\))?$',
+  'i',
+)

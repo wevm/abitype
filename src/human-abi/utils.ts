@@ -101,6 +101,11 @@ export type AbiArgsWithTuple = AbiArgs | TupleValue
 export type AbiArgsTypeWithTuple = readonly AbiArgsWithTuple[]
 
 /**
+ * Abi struct signature.
+ */
+export type StructSignature = `${'s' | 'S'}truct${WS}${string}{${string}}`
+
+/**
  * Abi error signature.
  */
 export type ErrorSignature = `error ${string}(${string})`
