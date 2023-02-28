@@ -1,11 +1,11 @@
 import { expectTypeOf, test } from 'vitest'
 
 import type { DeepReadonly } from '../utils'
-import { parseHumanAbiConstructor } from './parseHumanAbiConstructor'
+import { parseHumanAbiConstructors } from './parseHumanAbiConstructor'
 
 test('Parse Human Abi constructor', () => {
   expectTypeOf(
-    parseHumanAbiConstructor([
+    parseHumanAbiConstructors([
       'struct Color { uint8 red; uint8 green; uint8 blue; }',
       'struct Foo { string name; Color color; }',
       'function foo(Foo bar) view returns (string)',
