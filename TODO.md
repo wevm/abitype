@@ -7,9 +7,11 @@
 
 ### Docs
 
-- twoslash
-- What is ABIType?
-- Logo
-- README
+- Meta (OG image, etc.)
+- Frontmatter
 - Algolia docsearch
-- Meta
+- update website in GitHub
+
+- Create new GitHub project
+- twoslash
+- sponsor aside https://github.com/vitejs/vite/blob/1e1cd3ba33aee628430c15c58fb43bf2739d5c2f/docs/.vitepress/theme/index.ts#L5

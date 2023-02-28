@@ -1,5 +1,7 @@
 # Getting Started
 
+This section will help you start using ABIType in your TypeScript project. You can also try ABIType online in a [TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwAYgK4B2uwE5AznAL5wBmUEIcA5JkTAJ5gAppwBQoSLERxBUbACYADIWCMWbDt14DBAehiDaMUSP5C4ZSjGrkAcphAG4AXhTosuZRao07D2gB5TQQhmaVlFZQAaLgA3YEEAd04APhEdHThMgD0Afjgg8wpvW3tHFwAiWj4QAggAG3K4AB84cvJSxpbyzDq6iATMSkFO1oIewexBAHlmEfKAE0FsUB7aOZgIGB6AZVIwMDq+cpETbTgAFSw6ZhkASXIwUhhz7XoXZQAFTCwHfShac4QD5QUDAKwxQQvIQBESZdJwXL5M6XQa0G5Qe6PZ6vZxwKCCTDzGiHOAAbQABgpUAASBCGEHkADmDHJ0SIjOA5BgAF1Ya4MDh8EQvFYaIFtCEwvIlERopwBdcZClSZxOVjaJxeakgA).
+
 ## Install
 
 ::: code-group
@@ -48,6 +50,11 @@ type Result = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
 The [`// ^?`](https://github.com/orta/vscode-twoslash-queries) syntax inlines the type in your editor so you don't need to constantly hover with your mouse. Check out the twoslash [VS Code extension](https://marketplace.visualstudio.com/items?itemName=Orta.vscode-twoslash-queries) or [nvim plugin](https://github.com/marilari88/twoslash-queries.nvim) to get started.
 :::
 
-## Community
+## What's next?
 
-If you have questions or need help, reach out to the community at [GitHub Discussions](https://github.com/wagmi-dev/abitype).
+After setting up your project with ABIType, you are ready to dive in further! Here are some places to start:
+
+- [Learn about the types](/api/types) and [utilities](/api/utilities) available in ABIType.
+- Follow along with a [walkthrough](/guide/walkthrough) on building a type-safe `readContract` function.
+- Check out comparisons between features in [ABIType and TypeChain](/guide/comparisons#typechain) as well as [ABIType and ethers.js](/guide/comparisons#ethers-js).
+- Make reading and writing ABIs more [human-readable ABI support](/api/human).

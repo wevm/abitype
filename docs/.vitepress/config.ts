@@ -30,6 +30,11 @@ export default defineConfig({
       message: 'Released under the MIT License.',
       copyright: 'Copyright © 2023-PRESENT weth, LLC  ',
     },
+    logo: {
+      light: '/logo-light.svg',
+      dark: '/logo-dark.svg',
+      alt: 'ABIType logo',
+    },
     nav: [
       { text: 'Guide', link: '/' },
       { text: 'API', link: '/api/types' },
@@ -107,6 +112,7 @@ export default defineConfig({
         },
       ],
     },
+    siteTitle: false,
     socialLinks: [
       { icon: 'twitter', link: 'https://twitter.com/wagmi_sh' },
       { icon: 'github', link: 'https://github.com/wagmi-dev/abitype' },
