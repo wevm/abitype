@@ -11,6 +11,7 @@ test('Parse Parameters', () => {
         structs: {
           Demo: ['bytes x', 'address d'],
         },
+        structTypes: new WeakSet(),
       },
     ),
     { depth: null },
@@ -28,6 +29,7 @@ test('Parse Parameters', () => {
           'uint vote',
         ],
       },
+      structTypes: new WeakSet(),
     }),
   ).toMatchInlineSnapshot(`
 [
