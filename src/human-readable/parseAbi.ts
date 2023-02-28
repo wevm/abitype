@@ -43,7 +43,7 @@ export type ParseAbi<
 /**
  * Parses human-readable ABI into JSON {@link Abi}
  *
- * @param signatures - Human-readable ABI
+ * @param signatures - Human-Readable ABI
  * @returns Parsed {@link Abi}
  *
  * @example

@@ -1,10 +1,17 @@
-### Type validation
+### Human-readable type validation
 
 - Circular structs
 - Validate return AbiParameters against `{ type: AbiType }`
 - Validate function, event, and error params (e.g. missing comma) (can use for `parseAbiParameter`/`parseAbiParameters`)
 - Validate struct properties (e.g. missing semi-colon)
 
-- Docs with vitepress
+### Docs
 
-https://github.com/shikijs/twoslash/tree/main/packages/markdown-it-shiki-twoslash
+- Benchmarks
+- Recommend installing twoslash
+- Docs with vitepress
+- README
+- Logo
+- Vercel site
+- Brand colors
+- Algolia docsearch

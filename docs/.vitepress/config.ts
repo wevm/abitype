@@ -85,7 +85,7 @@ export default defineConfig({
               link: '/api/human',
             },
             {
-              text: 'Test 🚧',
+              text: 'Test',
               link: '/api/test',
             },
             {
