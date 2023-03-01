@@ -1,3 +1,8 @@
+---
+description: "ABIType types as Zod schemas via the `'abitype/zod'` entrypoint."
+title: 'Zod'
+---
+
 # Zod
 
 ABIType exports the [core types](/api/types) as [Zod](https://github.com/colinhacks/zod) schemas from the `'abitype/zod'` entrypoint.

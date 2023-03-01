@@ -1,3 +1,8 @@
+---
+description: "Comparisons between ABIType's features and features from similar libraries."
+title: 'Comparisons'
+---
+
 # Comparisons
 
 No other library does what ABIType does (inferring TypeScript types from ABIs and EIP-712 Typed Data), but there are some similarities with other libraries. This page compares ABIType to other libraries that are similar in some way.
@@ -22,9 +27,9 @@ If you are a library author looking to support type inference and autocomplete b
 
 ## ethers.js
 
-[ethers.js](https://github.com/ethers-io/ethers.js) is a JavaScript library for interacting with Ethereum. Among other features, it has utilities for working with human-readable ABIs. In addition to runtime functions, ABIType also has type utilies for working with [human-readable ABIs](/api/human).
+[ethers.js](https://github.com/ethers-io/ethers.js) is a JavaScript library for interacting with Ethereum. Among other features, it has utilities for working with human-readable ABIs. In addition to runtime functions, ABIType also has type utilities for working with [human-readable ABIs](/api/human).
 
-Below is a comparison of the runtime functions for manipulating human-readable ABIs.
+Below is a comparison of the runtime functions from ethers.js and ABIType for parsing human-readable ABIs.
 
 ### `Interface` versus `parseAbi`
 

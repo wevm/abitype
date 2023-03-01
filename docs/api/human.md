@@ -1,3 +1,8 @@
+---
+description: 'Type-level and runtime utilities for parsing human-readable ABIs.'
+title: 'Human-Readable ABI'
+---
+
 # Human-Readable ABI
 
 Human-Readable ABIs compress [JSON ABIs](https://docs.soliditylang.org/en/latest/abi-spec.html#json) into signatures that are nicer to read and less verbose to write. For example:
@@ -49,6 +54,8 @@ const abi = [
 ```
 
 :::
+
+ABIType contains [type-level](/api/human#types) and [runtime](/api/human#utilities) utilities for parsing human-readable ABIs, ABI items, and parameters.
 
 ## Signature Types
 

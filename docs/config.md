@@ -1,4 +1,11 @@
+---
+description: 'How to configure ABIType in userland or as a library author.'
+title: 'Configuration'
+---
+
 # Configuration
+
+How to configure ABIType in userland or as a library author.
 
 ## Overview
 

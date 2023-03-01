@@ -1,4 +1,11 @@
+---
+description: 'Types covering the Contract ABI and EIP-712 Typed Data Specifications.'
+title: 'Types'
+---
+
 # Types
+
+Types covering the [Contract ABI](https://docs.soliditylang.org/en/latest/abi-spec.html#json) and [EIP-712 Typed Data](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) Specifications.
 
 ## `Abi`
 

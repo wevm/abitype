@@ -1,3 +1,8 @@
+---
+description: "Let's use ABIType to create a type-safe function that calls \"read\" contract methods. We'll infer function names, argument types, and return types from a user-provided ABI, and make sure it works for function overloads."
+title: 'Walkthrough'
+---
+
 # Walkthrough
 
 Let's use ABIType to create a type-safe function that calls "read" contract methods. We'll infer function names, argument types, and return types from a user-provided ABI, and make sure it works for function overloads.

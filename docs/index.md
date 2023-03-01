@@ -1,7 +1,17 @@
+---
+description: 'Utilities and type definitions for ABI properties and values, covering the Contract ABI Specification, as well as EIP-712 Typed Data.'
+head:
+  - - meta
+    - name: keywords
+      content: ethereum, abi, typescript, types, eip-712, typed data
+title: 'ABIType: Strict TypeScript types for Ethereum ABIs'
+titleTemplate: false
+---
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-dark.svg">
-    <img alt="ABIType logo" src="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-light.svg" width="auto" height="45">
+    <img alt="ABIType" src="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-light.svg" width="auto" height="45">
   </picture>
 </p>
 

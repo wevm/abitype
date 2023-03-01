@@ -1,4 +1,11 @@
+---
+description: 'Utility types for working with ABIs and EIP-712 Typed Data.'
+title: 'Utilities'
+---
+
 # Utilities
+
+Utility types for working with ABIs and EIP-712 Typed Data.
 
 ## `AbiParameterToPrimitiveType`
 

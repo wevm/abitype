@@ -1,3 +1,8 @@
+---
+description: "Quickly add ABIType to your TypeScript project."
+title: 'Getting Started'
+---
+
 # Getting Started
 
 This section will help you start using ABIType in your TypeScript project. You can also try ABIType online in a [TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwAYgK4B2uwE5AznAL5wBmUEIcA5JkTAJ5gAppwBQoSLERxBUbACYADIWCMWbDt14DBAehiDaMUSP5C4ZSjGrkAcphAG4AXhTosuZRao07D2gB5TQQhmaVlFZQAaLgA3YEEAd04APhEdHThMgD0Afjgg8wpvW3tHFwAiWj4QAggAG3K4AB84cvJSxpbyzDq6iATMSkFO1oIewexBAHlmEfKAE0FsUB7aOZgIGB6AZVIwMDq+cpETbTgAFSw6ZhkASXIwUhhz7XoXZQAFTCwHfShac4QD5QUDAKwxQQvIQBESZdJwXL5M6XQa0G5Qe6PZ6vZxwKCCTDzGiHOAAbQABgpUAASBCGEHkADmDHJ0SIjOA5BgAF1Ya4MDh8EQvFYaIFtCEwvIlERopwBdcZClSZxOVjaJxeakgA).

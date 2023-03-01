@@ -1,10 +1,34 @@
 import { defineConfig } from 'vitepress'
 import { version } from '../../package.json'
-import { markdownItShikiTwoslashSetup } from 'markdown-it-shiki-twoslash'
 
 export default defineConfig({
-  description: 'Just playing around.',
-  ignoreDeadLinks: true, // TODO: Turn off for prod
+  description:
+    'Utilities and type definitions for ABI properties and values, covering the Contract ABI Specification, as well as EIP-712 Typed Data.',
+  head: [
+    ['meta', { name: 'theme-color', content: '#729b1a' }],
+    ['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
+    [
+      'link',
+      {
+        rel: 'alternate icon',
+        href: '/favicon.png',
+        type: 'image/png',
+        sizes: '48x48',
+      },
+    ],
+    [
+      'meta',
+      {
+        name: 'keywords',
+        content: 'ethereum, abi, typescript, types, eip-712, typed data',
+      },
+    ],
+    ['meta', { property: 'og:title', content: 'ABIType' }],
+    ['meta', { property: 'og:url', content: 'https://abitype.dev' }],
+    ['meta', { property: 'og:image', content: 'https://abitype.dev/og.png' }],
+    ['meta', { name: 'twitter:image', content: 'https://abitype.dev/og.png' }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+  ],
   lang: 'en-US',
   lastUpdated: true,
   markdown: {
@@ -18,8 +42,8 @@ export default defineConfig({
   },
   themeConfig: {
     algolia: {
-      appId: 'B2GGTJJMD3',
-      apiKey: '42f4bd06fd3343c9a742128af056bdf5',
+      appId: '4QMG0RYQG7',
+      apiKey: 'd2114bafbf2a7fb3c9c2a856d4bc9e38',
       indexName: 'abitype',
     },
     editLink: {
@@ -59,7 +83,7 @@ export default defineConfig({
           text: 'Guide',
           items: [
             {
-              text: 'What is ABIType? 🚧',
+              text: 'What is ABIType?',
               link: '/',
             },
             {
