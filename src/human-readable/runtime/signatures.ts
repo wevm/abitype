@@ -56,12 +56,16 @@ export function execStructSignature(signature: string) {
 }
 
 // https://regexr.com/78u01
-const constructorSignatureRegex = /^constructor\((?<parameters>.*?)\)$/
+const constructorSignatureRegex =
+  /^constructor\((?<parameters>.*?)\)(?:\s(?<stateMutability>payable{1}))?$/
 export function isConstructorSignature(signature: string) {
   return constructorSignatureRegex.test(signature)
 }
 export function execConstructorSignature(signature: string) {
-  return execTyped<{ parameters: string }>(constructorSignatureRegex, signature)
+  return execTyped<{
+    parameters: string
+    stateMutability?: Extract<AbiStateMutability, 'payable'>
+  }>(constructorSignatureRegex, signature)
 }
 
 // https://regexr.com/78u18

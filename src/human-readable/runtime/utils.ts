@@ -102,7 +102,7 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
     }
     return {
       type: 'constructor',
-      stateMutability: 'nonpayable',
+      stateMutability: match.stateMutability ?? 'nonpayable',
       inputs: abiParameters,
     }
   }
