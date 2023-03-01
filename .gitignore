@@ -11,6 +11,11 @@ tsconfig.tsbuildinfo
 trace
 !examples/trace
 
+# proxy packages
+config/**
+test/**
+zod/**
+
 # local env files
 .env
 .env.local

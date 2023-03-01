@@ -18,10 +18,19 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "default": "./dist/config.js"
+    },
+    "./test": {
+      "types": "./dist/test/index.d.ts",
+      "default": "./dist/test/index.js"
     },
     "./zod": {
       "types": "./dist/zod/index.d.ts",
@@ -29,10 +38,11 @@
     },
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
   "files": [
-    "/dist",
-    "/zod"
+    "/config",
+    "/test",
+    "/zod",
+    "/dist"
   ],
   "peerDependencies": {
     "typescript": ">=4.9.4",
@@ -46,24 +56,29 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.0",
+    "@ethersproject/abi": "^5.7.0",
     "@types/eslint": "^8.4.10",
+    "@types/fs-extra": "^11.0.1",
     "@types/node": "17.0.21",
     "@types/prettier": "^2.7.2",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
     "@typescript-eslint/parser": "^5.48.0",
+    "bun": "^0.5.7",
     "eslint": "8.17.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "ethers": "^6.0.5",
+    "fs-extra": "^11.1.0",
     "lint-staged": "^12.4.1",
     "prettier": "^2.8.1",
     "simple-git-hooks": "^2.8.1",
-    "tsup": "^6.5.0",
+    "tsup": "^6.6.3",
     "typescript": "^4.9.4",
     "vitest": "^0.26.3",
-    "zod": "^3.20.2"
+    "zod": "^3.20.6"
   },
   "keywords": [
     "abi",
@@ -73,19 +88,26 @@
     "web3"
   ],
   "scripts": {
+    "bench": "vitest bench --no-threads",
     "build": "tsup",
     "changeset:release": "pnpm build && changeset publish",
     "changeset:version": "changeset version && pnpm install --lockfile-only",
+    "clean": "rm -rf config dist node_modules test trace zod **/node_modules",
+    "dev": "DEV=true tsup",
+    "docs:dev": "pnpm -r --filter docs dev",
+    "docs:build": "pnpm -r --filter docs build",
+    "docs:preview": "pnpm -r --filter docs preview",
     "lint": "eslint . --cache",
     "lint:fix": "pnpm lint --fix",
     "lint:format": "prettier --write",
-    "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project src/examples/trace/tsconfig.json",
-    "bench": "tsc --strict --noEmit --extendedDiagnostics",
+    "postinstall": "pnpm dev",
     "prepare": "npx simple-git-hooks",
+    "prepublishOnly": "pnpm bun scripts/prepublishOnly.ts",
     "test": "vitest",
     "test:run": "vitest run",
     "test:typecheck": "vitest typecheck",
     "test:update": "vitest --update",
+    "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project playground/tsconfig.json",
     "typecheck": "tsc --noEmit"
   },
   "simple-git-hooks": {

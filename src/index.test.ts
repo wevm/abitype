@@ -12,6 +12,10 @@ it('should expose correct exports', () => {
       "parseHumanAbiErrors",
       "parseHumanAbiConstructor",
       "narrow",
+      "parseAbi",
+      "parseAbiItem",
+      "parseAbiParameter",
+      "parseAbiParameters",
     ]
   `)
 })

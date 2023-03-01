@@ -73,3 +73,16 @@ export type {
   IsTypedData,
   TypedDataToPrimitiveTypes,
 } from './utils'
+
+export type {
+  ParseAbi,
+  ParseAbiItem,
+  ParseAbiParameter,
+  ParseAbiParameters,
+} from './human-readable'
+export {
+  parseAbi,
+  parseAbiItem,
+  parseAbiParameter,
+  parseAbiParameters,
+} from './human-readable'

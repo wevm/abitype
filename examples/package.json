@@ -1,0 +1,7 @@
+{
+  "name": "examples",
+  "private": true,
+  "devDependencies": {
+    "abitype": "workspace:*"
+  }
+}

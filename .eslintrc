@@ -2,13 +2,13 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./tsconfig.json",
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": [
+      "./tsconfig.json",
+      "./docs/tsconfig.json"
+    ]
   },
-  "plugins": [
-    "@typescript-eslint",
-    "import"
-  ],
+  "plugins": ["@typescript-eslint", "import"],
   "extends": [
     "eslint:recommended",
     "plugin:eslint-comments/recommended",
@@ -31,7 +31,7 @@
       2,
       {
         "argsIgnorePattern": "^_",
-        "destructuredArrayIgnorePattern": "^_"
+         "destructuredArrayIgnorePattern": "^_"
       }
     ],
     "@typescript-eslint/no-var-requires": "off",
@@ -40,10 +40,7 @@
     "import/order": [
       "error",
       {
-        "groups": [
-          "external",
-          "internal"
-        ],
+        "groups": ["external", "internal"],
         "newlines-between": "always-and-inside-groups",
         "alphabetize": {
           "order": "asc"
@@ -67,10 +64,7 @@
   ],
   "settings": {
     "import/parsers": {
-      "@typescript-eslint/parser": [
-        ".ts",
-        ".d.ts"
-      ]
+      "@typescript-eslint/parser": [".ts", ".d.ts"]
     },
     "import/resolver": {
       "typescript": {
