@@ -2,4 +2,4 @@
 'abitype': patch
 ---
 
-Fixes constructor signature not supporting "payable" mutability
+Fixed constructor signature not supporting "payable" mutability
