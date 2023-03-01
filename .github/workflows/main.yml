@@ -149,6 +149,6 @@ jobs:
             zod
           key: modules-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Test
-        run: pnpm test
+        run: pnpm test:cov
       - name: Test types
         run: pnpm test:typecheck
