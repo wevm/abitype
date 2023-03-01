@@ -25,6 +25,14 @@ export default defineConfig({
     ['meta', { property: 'og:image', content: 'https://abitype.dev/og.png' }],
     ['meta', { name: 'twitter:image', content: 'https://abitype.dev/og.png' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    [
+      'script',
+      {
+        src: 'https://cdn.usefathom.com/script.js',
+        ['data-site']: 'WKTTIYCY',
+        defer: '',
+      },
+    ],
   ],
   lang: 'en-US',
   lastUpdated: true,
