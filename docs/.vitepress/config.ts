@@ -2,8 +2,6 @@ import { defineConfig } from 'vitepress'
 import { version } from '../../package.json'
 
 export default defineConfig({
-  description:
-    'Utilities and type definitions for ABI properties and values, covering the Contract ABI Specification, as well as EIP-712 Typed Data.',
   head: [
     ['meta', { name: 'theme-color', content: '#729b1a' }],
     ['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
@@ -23,7 +21,6 @@ export default defineConfig({
         content: 'ethereum, abi, typescript, types, eip-712, typed data',
       },
     ],
-    ['meta', { property: 'og:title', content: 'ABIType' }],
     ['meta', { property: 'og:url', content: 'https://abitype.dev' }],
     ['meta', { property: 'og:image', content: 'https://abitype.dev/og.png' }],
     ['meta', { name: 'twitter:image', content: 'https://abitype.dev/og.png' }],
