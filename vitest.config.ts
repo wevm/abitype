@@ -7,7 +7,7 @@ export default defineConfig({
       reporters: ['verbose'],
     },
     coverage: {
-      exclude: ['**/_test/**'],
+      exclude: ['**/_test/**', 'src/test/**'],
       reporter: ['text', 'json', 'html'],
     },
     environment: 'node',
