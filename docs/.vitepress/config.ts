@@ -147,5 +147,4 @@ export default defineConfig({
       { icon: 'github', link: 'https://github.com/wagmi-dev/abitype' },
     ],
   },
-  title: 'ABIType',
 })
