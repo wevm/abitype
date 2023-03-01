@@ -29,7 +29,10 @@ export function parseHumanAbiErrors<
     result.push({
       type: 'error',
       name: name ?? '',
-      inputs: parseHumanAbiArguments(parseParameters(parameters), context),
+      inputs: parseHumanAbiArguments(
+        parseParameters(parameters ?? ''),
+        context,
+      ),
     })
   }
 
@@ -50,6 +53,6 @@ export function parseHumanAbiError<
   return {
     type: 'error',
     name: name ?? 'nonpayable',
-    inputs: parseHumanAbiArguments(parseParameters(parameters), context),
+    inputs: parseHumanAbiArguments(parseParameters(parameters ?? ''), context),
   }
 }

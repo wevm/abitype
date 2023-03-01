@@ -22,7 +22,7 @@ export const parametersWithTupleRegex = new SafeRegExp(
 export const isTuple = new SafeRegExp('^\\(.+?\\).*?$', 'i')
 
 export const structRegex = new SafeRegExp(
-  '^[sS]truct\\s(?<name>[a-zA-Z0-9_]+){(?<parameters>.*?)}$',
+  '^[sS]truct\\s(?<name>[a-zA-Z0-9_]+)\\s{(?<parameters>.*?)}$',
   'i',
 )
 

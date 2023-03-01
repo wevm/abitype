@@ -30,9 +30,12 @@ export function parseHumanAbiFunctions<
       type: 'function',
       name: name ?? '',
       stateMutability: (mutability as AbiMutability) ?? 'nonpayable',
-      inputs: parseHumanAbiArguments(parseParameters(parameters), context),
+      inputs: parseHumanAbiArguments(
+        parseParameters(parameters ?? ''),
+        context,
+      ),
       outputs: parseHumanAbiArguments(
-        parseParameters(returnParameters),
+        parseParameters(returnParameters ?? ''),
         context,
       ),
     })
@@ -56,7 +59,10 @@ export function parseHumanAbiFunction<
     type: 'function',
     name: name ?? '',
     stateMutability: (mutability as AbiMutability) ?? 'nonpayable',
-    inputs: parseHumanAbiArguments(parseParameters(parameters), context),
-    outputs: parseHumanAbiArguments(parseParameters(returnParameters), context),
+    inputs: parseHumanAbiArguments(parseParameters(parameters ?? ''), context),
+    outputs: parseHumanAbiArguments(
+      parseParameters(returnParameters ?? ''),
+      context,
+    ),
   }
 }

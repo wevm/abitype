@@ -27,7 +27,7 @@ export function parseHumanAbiConstructors<THAbi extends HAbi>(
     result.push({
       type: 'constructor',
       stateMutability: mutability ?? 'nonpayable',
-      inputs: parseHumanAbiArguments(parseParameters(parameters), {
+      inputs: parseHumanAbiArguments(parseParameters(parameters ?? ''), {
         parseContext: 'function',
         structTypes: new WeakSet(),
       }),
@@ -50,7 +50,7 @@ export function parseHumanAbiConstructor<THAbiSignature extends string>(
   return {
     type: 'constructor',
     stateMutability: (mutability as AbiMutability) ?? 'nonpayable',
-    inputs: parseHumanAbiArguments(parseParameters(parameters), {
+    inputs: parseHumanAbiArguments(parseParameters(parameters ?? ''), {
       parseContext: 'function',
       structTypes: new WeakSet(),
     }),

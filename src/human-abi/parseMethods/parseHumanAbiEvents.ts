@@ -29,7 +29,10 @@ export function parseHumanAbiEvents<
     result.push({
       type: 'event',
       name: name ?? '',
-      inputs: parseHumanAbiArguments(parseParameters(parameters), context),
+      inputs: parseHumanAbiArguments(
+        parseParameters(parameters ?? ''),
+        context,
+      ),
     })
   }
 
@@ -50,6 +53,6 @@ export function parseHumanAbiEvent<
   return {
     type: 'event',
     name: name ?? 'nonpayable',
-    inputs: parseHumanAbiArguments(parseParameters(parameters), context),
+    inputs: parseHumanAbiArguments(parseParameters(parameters ?? ''), context),
   }
 }

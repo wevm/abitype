@@ -1,7 +1,10 @@
 import type { AbiArgsWithTuple, StructSignature } from '../utils'
 import { structRegex } from './regex'
 
-export function parseParameters(parameters: string): AbiArgsWithTuple[] {
+export function parseParameters(
+  parameters: string,
+  separator = ',',
+): AbiArgsWithTuple[] {
   parameters = parameters.trim()
 
   let buildString = ''
@@ -10,7 +13,7 @@ export function parseParameters(parameters: string): AbiArgsWithTuple[] {
   const result = []
 
   for (let i = 0; i < parameters.length; i++) {
-    if (depth === 0 && parameters[i] === ',') {
+    if (depth === 0 && parameters[i] === separator) {
       result.push(buildString.trim())
       buildString = ''
     } else {
@@ -55,7 +58,7 @@ export function createStructObject(
 
     const { name, parameters } = extracted.groups
 
-    const splitedParameters = parameters.split(';')
+    const splitedParameters = parseParameters(parameters, ';')
 
     if (splitedParameters[splitedParameters.length - 1] === '')
       splitedParameters.pop()
