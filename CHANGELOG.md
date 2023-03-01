@@ -1,5 +1,11 @@
 # abitype
 
+## 0.6.1
+
+### Patch Changes
+
+- [`1597a8f`](https://github.com/wagmi-dev/abitype/commit/1597a8f454e199f2cd4c3c8c6f6613768a90e968) Thanks [@tmm](https://github.com/tmm)! - Added peerDependenciesMeta to package.json
+
 ## 0.6.0
 
 ### Minor Changes
