@@ -1,5 +1,11 @@
 # abitype
 
+## 0.6.0
+
+### Minor Changes
+
+- [#84](https://github.com/wagmi-dev/abitype/pull/84) [`e1fa871`](https://github.com/wagmi-dev/abitype/commit/e1fa871dbc4319e5a7aeec25c2b8ed50f5225e81) Thanks [@tmm](https://github.com/tmm)! - Added human-readable ABI type-level and runtime parse utilities.
+
 ## 0.5.0
 
 ### Minor Changes
