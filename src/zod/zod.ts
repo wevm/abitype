@@ -4,21 +4,16 @@ import type {
   AbiFunction as AbiFunctionType,
   AbiParameter as AbiParameter_,
 } from '../abi'
+import { bytesRegex, integerRegex } from '../regex'
 
 // From https://docs.soliditylang.org/en/latest/abi-spec.html#types
 export const SolidityAddress = z.literal('address')
 export const SolidityBool = z.literal('bool')
-export const SolidityBytes = z.string().regex(
-  // `bytes<M>`: binary type of `M` bytes, `0 < M <= 32`
-  /^bytes([1-9]|1[0-9]|2[0-9]|3[0-2])?$/,
-)
+export const SolidityBytes = z.string().regex(bytesRegex)
 export const SolidityFunction = z.literal('function')
 export const SolidityString = z.literal('string')
 export const SolidityTuple = z.literal('tuple')
-export const SolidityInt = z.string().regex(
-  // `(u)int<M>`: (un)signed integer type of `M` bits, `0 < M <= 256`, `M % 8 == 0`
-  /^u?int(8|16|24|32|40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)?$/,
-)
+export const SolidityInt = z.string().regex(integerRegex)
 export const SolidityArrayWithoutTuple = z
   .string()
   .regex(

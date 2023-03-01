@@ -20,7 +20,7 @@ import type {
   TypedDataType,
 } from './abi'
 import type { ResolvedConfig } from './config'
-import type { Merge, Tuple } from './types'
+import type { Error, Merge, Tuple } from './types'
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
@@ -53,8 +53,8 @@ type PrimitiveTypeLookup<
   [_ in SolidityInt]: TAbiType extends `${'u' | ''}int${infer TBits}`
     ? TBits extends keyof BitsTypeLookup
       ? BitsTypeLookup[TBits]
-      : 'Error: Unknown bits value.'
-    : `Error: Unknown 'SolidityInt' format.`
+      : Error<'Unknown bits value.'>
+    : Error<`Unknown 'SolidityInt' format.`>
 } & {
   [_ in SolidityString]: string
 } & {
@@ -155,7 +155,7 @@ export type AbiParameterToPrimitiveType<
     // the array has depth greater than `Config['ArrayMaxDepth']`, etc.
     ResolvedConfig['StrictAbiType'] extends true
     ? TAbiParameter['type'] extends infer TAbiType extends string
-      ? `Error: Unknown type '${TAbiType}'.`
+      ? Error<`Unknown type '${TAbiType}'.`>
       : never
     : unknown
 
@@ -352,13 +352,20 @@ export type IsTypedData<TTypedData> = TTypedData extends TypedData
 export type TypedDataToPrimitiveTypes<
   TTypedData extends TypedData,
   TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
+  TKeyReferences extends { [_: string]: unknown } | unknown = unknown,
 > = {
   [K in keyof TTypedData]: {
     // Map over typed data values and turn into key-value pairs
     [K2 in TTypedData[K][number] as K2['name']]: K2['type'] extends K // 1. Eliminate self-referencing structs
-      ? `Error: Cannot convert self-referencing struct '${K2['type']}' to primitive type.`
+      ? Error<`Cannot convert self-referencing struct '${K2['type']}' to primitive type.`>
       : K2['type'] extends keyof TTypedData // 2. Check if type is struct
-      ? TypedDataToPrimitiveTypes<Exclude<TTypedData, K>>[K2['type']]
+      ? K2['type'] extends keyof TKeyReferences
+        ? Error<`Circular reference detected. '${K2['type']}' is a circular reference.`>
+        : TypedDataToPrimitiveTypes<
+            Exclude<TTypedData, K>,
+            TAbiParameterKind,
+            TKeyReferences & { [_ in K2['type']]: true }
+          >[K2['type']]
       : // 3. Check if type is array of structs
       K2['type'] extends `${infer TType extends keyof TTypedData &
           string}[${infer Tail}]`
@@ -377,7 +384,7 @@ export type TypedDataToPrimitiveTypes<
         >
       : K2['type'] extends TypedDataType // 4. Known type to convert
       ? AbiParameterToPrimitiveType<K2, TAbiParameterKind>
-      : `Error: Cannot convert unknown type '${K2['type']}' to primitive type.`
+      : Error<`Cannot convert unknown type '${K2['type']}' to primitive type.`>
   }
 }
 

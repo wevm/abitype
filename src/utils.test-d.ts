@@ -1,6 +1,7 @@
 import { assertType, test } from 'vitest'
 
-import { address } from '../test'
+import type { Abi } from './abi'
+import { address } from './test'
 import type {
   customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
@@ -9,8 +10,7 @@ import type {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
-} from '../test'
-import type { Abi } from './abi'
+} from './test'
 import type {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
@@ -594,19 +594,12 @@ test('Function', () => {
       assertType<ExtractAbiFunction<typeof wagmiMintExampleAbi, 'tokenURI'>>({
         inputs: [
           {
-            internalType: 'uint256',
             name: 'tokenId',
             type: 'uint256',
           },
         ],
         name: 'tokenURI',
-        outputs: [
-          {
-            internalType: 'string',
-            name: '',
-            type: 'string',
-          },
-        ],
+        outputs: [{ type: 'string' }],
         stateMutability: 'pure',
         type: 'function',
       })
@@ -619,9 +612,9 @@ test('Function', () => {
       >
       assertType<Result>({
         inputs: [
-          { internalType: 'address', name: 'from', type: 'address' },
-          { internalType: 'address', name: 'to', type: 'address' },
-          { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+          { name: 'from', type: 'address' },
+          { name: 'to', type: 'address' },
+          { name: 'tokenId', type: 'uint256' },
         ],
         name: 'safeTransferFrom',
         outputs: [],
@@ -630,10 +623,10 @@ test('Function', () => {
       })
       assertType<Result>({
         inputs: [
-          { internalType: 'address', name: 'from', type: 'address' },
-          { internalType: 'address', name: 'to', type: 'address' },
-          { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
-          { internalType: 'bytes', name: '_data', type: 'bytes' },
+          { name: 'from', type: 'address' },
+          { name: 'to', type: 'address' },
+          { name: 'tokenId', type: 'uint256' },
+          { name: '_data', type: 'bytes' },
         ],
         name: 'safeTransferFrom',
         outputs: [],
@@ -665,23 +658,19 @@ test('Events', () => {
 
   test('ExtractAbiEvent', () => {
     assertType<ExtractAbiEvent<typeof wagmiMintExampleAbi, 'Transfer'>>({
-      anonymous: false,
       inputs: [
         {
           indexed: true,
-          internalType: 'address',
           name: 'from',
           type: 'address',
         },
         {
           indexed: true,
-          internalType: 'address',
           name: 'to',
           type: 'address',
         },
         {
           indexed: true,
-          internalType: 'uint256',
           name: 'tokenId',
           type: 'uint256',
         },
@@ -822,6 +811,30 @@ test('TypedDataToPrimitiveTypes', () => {
           first:
             "Error: Cannot convert self-referencing struct 'Name' to primitive type.",
           last: 'Meagher',
+        },
+      })
+    })
+
+    test('recursive structs', () => {
+      const types = {
+        Foo: [{ name: 'bar', type: 'Bar' }],
+        Bar: [{ name: 'foo', type: 'Foo' }],
+      } as const
+      type Result = TypedDataToPrimitiveTypes<typeof types>
+      assertType<Result>({
+        Foo: {
+          bar: {
+            foo: {
+              bar: "Error: Circular reference detected. 'Bar' is a circular reference.",
+            },
+          },
+        },
+        Bar: {
+          foo: {
+            bar: {
+              foo: "Error: Circular reference detected. 'Foo' is a circular reference.",
+            },
+          },
         },
       })
     })

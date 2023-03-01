@@ -8,6 +8,13 @@ coverage
 dist
 node_modules
 tsconfig.tsbuildinfo
+trace
+!examples/trace
+
+# proxy packages
+config/**
+test/**
+zod/**
 
 # local env files
 .env
