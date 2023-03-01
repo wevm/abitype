@@ -59,6 +59,7 @@
   "ignorePatterns": [
     "CHANGELOG.md",
     "build",
+    "coverage",
     "dist",
     "node_modules"
   ],

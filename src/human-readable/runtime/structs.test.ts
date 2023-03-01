@@ -144,7 +144,7 @@ test('no properties', () => {
     No properties exist.
 
     Details: struct Foo {}
-    Version: abitype@0.6.1"
+    Version: abitype@x.y.z"
   `,
   )
 })
@@ -156,7 +156,7 @@ test('struct does not exist when resolving', () => {
 
       Type \\"Bar\\" is not a valid ABI type. Perhaps you forgot to include a struct signature?
 
-      Version: abitype@0.6.1"
+      Version: abitype@x.y.z"
     `)
 })
 
@@ -169,7 +169,7 @@ test('throws if recursive structs are detected', () => {
 
     Struct \\"Bar\\" is a circular reference.
 
-    Version: abitype@0.6.1"
+    Version: abitype@x.y.z"
   `,
   )
 })
