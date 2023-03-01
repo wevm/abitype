@@ -119,9 +119,29 @@ test('execConstructorSignature', () => {
     `
     {
       "parameters": "string",
+      "stateMutability": undefined,
     }
   `,
   )
+  expect(
+    execConstructorSignature('constructor(string) payable'),
+  ).toMatchInlineSnapshot(
+    `
+    {
+      "parameters": "string",
+      "stateMutability": "payable",
+    }
+  `,
+  )
+  expect(
+    execConstructorSignature('constructor(string) '),
+  ).toMatchInlineSnapshot('undefined')
+  expect(
+    execConstructorSignature('constructor(string) external'),
+  ).toMatchInlineSnapshot('undefined')
+  expect(
+    execConstructorSignature('constructor(string)external'),
+  ).toMatchInlineSnapshot('undefined')
   expect(
     execConstructorSignature('function name(string)'),
   ).toMatchInlineSnapshot('undefined')
