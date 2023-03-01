@@ -87,7 +87,7 @@ test('invalid signature', () => {
     `
     "Unknown signature.
 
-    Version: abitype@0.5.0"
+    Version: abitype@0.6.0"
   `,
   )
   expect(() =>
@@ -97,7 +97,7 @@ test('invalid signature', () => {
     "Unknown signature.
 
     Details: method foo(string) (address)
-    Version: abitype@0.5.0"
+    Version: abitype@0.6.0"
   `,
   )
 })
@@ -107,7 +107,7 @@ test('empty string', () => {
     `
     "Invalid ABI parameter.
 
-    Version: abitype@0.5.0"
+    Version: abitype@0.6.0"
   `,
   )
 
@@ -116,7 +116,7 @@ test('empty string', () => {
     "Invalid ABI parameter.
 
     Details: foo ,
-    Version: abitype@0.5.0"
+    Version: abitype@0.6.0"
   `,
   )
 })
@@ -129,7 +129,7 @@ test('indexed not allowed', () => {
     "\`indexed\` keyword not allowed in param.
 
     Details: string indexed foo
-    Version: abitype@0.5.0"
+    Version: abitype@0.6.0"
   `,
   )
 })

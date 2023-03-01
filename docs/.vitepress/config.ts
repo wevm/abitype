@@ -2,6 +2,8 @@ import { defineConfig } from 'vitepress'
 import { version } from '../../package.json'
 
 export default defineConfig({
+  description:
+    'Utilities and type definitions for ABI properties and values, covering the Contract ABI Specification, as well as EIP-712 Typed Data.',
   head: [
     ['meta', { name: 'theme-color', content: '#729b1a' }],
     ['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
@@ -147,4 +149,5 @@ export default defineConfig({
       { icon: 'github', link: 'https://github.com/wagmi-dev/abitype' },
     ],
   },
+  title: 'ABIType: Strict TypeScript types for Ethereum ABIs',
 })

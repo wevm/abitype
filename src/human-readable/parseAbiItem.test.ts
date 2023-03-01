@@ -8,7 +8,7 @@ test('parseAbiItem', () => {
     `
     "Unknown signature.
 
-    Version: abitype@0.5.0"
+    Version: abitype@0.6.0"
   `,
   )
   // @ts-expect-error invalid signature type
@@ -18,7 +18,7 @@ test('parseAbiItem', () => {
 
     Docs: https://abitype.dev/todo
     Details: parseAbiItem([])
-    Version: abitype@0.5.0"
+    Version: abitype@0.6.0"
   `,
   )
   expect(() =>
@@ -31,7 +31,7 @@ test('parseAbiItem', () => {
     Details: parseAbiItem([
       \\"struct Foo { string name; }\\"
     ])
-    Version: abitype@0.5.0"
+    Version: abitype@0.6.0"
   `,
   )
 })
