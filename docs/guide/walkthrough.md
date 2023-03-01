@@ -106,7 +106,7 @@ const res = readContract({
 })
 ```
 
-First, we create two generics `TAbi` and `TFunctionName`, and constrain their types. `TAbi` is set to the `config.abi` property and the `Abi` type. For `TFunctionName`, we import [`ExtractAbiFunctionNames`](../../README.md#extractabifunctionnames) and use it to parse out all the read function names (state mutability `'pure' | 'view'`[^3]) from the ABI. Finally, `config.functionName` is set to the user-defined `TFunctionName` and another instance of `ExtractAbiFunctionNames`. This allows us to add the full union (not just the current value) to `functionName`'s scope.[^4]
+First, we create two generics `TAbi` and `TFunctionName`, and constrain their types. `TAbi` is set to the `config.abi` property and the `Abi` type. For `TFunctionName`, we import [`ExtractAbiFunctionNames`](/api/utilities#extractabifunctionnames) and use it to parse out all the read function names (state mutability `'pure' | 'view'`[^3]) from the ABI. Finally, `config.functionName` is set to the user-defined `TFunctionName` and another instance of `ExtractAbiFunctionNames`. This allows us to add the full union (not just the current value) to `functionName`'s scope.[^4]
 
 If you are following along in a TypeScript Playground or editor, you can try various values for `functionName`. `functionName` will autocomplete and only accept `'balanceOf' | 'tokenURI'`. You can also try renaming the function names in `abi` and types will update as well.
 
@@ -142,7 +142,7 @@ const res = readContract({
 })
 ```
 
-Since `args`'s type can be completely defined inline, we import [`ExtractAbiFunction`](../../README.md#extractabifunction) and [`AbiParametersToPrimitiveTypes`](../../README.md#abiparameterstoprimitivetypes) and wire them up. First, we use `ExtractAbiFunction` to get the function from the ABI that matches `TFunctionName`. Then, we use `AbiParametersToPrimitiveTypes` to convert the function's inputs to their TypeScript primitive types.
+Since `args`'s type can be completely defined inline, we import [`ExtractAbiFunction`](/api/utilities#extractabifunction) and [`AbiParametersToPrimitiveTypes`](/api/utilities#abiparameterstoprimitivetypes) and wire them up. First, we use `ExtractAbiFunction` to get the function from the ABI that matches `TFunctionName`. Then, we use `AbiParametersToPrimitiveTypes` to convert the function's inputs to their TypeScript primitive types.
 
 For `abi`, you'll notice there are two `'balanceOf'` functions. This means `'balanceOf'` is overloaded on the contract. The cool thing about TypeScript is that we can still infer the correct types for overloaded functions (e.g. union like `` readonly [`0x${string}`] | readonly [`0x${string}`, bigint] ``)! This uses a TypeScript feature called [distributivity](https://jser.dev/typescript/2023/01/22/distributiveness-in-ts.html) and is worth learning more about if you're interested.
 
