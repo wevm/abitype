@@ -29,6 +29,30 @@ export type {
 
 export type { Config, DefaultConfig, ResolvedConfig } from './config'
 
+export type {
+  ParseHAbiConstructor,
+  ParseHAbiFallbacks,
+  ParseHAbiFunctions,
+  ParseHAbiEvents,
+  ParseHAbiErrors,
+  CreateStructObject,
+  IsHAbi,
+  HAbi,
+  HandleArguments,
+  ParseArgs,
+  ParseHumanAbi,
+  ParseComponents,
+} from './human-abi'
+
+export {
+  parseHumanAbiFunctions,
+  parseHumanAbi,
+  parseHumanAbiFallbacks,
+  parseHumanAbiEvents,
+  parseHumanAbiErrors,
+  parseHumanAbiConstructor,
+} from './human-abi'
+
 export type { Narrow } from './narrow'
 export { narrow } from './narrow'
 
