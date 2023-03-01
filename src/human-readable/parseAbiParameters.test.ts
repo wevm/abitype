@@ -10,7 +10,7 @@ test('parseAbiParameters', () => {
 
     Docs: https://abitype.dev/todo
     Details: parseAbiParameters(\\"\\")
-    Version: abitype@0.6.0"
+    Version: abitype@x.y.z"
   `,
   )
   // @ts-expect-error invalid signature type
@@ -20,7 +20,7 @@ test('parseAbiParameters', () => {
 
     Docs: https://abitype.dev/todo
     Details: parseAbiParameters([])
-    Version: abitype@0.6.0"
+    Version: abitype@x.y.z"
   `,
   )
   expect(() =>
@@ -33,7 +33,7 @@ test('parseAbiParameters', () => {
     Details: parseAbiParameters([
       \\"struct Foo { string name; }\\"
     ])
-    Version: abitype@0.6.0"
+    Version: abitype@x.y.z"
   `,
   )
 

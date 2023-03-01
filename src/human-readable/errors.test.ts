@@ -6,7 +6,7 @@ test('BaseError', () => {
   expect(new BaseError('An error occurred.')).toMatchInlineSnapshot(`
     [AbiTypeError: An error occurred.
 
-    Version: abitype@0.6.0]
+    Version: abitype@x.y.z]
   `)
 
   expect(new BaseError('An error occurred.', { details: 'details' }))
@@ -14,14 +14,14 @@ test('BaseError', () => {
       [AbiTypeError: An error occurred.
 
       Details: details
-      Version: abitype@0.6.0]
+      Version: abitype@x.y.z]
     `)
 
   expect(new BaseError('', { details: 'details' })).toMatchInlineSnapshot(`
     [AbiTypeError: An error occurred.
 
     Details: details
-    Version: abitype@0.6.0]
+    Version: abitype@x.y.z]
   `)
 })
 
@@ -36,7 +36,7 @@ test('BaseError (w/ docsPath)', () => {
 
     Docs: https://abitype.dev/lol
     Details: details
-    Version: abitype@0.6.0]
+    Version: abitype@x.y.z]
   `)
   expect(
     new BaseError('An error occurred.', {
@@ -46,7 +46,7 @@ test('BaseError (w/ docsPath)', () => {
     [AbiTypeError: An error occurred.
 
     Docs: https://abitype.dev/docs
-    Version: abitype@0.6.0]
+    Version: abitype@x.y.z]
   `)
   expect(
     new BaseError('An error occurred.', {
@@ -57,7 +57,7 @@ test('BaseError (w/ docsPath)', () => {
     [AbiTypeError: An error occurred.
 
     Docs: https://abitype.dev/lol
-    Version: abitype@0.6.0]
+    Version: abitype@x.y.z]
   `)
 })
 
@@ -74,7 +74,7 @@ test('BaseError (w/ metaMessages)', () => {
     Cause: lol
 
     Details: details
-    Version: abitype@0.6.0]
+    Version: abitype@x.y.z]
   `)
 })
 
@@ -92,7 +92,7 @@ test('inherited BaseError', () => {
 
     Docs: https://abitype.dev/lol
     Details: details
-    Version: abitype@0.6.0]
+    Version: abitype@x.y.z]
   `)
 })
 
@@ -108,6 +108,6 @@ test('inherited Error', () => {
 
     Docs: https://abitype.dev/lol
     Details: details
-    Version: abitype@0.6.0]
+    Version: abitype@x.y.z]
   `)
 })
