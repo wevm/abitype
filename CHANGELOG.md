@@ -1,5 +1,11 @@
 # abitype
 
+## 0.6.2
+
+### Patch Changes
+
+- [#91](https://github.com/wagmi-dev/abitype/pull/91) [`fc4d4f7`](https://github.com/wagmi-dev/abitype/commit/fc4d4f7941e119868c25f88112aa90fe48085889) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Fixed constructor signature not supporting "payable" mutability
+
 ## 0.6.1
 
 ### Patch Changes
