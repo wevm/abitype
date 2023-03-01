@@ -1,5 +1,5 @@
 import type { AbiParameter } from '../../abi'
-import type { Trim } from '../../types'
+import type { Error, Trim } from '../../types'
 import type { StructSignature } from './signatures'
 import type { ParseAbiParameter } from './utils'
 
@@ -36,28 +36,37 @@ export type ParseStruct<
     }
   : never
 
-// TODO: Disallow recursive and self-referencing structs
 export type ResolveStructs<
   TAbiParameters extends readonly (AbiParameter & { type: string })[],
   TStructs extends Record<string, readonly (AbiParameter & { type: string })[]>,
+  TKeyReferences extends { [_: string]: unknown } | unknown = unknown,
 > = {
   [K in keyof TAbiParameters]: TAbiParameters[K]['type'] extends `${infer Head extends string &
     keyof TStructs}[${infer Tail}]` // Struct arrays (e.g. `type: 'Struct[]'`, `type: 'Struct[10]'`, `type: 'Struct[][]'`)
-    ? {
-        name: TAbiParameters[K]['name']
-        type: `tuple[${Tail}]`
-        components: ResolveStructs<TStructs[Head], TStructs>
-      }
+    ? Head extends keyof TKeyReferences
+      ? Error<`Circular reference detected. Struct "${TAbiParameters[K]['type']}" is a circular reference.`>
+      : {
+          name: TAbiParameters[K]['name']
+          type: `tuple[${Tail}]`
+          components: ResolveStructs<
+            TStructs[Head],
+            TStructs,
+            TKeyReferences & { [_ in Head]: true }
+          >
+        }
     : // Basic struct (e.g. `type: 'Struct'`)
     TAbiParameters[K]['type'] extends keyof TStructs
-    ? {
-        name: TAbiParameters[K]['name']
-        type: 'tuple'
-        components: ResolveStructs<
-          TStructs[TAbiParameters[K]['type']],
-          TStructs
-        >
-      }
+    ? TAbiParameters[K]['type'] extends keyof TKeyReferences
+      ? Error<`Circular reference detected. Struct "${TAbiParameters[K]['type']}" is a circular reference.`>
+      : {
+          name: TAbiParameters[K]['name']
+          type: 'tuple'
+          components: ResolveStructs<
+            TStructs[TAbiParameters[K]['type']],
+            TStructs,
+            TKeyReferences & { [_ in TAbiParameters[K]['type']]: true }
+          >
+        }
     : TAbiParameters[K]
 }
 

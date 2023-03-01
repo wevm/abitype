@@ -815,6 +815,30 @@ test('TypedDataToPrimitiveTypes', () => {
       })
     })
 
+    test('recursive structs', () => {
+      const types = {
+        Foo: [{ name: 'bar', type: 'Bar' }],
+        Bar: [{ name: 'foo', type: 'Foo' }],
+      } as const
+      type Result = TypedDataToPrimitiveTypes<typeof types>
+      assertType<Result>({
+        Foo: {
+          bar: {
+            foo: {
+              bar: "Error: Circular reference detected. 'Bar' is a circular reference.",
+            },
+          },
+        },
+        Bar: {
+          foo: {
+            bar: {
+              foo: "Error: Circular reference detected. 'Foo' is a circular reference.",
+            },
+          },
+        },
+      })
+    })
+
     test('unknown struct', () => {
       const types = {
         Name: [

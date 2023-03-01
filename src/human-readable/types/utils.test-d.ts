@@ -452,6 +452,34 @@ test('ParseAbiParameter', () => {
       { type: 'tuple', components: [{ type: 'string' }] },
     ],
   })
+
+  assertType<ParseAbiParameter<'((((string baz) bar)[1] foo) boo)'>>({
+    type: 'tuple',
+    components: [
+      {
+        type: 'tuple',
+        components: [
+          {
+            type: 'tuple[1]',
+            components: [
+              {
+                type: 'tuple',
+                components: [
+                  {
+                    type: 'string',
+                    name: 'baz',
+                  },
+                ],
+                name: 'bar',
+              },
+            ],
+            name: 'foo',
+          },
+        ],
+        name: 'boo',
+      },
+    ],
+  })
 })
 
 test('SplitParameters', () => {
@@ -736,6 +764,56 @@ test('_ParseTuple', () => {
     type: 'tuple[]',
     name: 'foo',
     components: [{ type: 'string', name: 'indexed' }],
+  })
+
+  assertType<_ParseTuple<'((((string baz) bar)[1] foo) boo)'>>({
+    type: 'tuple',
+    components: [
+      {
+        type: 'tuple',
+        components: [
+          {
+            type: 'tuple[1]',
+            components: [
+              {
+                type: 'tuple',
+                components: [
+                  {
+                    type: 'string',
+                    name: 'baz',
+                  },
+                ],
+                name: 'bar',
+              },
+            ],
+            name: 'foo',
+          },
+        ],
+        name: 'boo',
+      },
+    ],
+  })
+  assertType<_ParseTuple<'(((string baz) bar)[1] foo) boo'>>({
+    type: 'tuple',
+    components: [
+      {
+        type: 'tuple[1]',
+        components: [
+          {
+            type: 'tuple',
+            components: [
+              {
+                type: 'string',
+                name: 'baz',
+              },
+            ],
+            name: 'bar',
+          },
+        ],
+        name: 'foo',
+      },
+    ],
+    name: 'boo',
   })
 })
 

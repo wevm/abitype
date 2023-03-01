@@ -238,19 +238,34 @@ export type _ParseTuple<
         }
       : never
     : // Array or fixed-length array tuples with name and/or modifier attached (e.g. `(string)[] foo`, `(string)[5] foo`)
-    T extends `(${infer Head})[${
+    T extends `(${infer Parameters})[${
         | ''
         | `${SolidityFixedArrayRange}`}] ${infer NameOrModifier}`
-    ? T extends `(${Head})[${infer Size}] ${NameOrModifier}`
-      ? Prettify<
-          {
-            readonly type: `tuple[${Size}]`
-            readonly components: ParseAbiParameters<
-              SplitParameters<Head>,
-              Omit<Options, 'Modifier'>
+    ? T extends `(${Parameters})[${infer Size}] ${NameOrModifier}`
+      ? NameOrModifier extends `${string}) ${string}`
+        ? _UnwrapNameOrModifier<NameOrModifier> extends infer Parts extends {
+            NameOrModifier: string
+            End: string
+          }
+          ? Prettify<
+              {
+                readonly type: 'tuple'
+                readonly components: ParseAbiParameters<
+                  SplitParameters<`${Parameters})[${Size}] ${Parts['End']}`>,
+                  Omit<Options, 'Modifier'>
+                >
+              } & _SplitNameOrModifier<Parts['NameOrModifier'], Options>
             >
-          } & _SplitNameOrModifier<NameOrModifier, Options>
-        >
+          : never
+        : Prettify<
+            {
+              readonly type: `tuple[${Size}]`
+              readonly components: ParseAbiParameters<
+                SplitParameters<Parameters>,
+                Omit<Options, 'Modifier'>
+              >
+            } & _SplitNameOrModifier<NameOrModifier, Options>
+          >
       : never
     : // Tuples with name and/or modifier attached (e.g. `(string) foo`, `(string bar) foo`)
     T extends `(${infer Parameters}) ${infer NameOrModifier}`

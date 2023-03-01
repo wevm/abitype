@@ -352,13 +352,20 @@ export type IsTypedData<TTypedData> = TTypedData extends TypedData
 export type TypedDataToPrimitiveTypes<
   TTypedData extends TypedData,
   TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
+  TKeyReferences extends { [_: string]: unknown } | unknown = unknown,
 > = {
   [K in keyof TTypedData]: {
     // Map over typed data values and turn into key-value pairs
     [K2 in TTypedData[K][number] as K2['name']]: K2['type'] extends K // 1. Eliminate self-referencing structs
       ? Error<`Cannot convert self-referencing struct '${K2['type']}' to primitive type.`>
       : K2['type'] extends keyof TTypedData // 2. Check if type is struct
-      ? TypedDataToPrimitiveTypes<Exclude<TTypedData, K>>[K2['type']]
+      ? K2['type'] extends keyof TKeyReferences
+        ? Error<`Circular reference detected. '${K2['type']}' is a circular reference.`>
+        : TypedDataToPrimitiveTypes<
+            Exclude<TTypedData, K>,
+            TAbiParameterKind,
+            TKeyReferences & { [_ in K2['type']]: true }
+          >[K2['type']]
       : // 3. Check if type is array of structs
       K2['type'] extends `${infer TType extends keyof TTypedData &
           string}[${infer Tail}]`

@@ -1,3 +1,5 @@
+// TODO: This looks cool. Need to check the performance of `new RegExp` versus defined inline though.
+// https://twitter.com/GabrielVergnaud/status/1622906834343366657
 export function execTyped<T>(regex: RegExp, string: string) {
   const match = regex.exec(string)
   return match?.groups as T | undefined

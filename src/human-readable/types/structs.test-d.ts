@@ -41,6 +41,53 @@ test('ParseStructs', () => {
     ],
   })
 
+  assertType<
+    ParseStructs<['struct Foo { Bar bar; }', 'struct Bar { Foo foo; }']>
+  >({
+    Foo: [
+      {
+        name: 'bar',
+        type: 'tuple',
+        components: [
+          {
+            name: 'foo',
+            type: 'tuple',
+            components: [
+              'Error: Circular reference detected. Struct "Bar" is a circular reference.',
+            ],
+          },
+        ],
+      },
+    ],
+    Bar: [
+      {
+        name: 'foo',
+        type: 'tuple',
+        components: [
+          {
+            name: 'bar',
+            type: 'tuple',
+            components: [
+              'Error: Circular reference detected. Struct "Foo" is a circular reference.',
+            ],
+          },
+        ],
+      },
+    ],
+  })
+
+  assertType<ParseStructs<['struct Foo { Foo foo; }']>>({
+    Foo: [
+      {
+        name: 'foo',
+        type: 'tuple',
+        components: [
+          'Error: Circular reference detected. Struct "Foo" is a circular reference.',
+        ],
+      },
+    ],
+  })
+
   assertType<ParseStructs<['struct Person { Name name;']>>({})
   assertType<ParseStructs<[]>>({})
   assertType<ParseStructs<['function addPerson(Person person)']>>({})
@@ -52,6 +99,19 @@ test('ParseStruct', () => {
     components: [
       { type: 'string', name: 'foo' },
       { type: 'string', name: 'bar' },
+    ],
+  })
+  assertType<ParseStruct<'struct Foo {}'>>({
+    name: 'Foo',
+    components: [],
+  })
+  assertType<ParseStruct<'struct Foo { Bar bar; }'>>({
+    name: 'Foo',
+    components: [
+      {
+        type: 'Bar',
+        name: 'bar',
+      },
     ],
   })
 

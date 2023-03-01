@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest'
+import { assertType, expect, test } from 'vitest'
 
 import { parseAbiParameter } from './parseAbiParameter'
 
@@ -111,4 +111,64 @@ test.each([
   },
 ])(`parseAbiParameter($signatures)`, ({ signatures, expected }) => {
   expect(parseAbiParameter(signatures)).toEqual(expected)
+})
+
+test('nested tuple', () => {
+  const result = parseAbiParameter('((((string baz) bar)[1] foo) boo)')
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "components": [
+        {
+          "components": [
+            {
+              "components": [
+                {
+                  "components": [
+                    {
+                      "name": "baz",
+                      "type": "string",
+                    },
+                  ],
+                  "name": "bar",
+                  "type": "tuple",
+                },
+              ],
+              "name": "foo",
+              "type": "tuple[1]",
+            },
+          ],
+          "name": "boo",
+          "type": "tuple",
+        },
+      ],
+      "type": "tuple",
+    }
+  `)
+  assertType<typeof result>({
+    type: 'tuple',
+    components: [
+      {
+        type: 'tuple',
+        components: [
+          {
+            type: 'tuple[1]',
+            components: [
+              {
+                type: 'tuple',
+                components: [
+                  {
+                    type: 'string',
+                    name: 'baz',
+                  },
+                ],
+                name: 'bar',
+              },
+            ],
+            name: 'foo',
+          },
+        ],
+        name: 'boo',
+      },
+    ],
+  })
 })
