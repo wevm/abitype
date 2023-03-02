@@ -152,3 +152,36 @@ jobs:
         run: pnpm test:cov
       - name: Test types
         run: pnpm test:typecheck
+
+  bench:
+    name: Bench
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16]
+        pnpm-version: [7]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2.2.4
+        with:
+          version: ${{ matrix.pnpm-version }}
+      - name: Set up Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          cache: 'pnpm'
+          node-version: ${{ matrix.node-version }}
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            config
+            dist
+            node_modules
+            examples/node_modules
+            playground/node_modules
+            test
+            zod
+          key: modules-${{ hashFiles('pnpm-lock.yaml') }}
+      - name: Bench
+        run: pnpm bench

@@ -360,10 +360,10 @@ const abiItem = parseAbiItem([
 
 Parses human-readable ABI parameter into [`AbiParameter`](/api/types#abiparameter).
 
-| Name        | Description                                      | Type                       |
-| ----------- | ------------------------------------------------ | -------------------------- |
-| `signature` | Human-Readable ABI parameter.                    | `string \| string[]`       |
-| returns     | Parsed [`AbiParameter`](/api/types#abiparameter) | `TAbiParameter` (inferred) |
+| Name    | Description                                      | Type                       |
+| ------- | ------------------------------------------------ | -------------------------- |
+| `param` | Human-Readable ABI parameter.                    | `string \| string[]`       |
+| returns | Parsed [`AbiParameter`](/api/types#abiparameter) | `TAbiParameter` (inferred) |
 
 #### Example
 
