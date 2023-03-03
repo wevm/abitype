@@ -10,11 +10,11 @@ type IsStructProperty<TProperty extends string> =
     ? Head extends
         | `${AbiType}`
         | `${string} ${string}`
-        | `(${string})
+        | `(${string})`
         | `(${string}) ${string}`
       ? Tail extends ''
         ? true
-        : isValidStructProperty<Trim<Tail>>
+        : IsStructProperty<Trim<Tail>>
       : false
     : // TODO: throw types
       false // Error<`Missing semicolon on "${TProperty}"`>
@@ -87,7 +87,7 @@ export type IsStructSignature<T extends string> = T extends StructSignature<
   infer Properties
 >
   ? IsName<Name> extends true
-    ? isValidStructProperty<Trim<Properties>>
+    ? IsStructProperty<Trim<Properties>>
     : false
   : false
 
