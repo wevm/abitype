@@ -1,7 +1,7 @@
-import type { AbiParameter } from '../../abi'
-import { execTyped, isTupleRegex } from '../../regex'
+import { bytesRegex, execTyped, integerRegex, isTupleRegex } from '../../regex'
 import { BaseError } from '../errors'
 import type { Modifier, StructLookup } from '../types'
+import { createParameterCache } from './cache'
 import {
   execConstructorSignature,
   execErrorSignature,
@@ -119,7 +119,7 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
   })
 }
 
-const abiParameterCache = new Map<string, AbiParameter>()
+const abiParameterCache = createParameterCache()
 const abiParameterWithoutTupleRegex =
   /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
 const abiParameterWithTupleRegex =
@@ -129,11 +129,13 @@ type ParseOptions = {
   modifiers?: Modifier | readonly Modifier[]
   structs?: StructLookup
   type?: 'constructor' | 'error' | 'event' | 'function'
+  parseContext?: 'structs'
 }
 
 export function parseAbiParameter(param: string, options?: ParseOptions) {
   // optional namespace cache by `type`
   const paramKey = `${options?.type ?? ''}${param}`
+
   if (abiParameterCache.has(paramKey)) return abiParameterCache.get(paramKey)!
 
   const isTuple = isTupleRegex.test(param)
@@ -181,6 +183,16 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     components = { components: structs[match.type] }
   } else type = match.type
 
+  if (!options?.parseContext) {
+    if (!validateSolidityType(type)) {
+      throw new BaseError('Unknown type.', {
+        metaMessages: [
+          `Type "${type}" is not a valid ABI type. Make sure that "${type}" is a valid Solidity type.`,
+        ],
+      })
+    }
+  }
+
   const abiParameter = {
     type: `${type}${match.array ?? ''}`,
     ...name,
@@ -222,4 +234,16 @@ export function splitParameters(
   }
 
   return []
+}
+
+export function validateSolidityType(type: string) {
+  return (
+    type === 'address' ||
+    type === 'bool' ||
+    type === 'function' ||
+    type === 'string' ||
+    type === 'tuple' ||
+    bytesRegex.test(type) ||
+    integerRegex.test(type)
+  )
 }

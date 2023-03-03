@@ -121,6 +121,57 @@ test('empty string', () => {
   )
 })
 
+test('Invalid solidity type', () => {
+  expect(() => parseAbiParameter('strings'))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unknown type.
+
+      Type \\"strings\\" is not a valid ABI type. Make sure that \\"strings\\" is a valid Solidity type.
+
+      Version: abitype@x.y.z"
+    `)
+})
+
+test('Invalid solidity type in tuple', () => {
+  expect(() => parseAbiParameter('(strings)'))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unknown type.
+
+      Type \\"strings\\" is not a valid ABI type. Make sure that \\"strings\\" is a valid Solidity type.
+
+      Version: abitype@x.y.z"
+    `)
+})
+
+test('Invalid solidity type in nested tuple', () => {
+  expect(() => parseAbiParameter('((strings))'))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unknown type.
+
+      Type \\"strings\\" is not a valid ABI type. Make sure that \\"strings\\" is a valid Solidity type.
+
+      Version: abitype@x.y.z"
+    `)
+})
+
+test('Struct type without context', () => {
+  expect(() => parseAbiParameter('Demo demo'))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unknown type.
+
+      Type \\"Demo\\" is not a valid ABI type. Make sure that \\"Demo\\" is a valid Solidity type.
+
+      Version: abitype@x.y.z"
+    `)
+})
+
+test('Struct type with context', () => {
+  expect(parseAbiParameter('Demo demo', { parseContext: 'structs' })).toEqual({
+    type: 'Demo',
+    name: 'demo',
+  })
+})
+
 test('indexed not allowed', () => {
   expect(() =>
     parseAbiParameter('string indexed foo'),

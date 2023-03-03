@@ -1,15 +1,9 @@
 import type { AbiParameter } from '../../abi'
-import {
-  bytesRegex,
-  execTyped,
-  integerRegex,
-  isTupleRegex,
-  typeWithoutTupleRegex,
-} from '../../regex'
+import { execTyped, isTupleRegex, typeWithoutTupleRegex } from '../../regex'
 import { BaseError } from '../errors'
 import type { StructLookup } from '../types'
 import { execStructSignature, isStructSignature } from './signatures'
-import { parseAbiParameter } from './utils'
+import { parseAbiParameter, validateSolidityType } from './utils'
 
 export function parseStructs(signatures: readonly string[]) {
   // Create "shallow" version of each struct (and filter out non-structs or invalid structs)
@@ -32,7 +26,9 @@ export function parseStructs(signatures: readonly string[]) {
       const property = properties[k]!
       const trimmed = property.trim()
       if (!trimmed) continue
-      const abiParameter = parseAbiParameter(trimmed)
+      const abiParameter = parseAbiParameter(trimmed, {
+        parseContext: 'structs',
+      })
       components.push(abiParameter)
     }
 
@@ -95,15 +91,7 @@ function resolveStructs(
           ),
         })
       } else {
-        if (
-          type === 'address' ||
-          type === 'bool' ||
-          type === 'function' ||
-          type === 'string' ||
-          bytesRegex.test(type) ||
-          integerRegex.test(type)
-        )
-          components.push(abiParameter)
+        if (validateSolidityType(type)) components.push(abiParameter)
         else
           throw new BaseError('Unknown type.', {
             metaMessages: [
