@@ -2,4 +2,4 @@
 'abitype': patch
 ---
 
-Fixes a bug where solidity types where not being validated when parsing a abi parameter. Also adds a base cache with well know solidity parameters
+Fixed a bug, where Solidity types were not validated when parsing ABI parameters, and added a base cache with well know Solidity parameters.
