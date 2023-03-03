@@ -14,7 +14,7 @@ describe('Parse ABI', () => {
 
   bench('abitype (struct)', () => {
     parseAbi([
-      'struct Foo { string name; uint256 age }',
+      'struct Foo { string name; uint256 age; }',
       'function name(Foo foo, uint256 tokenId)',
       'event Foo(address indexed bar)',
     ])
