@@ -1,5 +1,8 @@
 import type { AbiParameter } from '../../abi'
 
+export function getParameterCacheKey(param: string, type?: string) {
+  return `${type ? `${type}:` : ''}${param}`
+}
 export function createAbiParameterCache() {
   return new Map<string, AbiParameter & { indexed?: boolean }>([
     ['address', { type: 'address' }],

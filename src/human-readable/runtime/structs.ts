@@ -3,7 +3,7 @@ import { execTyped, isTupleRegex, typeWithoutTupleRegex } from '../../regex'
 import { BaseError } from '../errors'
 import type { StructLookup } from '../types'
 import { execStructSignature, isStructSignature } from './signatures'
-import { parseAbiParameter, validateSolidityType } from './utils'
+import { isSolidityType, parseAbiParameter } from './utils'
 
 export function parseStructs(signatures: readonly string[]) {
   // Create "shallow" version of each struct (and filter out non-structs or invalid structs)
@@ -27,7 +27,7 @@ export function parseStructs(signatures: readonly string[]) {
       const trimmed = property.trim()
       if (!trimmed) continue
       const abiParameter = parseAbiParameter(trimmed, {
-        parseContext: 'structs',
+        type: 'struct',
       })
       components.push(abiParameter)
     }
@@ -91,7 +91,7 @@ function resolveStructs(
           ),
         })
       } else {
-        if (validateSolidityType(type)) components.push(abiParameter)
+        if (isSolidityType(type)) components.push(abiParameter)
         else
           throw new BaseError('Unknown type.', {
             metaMessages: [
