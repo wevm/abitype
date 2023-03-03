@@ -24,7 +24,7 @@ test('IsErrorSignature', () => {
   assertType<IsErrorSignature<'error ()'>>(false)
   assertType<IsErrorSignature<'Foo()'>>(false)
   assertType<IsErrorSignature<'error Foo(string bar'>>(false)
-  assertType<IsErrorSignature<'error Foo(strings)'>>(false)
+
   assertType<IsErrorSignature<'error Foo(string,)'>>(false)
   assertType<IsErrorSignature<'error Foo(string, string name,)'>>(false)
 })
@@ -42,7 +42,7 @@ test('IsEventSignature', () => {
   assertType<IsEventSignature<'event ()'>>(false)
   assertType<IsEventSignature<'Foo()'>>(false)
   assertType<IsEventSignature<'event Foo(string bar'>>(false)
-  assertType<IsEventSignature<'event Foo(strings)'>>(false)
+
   assertType<IsEventSignature<'event Foo(string,)'>>(false)
   assertType<IsEventSignature<'event Foo(string, string name,)'>>(false)
 })
@@ -87,18 +87,9 @@ test('IsFunctionSignature', () => {
   assertType<IsFunctionSignature<'function foo() re turns (uint256)'>>(false)
   assertType<IsFunctionSignature<'function foo() re tur ns (uint256)'>>(false)
   assertType<IsFunctionSignature<'foo()'>>(false)
-  assertType<IsFunctionSignature<'function foo(strings)'>>(false)
+
   assertType<IsFunctionSignature<'function foo(string,)'>>(false)
   assertType<IsFunctionSignature<'function foo(string, string name,)'>>(false)
-  assertType<
-    IsFunctionSignature<'function foo(string, string name) returns (strings)'>
-  >(false)
-  assertType<
-    IsFunctionSignature<'function foo(string, string name) external returns (strings)'>
-  >(false)
-  assertType<
-    IsFunctionSignature<'function foo(string, string name) external view returns (strings)'>
-  >(false)
   assertType<
     IsFunctionSignature<'function foo(string, string name) returns (string name,)'>
   >(false)
@@ -146,7 +137,7 @@ test('IsConstructorSignature', () => {
   assertType<isConstructorSignature<'constructor(string memory name)'>>(true)
 
   assertType<isConstructorSignature<'constructor(,)'>>(false)
-  assertType<isConstructorSignature<'constructor(strings)'>>(false)
+
   assertType<isConstructorSignature<'constructor(string name,)'>>(false)
   assertType<
     isConstructorSignature<'constructor(string name, string symbol,)'>

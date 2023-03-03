@@ -1,14 +1,11 @@
-import type { AbiStateMutability, AbiType } from '../../abi'
+import type { AbiStateMutability } from '../../abi'
 import type { Error, Trim } from '../../types'
 
 // Would be good to add validation by type. E.g function cannot have `indexed` modifer.
 // However `${string} ${string}` will always extends something like `string indexed name`
 type isValidSignatureProperty<TProperty extends string> =
   TProperty extends `${infer Head},${infer Tail}`
-    ? Head extends
-        | `${AbiType}`
-        | `${string} ${string}`
-        | `(${string}) ${string}`
+    ? Head extends `${string}` | `${string} ${string}` | `(${string}) ${string}`
       ? Tail extends ''
         ? // When throw types?
           false // `Error: Property '${TProperty}' cannot end with a comma`
@@ -17,7 +14,7 @@ type isValidSignatureProperty<TProperty extends string> =
     : TProperty extends `${infer Body}`
     ? Body extends
         | ''
-        | `${AbiType}`
+        | `${string}`
         | `${string} ${string}`
         | `(${string}) ${string}`
       ? true
