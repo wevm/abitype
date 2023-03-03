@@ -2,4 +2,4 @@
 'abitype': patch
 ---
 
-Adds validation to struct properties
+Added type-level validation to struct properties.
