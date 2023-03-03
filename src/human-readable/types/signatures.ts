@@ -1,9 +1,22 @@
-import type { AbiStateMutability } from '../../abi'
-import type { Error } from '../../types'
+import type { AbiStateMutability, AbiType } from '../../abi'
+import type { Error, Trim } from '../../types'
 
 type IsName<T extends string> = T extends '' | `${string}${' '}${string}`
   ? false
   : true
+
+type isValidStructProperty<TProperty extends string> =
+  TProperty extends `${infer Head};${infer Tail}`
+    ? Head extends
+        | `${AbiType}`
+        | `${string} ${string}`
+        | `(${string}) ${string}`
+      ? Tail extends ''
+        ? true
+        : isValidStructProperty<Trim<Tail>>
+      : false
+    : // When throw types?
+      false // `Error: Missing semicolon on ${TProperty}`
 
 export type ErrorSignature<
   TName extends string = string,
@@ -69,9 +82,12 @@ export type StructSignature<
   TProperties extends string = string,
 > = `struct ${TName} {${TProperties}}`
 export type IsStructSignature<T extends string> = T extends StructSignature<
-  infer Name
+  infer Name,
+  infer Properties
 >
-  ? IsName<Name>
+  ? IsName<Name> extends true
+    ? isValidStructProperty<Trim<Properties>>
+    : false
   : false
 
 export type ConstructorSignature<TParameters extends string = string> =
