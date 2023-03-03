@@ -236,7 +236,7 @@ export function splitParameters(
   return []
 }
 
-export function validateSolidityType(type: string) {
+export function isSolidityType(type: string): type is Exclude<AbiType, SolidityArray> {
   return (
     type === 'address' ||
     type === 'bool' ||
