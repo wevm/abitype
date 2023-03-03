@@ -6,6 +6,7 @@ import type {
   IsFunctionSignature,
   IsSignature,
   IsStructSignature,
+  Lexer,
   Signature,
   Signatures,
   isConstructorSignature,
@@ -27,6 +28,16 @@ test('IsErrorSignature', () => {
 
   assertType<IsErrorSignature<'error Foo(string,)'>>(false)
   assertType<IsErrorSignature<'error Foo(string, string name,)'>>(false)
+  assertType<IsErrorSignature<'error Foo(string calldata)'>>(false)
+  assertType<IsErrorSignature<'error Foo(string memory)'>>(false)
+  assertType<IsErrorSignature<'error Foo(string storage)'>>(false)
+  assertType<IsErrorSignature<'error Foo(string indexed)'>>(false)
+  assertType<IsErrorSignature<'error Foo(string calldata name)'>>(false)
+  assertType<IsErrorSignature<'error Foo(string memory name)'>>(false)
+  assertType<IsErrorSignature<'error Foo(string storage name)'>>(false)
+  assertType<IsErrorSignature<'error Foo(string indexed name)'>>(false)
+  assertType<IsErrorSignature<'error Foo((string) calldata)'>>(false)
+  assertType<IsErrorSignature<'event Foo((string) indexed name)'>>(false)
 })
 
 test('IsEventSignature', () => {
@@ -45,6 +56,14 @@ test('IsEventSignature', () => {
 
   assertType<IsEventSignature<'event Foo(string,)'>>(false)
   assertType<IsEventSignature<'event Foo(string, string name,)'>>(false)
+  assertType<IsEventSignature<'event Foo(string calldata)'>>(false)
+  assertType<IsEventSignature<'event Foo(string memory)'>>(false)
+  assertType<IsEventSignature<'event Foo(string storage)'>>(false)
+  assertType<IsEventSignature<'event Foo(string calldata name)'>>(false)
+  assertType<IsEventSignature<'event Foo(string memory name)'>>(false)
+  assertType<IsEventSignature<'event Foo(string storage name)'>>(false)
+  assertType<IsEventSignature<'event Foo((string) calldata)'>>(false)
+  assertType<IsEventSignature<'event Foo((string) calldata name)'>>(false)
 })
 
 test('IsFunctionSignature', () => {
@@ -108,6 +127,10 @@ test('IsFunctionSignature', () => {
   assertType<
     IsFunctionSignature<'function foo(string, string name) external view returns (string name, string symbol,)'>
   >(false)
+  assertType<IsFunctionSignature<'function foo(string indexed)'>>(false)
+  assertType<IsFunctionSignature<'function foo(string indexed name)'>>(false)
+  assertType<IsFunctionSignature<'function foo((string) indexed)'>>(false)
+  assertType<IsFunctionSignature<'function foo((string) indexed name)'>>(false)
 })
 
 test('IsStructSignature', () => {
@@ -169,6 +192,9 @@ test('Signature', () => {
   assertType<Signature<'function foo ()'>>(
     'Error: Signature "function foo ()" is invalid',
   )
+  assertType<Signature<'function foo??()'>>(
+    'Error: Signature "function foo??()" is invalid',
+  )
 })
 
 test('Signatures', () => {
@@ -176,4 +202,13 @@ test('Signatures', () => {
   assertType<Signatures<['function foo ()']>>([
     'Error: Signature "function foo ()" is invalid at position 0',
   ])
+})
+
+test('SolidityLexer', () => {
+  assertType<Lexer<'A'>>(true)
+  assertType<Lexer<'thisisavalidstring'>>(true)
+  assertType<Lexer<'thisisavalidstringwithnumber012345'>>(true)
+  assertType<Lexer<'thisisavalidstringwithnumber012345and_'>>(true)
+  assertType<Lexer<'invalid?'>>(false)
+  assertType<Lexer<'invalid!'>>(false)
 })

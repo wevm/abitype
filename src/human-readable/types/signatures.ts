@@ -1,29 +1,64 @@
 import type { AbiStateMutability } from '../../abi'
 import type { Error, Trim } from '../../types'
 
-// Would be good to add validation by type. E.g function cannot have `indexed` modifer.
-// However `${string} ${string}` will always extends something like `string indexed name`
-type isValidSignatureProperty<TProperty extends string> =
-  TProperty extends `${infer Head},${infer Tail}`
-    ? Head extends `${string}` | `${string} ${string}` | `(${string}) ${string}`
-      ? Tail extends ''
-        ? // When throw types?
-          false // `Error: Property '${TProperty}' cannot end with a comma`
-        : isValidSignatureProperty<Trim<Tail>>
+export type Lexer<T extends string> =
+  T extends `${infer Char extends string}${infer Rest extends string}`
+    ? Char extends SolidityLexer
+      ? Rest extends ''
+        ? true
+        : Lexer<Rest>
       : false
-    : TProperty extends `${infer Body}`
-    ? Body extends
-        | ''
-        | `${string}`
-        | `${string} ${string}`
-        | `(${string}) ${string}`
-      ? true
-      : false
+    : never
+
+// Could possibly make this stricter
+type ValidateContext<
+  T extends string,
+  TContext extends 'function' | 'event' | 'error',
+> = TContext extends 'function'
+  ? T extends
+      | `${string} ${EventModifiers} ${string}`
+      | `${string} ${EventModifiers}`
+    ? false
+    : T extends
+        | `(${string}) ${EventModifiers} ${string}`
+        | `(${string}) ${EventModifiers}`
+    ? false
+    : true
+  : TContext extends 'event'
+  ? T extends
+      | `${string} ${FunctionModifiers} ${string}`
+      | `${string} ${FunctionModifiers}`
+    ? false
+    : T extends
+        | `(${string}) ${FunctionModifiers} ${string}`
+        | `(${string}) ${FunctionModifiers}`
+    ? false
+    : true
+  : T extends `${string} ${Modifier} ${string}` | `${string} ${Modifier}`
+  ? false
+  : T extends `(${string}) ${Modifier} ${string}` | `(${string}) ${Modifier}`
+  ? false
+  : true
+
+type isValidSignatureProperty<
+  TProperty extends string,
+  TContext extends 'function' | 'event' | 'error' = 'function',
+> = TProperty extends `${infer Head extends string},${infer Tail}`
+  ? ValidateContext<Head, TContext> extends true
+    ? Tail extends ''
+      ? // When throw types?
+        false // `Error: Property '${TProperty}' cannot end with a comma`
+      : isValidSignatureProperty<Trim<Tail>, TContext>
     : false
+  : TProperty extends `${infer Body extends string}`
+  ? ValidateContext<Body, TContext> extends true
+    ? true
+    : false
+  : false
 
 type IsName<T extends string> = T extends '' | `${string}${' '}${string}`
   ? false
-  : true
+  : Lexer<T>
 
 export type ErrorSignature<
   TName extends string = string,
@@ -34,7 +69,7 @@ export type IsErrorSignature<T extends string> = T extends ErrorSignature<
   infer Property
 >
   ? IsName<Name> extends true
-    ? isValidSignatureProperty<Trim<Property>>
+    ? isValidSignatureProperty<Trim<Property>, 'error'>
     : false
   : false
 
@@ -47,7 +82,7 @@ export type IsEventSignature<T extends string> = T extends EventSignature<
   infer Property
 >
   ? IsName<Name> extends true
-    ? isValidSignatureProperty<Trim<Property>>
+    ? isValidSignatureProperty<Trim<Property>, 'event'>
     : false
   : false
 
@@ -218,3 +253,43 @@ type MangledReturns =
   // Sextuple
   // `r_e_t_u_r_n_s`
   | `r${string}e${string}t${string}u${string}r${string}n${string}s`
+
+// No regex so we do it manually
+type SolidityLexer =
+  | `${'a' | 'A'}`
+  | `${'b' | 'B'}`
+  | `${'c' | 'C'}`
+  | `${'d' | 'D'}`
+  | `${'e' | 'E'}`
+  | `${'f' | 'F'}`
+  | `${'g' | 'G'}`
+  | `${'h' | 'H'}`
+  | `${'i' | 'I'}`
+  | `${'j' | 'J'}`
+  | `${'k' | 'K'}`
+  | `${'l' | 'L'}`
+  | `${'m' | 'M'}`
+  | `${'n' | 'N'}`
+  | `${'o' | 'O'}`
+  | `${'p' | 'P'}`
+  | `${'q' | 'Q'}`
+  | `${'r' | 'R'}`
+  | `${'s' | 'S'}`
+  | `${'t' | 'T'}`
+  | `${'u' | 'U'}`
+  | `${'v' | 'V'}`
+  | `${'w' | 'W'}`
+  | `${'x' | 'X'}`
+  | `${'y' | 'Y'}`
+  | `${'z' | 'Z'}`
+  | '0'
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9'
+  | '_'
