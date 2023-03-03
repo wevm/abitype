@@ -5,7 +5,7 @@ type IsName<T extends string> = T extends '' | `${string}${' '}${string}`
   ? false
   : true
 
-type isValidStructProperty<TProperty extends string> =
+type IsStructProperty<TProperty extends string> =
   TProperty extends `${infer Head};${infer Tail}`
     ? Head extends
         | `${AbiType}`
