@@ -16,8 +16,8 @@ type IsStructProperty<TProperty extends string> =
         ? true
         : isValidStructProperty<Trim<Tail>>
       : false
-    : // When throw types?
-      false // `Error: Missing semicolon on ${TProperty}`
+    : // TODO: throw types
+      false // Error<`Missing semicolon on "${TProperty}"`>
 
 export type ErrorSignature<
   TName extends string = string,
