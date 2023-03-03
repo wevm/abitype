@@ -135,7 +135,6 @@ type ParseOptions = {
 export function parseAbiParameter(param: string, options?: ParseOptions) {
   // optional namespace cache by `type`
   const paramKey = `${options?.type ?? ''}${param}`
-
   if (abiParameterCache.has(paramKey)) return abiParameterCache.get(paramKey)!
 
   const isTuple = isTupleRegex.test(param)
