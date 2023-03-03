@@ -1,6 +1,6 @@
 import type { AbiParameter } from '../../abi'
 
-export function createParameterCache() {
+export function createAbiParameterCache() {
   return new Map<string, AbiParameter & { indexed?: boolean }>([
     ['address', { type: 'address' }],
     ['bool', { type: 'bool' }],
