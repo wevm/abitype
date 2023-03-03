@@ -10,6 +10,7 @@ type IsStructProperty<TProperty extends string> =
     ? Head extends
         | `${AbiType}`
         | `${string} ${string}`
+        | `(${string})
         | `(${string}) ${string}`
       ? Tail extends ''
         ? true
