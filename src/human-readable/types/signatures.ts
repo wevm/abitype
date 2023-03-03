@@ -1,5 +1,28 @@
-import type { AbiStateMutability } from '../../abi'
-import type { Error } from '../../types'
+import type { AbiStateMutability, AbiType } from '../../abi'
+import type { Error, Trim } from '../../types'
+
+// Would be good to add validation by type. E.g function cannot have `indexed` modifer.
+// However `${string} ${string}` will always extends something like `string indexed name`
+type isValidSignatureProperty<TProperty extends string> =
+  TProperty extends `${infer Head},${infer Tail}`
+    ? Head extends
+        | `${AbiType}`
+        | `${string} ${string}`
+        | `(${string}) ${string}`
+      ? Tail extends ''
+        ? // When throw types?
+          false // `Error: Property '${TProperty}' cannot end with a comma`
+        : isValidSignatureProperty<Trim<Tail>>
+      : false
+    : TProperty extends `${infer Body}`
+    ? Body extends
+        | ''
+        | `${AbiType}`
+        | `${string} ${string}`
+        | `(${string}) ${string}`
+      ? true
+      : false
+    : false
 
 type IsName<T extends string> = T extends '' | `${string}${' '}${string}`
   ? false
@@ -10,18 +33,25 @@ export type ErrorSignature<
   TParameters extends string = string,
 > = `error ${TName}(${TParameters})`
 export type IsErrorSignature<T extends string> = T extends ErrorSignature<
-  infer Name
+  infer Name,
+  infer Property
 >
-  ? IsName<Name>
+  ? IsName<Name> extends true
+    ? isValidSignatureProperty<Trim<Property>>
+    : false
   : false
+
 export type EventSignature<
   TName extends string = string,
   TParameters extends string = string,
 > = `event ${TName}(${TParameters})`
 export type IsEventSignature<T extends string> = T extends EventSignature<
-  infer Name
+  infer Name,
+  infer Property
 >
-  ? IsName<Name>
+  ? IsName<Name> extends true
+    ? isValidSignatureProperty<Trim<Property>>
+    : false
   : false
 
 export type FunctionSignature<
@@ -32,12 +62,14 @@ export type IsFunctionSignature<T> =
   T extends `function ${infer Name}(${string}`
     ? IsName<Name> extends true
       ? T extends ValidFunctionSignatures
-        ? true
+        ? T extends `${string}returns (${infer ReturnParams})`
+          ? isValidSignatureProperty<Trim<ReturnParams>>
+          : true
         : // Check that `Parameters` is not absorbing other types (e.g. `returns`)
         T extends `function ${string}(${infer Parameters})`
         ? Parameters extends InvalidFunctionParameters
           ? false
-          : true
+          : isValidSignatureProperty<Trim<Parameters>>
         : false
       : false
     : false
@@ -76,6 +108,11 @@ export type IsStructSignature<T extends string> = T extends StructSignature<
 
 export type ConstructorSignature<TParameters extends string = string> =
   `constructor(${TParameters})`
+export type isConstructorSignature<T extends string> =
+  T extends ConstructorSignature<infer Property>
+    ? isValidSignatureProperty<Trim<Property>>
+    : false
+
 export type FallbackSignature = 'fallback()'
 export type ReceiveSignature = 'receive() external payable'
 
@@ -86,7 +123,7 @@ export type IsSignature<T extends string> =
   | (IsEventSignature<T> extends true ? true : never)
   | (IsFunctionSignature<T> extends true ? true : never)
   | (IsStructSignature<T> extends true ? true : never)
-  | (T extends ConstructorSignature ? true : never)
+  | (isConstructorSignature<T> extends true ? true : never)
   | (T extends FallbackSignature ? true : never)
   | (T extends ReceiveSignature ? true : never) extends infer Condition
   ? [Condition] extends [never]
