@@ -186,7 +186,7 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     if (!validateSolidityType(type)) {
       throw new BaseError('Unknown type.', {
         metaMessages: [
-          `Type "${type}" is not a valid ABI type. Make sure that "${type}" is a valid Solidity type.`,
+          `Type "${type}" is not a valid ABI type.`,
         ],
       })
     }
