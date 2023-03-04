@@ -4,7 +4,7 @@ export function getParameterCacheKey(param: string, type?: string) {
   if (type) return `${type}:${param}`
   return param
 }
-export function createAbiParameterCache() {
+export function createParameterCache() {
   return new Map<string, AbiParameter & { indexed?: boolean }>([
     ['address', { type: 'address' }],
     ['bool', { type: 'bool' }],
