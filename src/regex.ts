@@ -9,6 +9,8 @@ export function execTyped<T>(regex: RegExp, string: string) {
 // https://regexr.com/6va55
 export const bytesRegex = /^bytes([1-9]|1[0-9]|2[0-9]|3[0-2])?$/
 
+export const bytesRegexNumbersOnly = /^bytes([1-9]|1[0-9]|2[0-9]|3[0-2])$/
+
 // `(u)int<M>`: (un)signed integer type of `M` bits, `0 < M <= 256`, `M % 8 == 0`
 // https://regexr.com/6v8hp
 export const integerRegex =
@@ -18,3 +20,6 @@ export const isTupleRegex = /^\(.+?\).*?$/
 
 export const typeWithoutTupleRegex =
   /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?$/
+
+export const protectedKeywords =
+  /^try$|^catch$|^function$|^override$|^view$|^internal$|^pure$|^public$|^external$|^virtual$|^event$|^error$|^struct$|^return$|^returns$|^let$|^mapping$|^after$|^alias$|^apply$|^auto$|^byte$|^case$|^copyof$|^default$|^defined$|^final$|^implements$|^in$|^inline$|^match$|^mutable$|^null$|^of$|^partial$|^promise$|^reference$|^relocatable$|^sizeof$|^static$|^supports$|^switch$|^typedef$|^typeof$|^var$/

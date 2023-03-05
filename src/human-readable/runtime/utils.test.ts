@@ -1,6 +1,8 @@
 import { expect, test } from 'vitest'
 
 import {
+  isInvalidSolidiyName,
+  isNotFunctionModifierType,
   isSolidityType,
   parseAbiParameter,
   parseSignature,
@@ -105,6 +107,32 @@ test('invalid signature', () => {
     Version: abitype@x.y.z"
   `,
   )
+
+  expect(() =>
+    parseSignature('error Foo(string memory foo)'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+    
+    memory modifier not allowed in 'error' type.
+
+    Details: string memory foo
+    Version: abitype@x.y.z"
+  `,
+  )
+
+  expect(() =>
+    parseSignature('event Foo(string memory foo)'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+    
+    memory modifier not allowed in 'event' type.
+
+    Details: string memory foo
+    Version: abitype@x.y.z"
+  `,
+  )
 })
 
 test('empty string', () => {
@@ -190,6 +218,36 @@ test('indexed not allowed', () => {
   )
 })
 
+test('modifier not allowed', () => {
+  expect(() =>
+    parseAbiParameter('uint256 calldata foo'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+
+    calldata modifier not allowed in 'uint256' type.
+
+    Details: uint256 calldata foo
+    Version: abitype@x.y.z"
+  `,
+  )
+})
+
+test('invalid name', () => {
+  expect(() =>
+    parseAbiParameter('uint256 address'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+
+    address is a protected Solidity keyword.
+
+    Details: uint256 address
+    Version: abitype@x.y.z"
+  `,
+  )
+})
+
 test.each(['address', 'bool', 'bytes32', 'int256', 'string', 'uint256'])(
   'parseAbiParameter($type)',
   (type) => {
@@ -205,24 +263,31 @@ test.each([
   'string indexed',
   'uint256 indexed',
 ])("parseAbiParameter($type, { modifiers: 'indexed' })", (type) => {
-  expect(parseAbiParameter(type, { modifiers: 'indexed' })).toEqual({
+  expect(
+    parseAbiParameter(type, {
+      modifiers: new Set(['indexed']),
+    }),
+  ).toEqual({
     type: type.replace(' indexed', ''),
     indexed: true,
   })
 })
 
 test.each([
-  'address calldata',
-  'bool calldata',
-  'bytes32 calldata',
-  'int256 calldata',
+  'address[] calldata',
+  'bool[] calldata',
+  'bytes32[] calldata',
+  'int256[] calldata',
   'string calldata',
-  'uint256 calldata',
+  'uint256[] calldata',
+  'bytes calldata',
 ])(
   "parseAbiParameter($type, { modifiers: ['calldata', 'memory'] })",
   (type) => {
     expect(
-      parseAbiParameter(type, { modifiers: ['calldata', 'memory'] }),
+      parseAbiParameter(type, {
+        modifiers: new Set(['calldata', 'memory']),
+      }),
     ).toEqual({
       type: type.replace(/\scalldata|memory/, ''),
     })
@@ -363,6 +428,139 @@ test.each([
   expect(isSolidityType(type)).toEqual(true)
 })
 
+test.each(['address', 'bool', 'bytes32', 'int256', 'uint256', 'function'])(
+  'isNotFunctionModifierType($type)',
+  (type) => {
+    expect(isNotFunctionModifierType(type)).toEqual(true)
+  },
+)
+
+test.each(['string', 'bytes', 'address[]', 'bool[]', 'bytes32[]', 'int256[]'])(
+  'isNotFunctionModifierType($type)',
+  (type) => {
+    expect(isNotFunctionModifierType(type)).toEqual(false)
+  },
+)
+
+test.each([
+  'address',
+  'bool',
+  'bytes32',
+  'int256',
+  'string',
+  'uint256',
+  'function',
+  'view',
+  'override',
+  'let',
+  'var',
+  'typeof',
+  'promise',
+  'in',
+  'of',
+  'reference',
+  'implements',
+  'mapping',
+  'error',
+  'event',
+  'struct',
+  'alias',
+  'byte',
+  'case',
+  'copyof',
+  'final',
+  'external',
+  'public',
+  'internal',
+  'pure',
+  'match',
+  'apply',
+  'case',
+  'null',
+  'mutable',
+  'inline',
+  'static',
+  'partial',
+  'relocatable',
+  'try',
+  'catch',
+  'switch',
+  'supports',
+  'mapping',
+  'virtual',
+  'return',
+  'returns',
+  'after',
+  'auto',
+  'default',
+  'defined',
+  'typedef',
+  'typeof',
+])('isInvalidSolidiyName($name)', (name) => {
+  expect(isInvalidSolidiyName(name)).toEqual(true)
+})
+
+test('isInvalidSolidiyName', () => {
+  expect(isSolidityType('foo')).toEqual(false)
+})
+
+test('isFunctionModifierType', () => {
+  expect(isSolidityType('foo')).toEqual(false)
+})
+
 test('isSolidityType', () => {
   expect(isSolidityType('foo')).toEqual(false)
+})
+
+test('Unbalanced Parethesis', () => {
+  expect(() =>
+    splitParameters('address owner, ((string name)'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Unbalanced parenthesis.
+
+    ((string name) has to many opening parenthesis.
+    
+    Details: Depth 1
+    Version: abitype@x.y.z"
+    `,
+  )
+
+  expect(() =>
+    splitParameters('address owner, (((string name)'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Unbalanced parenthesis.
+
+    (((string name) has to many opening parenthesis.
+    
+    Details: Depth 2
+    Version: abitype@x.y.z"
+    `,
+  )
+  expect(() =>
+    splitParameters('address owner, (string name))'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Unbalanced parenthesis.
+
+    (string name)) has to many closing parenthesis.
+    
+    Details: Depth -1
+    Version: abitype@x.y.z"
+    `,
+  )
+
+  expect(() =>
+    splitParameters('address owner, (string name)))'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Unbalanced parenthesis.
+
+    (string name))) has to many closing parenthesis.
+
+    Details: Depth -2
+    Version: abitype@x.y.z"
+    `,
+  )
 })
