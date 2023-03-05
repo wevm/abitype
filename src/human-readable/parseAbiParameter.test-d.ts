@@ -1,6 +1,7 @@
-import { assertType, expectTypeOf, test } from 'vitest'
+import { expectTypeOf, test } from 'vitest'
 
 import type { ParseAbiParameter } from './parseAbiParameter'
+import { parseAbiParameter } from './parseAbiParameter'
 
 test('ParseAbiParameter', () => {
   expectTypeOf<ParseAbiParameter<''>>().toEqualTypeOf<never>()
@@ -10,30 +11,32 @@ test('ParseAbiParameter', () => {
   >().toEqualTypeOf<never>()
 
   // string
-  assertType<ParseAbiParameter<'address from'>>({
-    type: 'address',
-    name: 'from',
-  })
-  assertType<ParseAbiParameter<'address indexed from'>>({
-    type: 'address',
-    name: 'from',
-    indexed: true,
-  })
-  assertType<ParseAbiParameter<'address calldata foo'>>({
-    type: 'address',
-    name: 'foo',
-  })
+  expectTypeOf<ParseAbiParameter<'address from'>>().toEqualTypeOf<{
+    readonly type: 'address'
+    readonly name: 'from'
+  }>()
+  expectTypeOf<ParseAbiParameter<'address indexed from'>>().toEqualTypeOf<{
+    readonly type: 'address'
+    readonly name: 'from'
+    readonly indexed: true
+  }>()
+  expectTypeOf<ParseAbiParameter<'address calldata foo'>>().toEqualTypeOf<{
+    readonly type: 'address'
+    readonly name: 'foo'
+  }>()
 
   // Array
-  assertType<ParseAbiParameter<['Foo', 'struct Foo { string name; }']>>({
-    type: 'tuple',
-    components: [
+  expectTypeOf<
+    ParseAbiParameter<['Foo', 'struct Foo { string name; }']>
+  >().toEqualTypeOf<{
+    readonly type: 'tuple'
+    readonly components: readonly [
       {
-        name: 'name',
-        type: 'string',
+        readonly name: 'name'
+        readonly type: 'string'
       },
-    ],
-  })
+    ]
+  }>()
 
   expectTypeOf<ParseAbiParameter<'(string bar) foo'>>().toEqualTypeOf<{
     readonly type: 'tuple'
@@ -44,5 +47,18 @@ test('ParseAbiParameter', () => {
       },
     ]
     readonly name: 'foo'
+  }>()
+})
+
+test('parseAbiParameter', () => {
+  // @ts-expect-error empty array not allowed
+  expectTypeOf(parseAbiParameter([])).toEqualTypeOf<never>()
+  expectTypeOf(
+    parseAbiParameter(['struct Foo { string name; }']),
+  ).toEqualTypeOf<never>()
+
+  expectTypeOf(parseAbiParameter('(string)')).toEqualTypeOf<{
+    readonly type: 'tuple'
+    readonly components: readonly [{ readonly type: 'string' }]
   }>()
 })

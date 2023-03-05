@@ -1,4 +1,4 @@
-import { assertType, expectTypeOf, test } from 'vitest'
+import { expectTypeOf, test } from 'vitest'
 
 import type { Abi } from '../abi'
 import type { ParseAbiItem } from './parseAbiItem'
@@ -12,64 +12,67 @@ test('ParseAbiItem', () => {
   >().toEqualTypeOf<never>()
 
   // string
-  assertType<ParseAbiItem<'function foo()'>>({
-    name: 'foo',
-    type: 'function',
-    stateMutability: 'nonpayable',
-    inputs: [],
-    outputs: [],
-  })
+  expectTypeOf<ParseAbiItem<'function foo()'>>().toEqualTypeOf<{
+    readonly name: 'foo'
+    readonly type: 'function'
+    readonly stateMutability: 'nonpayable'
+    readonly inputs: readonly []
+    readonly outputs: readonly []
+  }>()
 
   // Array
-  assertType<
+  expectTypeOf<
     ParseAbiItem<['function bar(Foo, bytes32)', 'struct Foo { string name; }']>
-  >({
-    name: 'bar',
-    type: 'function',
-    stateMutability: 'nonpayable',
-    inputs: [
+  >().toEqualTypeOf<{
+    readonly name: 'bar'
+    readonly type: 'function'
+    readonly stateMutability: 'nonpayable'
+    readonly inputs: readonly [
       {
-        type: 'tuple',
-        components: [
+        readonly type: 'tuple'
+        readonly components: readonly [
           {
-            name: 'name',
-            type: 'string',
+            readonly name: 'name'
+            readonly type: 'string'
           },
-        ],
+        ]
       },
       {
-        type: 'bytes32',
+        readonly type: 'bytes32'
       },
-    ],
-    outputs: [],
-  })
+    ]
+    readonly outputs: readonly []
+  }>()
 
-  assertType<
+  expectTypeOf<
     ParseAbiItem<
       [
         'event Transfer(address indexed from, address indexed to, uint256 amount)',
       ]
     >
-  >({
-    name: 'Transfer',
-    type: 'event',
-    inputs: [
+  >().toEqualTypeOf<{
+    readonly name: 'Transfer'
+    readonly type: 'event'
+    readonly inputs: readonly [
       {
-        name: 'from',
-        type: 'address',
-        indexed: true,
+        readonly name: 'from'
+        readonly type: 'address'
+        readonly indexed: true
       },
       {
-        name: 'to',
-        type: 'address',
-        indexed: true,
+        readonly name: 'to'
+        readonly type: 'address'
+        readonly indexed: true
       },
       {
-        name: 'amount',
-        type: 'uint256',
+        readonly name: 'amount'
+        readonly type: 'uint256'
       },
-    ],
-  })
+    ]
+  }>()
+
+  const abiItem = ['function bar(Foo, bytes32)', 'struct Foo { string name; }']
+  expectTypeOf<ParseAbiItem<typeof abiItem>>().toEqualTypeOf<Abi[number]>()
 
   expectTypeOf<ParseAbiItem<['function foo ()']>>().toEqualTypeOf<never>()
 })
@@ -119,26 +122,26 @@ test('parseAbiItem', () => {
     'function bar(Foo, bytes32)',
     'struct Foo { string name; }',
   ])
-  assertType<typeof res2>({
-    name: 'bar',
-    type: 'function',
-    stateMutability: 'nonpayable',
-    inputs: [
+  expectTypeOf<typeof res2>().toEqualTypeOf<{
+    readonly name: 'bar'
+    readonly type: 'function'
+    readonly stateMutability: 'nonpayable'
+    readonly inputs: readonly [
       {
-        type: 'tuple',
-        components: [
+        readonly type: 'tuple'
+        readonly components: readonly [
           {
-            name: 'name',
-            type: 'string',
+            readonly name: 'name'
+            readonly type: 'string'
           },
-        ],
+        ]
       },
       {
-        type: 'bytes32',
+        readonly type: 'bytes32'
       },
-    ],
-    outputs: [],
-  })
+    ]
+    readonly outputs: readonly []
+  }>()
 
   const abi2 = [
     'function foo()',

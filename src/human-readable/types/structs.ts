@@ -31,8 +31,8 @@ export type ParseStruct<
   TStructs extends StructLookup | unknown = unknown,
 > = TSignature extends StructSignature<infer Name, infer Properties>
   ? {
-      name: Trim<Name>
-      components: ParseStructProperties<Properties, TStructs>
+      readonly name: Trim<Name>
+      readonly components: ParseStructProperties<Properties, TStructs>
     }
   : never
 
@@ -40,35 +40,37 @@ export type ResolveStructs<
   TAbiParameters extends readonly (AbiParameter & { type: string })[],
   TStructs extends Record<string, readonly (AbiParameter & { type: string })[]>,
   TKeyReferences extends { [_: string]: unknown } | unknown = unknown,
-> = {
-  [K in keyof TAbiParameters]: TAbiParameters[K]['type'] extends `${infer Head extends string &
-    keyof TStructs}[${infer Tail}]` // Struct arrays (e.g. `type: 'Struct[]'`, `type: 'Struct[10]'`, `type: 'Struct[][]'`)
-    ? Head extends keyof TKeyReferences
-      ? Error<`Circular reference detected. Struct "${TAbiParameters[K]['type']}" is a circular reference.`>
-      : {
-          name: TAbiParameters[K]['name']
-          type: `tuple[${Tail}]`
-          components: ResolveStructs<
-            TStructs[Head],
-            TStructs,
-            TKeyReferences & { [_ in Head]: true }
-          >
-        }
-    : // Basic struct (e.g. `type: 'Struct'`)
-    TAbiParameters[K]['type'] extends keyof TStructs
-    ? TAbiParameters[K]['type'] extends keyof TKeyReferences
-      ? Error<`Circular reference detected. Struct "${TAbiParameters[K]['type']}" is a circular reference.`>
-      : {
-          name: TAbiParameters[K]['name']
-          type: 'tuple'
-          components: ResolveStructs<
-            TStructs[TAbiParameters[K]['type']],
-            TStructs,
-            TKeyReferences & { [_ in TAbiParameters[K]['type']]: true }
-          >
-        }
-    : TAbiParameters[K]
-}
+> = readonly [
+  ...{
+    [K in keyof TAbiParameters]: TAbiParameters[K]['type'] extends `${infer Head extends string &
+      keyof TStructs}[${infer Tail}]` // Struct arrays (e.g. `type: 'Struct[]'`, `type: 'Struct[10]'`, `type: 'Struct[][]'`)
+      ? Head extends keyof TKeyReferences
+        ? Error<`Circular reference detected. Struct "${TAbiParameters[K]['type']}" is a circular reference.`>
+        : {
+            readonly name: TAbiParameters[K]['name']
+            readonly type: `tuple[${Tail}]`
+            readonly components: ResolveStructs<
+              TStructs[Head],
+              TStructs,
+              TKeyReferences & { [_ in Head]: true }
+            >
+          }
+      : // Basic struct (e.g. `type: 'Struct'`)
+      TAbiParameters[K]['type'] extends keyof TStructs
+      ? TAbiParameters[K]['type'] extends keyof TKeyReferences
+        ? Error<`Circular reference detected. Struct "${TAbiParameters[K]['type']}" is a circular reference.`>
+        : {
+            readonly name: TAbiParameters[K]['name']
+            readonly type: 'tuple'
+            readonly components: ResolveStructs<
+              TStructs[TAbiParameters[K]['type']],
+              TStructs,
+              TKeyReferences & { [_ in TAbiParameters[K]['type']]: true }
+            >
+          }
+      : TAbiParameters[K]
+  },
+]
 
 export type ParseStructProperties<
   T extends string,

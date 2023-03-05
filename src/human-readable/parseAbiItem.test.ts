@@ -14,9 +14,9 @@ test('parseAbiItem', () => {
   // @ts-expect-error invalid signature type
   expect(() => parseAbiItem([])).toThrowErrorMatchingInlineSnapshot(
     `
-    "Failed to parse ABI Item.
+    "Failed to parse ABI item.
 
-    Docs: https://abitype.dev/todo
+    Docs: https://abitype.dev/api/human.html#parseabiitem-1
     Details: parseAbiItem([])
     Version: abitype@x.y.z"
   `,
@@ -25,9 +25,9 @@ test('parseAbiItem', () => {
     parseAbiItem(['struct Foo { string name; }']),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Failed to parse ABI Item.
+    "Failed to parse ABI item.
 
-    Docs: https://abitype.dev/todo
+    Docs: https://abitype.dev/api/human.html#parseabiitem-1
     Details: parseAbiItem([
       \\"struct Foo { string name; }\\"
     ])
@@ -38,7 +38,7 @@ test('parseAbiItem', () => {
 
 test.each([
   {
-    signatures: ['function foo(string)'],
+    signature: ['function foo(string)'],
     expected: {
       type: 'function',
       name: 'foo',
@@ -48,7 +48,7 @@ test.each([
     },
   },
   {
-    signatures: [
+    signature: [
       'event Foo(address indexed from, address indexed to, uint256 amount)',
     ],
     expected: {
@@ -61,13 +61,13 @@ test.each([
       ],
     },
   },
-])(`parseAbiItem($signatures)`, ({ signatures, expected }) => {
-  expect(parseAbiItem(signatures)).toEqual(expected)
+])(`parseAbiItem($signature)`, ({ signature, expected }) => {
+  expect(parseAbiItem(signature)).toEqual(expected)
 })
 
 test.each([
   {
-    signatures: ['struct Foo { string bar; }', 'function foo(Foo)'],
+    signature: ['struct Foo { string bar; }', 'function foo(Foo)'],
     expected: {
       type: 'function',
       name: 'foo',
@@ -78,6 +78,6 @@ test.each([
       stateMutability: 'nonpayable',
     },
   },
-])(`parseAbiItem($signatures)`, ({ signatures, expected }) => {
-  expect(parseAbiItem(signatures)).toEqual(expected)
+])(`parseAbiItem($signature)`, ({ signature, expected }) => {
+  expect(parseAbiItem(signature)).toEqual(expected)
 })
