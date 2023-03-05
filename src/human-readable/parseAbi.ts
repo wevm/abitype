@@ -1,6 +1,6 @@
 import type { Abi } from '../abi'
 import type { Narrow } from '../narrow'
-import type { Filter } from '../types'
+import type { Error, Filter } from '../types'
 import { isStructSignature, parseStructs } from './runtime'
 import { parseSignature } from './runtime/utils'
 import type { ParseSignature, ParseStructs, Signatures } from './types'
@@ -22,23 +22,25 @@ import type { ParseSignature, ParseStructs, Signatures } from './types'
  */
 export type ParseAbi<
   TSignatures extends readonly string[] | readonly unknown[],
-> =
-  // If `T` was not able to be inferred (e.g. just `string[]`), return `Abi`
-  string[] extends TSignatures
-    ? Abi
-    : TSignatures extends readonly string[]
-    ? TSignatures extends Signatures<TSignatures> // Validate signatures
-      ? ParseStructs<TSignatures> extends infer Structs
-        ? {
-            [K in keyof TSignatures]: TSignatures[K] extends string
-              ? ParseSignature<TSignatures[K], Structs>
-              : never
-          } extends infer Mapped extends readonly unknown[]
-          ? Filter<Mapped, never>
+> = string[] extends TSignatures
+  ? Abi // If `T` was not able to be inferred (e.g. just `string[]`), return `Abi`
+  : TSignatures extends readonly string[]
+  ? TSignatures extends Signatures<TSignatures> // Validate signatures
+    ? ParseStructs<TSignatures> extends infer Structs
+      ? {
+          [K in keyof TSignatures]: TSignatures[K] extends string
+            ? ParseSignature<TSignatures[K], Structs>
+            : never
+        } extends infer Mapped extends readonly unknown[]
+        ? Filter<Mapped, never> extends infer Result
+          ? Result extends readonly []
+            ? never
+            : Result
           : never
         : never
       : never
     : never
+  : never
 
 /**
  * Parses human-readable ABI into JSON {@link Abi}
@@ -57,12 +59,12 @@ export function parseAbi<
   TSignatures extends readonly string[] | readonly unknown[],
 >(
   signatures: Narrow<TSignatures> &
-    (string[] extends TSignatures
-      ? unknown
-      : TSignatures extends Signatures<
-          TSignatures extends readonly string[] ? TSignatures : never
-        >
-      ? unknown
+    (TSignatures extends readonly string[]
+      ? TSignatures extends readonly [] // empty array
+        ? Error<'At least one signature required.'>
+        : string[] extends TSignatures
+        ? unknown
+        : Signatures<TSignatures>
       : never),
 ): ParseAbi<TSignatures> {
   const structs = parseStructs(signatures as readonly string[])

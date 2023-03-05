@@ -8,7 +8,7 @@ title: 'ABIType: Strict TypeScript types for Ethereum ABIs'
 titleTemplate: false
 ---
 
-<p align="center">
+<p align="center" style="min-height:45px;">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-dark.svg">
     <img alt="ABIType" src="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-light.svg" width="auto" height="45">
