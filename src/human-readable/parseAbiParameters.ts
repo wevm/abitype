@@ -1,6 +1,6 @@
 import type { AbiParameter } from '../abi'
 import type { Narrow } from '../narrow'
-import type { Filter } from '../types'
+import type { Error, Filter } from '../types'
 import { BaseError } from './errors'
 import {
   isStructSignature,
@@ -41,13 +41,13 @@ export type ParseAbiParameters<
         ? never
         : ParseAbiParameters_<SplitParameters<TParams>, { Modifier: Modifier }>
       : never)
-  // Return generic AbiParameter item since type was not inferrable
-  | (string[] extends TParams ? AbiParameter : never)
   | (TParams extends readonly string[]
-      ? ParseStructs<TParams> extends infer Structs
+      ? string[] extends TParams
+        ? AbiParameter // Return generic AbiParameter item since type was no inferrable
+        : ParseStructs<TParams> extends infer Structs
         ? {
             [K in keyof TParams]: TParams[K] extends string
-              ? IsStructSignature<TParams[K]> extends true // filter out structs
+              ? IsStructSignature<TParams[K]> extends true
                 ? never
                 : ParseAbiParameters_<
                     SplitParameters<TParams[K]>,
@@ -85,17 +85,20 @@ export function parseAbiParameters<
   TParams extends string | readonly string[] | readonly unknown[],
 >(
   params: Narrow<TParams> &
-    (TParams extends readonly []
-      ? never
-      : string[] extends TParams
-      ? unknown
-      : TParams extends string
-      ? TParams extends ''
-        ? never
-        : unknown
-      : TParams extends readonly string[]
-      ? unknown
-      : never),
+    (
+      | (TParams extends string
+          ? TParams extends ''
+            ? Error<'Empty string is not allowed.'>
+            : unknown
+          : never)
+      | (TParams extends readonly string[]
+          ? TParams extends readonly [] // empty array
+            ? Error<'At least one parameter required.'>
+            : string[] extends TParams
+            ? unknown
+            : unknown // TODO: Validate param string
+          : never)
+    ),
 ): ParseAbiParameters<TParams> {
   const abiParameters: AbiParameter[] = []
   if (typeof params === 'string') {
@@ -121,9 +124,9 @@ export function parseAbiParameters<
   }
 
   if (abiParameters.length === 0)
-    throw new BaseError('Failed to parse ABI Item.', {
+    throw new BaseError('Failed to parse ABI parameters.', {
       details: `parseAbiParameters(${JSON.stringify(params, null, 2)})`,
-      docsPath: '/todo',
+      docsPath: '/api/human.html#parseabiparameters-1',
     })
   return abiParameters as ParseAbiParameters<TParams>
 }
