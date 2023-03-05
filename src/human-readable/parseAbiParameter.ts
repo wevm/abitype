@@ -37,6 +37,8 @@ export type ParseAbiParameter<
   | (TParam extends string
       ? TParam extends ''
         ? never
+        : string extends TParam
+        ? AbiParameter
         : ParseAbiParameter_<TParam, { Modifier: Modifier }>
       : never)
   | (TParam extends readonly string[]

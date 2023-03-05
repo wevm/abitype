@@ -30,7 +30,9 @@ export type ParseAbiItem<
   TSignature extends string | readonly string[] | readonly unknown[],
 > =
   | (TSignature extends string
-      ? TSignature extends Signature<TSignature> // Validate signature
+      ? string extends TSignature
+        ? Abi[number]
+        : TSignature extends Signature<TSignature> // Validate signature
         ? ParseSignature<TSignature>
         : never
       : never)

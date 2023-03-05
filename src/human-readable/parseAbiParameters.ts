@@ -39,6 +39,8 @@ export type ParseAbiParameters<
   | (TParams extends string
       ? TParams extends ''
         ? never
+        : string extends TParams
+        ? readonly AbiParameter[]
         : ParseAbiParameters_<SplitParameters<TParams>, { Modifier: Modifier }>
       : never)
   | (TParams extends readonly string[]

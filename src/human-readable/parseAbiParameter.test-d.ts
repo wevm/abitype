@@ -1,5 +1,7 @@
 import { expectTypeOf, test } from 'vitest'
 
+import type { AbiParameter } from '../abi'
+
 import type { ParseAbiParameter } from './parseAbiParameter'
 import { parseAbiParameter } from './parseAbiParameter'
 
@@ -61,4 +63,8 @@ test('parseAbiParameter', () => {
     readonly type: 'tuple'
     readonly components: readonly [{ readonly type: 'string' }]
   }>()
+
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+  const param: string = 'address'
+  expectTypeOf(parseAbiParameter(param)).toEqualTypeOf<AbiParameter>()
 })
