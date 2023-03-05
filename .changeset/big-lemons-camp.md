@@ -1,5 +1,0 @@
----
-'abitype': patch
----
-
-Exported BaseError.
