@@ -1,5 +1,11 @@
 # abitype
 
+## 0.6.4
+
+### Patch Changes
+
+- [`387ad15`](https://github.com/wagmi-dev/abitype/commit/387ad154ce0d4d30dc8213ede8972a759fac100e) Thanks [@tmm](https://github.com/tmm)! - Fixed parse types for inline annotations.
+
 ## 0.6.3
 
 ### Patch Changes
