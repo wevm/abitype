@@ -29,6 +29,8 @@ export type {
 
 export type { Config, DefaultConfig, ResolvedConfig } from './config'
 
+export { BaseError } from './errors'
+
 export type { Narrow } from './narrow'
 export { narrow } from './narrow'
 

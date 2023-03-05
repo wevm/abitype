@@ -4,6 +4,7 @@ import type {
   SolidityBytes,
   SolidityString,
 } from '../../abi'
+import { BaseError } from '../../errors'
 import {
   bytesRegex,
   bytesRegexNumbersOnly,
@@ -12,7 +13,7 @@ import {
   isTupleRegex,
   protectedKeywords,
 } from '../../regex'
-import { BaseError } from '../errors'
+
 import type { Modifier, StructLookup } from '../types'
 
 import type { FunctionModifiers, SolidityTypes } from '../types/signatures'

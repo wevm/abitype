@@ -1,5 +1,11 @@
 # abitype
 
+## 0.6.5
+
+### Patch Changes
+
+- [`cc053a4`](https://github.com/wagmi-dev/abitype/commit/cc053a4fa89aea9b80ff2228a41b7a83e77f2740) Thanks [@tmm](https://github.com/tmm)! - Exported BaseError.
+
 ## 0.6.4
 
 ### Patch Changes

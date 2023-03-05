@@ -5,6 +5,7 @@ import * as Exports from './'
 it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
     [
+      "BaseError",
       "narrow",
       "parseAbi",
       "parseAbiItem",

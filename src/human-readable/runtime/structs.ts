@@ -1,6 +1,6 @@
 import type { AbiParameter } from '../../abi'
+import { BaseError } from '../../errors'
 import { execTyped, isTupleRegex, typeWithoutTupleRegex } from '../../regex'
-import { BaseError } from '../errors'
 import type { StructLookup } from '../types'
 import { execStructSignature, isStructSignature } from './signatures'
 import { isSolidityType, parseAbiParameter } from './utils'
