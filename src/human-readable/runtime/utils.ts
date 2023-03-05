@@ -1,7 +1,8 @@
-import type { AbiParameter } from '../../abi'
-import { execTyped, isTupleRegex } from '../../regex'
+import type { AbiType, SolidityArray } from '../../abi'
+import { bytesRegex, execTyped, integerRegex, isTupleRegex } from '../../regex'
 import { BaseError } from '../errors'
 import type { Modifier, StructLookup } from '../types'
+import { getParameterCacheKey, parameterCache } from './cache'
 import {
   execConstructorSignature,
   execErrorSignature,
@@ -119,7 +120,6 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
   })
 }
 
-const abiParameterCache = new Map<string, AbiParameter>()
 const abiParameterWithoutTupleRegex =
   /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
 const abiParameterWithTupleRegex =
@@ -128,13 +128,14 @@ const abiParameterWithTupleRegex =
 type ParseOptions = {
   modifiers?: Modifier | readonly Modifier[]
   structs?: StructLookup
-  type?: 'constructor' | 'error' | 'event' | 'function'
+  type?: 'constructor' | 'error' | 'event' | 'function' | 'struct'
 }
 
 export function parseAbiParameter(param: string, options?: ParseOptions) {
   // optional namespace cache by `type`
-  const paramKey = `${options?.type ?? ''}${param}`
-  if (abiParameterCache.has(paramKey)) return abiParameterCache.get(paramKey)!
+  const parameterCacheKey = getParameterCacheKey(param, options?.type)
+  if (parameterCache.has(parameterCacheKey))
+    return parameterCache.get(parameterCacheKey)!
 
   const isTuple = isTupleRegex.test(param)
   const match = execTyped<{
@@ -179,7 +180,13 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
   } else if (match.type in structs) {
     type = 'tuple'
     components = { components: structs[match.type] }
-  } else type = match.type
+  } else {
+    type = match.type
+    if (!(options?.type === 'struct') && !isSolidityType(type))
+      throw new BaseError('Unknown type.', {
+        metaMessages: [`Type "${type}" is not a valid ABI type.`],
+      })
+  }
 
   const abiParameter = {
     type: `${type}${match.array ?? ''}`,
@@ -187,7 +194,7 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     ...indexed,
     ...components,
   }
-  abiParameterCache.set(paramKey, abiParameter)
+  parameterCache.set(parameterCacheKey, abiParameter)
   return abiParameter
 }
 
@@ -222,4 +229,18 @@ export function splitParameters(
   }
 
   return []
+}
+
+export function isSolidityType(
+  type: string,
+): type is Exclude<AbiType, SolidityArray> {
+  return (
+    type === 'address' ||
+    type === 'bool' ||
+    type === 'function' ||
+    type === 'string' ||
+    type === 'tuple' ||
+    bytesRegex.test(type) ||
+    integerRegex.test(type)
+  )
 }
