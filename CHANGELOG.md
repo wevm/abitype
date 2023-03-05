@@ -1,5 +1,13 @@
 # abitype
 
+## 0.6.3
+
+### Patch Changes
+
+- [#96](https://github.com/wagmi-dev/abitype/pull/96) [`c35cae8`](https://github.com/wagmi-dev/abitype/commit/c35cae8b697f7ed05525c4f27585aaf6b12d7e51) Thanks [@tmm](https://github.com/tmm)! - Updated internal parse types.
+
+- [#93](https://github.com/wagmi-dev/abitype/pull/93) [`32daf7c`](https://github.com/wagmi-dev/abitype/commit/32daf7cf26b0816b9874486f2940fc8ef9277ae4) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Fixed a bug, where Solidity types were not validated when parsing ABI parameters, and added a base cache with well-known Solidity parameters.
+
 ## 0.6.2
 
 ### Patch Changes
