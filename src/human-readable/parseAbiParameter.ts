@@ -1,7 +1,7 @@
 import type { AbiParameter } from '../abi'
+import { BaseError } from '../errors'
 import type { Narrow } from '../narrow'
 import type { Error, Filter } from '../types'
-import { BaseError } from './errors'
 import {
   isStructSignature,
   parseAbiParameter as parseAbiParameter_,

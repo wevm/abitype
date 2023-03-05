@@ -1,6 +1,6 @@
 import type { AbiType, SolidityArray } from '../../abi'
+import { BaseError } from '../../errors'
 import { bytesRegex, execTyped, integerRegex, isTupleRegex } from '../../regex'
-import { BaseError } from '../errors'
 import type { Modifier, StructLookup } from '../types'
 import { getParameterCacheKey, parameterCache } from './cache'
 import {
