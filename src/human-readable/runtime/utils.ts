@@ -2,7 +2,7 @@ import type { AbiType, SolidityArray } from '../../abi'
 import { bytesRegex, execTyped, integerRegex, isTupleRegex } from '../../regex'
 import { BaseError } from '../errors'
 import type { Modifier, StructLookup } from '../types'
-import { createParameterCache, getParameterCacheKey } from './cache'
+import { getParameterCacheKey, parameterCache } from './cache'
 import {
   execConstructorSignature,
   execErrorSignature,
@@ -120,7 +120,6 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
   })
 }
 
-const abiParameterCache = createParameterCache()
 const abiParameterWithoutTupleRegex =
   /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
 const abiParameterWithTupleRegex =
@@ -134,8 +133,9 @@ type ParseOptions = {
 
 export function parseAbiParameter(param: string, options?: ParseOptions) {
   // optional namespace cache by `type`
-  const paramKey = getParameterCacheKey(param, options?.type)
-  if (abiParameterCache.has(paramKey)) return abiParameterCache.get(paramKey)!
+  const parameterCacheKey = getParameterCacheKey(param, options?.type)
+  if (parameterCache.has(parameterCacheKey))
+    return parameterCache.get(parameterCacheKey)!
 
   const isTuple = isTupleRegex.test(param)
   const match = execTyped<{
@@ -182,11 +182,10 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     components = { components: structs[match.type] }
   } else {
     type = match.type
-    if (!(options?.type === 'struct') && !isSolidityType(type)) {
+    if (!(options?.type === 'struct') && !isSolidityType(type))
       throw new BaseError('Unknown type.', {
         metaMessages: [`Type "${type}" is not a valid ABI type.`],
       })
-    }
   }
 
   const abiParameter = {
@@ -195,7 +194,7 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     ...indexed,
     ...components,
   }
-  abiParameterCache.set(paramKey, abiParameter)
+  parameterCache.set(parameterCacheKey, abiParameter)
   return abiParameter
 }
 

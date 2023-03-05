@@ -1,6 +1,11 @@
 import { expect, test } from 'vitest'
 
-import { parseAbiParameter, parseSignature, splitParameters } from './utils'
+import {
+  isSolidityType,
+  parseAbiParameter,
+  parseSignature,
+  splitParameters,
+} from './utils'
 
 const baseFunctionExpected = {
   name: 'foo',
@@ -343,4 +348,21 @@ test.each([
   },
 ])(`splitParameters($params)`, ({ params, expected }) => {
   expect(splitParameters(params)).toEqual(expected)
+})
+
+test.each([
+  'address',
+  'bool',
+  'bytes32',
+  'int256',
+  'string',
+  'uint256',
+  'function',
+  'tuple',
+])('isSolidityType($type)', (type) => {
+  expect(isSolidityType(type)).toEqual(true)
+})
+
+test('isSolidityType', () => {
+  expect(isSolidityType('foo')).toEqual(false)
 })
