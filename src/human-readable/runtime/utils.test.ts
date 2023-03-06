@@ -1,6 +1,11 @@
 import { expect, test } from 'vitest'
 
-import { parseAbiParameter, parseSignature, splitParameters } from './utils'
+import {
+  isSolidityType,
+  parseAbiParameter,
+  parseSignature,
+  splitParameters,
+} from './utils'
 
 const baseFunctionExpected = {
   name: 'foo',
@@ -119,6 +124,57 @@ test('empty string', () => {
     Version: abitype@x.y.z"
   `,
   )
+})
+
+test('Invalid solidity type', () => {
+  expect(() => parseAbiParameter('strings'))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unknown type.
+
+      Type \\"strings\\" is not a valid ABI type.
+
+      Version: abitype@x.y.z"
+    `)
+})
+
+test('Invalid solidity type in tuple', () => {
+  expect(() => parseAbiParameter('(strings)'))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unknown type.
+
+      Type \\"strings\\" is not a valid ABI type.
+
+      Version: abitype@x.y.z"
+    `)
+})
+
+test('Invalid solidity type in nested tuple', () => {
+  expect(() => parseAbiParameter('((strings))'))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unknown type.
+
+      Type \\"strings\\" is not a valid ABI type.
+
+      Version: abitype@x.y.z"
+    `)
+})
+
+test('Struct type without context', () => {
+  expect(() => parseAbiParameter('Demo demo'))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unknown type.
+
+      Type \\"Demo\\" is not a valid ABI type.
+
+      Version: abitype@x.y.z"
+    `)
+})
+
+test('Struct type with context', () => {
+  expect(parseAbiParameter('Demo demo', { type: 'struct' })).toEqual({
+    type: 'Demo',
+    name: 'demo',
+  })
 })
 
 test('indexed not allowed', () => {
@@ -292,4 +348,21 @@ test.each([
   },
 ])(`splitParameters($params)`, ({ params, expected }) => {
   expect(splitParameters(params)).toEqual(expected)
+})
+
+test.each([
+  'address',
+  'bool',
+  'bytes32',
+  'int256',
+  'string',
+  'uint256',
+  'function',
+  'tuple',
+])('isSolidityType($type)', (type) => {
+  expect(isSolidityType(type)).toEqual(true)
+})
+
+test('isSolidityType', () => {
+  expect(isSolidityType('foo')).toEqual(false)
 })

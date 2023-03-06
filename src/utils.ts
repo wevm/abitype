@@ -348,7 +348,6 @@ export type IsTypedData<TTypedData> = TTypedData extends TypedData
  * @param TAbiParameterKind - Optional {@link AbiParameterKind} to narrow by parameter type
  * @returns Union of TypeScript primitive types
  */
-// TODO: Check for recursive structs (e.g. add generic slot for recursion)
 export type TypedDataToPrimitiveTypes<
   TTypedData extends TypedData,
   TAbiParameterKind extends AbiParameterKind = AbiParameterKind,

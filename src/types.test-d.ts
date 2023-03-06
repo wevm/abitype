@@ -11,13 +11,13 @@ import type {
 } from './types'
 
 test('Error', () => {
-  expectTypeOf<
-    Error<'Custom error message'>
-  >().toEqualTypeOf<'Error: Custom error message'>()
+  expectTypeOf<Error<'Custom error message'>>().toEqualTypeOf<
+    ['Error: Custom error message']
+  >()
   expectTypeOf<
     Error<['Custom error message', 'Another custom message']>
   >().toEqualTypeOf<
-    'Error: Custom error message' | 'Error: Another custom message'
+    ['Error: Custom error message', 'Error: Another custom message']
   >()
 })
 

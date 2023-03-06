@@ -189,18 +189,18 @@ test('IsSignature', () => {
 
 test('Signature', () => {
   assertType<Signature<'function foo()'>>('function foo()')
-  assertType<Signature<'function foo ()'>>(
-    'Error: Signature "function foo ()" is invalid',
-  )
-  assertType<Signature<'function foo??()'>>(
-    'Error: Signature "function foo??()" is invalid',
-  )
+  assertType<Signature<'function foo ()'>>([
+    'Error: Signature "function foo ()" is invalid.',
+  ])
+  assertType<Signature<'function foo??()'>>([
+    'Error: Signature "function foo??()" is invalid.',
+  ])
 })
 
 test('Signatures', () => {
   assertType<Signatures<['function foo()']>>(['function foo()'])
   assertType<Signatures<['function foo ()']>>([
-    'Error: Signature "function foo ()" is invalid at position 0',
+    ['Error: Signature "function foo ()" is invalid at position 0.'],
   ])
 })
 

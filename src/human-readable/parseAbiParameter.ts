@@ -1,7 +1,7 @@
 import type { AbiParameter } from '../abi'
+import { BaseError } from '../errors'
 import type { Narrow } from '../narrow'
-import type { Filter } from '../types'
-import { BaseError } from './errors'
+import type { Error, Filter } from '../types'
 import {
   isStructSignature,
   parseAbiParameter as parseAbiParameter_,
@@ -33,32 +33,36 @@ import { modifiers } from './types'
  */
 export type ParseAbiParameter<
   TParam extends string | readonly string[] | readonly unknown[],
-> = TParam extends string
-  ? TParam extends ''
-    ? never
-    : ParseAbiParameter_<TParam, { Modifier: Modifier }>
-  : string[] extends TParam
-  ? AbiParameter // Return generic AbiParameter item since type was no inferrable
-  : TParam extends readonly string[]
-  ? ParseStructs<TParam> extends infer Structs
-    ? {
-        [K in keyof TParam]: TParam[K] extends string
-          ? IsStructSignature<TParam[K]> extends true
-            ? never
-            : ParseAbiParameter_<
-                TParam[K],
-                { Modifier: Modifier; Structs: Structs }
-              >
+> =
+  | (TParam extends string
+      ? TParam extends ''
+        ? never
+        : string extends TParam
+        ? AbiParameter
+        : ParseAbiParameter_<TParam, { Modifier: Modifier }>
+      : never)
+  | (TParam extends readonly string[]
+      ? string[] extends TParam
+        ? AbiParameter // Return generic AbiParameter item since type was no inferrable
+        : ParseStructs<TParam> extends infer Structs
+        ? {
+            [K in keyof TParam]: TParam[K] extends string
+              ? IsStructSignature<TParam[K]> extends true
+                ? never
+                : ParseAbiParameter_<
+                    TParam[K],
+                    { Modifier: Modifier; Structs: Structs }
+                  >
+              : never
+          } extends infer Mapped extends readonly unknown[]
+          ? Filter<Mapped, never>[0] extends infer Result
+            ? Result extends undefined
+              ? never
+              : Result
+            : never
           : never
-      } extends infer Mapped extends readonly unknown[]
-      ? Filter<Mapped, never>[0] extends infer Result
-        ? Result extends undefined
-          ? never
-          : Result
         : never
-      : never
-    : never
-  : never
+      : never)
 
 /**
  * Parses human-readable ABI parameter into {@link AbiParameter}
@@ -81,17 +85,20 @@ export function parseAbiParameter<
   TParam extends string | readonly string[] | readonly unknown[],
 >(
   param: Narrow<TParam> &
-    (TParam extends readonly []
-      ? never
-      : string[] extends TParam
-      ? unknown
-      : TParam extends string
-      ? TParam extends ''
-        ? never
-        : unknown
-      : TParam extends readonly string[]
-      ? unknown
-      : never),
+    (
+      | (TParam extends string
+          ? TParam extends ''
+            ? Error<'Empty string is not allowed.'>
+            : unknown
+          : never)
+      | (TParam extends readonly string[]
+          ? TParam extends readonly [] // empty array
+            ? Error<'At least one parameter required.'>
+            : string[] extends TParam
+            ? unknown
+            : unknown // TODO: Validate param string
+          : never)
+    ),
 ): ParseAbiParameter<TParam> {
   let abiParameter
   if (typeof param === 'string')
@@ -110,9 +117,9 @@ export function parseAbiParameter<
   }
 
   if (!abiParameter)
-    throw new BaseError('Failed to parse ABI Item.', {
+    throw new BaseError('Failed to parse ABI parameter.', {
       details: `parseAbiParameter(${JSON.stringify(param, null, 2)})`,
-      docsPath: '/todo',
+      docsPath: '/api/human.html#parseabiparameter-1',
     })
   return abiParameter as ParseAbiParameter<TParam>
 }

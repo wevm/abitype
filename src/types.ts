@@ -6,11 +6,18 @@
  *
  * @example
  * type Result = Error<'Custom error message'>
- * //   ^? type Result = 'Error: Custom error message'
+ * //   ^? type Result = ['Error: Custom error message']
  */
-export type Error<T extends string | string[]> = `Error: ${T extends string
-  ? T
-  : T[number]}`
+export type Error<T extends string | string[]> = T extends string
+  ? [
+      // Surrounding with array to prevent `T` from being widened to `string`
+      `Error: ${T}`,
+    ]
+  : {
+      [K in keyof T]: T[K] extends infer Message extends string
+        ? `Error: ${Message}`
+        : never
+    }
 
 /**
  * Filters out all members of {@link T} that are {@link P}

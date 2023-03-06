@@ -43,7 +43,7 @@ export default defineConfig({
       light: 'vitesse-light',
       dark: 'vitesse-dark',
     },
-    config: async (md) => {
+    config: (md) => {
       md.use(require('markdown-it-footnote'))
     },
   },

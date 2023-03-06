@@ -90,6 +90,7 @@ export type FunctionSignature<
   TName extends string = string,
   TTail extends string = string,
 > = `function ${TName}(${TTail}`
+
 export type IsFunctionSignature<T> =
   T extends `function ${infer Name}(${string}`
     ? IsName<Name> extends true
@@ -105,6 +106,7 @@ export type IsFunctionSignature<T> =
         : false
       : false
     : false
+
 export type Scope = 'public' | 'external' // `internal` or `private` functions wouldn't make it to ABI so can ignore
 type Returns = `returns (${string})`
 // Almost all valid function signatures, except `function ${string}(${infer Parameters})` since `Parameters` can absorb returns
@@ -170,7 +172,7 @@ export type Signature<
   ? T
   : Error<`Signature "${T}" is invalid${K extends string
       ? ` at position ${K}`
-      : ''}`>
+      : ''}.`>
 
 export type Signatures<T extends readonly string[]> = {
   [K in keyof T]: Signature<T[K], K>
