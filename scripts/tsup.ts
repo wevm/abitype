@@ -154,7 +154,7 @@ async function generateProxyPackages(
       JSON.stringify(
         {
           module: `${entrypoint.replace('.js', dev ? '.mts' : '.mjs')}`,
-          main: `${entrypoint}`,
+          main: entrypoint,
         },
         null,
         2,
