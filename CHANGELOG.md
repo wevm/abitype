@@ -1,5 +1,11 @@
 # abitype
 
+## 0.6.6
+
+### Patch Changes
+
+- [#101](https://github.com/wagmi-dev/abitype/pull/101) [`3975ef5`](https://github.com/wagmi-dev/abitype/commit/3975ef5eab740712ab91f8f6bfa3822bcd95ec22) Thanks [@jxom](https://github.com/jxom)! - Added support for CJS.
+
 ## 0.6.5
 
 ### Patch Changes
