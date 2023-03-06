@@ -46,7 +46,7 @@ type isValidSignatureProperty<
 > = TProperty extends `${infer Head extends string},${infer Tail}`
   ? ValidateContext<Head, TContext> extends true
     ? Tail extends ''
-      ? // When throw types?
+      ? // TODO: throw types
         false // `Error: Property '${TProperty}' cannot end with a comma`
       : isValidSignatureProperty<Trim<Tail>, TContext>
     : false

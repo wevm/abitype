@@ -2,4 +2,4 @@
 'abitype': patch
 ---
 
-Adds parameters validation to `function`, `event`, `error` and `constructor` types
+Adds parameter validation to `function`, `event`, `error` and `constructor` signatures.
