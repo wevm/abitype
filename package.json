@@ -15,25 +15,29 @@
       "url": "https://github.com/sponsors/wagmi-dev"
     }
   ],
-  "type": "module",
+  "module": "dist/index.mjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "module": "./dist/index.mts",
       "default": "./dist/index.js"
     },
     "./config": {
       "types": "./dist/config.d.ts",
+      "module": "./dist/config.mts",
       "default": "./dist/config.js"
     },
     "./test": {
       "types": "./dist/test/index.d.ts",
+      "module": "./dist/test/index.mts",
       "default": "./dist/test/index.js"
     },
     "./zod": {
       "types": "./dist/zod/index.d.ts",
+      "module": "./dist/zod/index.mts",
       "default": "./dist/zod/index.js"
     },
     "./package.json": "./package.json"
