@@ -242,6 +242,7 @@ test('invalid name', () => {
 
     address is a protected Solidity keyword.
 
+    Docs: https://abitype.devhttps://docs.soliditylang.org/en/latest/cheatsheet.html
     Details: uint256 address
     Version: abitype@x.y.z"
   `,

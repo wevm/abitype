@@ -224,6 +224,7 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     throw new BaseError('Invalid ABI parameter.', {
       details: param,
       metaMessages: [`${match.name} is a protected Solidity keyword.`],
+      docsPath: 'https://docs.soliditylang.org/en/latest/cheatsheet.html',
     })
   }
 

@@ -22,4 +22,4 @@ export const typeWithoutTupleRegex =
   /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?$/
 
 export const protectedKeywords =
-  /^try$|^catch$|^function$|^override$|^view$|^internal$|^pure$|^public$|^external$|^virtual$|^event$|^error$|^struct$|^return$|^returns$|^let$|^mapping$|^after$|^alias$|^apply$|^auto$|^byte$|^case$|^copyof$|^default$|^defined$|^final$|^implements$|^in$|^inline$|^match$|^mutable$|^null$|^of$|^partial$|^promise$|^reference$|^relocatable$|^sizeof$|^static$|^supports$|^switch$|^typedef$|^typeof$|^var$/
+  /^indexed$|^anonymous$|^immutable$|^constant$|^private$|^this$|^true$|^false$|^storage$|^memory$|^calldata$|^super$|^try$|^catch$|^function$|^override$|^view$|^internal$|^pure$|^public$|^external$|^virtual$|^event$|^error$|^struct$|^return$|^returns$|^let$|^mapping$|^after$|^alias$|^apply$|^auto$|^byte$|^case$|^copyof$|^default$|^defined$|^final$|^implements$|^in$|^inline$|^match$|^mutable$|^null$|^of$|^partial$|^promise$|^reference$|^relocatable$|^sizeof$|^static$|^supports$|^switch$|^typedef$|^typeof$|^var$/
