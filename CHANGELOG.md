@@ -1,5 +1,11 @@
 # abitype
 
+## 0.6.7
+
+### Patch Changes
+
+- [`228f083`](https://github.com/wagmi-dev/abitype/commit/228f083fda88f20de38af2a78da7043ec180b9bd) Thanks [@jxom](https://github.com/jxom)! - Updated published package.json attributes
+
 ## 0.6.6
 
 ### Patch Changes
