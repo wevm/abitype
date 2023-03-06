@@ -14,9 +14,9 @@ test('parseAbiParameter', () => {
   // @ts-expect-error invalid signature type
   expect(() => parseAbiParameter([])).toThrowErrorMatchingInlineSnapshot(
     `
-    "Failed to parse ABI Item.
+    "Failed to parse ABI parameter.
 
-    Docs: https://abitype.dev/todo
+    Docs: https://abitype.dev/api/human.html#parseabiparameter-1
     Details: parseAbiParameter([])
     Version: abitype@x.y.z"
   `,
@@ -25,9 +25,9 @@ test('parseAbiParameter', () => {
     parseAbiParameter(['struct Foo { string name; }']),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Failed to parse ABI Item.
+    "Failed to parse ABI parameter.
 
-    Docs: https://abitype.dev/todo
+    Docs: https://abitype.dev/api/human.html#parseabiparameter-1
     Details: parseAbiParameter([
       \\"struct Foo { string name; }\\"
     ])
@@ -144,31 +144,31 @@ test('nested tuple', () => {
       "type": "tuple",
     }
   `)
-  assertType<typeof result>({
-    type: 'tuple',
-    components: [
+  assertType<{
+    type: 'tuple'
+    components: readonly [
       {
-        type: 'tuple',
-        components: [
+        type: 'tuple'
+        components: readonly [
           {
-            type: 'tuple[1]',
-            components: [
+            type: 'tuple[1]'
+            components: readonly [
               {
-                type: 'tuple',
-                components: [
+                type: 'tuple'
+                components: readonly [
                   {
-                    type: 'string',
-                    name: 'baz',
+                    type: 'string'
+                    name: 'baz'
                   },
-                ],
-                name: 'bar',
+                ]
+                name: 'bar'
               },
-            ],
-            name: 'foo',
+            ]
+            name: 'foo'
           },
-        ],
-        name: 'boo',
+        ]
+        name: 'boo'
       },
-    ],
-  })
+    ]
+  }>(result)
 })

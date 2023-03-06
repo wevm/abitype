@@ -334,10 +334,10 @@ const abi = parseAbi([
 
 Parses human-readable ABI item (e.g. error, event, function) into ABI item.
 
-| Name         | Description              | Type                  |
-| ------------ | ------------------------ | --------------------- |
-| `signatures` | Human-Readable ABI item. | `string \| string[]`  |
-| returns      | Parsed ABI item          | `TAbiItem` (inferred) |
+| Name        | Description              | Type                  |
+| ----------- | ------------------------ | --------------------- |
+| `signature` | Human-Readable ABI item. | `string \| string[]`  |
+| returns     | Parsed ABI item          | `TAbiItem` (inferred) |
 
 #### Example
 

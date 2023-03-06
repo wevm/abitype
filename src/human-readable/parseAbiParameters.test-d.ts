@@ -1,6 +1,9 @@
-import { assertType, expectTypeOf, test } from 'vitest'
+import { expectTypeOf, test } from 'vitest'
+
+import type { AbiParameter } from '../abi'
 
 import type { ParseAbiParameters } from './parseAbiParameters'
+import { parseAbiParameters } from './parseAbiParameters'
 
 test('ParseAbiParameters', () => {
   expectTypeOf<ParseAbiParameters<''>>().toEqualTypeOf<never>()
@@ -10,69 +13,101 @@ test('ParseAbiParameters', () => {
   >().toEqualTypeOf<never>()
 
   // string
-  assertType<ParseAbiParameters<'address from, address to, uint256 amount'>>([
-    {
-      type: 'address',
-      name: 'from',
-    },
-    {
-      type: 'address',
-      name: 'to',
-    },
-    {
-      type: 'uint256',
-      name: 'amount',
-    },
-  ])
-  assertType<
+  expectTypeOf<
+    ParseAbiParameters<'address from, address to, uint256 amount'>
+  >().toEqualTypeOf<
+    readonly [
+      {
+        readonly type: 'address'
+        readonly name: 'from'
+      },
+      {
+        readonly type: 'address'
+        readonly name: 'to'
+      },
+      {
+        readonly type: 'uint256'
+        readonly name: 'amount'
+      },
+    ]
+  >()
+  expectTypeOf<
     ParseAbiParameters<'address indexed from, address indexed to, uint256 indexed amount'>
-  >([
-    {
-      type: 'address',
-      name: 'from',
-      indexed: true,
-    },
-    {
-      type: 'address',
-      name: 'to',
-      indexed: true,
-    },
-    {
-      type: 'uint256',
-      name: 'amount',
-      indexed: true,
-    },
-  ])
-  assertType<
+  >().toEqualTypeOf<
+    readonly [
+      {
+        readonly type: 'address'
+        readonly name: 'from'
+        readonly indexed: true
+      },
+      {
+        readonly type: 'address'
+        readonly name: 'to'
+        readonly indexed: true
+      },
+      {
+        readonly type: 'uint256'
+        readonly name: 'amount'
+        readonly indexed: true
+      },
+    ]
+  >()
+  expectTypeOf<
     ParseAbiParameters<'address calldata foo, address memory bar, uint256 storage baz'>
-  >([
-    {
-      type: 'address',
-      name: 'foo',
-    },
-    {
-      type: 'address',
-      name: 'bar',
-    },
-    {
-      type: 'uint256',
-      name: 'baz',
-    },
-  ])
+  >().toEqualTypeOf<
+    readonly [
+      {
+        readonly type: 'address'
+        readonly name: 'foo'
+      },
+      {
+        readonly type: 'address'
+        readonly name: 'bar'
+      },
+      {
+        readonly type: 'uint256'
+        readonly name: 'baz'
+      },
+    ]
+  >()
 
   // Array
-  assertType<
+  expectTypeOf<
     ParseAbiParameters<['Foo, bytes32', 'struct Foo { string name; }']>
-  >([
-    {
-      type: 'tuple',
-      components: [
-        {
-          name: 'name',
-          type: 'string',
-        },
-      ],
-    },
-    { type: 'bytes32' },
-  ])
+  >().toEqualTypeOf<
+    readonly [
+      {
+        readonly type: 'tuple'
+        readonly components: readonly [
+          {
+            readonly name: 'name'
+            readonly type: 'string'
+          },
+        ]
+      },
+      { readonly type: 'bytes32' },
+    ]
+  >()
+})
+
+test('parseAbiParameters', () => {
+  // @ts-expect-error empty array not allowed
+  expectTypeOf(parseAbiParameters([])).toEqualTypeOf<never>()
+  expectTypeOf(
+    parseAbiParameters(['struct Foo { string name; }']),
+  ).toEqualTypeOf<never>()
+
+  expectTypeOf(parseAbiParameters('(string)')).toEqualTypeOf<
+    readonly [
+      {
+        readonly type: 'tuple'
+        readonly components: readonly [{ readonly type: 'string' }]
+      },
+    ]
+  >()
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+  const param: string = 'address, string'
+  expectTypeOf(parseAbiParameters(param)).toEqualTypeOf<
+    readonly AbiParameter[]
+  >()
 })

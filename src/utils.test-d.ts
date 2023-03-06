@@ -808,8 +808,9 @@ test('TypedDataToPrimitiveTypes', () => {
       type Result = TypedDataToPrimitiveTypes<typeof types>
       assertType<Result>({
         Name: {
-          first:
+          first: [
             "Error: Cannot convert self-referencing struct 'Name' to primitive type.",
+          ],
           last: 'Meagher',
         },
       })
@@ -825,14 +826,18 @@ test('TypedDataToPrimitiveTypes', () => {
         Foo: {
           bar: {
             foo: {
-              bar: "Error: Circular reference detected. 'Bar' is a circular reference.",
+              bar: [
+                "Error: Circular reference detected. 'Bar' is a circular reference.",
+              ],
             },
           },
         },
         Bar: {
           foo: {
             bar: {
-              foo: "Error: Circular reference detected. 'Foo' is a circular reference.",
+              foo: [
+                "Error: Circular reference detected. 'Foo' is a circular reference.",
+              ],
             },
           },
         },
@@ -849,7 +854,9 @@ test('TypedDataToPrimitiveTypes', () => {
       type Result = TypedDataToPrimitiveTypes<typeof types>
       assertType<Result>({
         Name: {
-          first: "Error: Cannot convert unknown type 'Foo' to primitive type.",
+          first: [
+            "Error: Cannot convert unknown type 'Foo' to primitive type.",
+          ],
           last: 'Meagher',
         },
       })
