@@ -106,10 +106,12 @@ export type Signatures<T extends readonly string[]> = {
   [K in keyof T]: Signature<T[K], K>
 }
 
-export const modifiers = ['calldata', 'indexed', 'memory', 'storage'] as const
-export type Modifier = typeof modifiers[number]
-export type FunctionModifiers = Exclude<Modifier, 'indexed'>
-export type EventModifiers = Extract<Modifier, 'indexed'>
+export type Modifier = 'calldata' | 'indexed' | 'memory' | 'storage'
+export type FunctionModifier = Extract<
+  Modifier,
+  'calldata' | 'memory' | 'storage'
+>
+export type EventModifier = Extract<Modifier, 'indexed'>
 
 // Template string inference can abosrb `returns`:
 // type Result = `function foo(string) return s (uint256)` extends `function ${string}(${infer Parameters})` ? Parameters : never
