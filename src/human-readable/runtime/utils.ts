@@ -149,7 +149,7 @@ const abiParameterWithTupleRegex =
 type ParseOptions = {
   modifiers?: Set<Modifier>
   structs?: StructLookup
-  type?: AbiItemType
+  type?: AbiItemType | 'struct'
 }
 
 export function parseAbiParameter(param: string, options?: ParseOptions) {
