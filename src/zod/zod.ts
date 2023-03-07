@@ -1,8 +1,11 @@
 import { z } from 'zod'
 
 import type {
+  AbiConstructor as AbiConstructorType,
+  AbiFallback as AbiFallbackType,
   AbiFunction as AbiFunctionType,
-  AbiParameter as AbiParameter_,
+  AbiParameter as AbiParameterType,
+  AbiReceive as AbiReceiveType,
 } from '../abi'
 import { bytesRegex, integerRegex } from '../regex'
 
@@ -27,7 +30,7 @@ export const SolidityArray = z.union([
   SolidityArrayWithoutTuple,
 ])
 
-export const AbiParameter: z.ZodType<AbiParameter_> = z.lazy(() =>
+export const AbiParameter: z.ZodType<AbiParameterType> = z.lazy(() =>
   z.intersection(
     z.object({
       name: z.string().optional(),
@@ -63,18 +66,7 @@ export const AbiStateMutability = z.union([
 
 export const AbiFunction = z.preprocess(
   (val) => {
-    const abiFunction = val as unknown as {
-      constant?: AbiFunctionType['constant']
-      payable?: AbiFunctionType['payable']
-      stateMutability?: z.infer<typeof AbiStateMutability>
-      type: AbiFunctionType['type']
-    }
-    if (
-      abiFunction.type === 'constructor' ||
-      abiFunction.type === 'fallback' ||
-      abiFunction.type === 'receive'
-    )
-      return abiFunction
+    const abiFunction = val as unknown as AbiFunctionType
     // Calculate `stateMutability` for deprecated `constant` and `payable` fields
     if (abiFunction.stateMutability === undefined) {
       if (abiFunction.constant) abiFunction.stateMutability = 'view'
@@ -83,47 +75,86 @@ export const AbiFunction = z.preprocess(
     }
     return val
   },
-  z.intersection(
-    z.object({
-      /**
-       * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
-       * https://github.com/ethereum/solidity/issues/992
-       */
-      constant: z.boolean().optional(),
-      /**
-       * @deprecated Vyper used to provide gas estimates
-       * https://github.com/vyperlang/vyper/issues/2151
-       */
-      gas: z.number().optional(),
-      /**
-       * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
-       * https://github.com/ethereum/solidity/issues/992
-       */
-      payable: z.boolean().optional(),
-      stateMutability: AbiStateMutability,
-    }),
-    z.discriminatedUnion('type', [
-      z.object({
-        type: z.literal('function'),
-        inputs: z.array(AbiParameter),
-        name: z.string(),
-        outputs: z.array(AbiParameter),
-      }),
-      z.object({
-        type: z.literal('constructor'),
-        inputs: z.array(AbiParameter),
-      }),
-      z.object({
-        type: z.literal('fallback'),
-        inputs: z.tuple([]).optional(),
-      }),
-      z.object({
-        type: z.literal('receive'),
-        stateMutability: z.literal('payable'),
-      }),
-    ]),
-  ),
+  z.object({
+    type: z.literal('function'),
+    /**
+     * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
+     * https://github.com/ethereum/solidity/issues/992
+     */
+    constant: z.boolean().optional(),
+    /**
+     * @deprecated Vyper used to provide gas estimates
+     * https://github.com/vyperlang/vyper/issues/2151
+     */
+    gas: z.number().optional(),
+    inputs: z.array(AbiParameter),
+    name: z.string(),
+    outputs: z.array(AbiParameter),
+    /**
+     * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
+     * https://github.com/ethereum/solidity/issues/992
+     */
+    payable: z.boolean().optional(),
+    stateMutability: AbiStateMutability,
+  }),
 )
+
+export const AbiConstructor = z.preprocess(
+  (val) => {
+    const abiFunction = val as unknown as AbiConstructorType
+    // Calculate `stateMutability` for deprecated `payable` field
+    if (abiFunction.stateMutability === undefined) {
+      if (abiFunction.payable) abiFunction.stateMutability = 'payable'
+      else abiFunction.stateMutability = 'nonpayable'
+    }
+    return val
+  },
+  z.object({
+    type: z.literal('constructor'),
+    /**
+     * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
+     * https://github.com/ethereum/solidity/issues/992
+     */
+    inputs: z.array(AbiParameter),
+    /**
+     * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
+     * https://github.com/ethereum/solidity/issues/992
+     */
+    payable: z.boolean().optional(),
+    stateMutability: z.union([z.literal('nonpayable'), z.literal('payable')]),
+  }),
+)
+
+export const AbiFallback = z.preprocess(
+  (val) => {
+    const abiFunction = val as unknown as AbiFallbackType
+    // Calculate `stateMutability` for deprecated `payable` field
+    if (abiFunction.stateMutability === undefined) {
+      if (abiFunction.payable) abiFunction.stateMutability = 'payable'
+      else abiFunction.stateMutability = 'nonpayable'
+    }
+    return val
+  },
+  z.object({
+    type: z.literal('fallback'),
+    /**
+     * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
+     * https://github.com/ethereum/solidity/issues/992
+     */
+    inputs: z.tuple([]).optional(),
+    /**
+     * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
+     * https://github.com/ethereum/solidity/issues/992
+     */
+    payable: z.boolean().optional(),
+    stateMutability: z.union([z.literal('nonpayable'), z.literal('payable')]),
+  }),
+)
+
+export const AbiReceive = z.object({
+  type: z.literal('receive'),
+  stateMutability: z.literal('payable'),
+})
 
 export const AbiEvent = z.object({
   type: z.literal('event'),
@@ -140,10 +171,95 @@ export const AbiError = z.object({
   name: z.string(),
 })
 
+export const AbiItemType = z.union([
+  z.literal('constructor'),
+  z.literal('event'),
+  z.literal('error'),
+  z.literal('fallback'),
+  z.literal('function'),
+  z.literal('receive'),
+])
+
 /**
  * Zod Schema for Contract [ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html#json)
  *
  * @example
  * const parsedAbi = Abi.parse([…])
  */
-export const Abi = z.array(z.union([AbiFunction, AbiEvent, AbiError]))
+export const Abi = z.array(
+  z.union([
+    AbiError,
+    AbiEvent,
+    // TODO: Replace code below to `z.switch` (https://github.com/colinhacks/zod/issues/2106)
+    // Need to redefine `AbiFunction | AbiConstructor | AbiFallback | AbiReceive` since `z.discriminate` doesn't support `z.preprocess` on `options`
+    // https://github.com/colinhacks/zod/issues/1490
+    z.preprocess(
+      (val) => {
+        const abiItem = val as
+          | AbiConstructorType
+          | AbiFallbackType
+          | AbiFunctionType
+          | AbiReceiveType
+        if (abiItem.type === 'receive') return abiItem
+        // Calculate `stateMutability` for deprecated `constant` and `payable` fields
+        if (
+          (val as { stateMutability: AbiFunctionType['stateMutability'] })
+            .stateMutability === undefined
+        ) {
+          if (
+            abiItem.type === 'function' &&
+            (abiItem as AbiFunctionType).constant
+          )
+            abiItem.stateMutability = 'view'
+          else if (
+            (abiItem as AbiConstructorType | AbiFallbackType | AbiFunctionType)
+              .payable
+          )
+            abiItem.stateMutability = 'payable'
+          else abiItem.stateMutability = 'nonpayable'
+        }
+        return val
+      },
+      z.intersection(
+        z.object({
+          /**
+           * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
+           * https://github.com/ethereum/solidity/issues/992
+           */
+          constant: z.boolean().optional(),
+          /**
+           * @deprecated Vyper used to provide gas estimates
+           * https://github.com/vyperlang/vyper/issues/2151
+           */
+          gas: z.number().optional(),
+          /**
+           * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
+           * https://github.com/ethereum/solidity/issues/992
+           */
+          payable: z.boolean().optional(),
+          stateMutability: AbiStateMutability,
+        }),
+        z.discriminatedUnion('type', [
+          z.object({
+            type: z.literal('function'),
+            inputs: z.array(AbiParameter),
+            name: z.string(),
+            outputs: z.array(AbiParameter),
+          }),
+          z.object({
+            type: z.literal('constructor'),
+            inputs: z.array(AbiParameter),
+          }),
+          z.object({
+            type: z.literal('fallback'),
+            inputs: z.tuple([]).optional(),
+          }),
+          z.object({
+            type: z.literal('receive'),
+            stateMutability: z.literal('payable'),
+          }),
+        ]),
+      ),
+    ),
+  ]),
+)
