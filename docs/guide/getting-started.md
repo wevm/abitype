@@ -43,12 +43,12 @@ const erc20Abi = narrow([...])
 
 Once your ABIs are set up correctly, you can use the exported [types](/api/types) and [utilities](/api/utilities) to work with them. You can also import already set-up ABIs from the `abitype/test` entrypoint to get started quickly.
 
-```ts
-import { ExtractAbiFunctions } from 'abitype'
+```ts twoslash
+import { ExtractAbiFunctionNames } from 'abitype'
 import { erc20Abi } from 'abitype/test'
 
 type Result = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
-//   ^? type Result = "symbol" | "name" | "allowance" | "balanceOf" | "decimals" | "totalSupply"
+//   ^?
 ```
 
 ::: tip

@@ -41,14 +41,6 @@
   --vp-code-tab-active-text-color: var(--vp-c-text-1);
 }
 
-  pre.shiki.vitesse-dark {
-    display: block;
-  }
-
-  pre.shiki.vitesse-light {
-    display: none;
-  }
-
 
 /**
  * Component: Button
@@ -98,6 +90,33 @@ html:not(.dark) [img-dark] {
   display: none;
 }
 
+html:not(.dark) pre.shiki.vitesse-dark {
+  display: none;
+}
+
+html:not(.dark) pre.shiki.vitesse-light {
+  display: block;
+  background-color: #f6f6f7 !important
+}
+
+html:not(.dark) .custom-block div[class*="language-"] {
+    background-color: transparent !important;
+}
+
+html:not(.dark) .custom-block pre.shiki.vitesse-light {
+    background-color: transparent !important;
+}
+
+html.dark pre.shiki.vitesse-dark {
+    display: block;
+  }
+
+html.dark pre.shiki.vitesse-light {
+    display: none;
+}
+
+
+
 /* Overrides */
 
 .VPSocialLink {
@@ -122,19 +141,23 @@ img.resizable-img {
   height: unset;
 }
 
+.vp-doc pre.shiki.vitesse-dark > .code-container > code {
+  background-color:rgb(18, 18, 18)
+}
+
 pre {
-  /* Give the text some space to breathe */
-  padding: 12px;
-  line-height: 18px;
-  /* All code samples get a grey border, twoslash ones get a different color */
-  border-left: 1px solid #bb8700;
-  border-bottom: 1px solid #bb8700;
-  margin-bottom: 3rem;
-  /* Important to allow the code to move horizontally;
- */
+  /* In theory shiki will overwrite these, but this is to make sure there are defaults regardless */
+  background-color: white;
+  color: black;
+
+
+  /* Give it some space to breathe */
+  padding-block: 0.5rem;
+
+  margin-block-end: 3rem;
+
+  /* Important to allow the code to move horizontally; */
   overflow-x: auto;
-  /* So that folks know you can highlight */
-  position: relative;
 }
  pre.shiki {
     overflow-x: auto;
@@ -169,47 +192,48 @@ pre.shiki .language-id{
    overflow:hidden;
 }
 
-/** When you mouse over the pre, show the underlines */
-pre.twoslash data-lsp {
-  cursor:pointer    
-}
+/* /** When you mouse over the pre, show the underlines */ */
+/* pre.twoslash data-lsp { */
+/*   cursor:pointer     */
+/* } */
 
-/** When you mouse over the pre, show the underlines */
-pre.twoslash:hover data-lsp {
-    border-color: #747474;
-    transition: all 0.2s ease-in-out;
-}
+/* /** When you mouse over the pre, show the underlines */ */
+/* pre.twoslash:hover data-lsp { */
+/*     border-color: #747474; */
+/*     transition: all 0.2s ease-in-out; */
+/* } */
 
+/*  Removing this for now */
 /** The tooltip-like which provides the LSP response */
-.twoslash data-lsp:hover::before,
-.twoslash data-lsp:active::before {
-    content: attr(lsp);
-    position: absolute;
-    transform: translate(0, 1.5rem);
-    
-    float: inline-end;
-    display:flex;
-    flex: 1;
-    background-color: #420420;
-    color: #fff;
-    text-align: left;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    border-width: 1px;
-    border-style: solid;
-    border-block-end-width: 2px;
-    box-shadow: 0 2px 1px -1px rgb(0 0 0 / 20%), 0 1px 1px 0 rgb(0 0 0 / 14%),
-    0 1px 3px 0 rgb(0 0 0 / 12%);
-    font-size: 0.7rem;
-    white-space: pre-wrap;
-    z-index: 100;
-}
+/* .twoslash data-lsp:hover::before, */
+/* .twoslash data-lsp:active::before { */
+/*     content: attr(lsp); */
+/*     position: absolute; */
+/*     transform: translate(0, 1.5rem); */
+/*      */
+/*     float: inline-end; */
+/*     display:flex; */
+/*     flex: 1; */
+/*     background-color: #420420; */
+/*     color: #fff; */
+/*     text-align: left; */
+/*     padding: 0.2rem 0.5rem; */
+/*     border-radius: 4px; */
+/*     border-width: 1px; */
+/*     border-style: solid; */
+/*     border-block-end-width: 2px; */
+/*     box-shadow: 0 2px 1px -1px rgb(0 0 0 / 20%), 0 1px 1px 0 rgb(0 0 0 / 14%), */
+/*     0 1px 3px 0 rgb(0 0 0 / 12%); */
+/*     font-size: 0.7rem; */
+/*     white-space: pre-wrap; */
+/*     z-index: 100; */
+/* } */
 
 
 pre .code-container {
 	 overflow: auto;
 }
-/* The try button */
+The try button
  pre .code-container > a {
 	 position: absolute;
 	 right: 8px;
@@ -237,9 +261,6 @@ pre .code-container {
 	 opacity: 1;
 }
 
-.vp-doc [class*='language-'] code {
-  background-color: rgb(18,18,18)
-}
  pre code {
 	 font-size: 11px;
   
@@ -296,13 +317,13 @@ pre .code-container {
 /* Queries */
  pre .arrow {
 	/* Transparent background */
-	 background-color: #eee;
+	 background-color: var(--vp-c-brand-darker);
 	 position: relative;
 	 top: -5px;
 	 margin-left: 0.1rem;
 	/* Edges */
-	 border-left: 1px solid #eee;
-	 border-top: 1px solid #eee;
+	 border-left: 1px solid var(--vp-c-brand-darker);
+	 border-top: 1px solid var(--vp-c-brand-darker);
 	 transform: translateY(25%) rotate(45deg);
 	/* Size */
 	 height: 8px;
@@ -310,11 +331,12 @@ pre .code-container {
 }
  pre .popover {
 	 margin-bottom: 10px;
-	 background-color: #666;
+	 background-color: var(--vp-c-brand-darker);
 	 display: inline-block;
 	 padding: 0 0.5rem 0.3rem;
 	 margin-top: 10px;
 	 border-radius: 3px;
+   color: var(--vp-code-tab-active-text-color)
 }
 /* Completion */
  pre .inline-completions ul.dropdown {
@@ -355,19 +377,19 @@ pre .code-container {
 	 display: inline-block;
 }
 
-.twoslash data-lsp {
-	/* Ensures there's no 1px jump when the hover happens */
-	 border-bottom: 1px dotted transparent;
-	/* Fades in unobtrusively */
-	 transition-timing-function: ease;
-	 transition: border-color 0.3s;
-}
-/* Respect people's wishes to not have animations */
- @media (prefers-reduced-motion: reduce) {
-	 data-lsp {
-		 transition: none;
-	}
-}
+/* .twoslash data-lsp { */
+/* 	/* Ensures there's no 1px jump when the hover happens */ */
+/* 	 border-bottom: 1px dotted transparent; */
+/* 	/* Fades in unobtrusively */ */
+/* 	 transition-timing-function: ease; */
+/* 	 transition: border-color 0.3s; */
+/* } */
+/* /* Respect people's wishes to not have animations */ */
+/*  @media (prefers-reduced-motion: reduce) { */
+/* 	 data-lsp { */
+/* 		 transition: none; */
+/* 	} */
+/* } */
 
 /** Annotations support, providing a tool for meta commentary */
 .tag-container {
@@ -377,7 +399,7 @@ pre .code-container {
 	position: absolute;
 	font-family: "JetBrains Mono", Menlo, Monaco, Consolas, Courier New, monospace;
 	right: -10px;
-   /** Default annotation text to 200px */
+   
 	width: 200px;
 	color: #187abf;
 	background-color: #fcf3d9 bb;

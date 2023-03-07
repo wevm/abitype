@@ -86,7 +86,46 @@ const abi = [
 
 `functionName` and `args` types aren't inferred from the ABI yet so we can pass any value we want. Let's fix that! Often, you'll want to pull types into [generics](https://www.typescriptlang.org/docs/handbook/2/generics.html) when trying to infer parameters. We'll do the same here, starting with `functionName`:
 
-```ts
+```ts twoslash
+const abi = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'owner', type: 'address' }],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'owner', type: 'address' },
+      { name: 'collectionId', type: 'uint256' },
+    ],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'tokenURI',
+    type: 'function',
+    stateMutability: 'pure',
+    inputs: [{ name: 'id', type: 'uint256' }],
+    outputs: [{ name: 'uri', type: 'string' }],
+  },
+  {
+    name: 'safeTransferFrom',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+] as const
+
+// ---cut---
 import { Abi, ExtractAbiFunctionNames } from 'abitype'
 
 declare function readContract<
@@ -99,9 +138,9 @@ declare function readContract<
 }): unknown
 
 const res = readContract({
-  abi: [...] as const,
+  abi,
   functionName: 'balanceOf',
-  // ^? (property) functionName: "balanceOf" | "tokenURI"
+  // ^?
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
 })
 ```
@@ -114,7 +153,47 @@ If you are following along in a TypeScript Playground or editor, you can try var
 
 With `functionName` complete, we can move on to `args`. This time we don't need to add a generic slot because `args` depends completely on `abi` and `functionName` and doesn't need to infer user input.
 
-```ts
+```ts twoslash
+const abi = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'owner', type: 'address' }],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'owner', type: 'address' },
+      { name: 'collectionId', type: 'uint256' },
+    ],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'tokenURI',
+    type: 'function',
+    stateMutability: 'pure',
+    inputs: [{ name: 'id', type: 'uint256' }],
+    outputs: [{ name: 'uri', type: 'string' }],
+  },
+  {
+    name: 'safeTransferFrom',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+] as const
+
+// ---cut---
+
 import {
   Abi,
   AbiParametersToPrimitiveTypes,
@@ -135,10 +214,10 @@ declare function readContract<
 }): unknown
 
 const res = readContract({
-  abi: [...] as const,
+  abi,
   functionName: 'balanceOf',
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
-  // ^? (property) args: readonly [`0x${string}`] | readonly [`0x${string}`, bigint]
+  // ^?
 })
 ```
 
@@ -150,7 +229,46 @@ For `abi`, you'll notice there are two `'balanceOf'` functions. This means `'bal
 
 Finally, we can add the return type:
 
-```ts
+```ts twoslash
+const abi = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'owner', type: 'address' }],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'owner', type: 'address' },
+      { name: 'collectionId', type: 'uint256' },
+    ],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'tokenURI',
+    type: 'function',
+    stateMutability: 'pure',
+    inputs: [{ name: 'id', type: 'uint256' }],
+    outputs: [{ name: 'uri', type: 'string' }],
+  },
+  {
+    name: 'safeTransferFrom',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+] as const
+
+// ---cut---
 import {
   Abi,
   AbiFunction,
@@ -173,8 +291,8 @@ declare function readContract<
 }): AbiParametersToPrimitiveTypes<TAbiFunction['outputs'], 'outputs'>
 
 const res = readContract({
-  //  ^? const res: [bigint]
-  abi: [...] as const,
+  //  ^?
+  abi,
   functionName: 'balanceOf',
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
 })

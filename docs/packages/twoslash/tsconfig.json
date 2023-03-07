@@ -1,23 +1,22 @@
 {
   "compilerOptions": {
-    "compilerOptions": {
-      "composite": true,
-      "outDir": "dist",
-      "rootDir": ".",
-      "target": "esnext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
-      "jsx": "react-jsx" /* Specify what JSX code is generated. */,
-      "jsxImportSource": "preact",
-      "module": "NodeNext" /* Specify what module code is generated. */,
-      "moduleResolution": "node" /* Specify how TypeScript looks up a file from a given module specifier. */,
-      "resolveJsonModule": true /* Enable importing .json files. */,
-      "importsNotUsedAsValues": "error" /* Specify emit/checking behavior for imports that are only used for types. */,
-      "isolatedModules": true /* Ensure that each file can be safely transpiled without relying on other imports. */,
-      "allowSyntheticDefaultImports": true /* Allow 'import x from y' when a module doesn't have a default export. */,
-      "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
-      "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
-      "strict": true /* Enable all strict type-checking options. */,
-      "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-      "experimentalDecorators": true
-    }
-  }
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "preserve",
+    "lib": ["DOM", "ESNext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "paths": {
+      "~/*": ["src/*"]
+    },
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "target": "esnext",
+    "types": ["vite/client", "vitepress"]
+  },
+  "exclude": ["dist", "node_modules"]
 }

@@ -3,6 +3,7 @@ import { markdownItShikiTwoslashSetup } from 'markdown-it-shiki-twoslash'
 import path, { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import footNote from 'markdown-it-footnote'
+
 type ThemeConfig = DefaultTheme.Config
 type Config = UserConfig<ThemeConfig>
 
@@ -10,7 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '../')
 
 const shiki = await markdownItShikiTwoslashSetup({
-  theme: 'vitesse-dark',
+  themes: ['vitesse-dark', 'vitesse-light'],
   wrapFragments: true,
   vfsRoot: resolve(root, 'packages/twoslash'),
 })
@@ -22,11 +23,11 @@ export const MARKDOWN: Config['markdown'] = {
   config: (md) => {
     md.use(footNote)
     md.use(shiki, {
+      themes: ['vitesse-light', 'vitesse-dark'],
       vfsRoot: resolve(root, 'packages/twoslash'),
       defaultCompilerOptions: {
         target: 'esnext',
       },
-      wrapFragments: true,
     })
   },
 }
