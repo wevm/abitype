@@ -1,5 +1,17 @@
 # abitype
 
+## 0.6.7
+
+### Patch Changes
+
+- [`228f083`](https://github.com/wagmi-dev/abitype/commit/228f083fda88f20de38af2a78da7043ec180b9bd) Thanks [@jxom](https://github.com/jxom)! - Updated published package.json attributes
+
+## 0.6.6
+
+### Patch Changes
+
+- [#101](https://github.com/wagmi-dev/abitype/pull/101) [`3975ef5`](https://github.com/wagmi-dev/abitype/commit/3975ef5eab740712ab91f8f6bfa3822bcd95ec22) Thanks [@jxom](https://github.com/jxom)! - Added support for CJS.
+
 ## 0.6.5
 
 ### Patch Changes
