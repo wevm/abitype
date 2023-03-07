@@ -1,7 +1,14 @@
-import type { AbiItemType, AbiType, SolidityArray } from '../../abi'
+import type {
+  AbiItemType,
+  AbiType,
+  SolidityArray,
+  SolidityBytes,
+  SolidityString,
+  SolidityTuple,
+} from '../../abi'
 import { BaseError } from '../../errors'
 import { bytesRegex, execTyped, integerRegex, isTupleRegex } from '../../regex'
-import type { Modifier, StructLookup } from '../types'
+import type { FunctionModifier, Modifier, StructLookup } from '../types'
 import { getParameterCacheKey, parameterCache } from './cache'
 import {
   eventModifiers,
@@ -166,17 +173,6 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
       details: param,
     })
 
-  // Check if modifier exists, but is not allowed (e.g. `indexed` in `functionModifiers`)
-  if (match.modifier && !options?.modifiers?.has?.(match.modifier))
-    throw new BaseError('Invalid ABI parameter.', {
-      details: param,
-      metaMessages: [
-        `Modifier "${match.modifier}" not allowed${
-          options?.type ? ` in "${options.type}" type` : ''
-        }.`,
-      ],
-    })
-
   if (match.name && isProtectedSolidityKeyword(match.name))
     throw new BaseError('Invalid ABI parameter.', {
       details: param,
@@ -197,9 +193,7 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     const length = params.length
     for (let i = 0; i < length; i++) {
       // remove `modifiers` from `options` to prevent from being added to tuple components
-      components_.push(
-        parseAbiParameter(params[i]!, { structs: options?.structs }),
-      )
+      components_.push(parseAbiParameter(params[i]!, { structs }))
     }
     components = { components: components_ }
   } else if (match.type in structs) {
@@ -210,6 +204,34 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     if (!(options?.type === 'struct') && !isSolidityType(type))
       throw new BaseError('Unknown type.', {
         metaMessages: [`Type "${type}" is not a valid ABI type.`],
+      })
+  }
+
+  if (match.modifier) {
+    // Check if modifier exists, but is not allowed (e.g. `indexed` in `functionModifiers`)
+    if (!options?.modifiers?.has?.(match.modifier))
+      throw new BaseError('Invalid ABI parameter.', {
+        details: param,
+        metaMessages: [
+          `Modifier "${match.modifier}" not allowed${
+            options?.type ? ` in "${options.type}" type` : ''
+          }.`,
+        ],
+      })
+
+    // Check if resolved `type` is valid if there is a function modifier
+    if (
+      functionModifiers.has(match.modifier as FunctionModifier) &&
+      !isValidDataLocation(type, !!match.array)
+    )
+      throw new BaseError('Invalid ABI parameter.', {
+        details: param,
+        metaMessages: [
+          `Modifier "${match.modifier}" not allowed${
+            options?.type ? ` in "${options.type}" type` : ''
+          }.`,
+          `Data location can only be specified for array, struct, or mapping types, but "${match.modifier}" was given.`,
+        ],
       })
   }
 
@@ -267,13 +289,12 @@ export function splitParameters(
 
 export function isSolidityType(
   type: string,
-): type is Exclude<AbiType, SolidityArray> {
+): type is Exclude<AbiType, SolidityTuple | SolidityArray> {
   return (
     type === 'address' ||
     type === 'bool' ||
     type === 'function' ||
     type === 'string' ||
-    type === 'tuple' ||
     bytesRegex.test(type) ||
     integerRegex.test(type)
   )
@@ -282,7 +303,7 @@ export function isSolidityType(
 const protectedKeywordsRegex =
   /^(?:after|alias|anonymous|apply|auto|byte|calldata|case|catch|constant|copyof|default|defined|error|event|external|false|final|function|immutable|implements|in|indexed|inline|internal|let|mapping|match|memory|mutable|null|of|override|partial|private|promise|public|pure|reference|relocatable|return|returns|sizeof|static|storage|struct|super|supports|switch|this|true|try|typedef|typeof|var|view|virtual)$/
 
-export function isProtectedSolidityKeyword(name: string): name is string {
+export function isProtectedSolidityKeyword(name: string) {
   return (
     name === 'address' ||
     name === 'bool' ||
@@ -293,4 +314,14 @@ export function isProtectedSolidityKeyword(name: string): name is string {
     integerRegex.test(name) ||
     protectedKeywordsRegex.test(name)
   )
+}
+
+export function isValidDataLocation(
+  type: string,
+  isArray: boolean,
+): type is Exclude<
+  AbiType,
+  SolidityString | Extract<SolidityBytes, 'bytes'> | SolidityArray
+> {
+  return isArray || type === 'bytes' || type === 'string' || type === 'tuple'
 }

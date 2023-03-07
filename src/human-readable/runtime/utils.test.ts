@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest'
 
+import { functionModifiers } from './signatures'
 import {
   isProtectedSolidityKeyword,
   isSolidityType,
@@ -249,6 +250,56 @@ test('invalid name', () => {
   )
 })
 
+test('invalid data location', () => {
+  expect(() =>
+    parseAbiParameter('uint256 memory foo', { modifiers: functionModifiers }),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+
+    Modifier \\"memory\\" not allowed.
+    Data location can only be specified for array, struct, or mapping types, but \\"memory\\" was given.
+
+    Details: uint256 memory foo
+    Version: abitype@x.y.z"
+  `,
+  )
+})
+test('valid data location', () => {
+  expect(
+    parseAbiParameter('uint256[] memory foo', { modifiers: functionModifiers }),
+  ).toMatchInlineSnapshot(`
+    {
+      "name": "foo",
+      "type": "uint256[]",
+    }
+  `)
+  expect(
+    parseAbiParameter('string memory foo', { modifiers: functionModifiers }),
+  ).toMatchInlineSnapshot(`
+    {
+      "name": "foo",
+      "type": "string",
+    }
+  `)
+  expect(
+    parseAbiParameter('Foo memory foo', {
+      modifiers: functionModifiers,
+      structs: { Foo: [{ type: 'string' }] },
+    }),
+  ).toMatchInlineSnapshot(`
+    {
+      "components": [
+        {
+          "type": "string",
+        },
+      ],
+      "name": "foo",
+      "type": "tuple",
+    }
+  `)
+})
+
 test.each(['address', 'bool', 'bytes32', 'int256', 'string', 'uint256'])(
   'parseAbiParameter($type)',
   (type) => {
@@ -424,9 +475,11 @@ test.each([
   'string',
   'uint256',
   'function',
-  'tuple',
 ])('isSolidityType($type)', (type) => {
   expect(isSolidityType(type)).toEqual(true)
+})
+test('isSolidityType', () => {
+  expect(isSolidityType('foo')).toEqual(false)
 })
 
 test.each([
@@ -485,18 +538,6 @@ test.each([
   'typeof',
 ])('isInvalidSolidiyName($name)', (name) => {
   expect(isProtectedSolidityKeyword(name)).toEqual(true)
-})
-
-test('isInvalidSolidiyName', () => {
-  expect(isSolidityType('foo')).toEqual(false)
-})
-
-test('isFunctionModifierType', () => {
-  expect(isSolidityType('foo')).toEqual(false)
-})
-
-test('isSolidityType', () => {
-  expect(isSolidityType('foo')).toEqual(false)
 })
 
 test('Unbalanced Parethesis', () => {
