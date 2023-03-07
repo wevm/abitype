@@ -47,9 +47,17 @@ Representation used by Solidity compiler (e.g. `'string'`, `'int256'`, `'struct 
 import { AbiInternalType } from 'abitype'
 ```
 
+## `AbiItemType`
+
+`"type"` name for [`Abi`](#abi) items (e.g. `'type': 'function'` for [`AbiFunction`](#abifunction))
+
+```ts
+import { AbiInternalType } from 'abitype'
+```
+
 ## `AbiParameter`
 
-`inputs` and `ouputs` item for ABI functions, events, and errors
+`inputs` and `ouputs` item for ABI functions, events, errors, and constructors
 
 ```ts
 import { AbiParameter } from 'abitype'

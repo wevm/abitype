@@ -9,17 +9,9 @@ export function execTyped<T>(regex: RegExp, string: string) {
 // https://regexr.com/6va55
 export const bytesRegex = /^bytes([1-9]|1[0-9]|2[0-9]|3[0-2])?$/
 
-export const bytesRegexNumbersOnly = /^bytes([1-9]|1[0-9]|2[0-9]|3[0-2])$/
-
 // `(u)int<M>`: (un)signed integer type of `M` bits, `0 < M <= 256`, `M % 8 == 0`
 // https://regexr.com/6v8hp
 export const integerRegex =
   /^u?int(8|16|24|32|40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)?$/
 
 export const isTupleRegex = /^\(.+?\).*?$/
-
-export const typeWithoutTupleRegex =
-  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?$/
-
-export const protectedKeywords =
-  /^indexed$|^anonymous$|^immutable$|^constant$|^private$|^this$|^true$|^false$|^storage$|^memory$|^calldata$|^super$|^try$|^catch$|^function$|^override$|^view$|^internal$|^pure$|^public$|^external$|^virtual$|^event$|^error$|^struct$|^return$|^returns$|^let$|^mapping$|^after$|^alias$|^apply$|^auto$|^byte$|^case$|^copyof$|^default$|^defined$|^final$|^implements$|^in$|^inline$|^match$|^mutable$|^null$|^of$|^partial$|^promise$|^reference$|^relocatable$|^sizeof$|^static$|^supports$|^switch$|^typedef$|^typeof$|^var$/

@@ -40,8 +40,8 @@ test('parseAbiParameter', () => {
   ).toThrowErrorMatchingInlineSnapshot(
     `
     "Invalid ABI parameter.
-    
-    memory modifier not allowed in 'struct' type.
+
+    Modifier \\"memory\\" not allowed in \\"struct\\" type.
 
     Details: string memory bar
     Version: abitype@x.y.z"

@@ -1,30 +1,15 @@
-import type {
-  AbiType,
-  SolidityArray,
-  SolidityBytes,
-  SolidityString,
-} from '../../abi'
+import type { AbiItemType, AbiType, SolidityArray } from '../../abi'
 import { BaseError } from '../../errors'
-import {
-  bytesRegex,
-  bytesRegexNumbersOnly,
-  execTyped,
-  integerRegex,
-  isTupleRegex,
-  protectedKeywords,
-} from '../../regex'
-
+import { bytesRegex, execTyped, integerRegex, isTupleRegex } from '../../regex'
 import type { Modifier, StructLookup } from '../types'
-
-import type { FunctionModifiers, SolidityTypes } from '../types/signatures'
-import { functionModifiers, indexedModifier } from '../types/signatures'
 import { getParameterCacheKey, parameterCache } from './cache'
-
 import {
+  eventModifiers,
   execConstructorSignature,
   execErrorSignature,
   execEventSignature,
   execFunctionSignature,
+  functionModifiers,
   isConstructorSignature,
   isErrorSignature,
   isEventSignature,
@@ -40,13 +25,16 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
       throw new BaseError('Invalid function signature.', {
         details: signature,
       })
+
     const inputParams = splitParameters(match.parameters)
     const inputs = []
     const inputLength = inputParams.length
     for (let i = 0; i < inputLength; i++) {
       inputs.push(
         parseAbiParameter(inputParams[i]!, {
+          modifiers: functionModifiers,
           structs,
+          type: 'function',
         }),
       )
     }
@@ -56,7 +44,13 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
       const outputParams = splitParameters(match.returns)
       const outputLength = outputParams.length
       for (let i = 0; i < outputLength; i++) {
-        outputs.push(parseAbiParameter(outputParams[i]!, { structs }))
+        outputs.push(
+          parseAbiParameter(outputParams[i]!, {
+            modifiers: functionModifiers,
+            structs,
+            type: 'function',
+          }),
+        )
       }
     }
 
@@ -81,8 +75,8 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
     for (let i = 0; i < length; i++) {
       abiParameters.push(
         parseAbiParameter(params[i]!, {
+          modifiers: eventModifiers,
           structs,
-          modifiers: indexedModifier,
           type: 'event',
         }),
       )
@@ -101,10 +95,7 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
     const length = params.length
     for (let i = 0; i < length; i++) {
       abiParameters.push(
-        parseAbiParameter(params[i]!, {
-          structs,
-          type: 'error',
-        }),
+        parseAbiParameter(params[i]!, { structs, type: 'error' }),
       )
     }
     return { name: match.name, type: 'error', inputs: abiParameters }
@@ -121,9 +112,7 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
     const length = params.length
     for (let i = 0; i < length; i++) {
       abiParameters.push(
-        parseAbiParameter(params[i]!, {
-          structs,
-        }),
+        parseAbiParameter(params[i]!, { structs, type: 'constructor' }),
       )
     }
     return {
@@ -153,7 +142,7 @@ const abiParameterWithTupleRegex =
 type ParseOptions = {
   modifiers?: Set<Modifier>
   structs?: StructLookup
-  type?: SolidityTypes
+  type?: AbiItemType
 }
 
 export function parseAbiParameter(param: string, options?: ParseOptions) {
@@ -177,59 +166,27 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
       details: param,
     })
 
-  // Check if `indexed` modifier exists, but is not allowed (e.g function parameters, struct properties)
-  const hasIndexedModifier = options?.modifiers?.has?.('indexed') ?? false
-  const isIndexed = match.modifier === 'indexed'
-  // Check if any modifier exists on error, struct, or event types.
-  // It is safe to not specify which `type` to check because we don't pass down the "function" or "constructor" types.
-  // `parseSignature` only passes down "struct", "event", and "error" types.
-  // And the exported `parseAbiParameter` only passes down the "struct" type if it has an "struct" signature as a argument.
-  // Since it's assumed that it will be used to quickly get an abi spec of a given parameter
-  const hasFunctionModifier =
-    options?.type && functionModifiers.has(match.modifier as FunctionModifiers)
-  // Check if the parameter has a valid function modifier with the correct type.
-  // e.g. uint256[], string, bytes, etc.
-  // Struct types are also valid
-  const isValidModifier =
-    functionModifiers.has(match.modifier as FunctionModifiers) &&
-    isNotFunctionModifierType(match.type) &&
-    !match.array
-
-  const isInvalidName = match.name && isInvalidSolidiyName(match.name)
-
-  if (isIndexed && !hasIndexedModifier)
-    throw new BaseError('`indexed` keyword not allowed in param.', {
-      details: param,
-    })
-
-  if (hasFunctionModifier) {
+  // Check if modifier exists, but is not allowed (e.g. `indexed` in `functionModifiers`)
+  if (match.modifier && !options?.modifiers?.has?.(match.modifier))
     throw new BaseError('Invalid ABI parameter.', {
       details: param,
       metaMessages: [
-        `${match.modifier} modifier not allowed in '${options.type}' type.`,
+        `Modifier "${match.modifier}" not allowed${
+          options?.type ? ` in "${options.type}" type` : ''
+        }.`,
       ],
     })
-  }
 
-  if (isValidModifier) {
+  if (match.name && isProtectedSolidityKeyword(match.name))
     throw new BaseError('Invalid ABI parameter.', {
       details: param,
       metaMessages: [
-        `${match.modifier} modifier not allowed in '${match.type}' type.`,
+        `"${match.name}" is a protected Solidity keyword. More info: https://docs.soliditylang.org/en/latest/cheatsheet.html`,
       ],
     })
-  }
-
-  if (isInvalidName) {
-    throw new BaseError('Invalid ABI parameter.', {
-      details: param,
-      metaMessages: [`${match.name} is a protected Solidity keyword.`],
-      docsPath: 'https://docs.soliditylang.org/en/latest/cheatsheet.html',
-    })
-  }
 
   const name = match.name ? { name: match.name } : {}
-  const indexed = hasIndexedModifier && isIndexed ? { indexed: true } : {}
+  const indexed = match.modifier === 'indexed' ? { indexed: true } : {}
   const structs = options?.structs ?? {}
   let type: string
   let components = {}
@@ -276,13 +233,13 @@ export function splitParameters(
   if (params === '') {
     if (current === '') return result
     if (depth !== 0)
-      throw new BaseError('Unbalanced parenthesis.', {
+      throw new BaseError('Unbalanced parentheses.', {
         metaMessages: [
-          `${current.trim()} has to many ${
+          `"${current}" has too many ${
             depth > 0 ? 'opening' : 'closing'
-          } parenthesis.`,
+          } parentheses.`,
         ],
-        details: `Depth ${depth}`,
+        details: `Depth "${depth}"`,
       })
     return [...result, current.trim()]
   }
@@ -322,22 +279,10 @@ export function isSolidityType(
   )
 }
 
-export function isNotFunctionModifierType(
-  type: string,
-): type is Exclude<
-  AbiType,
-  SolidityString | Extract<SolidityBytes, 'bytes'> | SolidityArray
-> {
-  return (
-    type === 'address' ||
-    type === 'bool' ||
-    type === 'function' ||
-    bytesRegexNumbersOnly.test(type) ||
-    integerRegex.test(type)
-  )
-}
+const protectedKeywordsRegex =
+  /^(?:after|alias|anonymous|apply|auto|byte|calldata|case|catch|constant|copyof|default|defined|error|event|external|false|final|function|immutable|implements|in|indexed|inline|internal|let|mapping|match|memory|mutable|null|of|override|partial|private|promise|public|pure|reference|relocatable|return|returns|sizeof|static|storage|struct|super|supports|switch|this|true|try|typedef|typeof|var|view|virtual)$/
 
-export function isInvalidSolidiyName(name: string): name is string {
+export function isProtectedSolidityKeyword(name: string): name is string {
   return (
     name === 'address' ||
     name === 'bool' ||
@@ -346,6 +291,6 @@ export function isInvalidSolidiyName(name: string): name is string {
     name === 'tuple' ||
     bytesRegex.test(name) ||
     integerRegex.test(name) ||
-    protectedKeywords.test(name)
+    protectedKeywordsRegex.test(name)
   )
 }

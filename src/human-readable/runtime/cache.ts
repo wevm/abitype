@@ -1,19 +1,21 @@
-import type { AbiParameter } from '../../abi'
-import type { SolidityTypes } from '../types/signatures'
+import type { AbiItemType, AbiParameter } from '../../abi'
 
-// Gets the cache key based on type.
-// This prevents any leaking of invalid parameters on types that don't allow these parameters.
-export function getParameterCacheKey(param: string, type?: SolidityTypes) {
+/**
+ * Gets {@link parameterCache} cache key namespaced by {@link type}. This prevents parameters from being accessible to types that don't allow them (e.g. `string indexed foo` not allowed outside of `type: 'event'`).
+ * @param param ABI parameter string
+ * @param type ABI parameter type
+ * @returns Cache key for {@link parameterCache}
+ */
+export function getParameterCacheKey(param: string, type?: AbiItemType) {
   if (type) return `${type}:${param}`
-
   return param
 }
 
-// Creates a very basic cache with some of the well-know parameters.
-// We purposely don't create a very complex cache because it actually hurts performance instead of helping.
-// So we chose to only include these common ones because...
-// 1- They are some of the most popular ones.
-// 2- It is a sweet spot in terms of balance between performance and having an already existing cache.
+/**
+ * Basic cache seeded with common ABI parameter strings.
+ *
+ * **Note: When seeding more parameters, make sure you benchmark performance. The current number is the ideal balance between performance and having an already existing cache.**
+ */
 export const parameterCache = new Map<
   string,
   AbiParameter & { indexed?: boolean }

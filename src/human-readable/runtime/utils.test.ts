@@ -1,8 +1,7 @@
 import { expect, test } from 'vitest'
 
 import {
-  isInvalidSolidiyName,
-  isNotFunctionModifierType,
+  isProtectedSolidityKeyword,
   isSolidityType,
   parseAbiParameter,
   parseSignature,
@@ -113,8 +112,8 @@ test('invalid signature', () => {
   ).toThrowErrorMatchingInlineSnapshot(
     `
     "Invalid ABI parameter.
-    
-    memory modifier not allowed in 'error' type.
+
+    Modifier \\"memory\\" not allowed in \\"error\\" type.
 
     Details: string memory foo
     Version: abitype@x.y.z"
@@ -126,8 +125,8 @@ test('invalid signature', () => {
   ).toThrowErrorMatchingInlineSnapshot(
     `
     "Invalid ABI parameter.
-    
-    memory modifier not allowed in 'event' type.
+
+    Modifier \\"memory\\" not allowed in \\"event\\" type.
 
     Details: string memory foo
     Version: abitype@x.y.z"
@@ -210,7 +209,9 @@ test('indexed not allowed', () => {
     parseAbiParameter('string indexed foo'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "\`indexed\` keyword not allowed in param.
+    "Invalid ABI parameter.
+
+    Modifier \\"indexed\\" not allowed.
 
     Details: string indexed foo
     Version: abitype@x.y.z"
@@ -225,7 +226,7 @@ test('modifier not allowed', () => {
     `
     "Invalid ABI parameter.
 
-    calldata modifier not allowed in 'uint256' type.
+    Modifier \\"calldata\\" not allowed.
 
     Details: uint256 calldata foo
     Version: abitype@x.y.z"
@@ -240,9 +241,8 @@ test('invalid name', () => {
     `
     "Invalid ABI parameter.
 
-    address is a protected Solidity keyword.
+    \\"address\\" is a protected Solidity keyword. More info: https://docs.soliditylang.org/en/latest/cheatsheet.html
 
-    Docs: https://abitype.devhttps://docs.soliditylang.org/en/latest/cheatsheet.html
     Details: uint256 address
     Version: abitype@x.y.z"
   `,
@@ -429,20 +429,6 @@ test.each([
   expect(isSolidityType(type)).toEqual(true)
 })
 
-test.each(['address', 'bool', 'bytes32', 'int256', 'uint256', 'function'])(
-  'isNotFunctionModifierType($type)',
-  (type) => {
-    expect(isNotFunctionModifierType(type)).toEqual(true)
-  },
-)
-
-test.each(['string', 'bytes', 'address[]', 'bool[]', 'bytes32[]', 'int256[]'])(
-  'isNotFunctionModifierType($type)',
-  (type) => {
-    expect(isNotFunctionModifierType(type)).toEqual(false)
-  },
-)
-
 test.each([
   'address',
   'bool',
@@ -498,7 +484,7 @@ test.each([
   'typedef',
   'typeof',
 ])('isInvalidSolidiyName($name)', (name) => {
-  expect(isInvalidSolidiyName(name)).toEqual(true)
+  expect(isProtectedSolidityKeyword(name)).toEqual(true)
 })
 
 test('isInvalidSolidiyName', () => {
@@ -518,50 +504,50 @@ test('Unbalanced Parethesis', () => {
     splitParameters('address owner, ((string name)'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unbalanced parenthesis.
+    "Unbalanced parentheses.
 
-    ((string name) has to many opening parenthesis.
-    
-    Details: Depth 1
+    \\" ((string name)\\" has too many opening parentheses.
+
+    Details: Depth \\"1\\"
     Version: abitype@x.y.z"
-    `,
+  `,
   )
 
   expect(() =>
     splitParameters('address owner, (((string name)'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unbalanced parenthesis.
+    "Unbalanced parentheses.
 
-    (((string name) has to many opening parenthesis.
-    
-    Details: Depth 2
+    \\" (((string name)\\" has too many opening parentheses.
+
+    Details: Depth \\"2\\"
     Version: abitype@x.y.z"
-    `,
+  `,
   )
   expect(() =>
     splitParameters('address owner, (string name))'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unbalanced parenthesis.
+    "Unbalanced parentheses.
 
-    (string name)) has to many closing parenthesis.
-    
-    Details: Depth -1
+    \\" (string name))\\" has too many closing parentheses.
+
+    Details: Depth \\"-1\\"
     Version: abitype@x.y.z"
-    `,
+  `,
   )
 
   expect(() =>
     splitParameters('address owner, (string name)))'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unbalanced parenthesis.
+    "Unbalanced parentheses.
 
-    (string name))) has to many closing parenthesis.
+    \\" (string name)))\\" has too many closing parentheses.
 
-    Details: Depth -2
+    Details: Depth \\"-2\\"
     Version: abitype@x.y.z"
-    `,
+  `,
   )
 })
