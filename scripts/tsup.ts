@@ -1,5 +1,5 @@
 import { default as fse } from 'fs-extra'
-import type { Format, Options } from 'tsup'
+import type { Options } from 'tsup'
 
 import { exec } from 'child_process'
 import path from 'path'
@@ -26,7 +26,7 @@ export function getConfig({ dev, noExport, ...options }: GetConfig): Options {
       dts: false,
       // Only need to generate one file with tsup for development since we will create links in `onSuccess`
       entry: [entry[0] as string],
-      format: [(process.env.FORMAT as Format) ?? 'esm'],
+      format: ['esm', 'cjs'],
       silent: true,
       async onSuccess() {
         // remove all files in dist
@@ -49,9 +49,14 @@ export function getConfig({ dev, noExport, ...options }: GetConfig): Options {
             distSourceFile.replace(/\.js$/, '.d.ts'),
             `export * from '${srcTypesFile}'`,
           )
+          await fse.symlink(
+            filePath,
+            distSourceFile.replace('.js', '.mts'),
+            'file',
+          )
         }
-        const exports = await generateExports(entry, noExport)
-        await generateProxyPackages(exports)
+        const exports = await generateExports(entry, { dev: true, noExport })
+        await generateProxyPackages(exports, { dev: true })
       },
     }
   }
@@ -60,14 +65,14 @@ export function getConfig({ dev, noExport, ...options }: GetConfig): Options {
     bundle: true,
     clean: true,
     dts: true,
-    format: [(process.env.FORMAT as Format) ?? 'esm'],
+    format: ['esm', 'cjs'],
     splitting: true,
     target: 'es2021',
     async onSuccess() {
       if (typeof options.onSuccess === 'function') await options.onSuccess()
       else if (typeof options.onSuccess === 'string') exec(options.onSuccess)
 
-      const exports = await generateExports(entry, noExport)
+      const exports = await generateExports(entry, { noExport })
       await generateProxyPackages(exports)
     },
     ...options,
@@ -75,13 +80,16 @@ export function getConfig({ dev, noExport, ...options }: GetConfig): Options {
 }
 
 type Exports = {
-  [key: string]: string | { types?: string; default: string }
+  [key: string]: string | { types?: string; module: string; default: string }
 }
 
 /**
  * Generate exports from entry files
  */
-async function generateExports(entry: string[], noExport?: string[]) {
+async function generateExports(
+  entry: string[],
+  { dev, noExport }: { dev?: boolean; noExport?: string[] } = {},
+) {
   const exports: Exports = {}
   for (const file of entry) {
     if (noExport?.includes(file)) continue
@@ -90,17 +98,22 @@ async function generateExports(entry: string[], noExport?: string[]) {
     const name = fileWithoutExtension
       .replace(/^src\//g, './')
       .replace(/\/index$/, '')
-    const distSourceFile = `${fileWithoutExtension.replace(
+    const distCjsFile = `${fileWithoutExtension.replace(
       /^src\//g,
       './dist/',
     )}.js`
+    const distEsmFile = `${fileWithoutExtension.replace(
+      /^src\//g,
+      './dist/',
+    )}.${dev ? 'mts' : 'mjs'}`
     const distTypesFile = `${fileWithoutExtension.replace(
       /^src\//g,
       './dist/',
     )}.d.ts`
     exports[name] = {
       types: distTypesFile,
-      default: distSourceFile,
+      module: distEsmFile,
+      default: distCjsFile,
     }
   }
 
@@ -119,7 +132,10 @@ async function generateExports(entry: string[], noExport?: string[]) {
 /**
  * Generate proxy packages files for each export
  */
-async function generateProxyPackages(exports: Exports) {
+async function generateProxyPackages(
+  exports: Exports,
+  { dev }: { dev?: boolean } = {},
+) {
   const files = new Set<string>()
   for (const [key, value] of Object.entries(exports)) {
     if (typeof value === 'string') continue
@@ -135,7 +151,14 @@ async function generateProxyPackages(exports: Exports) {
 
     await fse.outputFile(
       `${key}/package.json`,
-      JSON.stringify({ type: 'module', main: `${entrypoint}` }, null, 2),
+      JSON.stringify(
+        {
+          module: `${entrypoint.replace('.js', dev ? '.mts' : '.mjs')}`,
+          main: entrypoint,
+        },
+        null,
+        2,
+      ),
     )
     const file = key.replace(/^\.\//g, '').split('/')[0]
     if (!file || files.has(file)) continue
