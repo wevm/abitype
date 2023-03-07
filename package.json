@@ -123,6 +123,13 @@
     ]
   },
   "packageManager": "pnpm@7.5.0",
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@algolia/client-search"
+      ]
+    }
+  },
   "engines": {
     "pnpm": ">=7"
   }
