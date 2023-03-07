@@ -390,7 +390,7 @@ test('ParseAbiParameter', () => {
   })
   assertType<ParseAbiParameter<'string indexed'>>({
     type: 'string',
-    name: 'indexed',
+    name: "Error: Invalid name found 'indexed'",
   })
   assertType<ParseAbiParameter<'string calldata', OptionsWithModifier>>({
     type: 'string',
@@ -575,7 +575,9 @@ test('_ParseTuple', () => {
   })
   assertType<_ParseTuple<'(string calldata)'>>({
     type: 'tuple',
-    components: [{ type: 'string', name: 'calldata' }],
+    components: [
+      { type: 'string', name: "Error: Invalid name found 'calldata'" },
+    ],
   })
   assertType<_ParseTuple<'(Foo)', OptionsWithStructs>>({
     type: 'tuple',
@@ -776,7 +778,9 @@ test('_ParseTuple', () => {
   assertType<_ParseTuple<'(string indexed)[] foo', OptionsWithIndexed>>({
     type: 'tuple[]',
     name: 'foo',
-    components: [{ type: 'string', name: 'indexed' }],
+    components: [
+      { type: 'string', name: "Error: Invalid name found 'indexed'" },
+    ],
   })
 
   assertType<_ParseTuple<'((((string baz) bar)[1] foo) boo)'>>({
@@ -845,6 +849,16 @@ test('_SplitNameOrModifier', () => {
   >().toEqualTypeOf<{
     readonly name: 'foo'
   }>()
+
+  expectTypeOf<
+    _SplitNameOrModifier<'indexed indexed', { Modifier: 'indexed' }>
+  >().toEqualTypeOf<{ readonly name: "Error: Invalid name found 'indexed'" }>()
+
+  assertType<
+    _SplitNameOrModifier<'calldata address', { Modifier: 'calldata' }>
+  >({
+    name: "Error: Invalid name found 'address'",
+  })
 })
 
 test('_UnwrapNameOrModifier', () => {

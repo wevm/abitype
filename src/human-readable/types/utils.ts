@@ -15,6 +15,7 @@ import type {
   IsErrorSignature,
   IsEventSignature,
   IsFunctionSignature,
+  IsName,
   Modifier,
   ReceiveSignature,
   Scope,
@@ -200,8 +201,7 @@ export type SplitParameters<
 
 type Pop<T extends ReadonlyArray<number | string>> = T extends [...infer R, any]
   ? R
-  : // TODO: throw types.
-    []
+  : []
 
 export type _ParseFunctionParametersAndStateMutability<
   TSignature extends string,
@@ -310,18 +310,24 @@ export type _ParseTuple<
 export type _SplitNameOrModifier<
   T extends string,
   Options extends ParseOptions = DefaultParseOptions,
-> = Trim<T> extends infer Trimmed
+> = Trim<T> extends infer Trimmed extends string
   ? Options extends { Modifier: Modifier }
     ? Trimmed extends `${infer Mod extends Options['Modifier']} ${infer Name}`
-      ? { readonly name: Trim<Name> } & (Mod extends 'indexed'
-          ? { readonly indexed: true }
-          : object)
+      ? IsName<Trim<Name>> extends true
+        ? { readonly name: Trim<Name> } & (Mod extends 'indexed'
+            ? { readonly indexed: true }
+            : object)
+        : { readonly name: `Error: Invalid name found '${Trim<Name>}'` }
       : Trimmed extends Options['Modifier']
       ? Trimmed extends 'indexed'
         ? { readonly indexed: true }
         : object
-      : { readonly name: Trimmed }
-    : { readonly name: Trimmed }
+      : IsName<Trimmed> extends true
+      ? { readonly name: Trimmed }
+      : { readonly name: `Error: Invalid name found '${Trimmed}'` }
+    : IsName<Trimmed> extends true
+    ? { readonly name: Trimmed }
+    : { readonly name: `Error: Invalid name found '${Trimmed}'` }
   : never
 
 // `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)

@@ -1,5 +1,6 @@
 import type {
   AbiStateMutability,
+  AbiType,
   SolidityAddress,
   SolidityBool,
   SolidityBytes,
@@ -76,10 +77,12 @@ type isValidSignatureProperty<
     : false
   : false
 
-type IsName<T extends string> = T extends '' | `${string}${' '}${string}`
+export type IsName<T extends string> = T extends '' | `${string}${' '}${string}`
   ? false
   : Lexer<T> extends true
   ? isProtectedKeyword<T> extends true
+    ? false
+    : T extends AbiType
     ? false
     : true
   : false
