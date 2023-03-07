@@ -58,7 +58,11 @@ type isValidSignatureProperty<
 
 type IsName<T extends string> = T extends '' | `${string}${' '}${string}`
   ? false
-  : Lexer<T>
+  : Lexer<T> extends true
+  ? isProtectedKeyword<T> extends true
+    ? false
+    : true
+  : false
 
 export type ErrorSignature<
   TName extends string = string,
@@ -256,6 +260,75 @@ type MangledReturns =
   // `r_e_t_u_r_n_s`
   | `r${string}e${string}t${string}u${string}r${string}n${string}s`
 
+export type isProtectedKeyword<T extends string> =
+  Trim<T> extends infer Trimmed_
+    ? Trimmed_ extends ProtectedKeywords
+      ? ProtectedKeywords extends Trimmed_
+        ? // TODO: throw types
+          false
+        : true
+      : false
+    : // TODO: throw types
+      false
+
+export type ProtectedKeywords =
+  | 'after'
+  | 'alias'
+  | 'anonymous'
+  | 'apply'
+  | 'auto'
+  | 'byte'
+  | 'calldata'
+  | 'case'
+  | 'catch'
+  | 'constant'
+  | 'copyof'
+  | 'default'
+  | 'defined'
+  | 'error'
+  | 'event'
+  | 'external'
+  | 'false'
+  | 'final'
+  | 'function'
+  | 'immutable'
+  | 'implements'
+  | 'in'
+  | 'indexed'
+  | 'inline'
+  | 'internal'
+  | 'let'
+  | 'mapping'
+  | 'match'
+  | 'memory'
+  | 'mutable'
+  | 'null'
+  | 'of'
+  | 'override'
+  | 'partial'
+  | 'private'
+  | 'promise'
+  | 'public'
+  | 'pure'
+  | 'reference'
+  | 'relocatable'
+  | 'return'
+  | 'returns'
+  | 'sizeof'
+  | 'static'
+  | 'storage'
+  | 'struct'
+  | 'super'
+  | 'supports'
+  | 'switch'
+  | 'this'
+  | 'true'
+  | 'try'
+  | 'typedef'
+  | 'typeof'
+  | 'var'
+  | 'view'
+  | 'virtual'
 // No regex so we do it manually
 type SolidityLexer =
   | `${'a' | 'A'}`

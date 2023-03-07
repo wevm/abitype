@@ -7,9 +7,11 @@ import type {
   IsSignature,
   IsStructSignature,
   Lexer,
+  ProtectedKeywords,
   Signature,
   Signatures,
   isConstructorSignature,
+  isProtectedKeyword,
 } from './signatures'
 
 test('IsErrorSignature', () => {
@@ -211,4 +213,17 @@ test('SolidityLexer', () => {
   assertType<Lexer<'thisisavalidstringwithnumber012345and_'>>(true)
   assertType<Lexer<'invalid?'>>(false)
   assertType<Lexer<'invalid!'>>(false)
+})
+
+test('Protected Keywords', () => {
+  assertType<isProtectedKeyword<ProtectedKeywords>>(true)
+  assertType<isProtectedKeyword<'   calldata    '>>(true)
+  assertType<isProtectedKeyword<'           byte'>>(true)
+  assertType<isProtectedKeyword<'memory         '>>(true)
+
+  // Not protected
+  assertType<isProtectedKeyword<'normalname'>>(false)
+  assertType<isProtectedKeyword<'normalname    '>>(false)
+  assertType<isProtectedKeyword<'    normalname'>>(false)
+  assertType<isProtectedKeyword<'  normalname  '>>(false)
 })
