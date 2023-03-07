@@ -1,6 +1,8 @@
 import { expect, test } from 'vitest'
 
+import { functionModifiers } from './signatures'
 import {
+  isProtectedSolidityKeyword,
   isSolidityType,
   parseAbiParameter,
   parseSignature,
@@ -105,6 +107,32 @@ test('invalid signature', () => {
     Version: abitype@x.y.z"
   `,
   )
+
+  expect(() =>
+    parseSignature('error Foo(string memory foo)'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+
+    Modifier \\"memory\\" not allowed in \\"error\\" type.
+
+    Details: string memory foo
+    Version: abitype@x.y.z"
+  `,
+  )
+
+  expect(() =>
+    parseSignature('event Foo(string memory foo)'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+
+    Modifier \\"memory\\" not allowed in \\"event\\" type.
+
+    Details: string memory foo
+    Version: abitype@x.y.z"
+  `,
+  )
 })
 
 test('empty string', () => {
@@ -182,12 +210,94 @@ test('indexed not allowed', () => {
     parseAbiParameter('string indexed foo'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "\`indexed\` keyword not allowed in param.
+    "Invalid ABI parameter.
+
+    Modifier \\"indexed\\" not allowed.
 
     Details: string indexed foo
     Version: abitype@x.y.z"
   `,
   )
+})
+
+test('modifier not allowed', () => {
+  expect(() =>
+    parseAbiParameter('uint256 calldata foo'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+
+    Modifier \\"calldata\\" not allowed.
+
+    Details: uint256 calldata foo
+    Version: abitype@x.y.z"
+  `,
+  )
+})
+
+test('invalid name', () => {
+  expect(() =>
+    parseAbiParameter('uint256 address'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+
+    \\"address\\" is a protected Solidity keyword. More info: https://docs.soliditylang.org/en/latest/cheatsheet.html
+
+    Details: uint256 address
+    Version: abitype@x.y.z"
+  `,
+  )
+})
+
+test('invalid data location', () => {
+  expect(() =>
+    parseAbiParameter('uint256 memory foo', { modifiers: functionModifiers }),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+
+    Modifier \\"memory\\" not allowed.
+    Data location can only be specified for array, struct, or mapping types, but \\"memory\\" was given.
+
+    Details: uint256 memory foo
+    Version: abitype@x.y.z"
+  `,
+  )
+})
+test('valid data location', () => {
+  expect(
+    parseAbiParameter('uint256[] memory foo', { modifiers: functionModifiers }),
+  ).toMatchInlineSnapshot(`
+    {
+      "name": "foo",
+      "type": "uint256[]",
+    }
+  `)
+  expect(
+    parseAbiParameter('string memory foo', { modifiers: functionModifiers }),
+  ).toMatchInlineSnapshot(`
+    {
+      "name": "foo",
+      "type": "string",
+    }
+  `)
+  expect(
+    parseAbiParameter('Foo memory foo', {
+      modifiers: functionModifiers,
+      structs: { Foo: [{ type: 'string' }] },
+    }),
+  ).toMatchInlineSnapshot(`
+    {
+      "components": [
+        {
+          "type": "string",
+        },
+      ],
+      "name": "foo",
+      "type": "tuple",
+    }
+  `)
 })
 
 test.each(['address', 'bool', 'bytes32', 'int256', 'string', 'uint256'])(
@@ -205,24 +315,31 @@ test.each([
   'string indexed',
   'uint256 indexed',
 ])("parseAbiParameter($type, { modifiers: 'indexed' })", (type) => {
-  expect(parseAbiParameter(type, { modifiers: 'indexed' })).toEqual({
+  expect(
+    parseAbiParameter(type, {
+      modifiers: new Set(['indexed']),
+    }),
+  ).toEqual({
     type: type.replace(' indexed', ''),
     indexed: true,
   })
 })
 
 test.each([
-  'address calldata',
-  'bool calldata',
-  'bytes32 calldata',
-  'int256 calldata',
+  'address[] calldata',
+  'bool[] calldata',
+  'bytes32[] calldata',
+  'int256[] calldata',
   'string calldata',
-  'uint256 calldata',
+  'uint256[] calldata',
+  'bytes calldata',
 ])(
   "parseAbiParameter($type, { modifiers: ['calldata', 'memory'] })",
   (type) => {
     expect(
-      parseAbiParameter(type, { modifiers: ['calldata', 'memory'] }),
+      parseAbiParameter(type, {
+        modifiers: new Set(['calldata', 'memory']),
+      }),
     ).toEqual({
       type: type.replace(/\scalldata|memory/, ''),
     })
@@ -358,11 +475,120 @@ test.each([
   'string',
   'uint256',
   'function',
-  'tuple',
 ])('isSolidityType($type)', (type) => {
   expect(isSolidityType(type)).toEqual(true)
 })
-
 test('isSolidityType', () => {
   expect(isSolidityType('foo')).toEqual(false)
+})
+
+test.each([
+  'address',
+  'bool',
+  'bytes32',
+  'int256',
+  'string',
+  'uint256',
+  'function',
+  'view',
+  'override',
+  'let',
+  'var',
+  'typeof',
+  'promise',
+  'in',
+  'of',
+  'reference',
+  'implements',
+  'mapping',
+  'error',
+  'event',
+  'struct',
+  'alias',
+  'byte',
+  'case',
+  'copyof',
+  'final',
+  'external',
+  'public',
+  'internal',
+  'pure',
+  'match',
+  'apply',
+  'case',
+  'null',
+  'mutable',
+  'inline',
+  'static',
+  'partial',
+  'relocatable',
+  'try',
+  'catch',
+  'switch',
+  'supports',
+  'mapping',
+  'virtual',
+  'return',
+  'returns',
+  'after',
+  'auto',
+  'default',
+  'defined',
+  'typedef',
+  'typeof',
+])('isInvalidSolidiyName($name)', (name) => {
+  expect(isProtectedSolidityKeyword(name)).toEqual(true)
+})
+
+test('Unbalanced Parethesis', () => {
+  expect(() =>
+    splitParameters('address owner, ((string name)'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Unbalanced parentheses.
+
+    \\"((string name)\\" has too many opening parentheses.
+
+    Details: Depth \\"1\\"
+    Version: abitype@x.y.z"
+  `,
+  )
+
+  expect(() =>
+    splitParameters('address owner, (((string name)'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Unbalanced parentheses.
+
+    \\"(((string name)\\" has too many opening parentheses.
+
+    Details: Depth \\"2\\"
+    Version: abitype@x.y.z"
+  `,
+  )
+  expect(() =>
+    splitParameters('address owner, (string name))'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Unbalanced parentheses.
+
+    \\"(string name))\\" has too many closing parentheses.
+
+    Details: Depth \\"-1\\"
+    Version: abitype@x.y.z"
+  `,
+  )
+
+  expect(() =>
+    splitParameters('address owner, (string name)))'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Unbalanced parentheses.
+
+    \\"(string name)))\\" has too many closing parentheses.
+
+    Details: Depth \\"-2\\"
+    Version: abitype@x.y.z"
+  `,
+  )
 })

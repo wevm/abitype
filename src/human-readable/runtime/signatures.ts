@@ -1,5 +1,6 @@
 import type { AbiStateMutability } from '../../abi'
 import { execTyped } from '../../regex'
+import type { EventModifier, FunctionModifier, Modifier } from '../types'
 
 // https://regexr.com/78tsr
 const errorSignatureRegex =
@@ -79,3 +80,16 @@ const receiveSignatureRegex = /^receive\(\) external payable$/
 export function isReceiveSignature(signature: string) {
   return receiveSignatureRegex.test(signature)
 }
+
+export const modifiers = new Set<Modifier>([
+  'memory',
+  'indexed',
+  'storage',
+  'calldata',
+])
+export const eventModifiers = new Set<EventModifier>(['indexed'])
+export const functionModifiers = new Set<FunctionModifier>([
+  'calldata',
+  'memory',
+  'storage',
+])

@@ -110,8 +110,14 @@ export type AbiParameter = Prettify<
   )
 >
 
+/**
+ * State mutability for {@link AbiFunction}
+ *
+ * @see {@link https://docs.soliditylang.org/en/latest/contracts.html#state-mutability}
+ */
 export type AbiStateMutability = 'pure' | 'view' | 'nonpayable' | 'payable'
 
+/** Kind of {@link AbiParameter} */
 export type AbiParameterKind = 'inputs' | 'outputs'
 
 export type AbiFunction = Prettify<
@@ -160,6 +166,16 @@ export type AbiError = {
   inputs: readonly AbiParameter[]
   name: string
 }
+
+/** `"type"` name for {@link Abi} items. */
+export type AbiItemType =
+  | 'constructor'
+  | 'error'
+  | 'event'
+  | 'fallback'
+  | 'function'
+  | 'receive'
+  | 'struct'
 
 /**
  * Contract [ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html#json)

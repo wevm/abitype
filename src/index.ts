@@ -4,6 +4,7 @@ export type {
   AbiEvent,
   AbiFunction,
   AbiInternalType,
+  AbiItemType,
   AbiParameter,
   AbiParameterKind,
   AbiStateMutability,
