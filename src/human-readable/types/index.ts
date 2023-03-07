@@ -1,11 +1,12 @@
 export type {
-  Signatures,
+  EventModifier,
+  FunctionModifier,
   IsSignature,
-  Signature,
-  Modifier,
   IsStructSignature,
+  Modifier,
+  Signature,
+  Signatures,
 } from './signatures'
-export { modifiers } from './signatures'
 
 export type { ParseStructs, StructLookup } from './structs'
 

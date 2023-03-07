@@ -1,9 +1,21 @@
-import type { AbiParameter } from '../../abi'
+import type { AbiItemType, AbiParameter } from '../../abi'
 
-export function getParameterCacheKey(param: string, type?: string) {
+/**
+ * Gets {@link parameterCache} cache key namespaced by {@link type}. This prevents parameters from being accessible to types that don't allow them (e.g. `string indexed foo` not allowed outside of `type: 'event'`).
+ * @param param ABI parameter string
+ * @param type ABI parameter type
+ * @returns Cache key for {@link parameterCache}
+ */
+export function getParameterCacheKey(param: string, type?: AbiItemType) {
   if (type) return `${type}:${param}`
   return param
 }
+
+/**
+ * Basic cache seeded with common ABI parameter strings.
+ *
+ * **Note: When seeding more parameters, make sure you benchmark performance. The current number is the ideal balance between performance and having an already existing cache.**
+ */
 export const parameterCache = new Map<
   string,
   AbiParameter & { indexed?: boolean }

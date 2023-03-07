@@ -35,6 +35,19 @@ test('parseAbiParameter', () => {
   `,
   )
 
+  expect(() =>
+    parseAbiParameter(['struct Foo { string memory bar; }', 'Foo indexed foo']),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+
+    Modifier \\"memory\\" not allowed in \\"struct\\" type.
+
+    Details: string memory bar
+    Version: abitype@x.y.z"
+  `,
+  )
+
   expect([parseAbiParameter('address from')]).toMatchInlineSnapshot(`
   [
     {
