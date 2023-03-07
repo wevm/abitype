@@ -78,7 +78,7 @@ test('readContracts', () => {
             address,
             abi: wagmiMintExampleAbi,
             functionName: 'supportsInterface',
-            args: [new Uint8Array(Buffer.from('0xfoobarbaz'))],
+            args: ['0xfoobar'],
             //^?
           },
         ],

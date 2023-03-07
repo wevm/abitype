@@ -44,13 +44,7 @@ test('AbiTypeToPrimitiveType', () => {
     assertType<AbiTypeToPrimitiveType<'bytes1'>>('0xfoo')
     assertType<AbiTypeToPrimitiveType<'bytes24'>>('0xfoo')
     assertType<AbiTypeToPrimitiveType<'bytes32'>>('0xfoo')
-    assertType<AbiTypeToPrimitiveType<'bytes24'>>(
-      new Uint8Array(Buffer.from('0xfoo')),
-    )
-    assertType<AbiTypeToPrimitiveType<'bytes', 'outputs'>>(
-      // @ts-expect-error `Uint8Array` only valid for bytes inputs
-      new Uint8Array(Buffer.from('0xfoo')),
-    )
+    assertType<AbiTypeToPrimitiveType<'bytes', 'outputs'>>('0xfoo')
   })
 
   test('function', () => {
@@ -416,15 +410,12 @@ test('AbiParameterToPrimitiveType', () => {
       name: 'foo',
       type: 'bytes32',
     } as const
-    assertType<AbiParameterToPrimitiveType<typeof parameter, 'inputs'>>(
-      new Uint8Array(Buffer.from('0xfoo')),
-    )
+    assertType<AbiParameterToPrimitiveType<typeof parameter, 'inputs'>>('0xfoo')
     assertType<AbiParameterToPrimitiveType<typeof parameter, 'outputs'>>(
       '0xfoo',
     )
     assertType<AbiParameterToPrimitiveType<typeof parameter, 'outputs'>>(
-      // @ts-expect-error `Uint8Array` only valid for bytes inputs
-      new Uint8Array(Buffer.from('0xfoo')),
+      '0xfoo',
     )
   })
 })
@@ -516,14 +507,13 @@ test('AbiParametersToPrimitiveTypes', () => {
       },
     ] as const
     assertType<AbiParametersToPrimitiveTypes<typeof parameters, 'inputs'>>([
-      new Uint8Array(Buffer.from('0xfoo')),
+      '0xfoo',
     ])
     assertType<AbiParametersToPrimitiveTypes<typeof parameters, 'outputs'>>([
       '0xfoo',
     ])
     assertType<AbiParametersToPrimitiveTypes<typeof parameters, 'outputs'>>([
-      // @ts-expect-error `Uint8Array` only valid for bytes inputs
-      new Uint8Array(Buffer.from('0xfoo')),
+      '0xfoo',
     ])
   })
 })
