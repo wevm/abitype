@@ -3,7 +3,7 @@ import type {
   AbiStateMutability,
   SolidityFixedArrayRange,
 } from '../../abi'
-import type { IsUnknown, Prettify, Trim } from '../../types'
+import type { Error, IsUnknown, Prettify, Trim } from '../../types'
 import type {
   ConstructorSignature,
   ErrorSignature,
@@ -175,11 +175,15 @@ export type SplitParameters<
   T extends string,
   Result extends unknown[] = [],
   Current extends string = '',
-  Depth extends ReadonlyArray<number> = [],
+  Depth extends ReadonlyArray<number | string> = [],
 > = T extends ''
   ? Current extends ''
-    ? [...Result] // empty string was passed in to `SplitParameters`
-    : [...Result, Trim<Current>]
+    ? Depth['length'] extends 0
+      ? [...Result] // empty string was passed in to `SplitParameters`
+      : Error<`Unbalanced parentheses! Details: "${Depth['length']}"`>
+    : Depth['length'] extends 0
+    ? [...Result, Trim<Current>]
+    : Error<`Unbalanced parentheses! Details: "${Depth['length']}"`>
   : T extends `${infer Char}${infer Tail}`
   ? Char extends ','
     ? Depth['length'] extends 0
@@ -188,10 +192,16 @@ export type SplitParameters<
     : Char extends '('
     ? SplitParameters<Tail, Result, `${Current}${Char}`, [...Depth, 1]>
     : Char extends ')'
-    ? SplitParameters<Tail, Result, `${Current}${Char}`, Pop<Depth>>
+    ? Depth['length'] extends 0
+      ? Error<`Unbalanced parentheses! Depth cannot go bellow 0!`>
+      : SplitParameters<Tail, Result, `${Current}${Char}`, Pop<Depth>>
     : SplitParameters<Tail, Result, `${Current}${Char}`, Depth>
   : []
-type Pop<T extends ReadonlyArray<number>> = T extends [...infer R, any] ? R : []
+
+type Pop<T extends ReadonlyArray<number | string>> = T extends [...infer R, any]
+  ? R
+  : // TODO: throw types.
+    []
 
 export type _ParseFunctionParametersAndStateMutability<
   TSignature extends string,

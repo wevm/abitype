@@ -1,4 +1,11 @@
-import type { AbiStateMutability } from '../../abi'
+import type {
+  AbiStateMutability,
+  SolidityAddress,
+  SolidityBool,
+  SolidityBytes,
+  SolidityFunction,
+  SolidityInt,
+} from '../../abi'
 import type { Error, Trim } from '../../types'
 
 export type Lexer<T extends string> =
@@ -11,7 +18,7 @@ export type Lexer<T extends string> =
     : never
 
 // Could possibly make this stricter
-type ValidateContext<
+export type ValidateContext<
   T extends string,
   TContext extends 'function' | 'event' | 'error',
 > = TContext extends 'function'
@@ -23,6 +30,19 @@ type ValidateContext<
         | `(${string}) ${EventModifiers} ${string}`
         | `(${string}) ${EventModifiers}`
     ? false
+    : T extends
+        | `${infer Head extends string} ${FunctionModifiers} ${string}`
+        | `${infer Head extends string} ${FunctionModifiers}`
+    ? Head extends `${string}[${string}]`
+      ? true
+      : Head extends
+          | Exclude<SolidityBytes, 'bytes'>
+          | SolidityAddress
+          | SolidityBool
+          | SolidityFunction
+          | SolidityInt
+      ? false
+      : true
     : true
   : TContext extends 'event'
   ? T extends

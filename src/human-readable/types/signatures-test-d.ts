@@ -10,6 +10,7 @@ import type {
   ProtectedKeywords,
   Signature,
   Signatures,
+  ValidateContext,
   isConstructorSignature,
   isProtectedKeyword,
 } from './signatures'
@@ -213,6 +214,73 @@ test('SolidityLexer', () => {
   assertType<Lexer<'thisisavalidstringwithnumber012345and_'>>(true)
   assertType<Lexer<'invalid?'>>(false)
   assertType<Lexer<'invalid!'>>(false)
+})
+
+test('Validate Context', () => {
+  // Function
+  // runs
+  assertType<ValidateContext<'string', 'function'>>(true)
+  assertType<ValidateContext<'address', 'function'>>(true)
+  assertType<ValidateContext<'string[]', 'function'>>(true)
+  assertType<ValidateContext<'address[][]', 'function'>>(true)
+  assertType<ValidateContext<'Demo memory owner', 'function'>>(true)
+  assertType<ValidateContext<'bool[] calldata', 'function'>>(true)
+  assertType<ValidateContext<'bytes1[] storage', 'function'>>(true)
+  assertType<ValidateContext<'uint[] memory', 'function'>>(true)
+  assertType<ValidateContext<'(uint tokenId) memory', 'function'>>(true)
+  assertType<ValidateContext<'((uint tokenId)) calldata', 'function'>>(true)
+  assertType<ValidateContext<'(((uint tokenId)))[] storage name', 'function'>>(
+    true,
+  )
+
+  // fails
+  assertType<ValidateContext<'address memory', 'function'>>(false)
+  assertType<ValidateContext<'bool memory', 'function'>>(false)
+  assertType<ValidateContext<'function memory', 'function'>>(false)
+  assertType<ValidateContext<'uint memory', 'function'>>(false)
+  assertType<ValidateContext<'int memory', 'function'>>(false)
+  assertType<ValidateContext<'Demo indexed owner', 'function'>>(false)
+
+  // Event
+  // runs
+  assertType<ValidateContext<'string', 'event'>>(true)
+  assertType<ValidateContext<'address', 'event'>>(true)
+  assertType<ValidateContext<'string[]', 'event'>>(true)
+  assertType<ValidateContext<'address[][]', 'event'>>(true)
+  assertType<ValidateContext<'string[] indexed', 'event'>>(true)
+  assertType<ValidateContext<'string[] indexed names', 'event'>>(true)
+
+  // fails
+  assertType<ValidateContext<'Demo memory owner', 'event'>>(false)
+  assertType<ValidateContext<'bool[] calldata', 'event'>>(false)
+  assertType<ValidateContext<'bytes1[] storage', 'event'>>(false)
+  assertType<ValidateContext<'uint[] memory', 'event'>>(false)
+  assertType<ValidateContext<'(uint tokenId) memory', 'event'>>(false)
+  assertType<ValidateContext<'((uint tokenId)) calldata', 'event'>>(false)
+  assertType<ValidateContext<'(((uint tokenId)))[] storage name', 'event'>>(
+    false,
+  )
+
+  // Error
+  // runs
+  assertType<ValidateContext<'string', 'error'>>(true)
+  assertType<ValidateContext<'address', 'error'>>(true)
+  assertType<ValidateContext<'string[]', 'error'>>(true)
+  assertType<ValidateContext<'address[][]', 'error'>>(true)
+  assertType<ValidateContext<'string[] names', 'error'>>(true)
+
+  // fails
+  assertType<ValidateContext<'Demo memory owner', 'error'>>(false)
+  assertType<ValidateContext<'bool[] calldata', 'error'>>(false)
+  assertType<ValidateContext<'bytes1[] storage', 'error'>>(false)
+  assertType<ValidateContext<'uint[] memory', 'error'>>(false)
+  assertType<ValidateContext<'(uint tokenId) memory', 'error'>>(false)
+  assertType<ValidateContext<'((uint tokenId)) calldata', 'error'>>(false)
+  assertType<ValidateContext<'(((uint tokenId)))[] storage name', 'error'>>(
+    false,
+  )
+  assertType<ValidateContext<'string[] indexed', 'error'>>(false)
+  assertType<ValidateContext<'string[] indexed names', 'error'>>(false)
 })
 
 test('Protected Keywords', () => {

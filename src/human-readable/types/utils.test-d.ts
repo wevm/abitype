@@ -498,6 +498,19 @@ test('SplitParameters', () => {
     '(bool loading, (string[][] names) cats)[] dog',
     'uint tokenId',
   ])
+
+  assertType<SplitParameters<'((string)'>>([
+    'Error: Unbalanced parentheses! Details: "1"',
+  ])
+  assertType<SplitParameters<'((((string))'>>([
+    'Error: Unbalanced parentheses! Details: "2"',
+  ])
+  assertType<SplitParameters<'(string))'>>([
+    'Error: Unbalanced parentheses! Depth cannot go bellow 0!',
+  ])
+  assertType<SplitParameters<'(string))))'>>([
+    'Error: Unbalanced parentheses! Depth cannot go bellow 0!',
+  ])
 })
 
 test('_ParseFunctionParametersAndStateMutability', () => {
