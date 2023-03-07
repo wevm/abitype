@@ -1,6 +1,6 @@
 import type { AbiParameter } from '../../abi'
 import { BaseError } from '../../errors'
-import { execTyped, isTupleRegex, typeWithoutTupleRegex } from '../../regex'
+import { execTyped, isTupleRegex } from '../../regex'
 import type { StructLookup } from '../types'
 import { execStructSignature, isStructSignature } from './signatures'
 import { isSolidityType, parseAbiParameter } from './utils'
@@ -51,6 +51,9 @@ export function parseStructs(signatures: readonly string[]) {
 
   return resolvedStructs
 }
+
+const typeWithoutTupleRegex =
+  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?$/
 
 function resolveStructs(
   abiParameters: readonly (AbiParameter & { indexed?: true })[],

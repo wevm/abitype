@@ -7,10 +7,10 @@ import type { IsUnknown, Prettify, Trim } from '../../types'
 import type {
   ConstructorSignature,
   ErrorSignature,
-  EventModifiers,
+  EventModifier,
   EventSignature,
   FallbackSignature,
-  FunctionModifiers,
+  FunctionModifier,
   FunctionSignature,
   IsErrorSignature,
   IsEventSignature,
@@ -44,7 +44,7 @@ export type ParseSignature<
             readonly type: 'event'
             readonly inputs: ParseAbiParameters<
               SplitParameters<Parameters>,
-              { Modifier: EventModifiers; Structs: TStructs }
+              { Modifier: EventModifier; Structs: TStructs }
             >
           }
         : never
@@ -60,7 +60,7 @@ export type ParseSignature<
                 _ParseFunctionParametersAndStateMutability<TSignature>['Inputs']
               >,
               {
-                Modifier: FunctionModifiers
+                Modifier: FunctionModifier
                 Structs: TStructs
               }
             >
@@ -68,7 +68,7 @@ export type ParseSignature<
               ? ParseAbiParameters<
                   SplitParameters<Returns>,
                   {
-                    Modifier: FunctionModifiers
+                    Modifier: FunctionModifier
                     Structs: TStructs
                   }
                 >

@@ -1,4 +1,9 @@
-export { isStructSignature } from './signatures'
+export {
+  eventModifiers,
+  functionModifiers,
+  isStructSignature,
+  modifiers,
+} from './signatures'
 
 export { parseStructs } from './structs'
 

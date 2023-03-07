@@ -4,6 +4,7 @@ import type { Narrow } from '../narrow'
 import type { Error, Filter } from '../types'
 import {
   isStructSignature,
+  modifiers,
   parseAbiParameter as parseAbiParameter_,
   parseStructs,
 } from './runtime'
@@ -13,7 +14,6 @@ import type {
   ParseAbiParameter as ParseAbiParameter_,
   ParseStructs,
 } from './types'
-import { modifiers } from './types'
 
 /**
  * Parses human-readable ABI parameter into {@link AbiParameter}
