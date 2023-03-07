@@ -45,10 +45,13 @@ const abi = Abi.parse(result)
 ```ts
 export {
   Abi,
-  AbiFunction,
+  AbiConstructor,
   AbiEvent,
   AbiError,
+  AbiFallback,
+  AbiFunction,
   AbiParameter,
+  AbiReceive,
   AbiStateMutability,
   SolidityAddress,
   SolidityArray,

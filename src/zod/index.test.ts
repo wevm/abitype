@@ -6,10 +6,14 @@ it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
     [
       "Abi",
-      "AbiFunction",
+      "AbiConstructor",
       "AbiEvent",
       "AbiError",
+      "AbiFallback",
+      "AbiFunction",
+      "AbiItemType",
       "AbiParameter",
+      "AbiReceive",
       "AbiStateMutability",
       "SolidityAddress",
       "SolidityArray",

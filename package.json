@@ -50,7 +50,7 @@
   ],
   "peerDependencies": {
     "typescript": ">=4.9.4",
-    "zod": ">=3.19.1"
+    "zod": "^3 >=3.19.1"
   },
   "peerDependenciesMeta": {
     "zod": {
