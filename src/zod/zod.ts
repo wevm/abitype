@@ -190,8 +190,8 @@ export const Abi = z.array(
   z.union([
     AbiError,
     AbiEvent,
-    // TODO: Switch to `z.switch` (https://github.com/colinhacks/zod/issues/2106)
-    // Need to redefine `AbiFunction | AbiConstructor | AbiFallback | AbiReceive` since `z.discriminate` doesn't support `z.preprocess`
+    // TODO: Replace code below to `z.switch` (https://github.com/colinhacks/zod/issues/2106)
+    // Need to redefine `AbiFunction | AbiConstructor | AbiFallback | AbiReceive` since `z.discriminate` doesn't support `z.preprocess` on `options`
     // https://github.com/colinhacks/zod/issues/1490
     z.preprocess(
       (val) => {
