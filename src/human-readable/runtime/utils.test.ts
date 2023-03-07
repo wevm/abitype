@@ -547,7 +547,7 @@ test('Unbalanced Parethesis', () => {
     `
     "Unbalanced parentheses.
 
-    \\" ((string name)\\" has too many opening parentheses.
+    \\"((string name)\\" has too many opening parentheses.
 
     Details: Depth \\"1\\"
     Version: abitype@x.y.z"
@@ -560,7 +560,7 @@ test('Unbalanced Parethesis', () => {
     `
     "Unbalanced parentheses.
 
-    \\" (((string name)\\" has too many opening parentheses.
+    \\"(((string name)\\" has too many opening parentheses.
 
     Details: Depth \\"2\\"
     Version: abitype@x.y.z"
@@ -572,7 +572,7 @@ test('Unbalanced Parethesis', () => {
     `
     "Unbalanced parentheses.
 
-    \\" (string name))\\" has too many closing parentheses.
+    \\"(string name))\\" has too many closing parentheses.
 
     Details: Depth \\"-1\\"
     Version: abitype@x.y.z"
@@ -585,7 +585,7 @@ test('Unbalanced Parethesis', () => {
     `
     "Unbalanced parentheses.
 
-    \\" (string name)))\\" has too many closing parentheses.
+    \\"(string name)))\\" has too many closing parentheses.
 
     Details: Depth \\"-2\\"
     Version: abitype@x.y.z"

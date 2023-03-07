@@ -257,7 +257,7 @@ export function splitParameters(
     if (depth !== 0)
       throw new BaseError('Unbalanced parentheses.', {
         metaMessages: [
-          `"${current}" has too many ${
+          `"${current.trim()}" has too many ${
             depth > 0 ? 'opening' : 'closing'
           } parentheses.`,
         ],

@@ -107,7 +107,10 @@ export type Signatures<T extends readonly string[]> = {
 }
 
 export type Modifier = 'calldata' | 'indexed' | 'memory' | 'storage'
-export type FunctionModifier = Exclude<Modifier, 'indexed'>
+export type FunctionModifier = Extract<
+  Modifier,
+  'calldata' | 'memory' | 'storage'
+>
 export type EventModifier = Extract<Modifier, 'indexed'>
 
 // Template string inference can abosrb `returns`:
