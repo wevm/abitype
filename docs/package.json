@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "docs",
   "private": true,
   "scripts": {
@@ -11,6 +12,9 @@
     "vue": "^3.2.47"
   },
   "dependencies": {
-    "markdown-it-footnote": "^3.0.3"
+    "@vue/runtime-core": "^3.2.47",
+    "@vue/runtime-dom": "^3.2.47",
+    "markdown-it-footnote": "^3.0.3",
+    "markdown-it-shiki-twoslash": "^2.1.1"
   }
 }

@@ -1,0 +1,10 @@
+{
+  "name": "abitype/docs-twoslash",
+  "private": true,
+  "devDependencies": {
+    "abitype": "*"
+  },
+  "dependencies": {
+    "markdown-it-footnote": "^3.0.3"
+  }
+}

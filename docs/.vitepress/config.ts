@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { version } from '../../package.json'
+import { MARKDOWN } from './markdown.js'
 
 export default defineConfig({
   description:
@@ -38,15 +39,7 @@ export default defineConfig({
   ],
   lang: 'en-US',
   lastUpdated: true,
-  markdown: {
-    theme: {
-      light: 'vitesse-light',
-      dark: 'vitesse-dark',
-    },
-    config: (md) => {
-      md.use(require('markdown-it-footnote'))
-    },
-  },
+  markdown: MARKDOWN,
   themeConfig: {
     algolia: {
       appId: '4QMG0RYQG7',
@@ -150,4 +143,11 @@ export default defineConfig({
     ],
   },
   title: 'ABIType: Strict TypeScript types for Ethereum ABIs',
+  vue: {
+    template: {
+      compilerOptions: {
+        isCustomElement: (tag) => tag.includes('-'),
+      },
+    },
+  },
 })

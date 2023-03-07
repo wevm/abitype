@@ -21,13 +21,14 @@ Converts `AbiParameter` to corresponding TypeScript primitive type.
 
 [TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgQQEbAAoEMpZAUxnygBUIMpRgZgA3fEgTzHzgF84AzKCEOAcizoYzfPwBQ4kSzgAlfAGcArgBt4AXhTpsuAkVLlKIanQaiAPAnEB6a3HsA9APzj7AOzz4AXAIgB3N2IJe2lvASwAEwioRQUJNgA+IA)
 
-```ts
+```ts twoslash
 import { AbiParameterToPrimitiveType } from 'abitype'
 
 type Result = AbiParameterToPrimitiveType<{
   name: 'owner'
   type: 'address'
 }>
+
 ```
 
 ## `AbiParametersToPrimitiveTypes`
@@ -79,10 +80,11 @@ Does not include full array or tuple conversion. Use [`AbiParameterToPrimitiveTy
 
 [TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgQQEbACoE8wFMMQAKUowMwAbvjrnAL5wBmUEIcA5AIbow3sBQ-XnjgAlXAGcArgBt4AXhTpseAsVLkqK3AB4uAE31RJE9gD5+AektxbAPQD8QA)
 
-```ts
+```ts twoslash
 import { AbiTypeToPrimitiveType } from 'abitype'
 
 type Result = AbiTypeToPrimitiveType<'address'>
+//   ^?
 ```
 
 ## `ExtractAbiError`
