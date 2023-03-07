@@ -24,16 +24,16 @@ export type ValidateContext<
   TContext extends 'function' | 'event' | 'error',
 > = TContext extends 'function'
   ? T extends
-      | `${string} ${EventModifiers} ${string}`
-      | `${string} ${EventModifiers}`
+      | `${string} ${EventModifier} ${string}`
+      | `${string} ${EventModifier}`
     ? false
     : T extends
-        | `(${string}) ${EventModifiers} ${string}`
-        | `(${string}) ${EventModifiers}`
+        | `(${string}) ${EventModifier} ${string}`
+        | `(${string}) ${EventModifier}`
     ? false
     : T extends
-        | `${infer Head extends string} ${FunctionModifiers} ${string}`
-        | `${infer Head extends string} ${FunctionModifiers}`
+        | `${infer Head extends string} ${FunctionModifier} ${string}`
+        | `${infer Head extends string} ${FunctionModifier}`
     ? Head extends `${string}[${string}]`
       ? true
       : Head extends
@@ -47,12 +47,12 @@ export type ValidateContext<
     : true
   : TContext extends 'event'
   ? T extends
-      | `${string} ${FunctionModifiers} ${string}`
-      | `${string} ${FunctionModifiers}`
+      | `${string} ${FunctionModifier} ${string}`
+      | `${string} ${FunctionModifier}`
     ? false
     : T extends
-        | `(${string}) ${FunctionModifiers} ${string}`
-        | `(${string}) ${FunctionModifiers}`
+        | `(${string}) ${FunctionModifier} ${string}`
+        | `(${string}) ${FunctionModifier}`
     ? false
     : true
   : T extends `${string} ${Modifier} ${string}` | `${string} ${Modifier}`
