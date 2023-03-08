@@ -1,5 +1,16 @@
 # abitype
 
+## 0.6.8
+
+### Patch Changes
+
+- [#100](https://github.com/wagmi-dev/abitype/pull/100) [`4263277`](https://github.com/wagmi-dev/abitype/commit/4263277e0630af8fcaedefa084d754f607c588a4) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Bug fixes:
+
+  - Fixed `splitParameters` parsing behavior for tuples with too many closing or opening parentheses.
+  - Fixed modifiers parsing for `error`, `event`, `struct` signatures.
+  - Stopped allowing protected Solidity keywords as parameter names.
+  - Stopped allowing `calldata`, `memory`, and `storage` on non-array types (or `string`, `bytes`, and `tuple`).
+
 ## 0.6.7
 
 ### Patch Changes

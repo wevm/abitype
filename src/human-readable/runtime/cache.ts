@@ -6,7 +6,10 @@ import type { AbiItemType, AbiParameter } from '../../abi'
  * @param type ABI parameter type
  * @returns Cache key for {@link parameterCache}
  */
-export function getParameterCacheKey(param: string, type?: AbiItemType) {
+export function getParameterCacheKey(
+  param: string,
+  type?: AbiItemType | 'struct',
+) {
   if (type) return `${type}:${param}`
   return param
 }

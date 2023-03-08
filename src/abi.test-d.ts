@@ -2,11 +2,14 @@ import { assertType, test } from 'vitest'
 
 import type {
   Abi,
+  AbiConstructor,
   AbiError,
   AbiEvent,
+  AbiFallback,
   AbiFunction,
   AbiInternalType,
   AbiParameter,
+  AbiReceive,
   AbiStateMutability,
   AbiType,
   Address,
@@ -175,28 +178,32 @@ test('AbiFunction', () => {
   })
 
   assertType<AbiFunction>({
-    inputs: [],
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-  })
-
-  assertType<AbiFunction>({
-    stateMutability: 'nonpayable',
-    type: 'fallback',
-  })
-
-  assertType<AbiFunction>({
-    stateMutability: 'payable',
-    type: 'receive',
-  })
-
-  assertType<AbiFunction>({
     inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
     name: 'tokenURI',
     outputs: [{ internalType: 'string', name: '', type: 'string' }],
     stateMutability: 'pure',
     // @ts-expect-error Must be function type
     type: 'event',
+  })
+})
+
+test('AbiConstructor', () => {
+  assertType<AbiConstructor>({
+    inputs: [],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  })
+})
+test('AbiFallback', () => {
+  assertType<AbiFallback>({
+    stateMutability: 'nonpayable',
+    type: 'fallback',
+  })
+})
+test('AbiReceive', () => {
+  assertType<AbiReceive>({
+    stateMutability: 'payable',
+    type: 'receive',
   })
 })
 
