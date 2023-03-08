@@ -1,24 +1,25 @@
 import type {
   AbiParameter,
   AbiStateMutability,
+  AbiType,
   SolidityFixedArrayRange,
 } from '../../abi'
-import type { Error, IsUnknown, Prettify, Trim } from '../../types'
+import type { Error, IsUnknown, Merge, Prettify, Trim } from '../../types'
 import type {
-  ConstructorSignature,
   ErrorSignature,
   EventModifier,
   EventSignature,
   FallbackSignature,
   FunctionModifier,
   FunctionSignature,
+  IsConstructorSignature,
   IsErrorSignature,
   IsEventSignature,
   IsFunctionSignature,
-  IsName,
   Modifier,
   ReceiveSignature,
   Scope,
+  ValidateName,
 } from './signatures'
 import type { StructLookup } from './structs'
 
@@ -60,36 +61,35 @@ export type ParseSignature<
               SplitParameters<
                 _ParseFunctionParametersAndStateMutability<TSignature>['Inputs']
               >,
-              {
-                Modifier: FunctionModifier
-                Structs: TStructs
-              }
+              { Modifier: FunctionModifier; Structs: TStructs }
             >
             readonly outputs: Tail extends `${string}returns (${infer Returns})`
               ? ParseAbiParameters<
                   SplitParameters<Returns>,
-                  {
-                    Modifier: FunctionModifier
-                    Structs: TStructs
-                  }
+                  { Modifier: FunctionModifier; Structs: TStructs }
                 >
               : readonly []
           }
         : never
       : never)
-  | (TSignature extends ConstructorSignature<infer Parameters>
+  | (IsConstructorSignature<TSignature> extends true
       ? {
           readonly type: 'constructor'
-          readonly stateMutability: 'nonpayable'
+          readonly stateMutability: _ParseConstructorParametersAndStateMutability<TSignature>['StateMutability']
           readonly inputs: ParseAbiParameters<
-            SplitParameters<Parameters>,
+            SplitParameters<
+              _ParseConstructorParametersAndStateMutability<TSignature>['Inputs']
+            >,
             { Structs: TStructs }
           >
         }
       : never)
-  | (TSignature extends FallbackSignature
+  | (TSignature extends FallbackSignature<infer StateMutability>
       ? {
           readonly type: 'fallback'
+          readonly stateMutability: StateMutability extends `${string}payable`
+            ? 'payable'
+            : 'nonpayable'
         }
       : never)
   | (TSignature extends ReceiveSignature
@@ -167,24 +167,45 @@ export type ParseAbiParameter<
             ? { readonly indexed: true }
             : object)
       >
-    : // Return existing parameter without modification
-      // TODO: Bubble up error if struct (e.g. `{ type: 'Foo' }`) and name was not found in `Structs`
-      Parameter
+    : // Validate `name` (e.g. not a Solidity keyword, etc.)
+    (
+        Parameter extends { name: string }
+          ? ValidateName<Parameter['name']> extends infer Name
+            ? Name extends Parameter['name']
+              ? Parameter
+              : Merge<Parameter, { readonly name: Name }>
+            : never
+          : Parameter
+      ) extends infer Parameter2
+    ? Parameter2 extends { type: string }
+      ? Parameter['type'] extends AbiType
+        ? Parameter2
+        : Prettify<
+            Merge<
+              Parameter,
+              {
+                readonly type: Error<`Type "${Parameter['type']}" is not a valid ABI type.`>
+              }
+            >
+          >
+      : never
+    : never
   : never
+
+// modifier not allowed
+// data location
 
 export type SplitParameters<
   T extends string,
   Result extends unknown[] = [],
   Current extends string = '',
-  Depth extends ReadonlyArray<number | string> = [],
+  Depth extends ReadonlyArray<number> = [],
 > = T extends ''
   ? Current extends ''
-    ? Depth['length'] extends 0
-      ? [...Result] // empty string was passed in to `SplitParameters`
-      : Error<`Unbalanced parentheses! Details: "${Depth['length']}"`>
+    ? [...Result] // empty string was passed in to `SplitParameters`
     : Depth['length'] extends 0
     ? [...Result, Trim<Current>]
-    : Error<`Unbalanced parentheses! Details: "${Depth['length']}"`>
+    : Error<`Unbalanced parentheses. "${Current}" has too many opening parentheses.`>
   : T extends `${infer Char}${infer Tail}`
   ? Char extends ','
     ? Depth['length'] extends 0
@@ -194,14 +215,11 @@ export type SplitParameters<
     ? SplitParameters<Tail, Result, `${Current}${Char}`, [...Depth, 1]>
     : Char extends ')'
     ? Depth['length'] extends 0
-      ? Error<`Unbalanced parentheses! Depth cannot go bellow 0!`>
+      ? Error<`Unbalanced parentheses. "${Current}" has too many closing parentheses.`>
       : SplitParameters<Tail, Result, `${Current}${Char}`, Pop<Depth>>
     : SplitParameters<Tail, Result, `${Current}${Char}`, Depth>
   : []
-
-type Pop<T extends ReadonlyArray<number | string>> = T extends [...infer R, any]
-  ? R
-  : []
+type Pop<T extends ReadonlyArray<number>> = T extends [...infer R, any] ? R : []
 
 export type _ParseFunctionParametersAndStateMutability<
   TSignature extends string,
@@ -221,6 +239,14 @@ export type _ParseFunctionParametersAndStateMutability<
         ? ScopeOrStateMutability
         : 'nonpayable'
     }
+  : never
+
+export type _ParseConstructorParametersAndStateMutability<
+  TSignature extends string,
+> = TSignature extends `constructor(${infer Parameters}) payable`
+  ? { Inputs: Parameters; StateMutability: 'payable' }
+  : TSignature extends `constructor(${infer Parameters})`
+  ? { Inputs: Parameters; StateMutability: 'nonpayable' }
   : never
 
 export type _ParseTuple<
@@ -311,23 +337,20 @@ export type _SplitNameOrModifier<
   T extends string,
   Options extends ParseOptions = DefaultParseOptions,
 > = Trim<T> extends infer Trimmed extends string
-  ? Options extends { Modifier: Modifier }
+  ? // TODO: Implement checks same runtime behavior
+    // - Check if modifier exists, but is not allowed (e.g. `indexed` in `functionModifiers`)
+    // - Check if resolved `type` is valid if there is a function modifier
+    Options extends { Modifier: Modifier }
     ? Trimmed extends `${infer Mod extends Options['Modifier']} ${infer Name}`
-      ? IsName<Trim<Name>> extends true
-        ? { readonly name: Trim<Name> } & (Mod extends 'indexed'
-            ? { readonly indexed: true }
-            : object)
-        : { readonly name: `Error: Invalid name found '${Trim<Name>}'` }
+      ? { readonly name: Trim<Name> } & (Mod extends 'indexed'
+          ? { readonly indexed: true }
+          : object)
       : Trimmed extends Options['Modifier']
       ? Trimmed extends 'indexed'
         ? { readonly indexed: true }
         : object
-      : IsName<Trimmed> extends true
-      ? { readonly name: Trimmed }
-      : { readonly name: `Error: Invalid name found '${Trimmed}'` }
-    : IsName<Trimmed> extends true
-    ? { readonly name: Trimmed }
-    : { readonly name: `Error: Invalid name found '${Trimmed}'` }
+      : { readonly name: Trimmed }
+    : { readonly name: Trimmed }
   : never
 
 // `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)

@@ -1,18 +1,19 @@
-import { assertType, test } from 'vitest'
+import { assertType, expectTypeOf, test } from 'vitest'
 
 import type {
+  IsConstructorSignature,
   IsErrorSignature,
   IsEventSignature,
   IsFunctionSignature,
+  IsName,
   IsSignature,
+  IsSolidityKeyword,
   IsStructSignature,
-  Lexer,
-  ProtectedKeywords,
+  IsValidCharacter,
   Signature,
   Signatures,
-  ValidateContext,
-  isConstructorSignature,
-  isProtectedKeyword,
+  SolidityKeywords,
+  ValidateName,
 } from './signatures'
 
 test('IsErrorSignature', () => {
@@ -154,26 +155,32 @@ test('IsStructSignature', () => {
 })
 
 test('IsConstructorSignature', () => {
-  assertType<isConstructorSignature<'constructor()'>>(true)
-  assertType<isConstructorSignature<'constructor(string)'>>(true)
-  assertType<isConstructorSignature<'constructor(string name)'>>(true)
-  assertType<isConstructorSignature<'constructor(string name, string symbol)'>>(
+  assertType<IsConstructorSignature<'constructor()'>>(true)
+  assertType<IsConstructorSignature<'constructor() payable'>>(true)
+  assertType<IsConstructorSignature<'constructor(string)'>>(true)
+  assertType<IsConstructorSignature<'constructor(string name)'>>(true)
+  assertType<IsConstructorSignature<'constructor(string name, string symbol)'>>(
     true,
   )
-  assertType<isConstructorSignature<'constructor(string memory name)'>>(true)
+  assertType<IsConstructorSignature<'constructor(string memory name)'>>(true)
+  assertType<IsConstructorSignature<'constructor(string memory name) payable'>>(
+    true,
+  )
 
-  assertType<isConstructorSignature<'constructor(,)'>>(false)
+  assertType<IsConstructorSignature<'constructor()payable'>>(false)
+  assertType<IsConstructorSignature<'constructor(,)'>>(false)
 
-  assertType<isConstructorSignature<'constructor(string name,)'>>(false)
+  assertType<IsConstructorSignature<'constructor(string name,)'>>(false)
   assertType<
-    isConstructorSignature<'constructor(string name, string symbol,)'>
+    IsConstructorSignature<'constructor(string name, string symbol,)'>
   >(false)
 })
+
 test('IsSignature', () => {
   // basic
   assertType<IsSignature<'function foo()'>>(true)
   assertType<IsSignature<'constructor()'>>(true)
-  assertType<IsSignature<'fallback()'>>(true)
+  assertType<IsSignature<'fallback() external'>>(true)
   assertType<IsSignature<'receive() external payable'>>(true)
   assertType<IsSignature<'event Foo()'>>(true)
   assertType<IsSignature<'error Foo()'>>(true)
@@ -207,91 +214,57 @@ test('Signatures', () => {
   ])
 })
 
-test('SolidityLexer', () => {
-  assertType<Lexer<'A'>>(true)
-  assertType<Lexer<'thisisavalidstring'>>(true)
-  assertType<Lexer<'thisisavalidstringwithnumber012345'>>(true)
-  assertType<Lexer<'thisisavalidstringwithnumber012345and_'>>(true)
-  assertType<Lexer<'invalid?'>>(false)
-  assertType<Lexer<'invalid!'>>(false)
+test('IsName', () => {
+  expectTypeOf<IsName<''>>().toEqualTypeOf<false>()
+  expectTypeOf<IsName<'   '>>().toEqualTypeOf<false>()
+  expectTypeOf<IsName<'foo'>>().toEqualTypeOf<true>()
+  // no whitespace
+  expectTypeOf<IsName<' foo'>>().toEqualTypeOf<false>()
+  expectTypeOf<IsName<'foo '>>().toEqualTypeOf<false>()
+  expectTypeOf<IsName<' foo '>>().toEqualTypeOf<false>()
+  // no solidity keywords
+  expectTypeOf<IsName<'alias'>>().toEqualTypeOf<false>()
+  expectTypeOf<IsName<'copyof'>>().toEqualTypeOf<false>()
+  expectTypeOf<IsName<'virtual'>>().toEqualTypeOf<false>()
+  // no invalid characters
+  expectTypeOf<IsName<'foo?'>>().toEqualTypeOf<false>()
+  expectTypeOf<IsName<'foo,'>>().toEqualTypeOf<false>()
 })
 
-test('Validate Context', () => {
-  // Function
-  // runs
-  assertType<ValidateContext<'string', 'function'>>(true)
-  assertType<ValidateContext<'address', 'function'>>(true)
-  assertType<ValidateContext<'string[]', 'function'>>(true)
-  assertType<ValidateContext<'address[][]', 'function'>>(true)
-  assertType<ValidateContext<'Demo memory owner', 'function'>>(true)
-  assertType<ValidateContext<'bool[] calldata', 'function'>>(true)
-  assertType<ValidateContext<'bytes1[] storage', 'function'>>(true)
-  assertType<ValidateContext<'uint[] memory', 'function'>>(true)
-  assertType<ValidateContext<'(uint tokenId) memory', 'function'>>(true)
-  assertType<ValidateContext<'((uint tokenId)) calldata', 'function'>>(true)
-  assertType<ValidateContext<'(((uint tokenId)))[] storage name', 'function'>>(
-    true,
-  )
-
-  // fails
-  assertType<ValidateContext<'address memory', 'function'>>(false)
-  assertType<ValidateContext<'bool memory', 'function'>>(false)
-  assertType<ValidateContext<'function memory', 'function'>>(false)
-  assertType<ValidateContext<'uint memory', 'function'>>(false)
-  assertType<ValidateContext<'int memory', 'function'>>(false)
-  assertType<ValidateContext<'Demo indexed owner', 'function'>>(false)
-
-  // Event
-  // runs
-  assertType<ValidateContext<'string', 'event'>>(true)
-  assertType<ValidateContext<'address', 'event'>>(true)
-  assertType<ValidateContext<'string[]', 'event'>>(true)
-  assertType<ValidateContext<'address[][]', 'event'>>(true)
-  assertType<ValidateContext<'string[] indexed', 'event'>>(true)
-  assertType<ValidateContext<'string[] indexed names', 'event'>>(true)
-
-  // fails
-  assertType<ValidateContext<'Demo memory owner', 'event'>>(false)
-  assertType<ValidateContext<'bool[] calldata', 'event'>>(false)
-  assertType<ValidateContext<'bytes1[] storage', 'event'>>(false)
-  assertType<ValidateContext<'uint[] memory', 'event'>>(false)
-  assertType<ValidateContext<'(uint tokenId) memory', 'event'>>(false)
-  assertType<ValidateContext<'((uint tokenId)) calldata', 'event'>>(false)
-  assertType<ValidateContext<'(((uint tokenId)))[] storage name', 'event'>>(
-    false,
-  )
-
-  // Error
-  // runs
-  assertType<ValidateContext<'string', 'error'>>(true)
-  assertType<ValidateContext<'address', 'error'>>(true)
-  assertType<ValidateContext<'string[]', 'error'>>(true)
-  assertType<ValidateContext<'address[][]', 'error'>>(true)
-  assertType<ValidateContext<'string[] names', 'error'>>(true)
-
-  // fails
-  assertType<ValidateContext<'Demo memory owner', 'error'>>(false)
-  assertType<ValidateContext<'bool[] calldata', 'error'>>(false)
-  assertType<ValidateContext<'bytes1[] storage', 'error'>>(false)
-  assertType<ValidateContext<'uint[] memory', 'error'>>(false)
-  assertType<ValidateContext<'(uint tokenId) memory', 'error'>>(false)
-  assertType<ValidateContext<'((uint tokenId)) calldata', 'error'>>(false)
-  assertType<ValidateContext<'(((uint tokenId)))[] storage name', 'error'>>(
-    false,
-  )
-  assertType<ValidateContext<'string[] indexed', 'error'>>(false)
-  assertType<ValidateContext<'string[] indexed names', 'error'>>(false)
+test('ValidateName', () => {
+  expectTypeOf<ValidateName<'foo'>>().toEqualTypeOf<'foo'>()
+  expectTypeOf<ValidateName<''>>().toEqualTypeOf<
+    ['Error: Name cannot be empty.']
+  >()
+  expectTypeOf<ValidateName<'foo bar'>>().toEqualTypeOf<
+    ['Error: Name "foo bar" cannot contain whitespace.']
+  >()
+  expectTypeOf<ValidateName<'alias'>>().toEqualTypeOf<
+    ['Error: "alias" is a protected Solidity keyword.']
+  >()
+  expectTypeOf<ValidateName<'foo$'>>().toEqualTypeOf<
+    ['Error: "foo$" contains invalid character.']
+  >()
 })
 
-test('Protected Keywords', () => {
-  assertType<isProtectedKeyword<ProtectedKeywords>>(true)
-  assertType<isProtectedKeyword<'   calldata    '>>(true)
-  assertType<isProtectedKeyword<'           byte'>>(true)
-  assertType<isProtectedKeyword<'memory         '>>(true)
+test('IsSolidityKeyword', () => {
+  expectTypeOf<IsSolidityKeyword<SolidityKeywords>>().toEqualTypeOf<true>()
+  expectTypeOf<IsSolidityKeyword<'calldata'>>().toEqualTypeOf<true>()
+  expectTypeOf<IsSolidityKeyword<'byte'>>().toEqualTypeOf<true>()
+  expectTypeOf<IsSolidityKeyword<'memory'>>().toEqualTypeOf<true>()
 
-  // Not protected
-  assertType<isProtectedKeyword<'normalname'>>(false)
-  assertType<isProtectedKeyword<'normalname    '>>(false)
-  assertType<isProtectedKeyword<'    normalname'>>(false)
-  assertType<isProtectedKeyword<'  normalname  '>>(false)
+  expectTypeOf<IsSolidityKeyword<'foo'>>().toEqualTypeOf<false>()
+  expectTypeOf<IsSolidityKeyword<'bar'>>().toEqualTypeOf<false>()
+})
+
+test('IsValidCharacter', () => {
+  expectTypeOf<IsValidCharacter<'A'>>().toEqualTypeOf<true>()
+  expectTypeOf<IsValidCharacter<'foobarbaz'>>().toEqualTypeOf<true>()
+  expectTypeOf<IsValidCharacter<'123123'>>().toEqualTypeOf<true>()
+  expectTypeOf<IsValidCharacter<'___'>>().toEqualTypeOf<true>()
+  expectTypeOf<IsValidCharacter<'foo_123'>>().toEqualTypeOf<true>()
+  expectTypeOf<IsValidCharacter<'foo_123?'>>().toEqualTypeOf<false>()
+  expectTypeOf<IsValidCharacter<'foo!123'>>().toEqualTypeOf<false>()
+  expectTypeOf<IsValidCharacter<''>>().toEqualTypeOf<false>()
+  expectTypeOf<IsValidCharacter<'         '>>().toEqualTypeOf<false>()
 })

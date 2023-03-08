@@ -41,6 +41,18 @@ export type Filter<
   : readonly [...Acc]
 
 /**
+ * Checks if {@link T} is `never`
+ *
+ * @param T - Type to check
+ * @returns `true` if {@link T} is `never`, otherwise `false`
+ *
+ * @example
+ * type Result = IsNever<never>
+ * //   ^? type Result = true
+ */
+export type IsNever<T> = [T] extends [never] ? true : false
+
+/**
  * Checks if {@link T} is `unknown`
  *
  * @param T - Type to check
