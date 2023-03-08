@@ -30,7 +30,7 @@ export interface DefaultConfig {
   /** TypeScript type to use for `bytes` values */
   BytesType: {
     /** TypeScript type to use for `bytes` input values */
-    inputs: `0x${string}` | Uint8Array
+    inputs: `0x${string}`
     /** TypeScript type to use for `bytes` output values */
     outputs: `0x${string}`
   }

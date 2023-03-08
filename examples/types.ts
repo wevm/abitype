@@ -52,9 +52,9 @@ export type GetFunctionName<
 export type GetArgs<
   TAbi extends Abi | readonly unknown[],
   TFunctionName extends string,
-  TAbiFunction extends AbiFunction & { type: 'function' } = TAbi extends Abi
+  TAbiFunction extends AbiFunction = TAbi extends Abi
     ? ExtractAbiFunction<TAbi, TFunctionName>
-    : AbiFunction & { type: 'function' },
+    : AbiFunction,
   TArgs = AbiParametersToPrimitiveTypes<TAbiFunction['inputs'], 'inputs'>,
   FailedToParseArgs =
     | ([TArgs] extends [never] ? true : false)
@@ -79,9 +79,7 @@ export type GetReturnType<
   TFunctionName extends string = string,
   TAbiFunction extends AbiFunction & {
     type: 'function'
-  } = TAbi extends Abi
-    ? ExtractAbiFunction<TAbi, TFunctionName>
-    : AbiFunction & { type: 'function' },
+  } = TAbi extends Abi ? ExtractAbiFunction<TAbi, TFunctionName> : AbiFunction,
   TArgs = AbiParametersToPrimitiveTypes<TAbiFunction['outputs'], 'outputs'>,
   FailedToParseArgs =
     | ([TArgs] extends [never] ? true : false)

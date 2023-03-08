@@ -113,47 +113,68 @@ export type AbiParameter = Prettify<
 /**
  * State mutability for {@link AbiFunction}
  *
- * @see {@link https://docs.soliditylang.org/en/latest/contracts.html#state-mutability}
+ * @see https://docs.soliditylang.org/en/latest/contracts.html#state-mutability
  */
 export type AbiStateMutability = 'pure' | 'view' | 'nonpayable' | 'payable'
 
 /** Kind of {@link AbiParameter} */
 export type AbiParameterKind = 'inputs' | 'outputs'
 
-export type AbiFunction = Prettify<
-  {
-    /**
-     * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
-     * https://github.com/ethereum/solidity/issues/992
-     */
-    constant?: boolean
-    /**
-     * @deprecated Vyper used to provide gas estimates
-     * https://github.com/vyperlang/vyper/issues/2151
-     */
-    gas?: number
-    /**
-     * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
-     * https://github.com/ethereum/solidity/issues/992
-     */
-    payable?: boolean
-    stateMutability: AbiStateMutability
-  } & (
-    | {
-        type: 'function'
-        inputs: readonly AbiParameter[]
-        name: string
-        outputs: readonly AbiParameter[]
-      }
-    | {
-        type: 'constructor'
-        inputs: readonly AbiParameter[]
-      }
-    | { type: 'fallback'; inputs?: [] }
-    | { type: 'receive'; stateMutability: 'payable' }
-  )
->
+/** ABI ["function"](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type */
+export type AbiFunction = {
+  type: 'function'
+  /**
+   * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
+   * @see https://github.com/ethereum/solidity/issues/992
+   */
+  constant?: boolean
+  /**
+   * @deprecated Vyper used to provide gas estimates
+   * @see https://github.com/vyperlang/vyper/issues/2151
+   */
+  gas?: number
+  inputs: readonly AbiParameter[]
+  name: string
+  outputs: readonly AbiParameter[]
+  /**
+   * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
+   * @see https://github.com/ethereum/solidity/issues/992
+   */
+  payable?: boolean
+  stateMutability: AbiStateMutability
+}
 
+/** ABI ["constructor"](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type */
+export type AbiConstructor = {
+  type: 'constructor'
+  inputs: readonly AbiParameter[]
+  /**
+   * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
+   * @see https://github.com/ethereum/solidity/issues/992
+   */
+  payable?: boolean
+  stateMutability: Extract<AbiStateMutability, 'payable' | 'nonpayable'>
+}
+
+/** ABI ["fallback"](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type */
+export type AbiFallback = {
+  type: 'fallback'
+  inputs?: readonly []
+  /**
+   * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
+   * @see https://github.com/ethereum/solidity/issues/992
+   */
+  payable?: boolean
+  stateMutability: Extract<AbiStateMutability, 'payable' | 'nonpayable'>
+}
+
+/** ABI ["receive"](https://docs.soliditylang.org/en/latest/contracts.html#receive-ether-function) type */
+export type AbiReceive = {
+  type: 'receive'
+  stateMutability: Extract<AbiStateMutability, 'payable'>
+}
+
+/** ABI ["event"](https://docs.soliditylang.org/en/latest/abi-spec.html#events) type */
 export type AbiEvent = {
   type: 'event'
   anonymous?: boolean
@@ -161,6 +182,7 @@ export type AbiEvent = {
   name: string
 }
 
+/** ABI ["error"](https://docs.soliditylang.org/en/latest/abi-spec.html#errors) type */
 export type AbiError = {
   type: 'error'
   inputs: readonly AbiParameter[]
@@ -175,12 +197,18 @@ export type AbiItemType =
   | 'fallback'
   | 'function'
   | 'receive'
-  | 'struct'
 
 /**
  * Contract [ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html#json)
  */
-export type Abi = readonly (AbiFunction | AbiEvent | AbiError)[]
+export type Abi = readonly (
+  | AbiConstructor
+  | AbiError
+  | AbiEvent
+  | AbiFallback
+  | AbiFunction
+  | AbiReceive
+)[]
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Typed Data Types

@@ -15,6 +15,14 @@ Type matching the [Contract ABI Specification](https://docs.soliditylang.org/en/
 import { Abi } from 'abitype'
 ```
 
+## `AbiConstructor`
+
+ABI [Constructor](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type
+
+```ts
+import { AbiConstructor } from 'abitype'
+```
+
 ## `AbiError`
 
 ABI [Error](https://docs.soliditylang.org/en/latest/abi-spec.html#errors) type
@@ -31,9 +39,17 @@ ABI [Event](https://docs.soliditylang.org/en/latest/abi-spec.html#events) type
 import { AbiEvent } from 'abitype'
 ```
 
+## `AbiFallback`
+
+ABI [Fallback](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type
+
+```ts
+import { AbiFallback } from 'abitype'
+```
+
 ## `AbiFunction`
 
-ABI [Function](https://docs.soliditylang.org/en/latest/abi-spec.html#argument-encoding) type
+ABI [Function](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type
 
 ```ts
 import { AbiFunction } from 'abitype'
@@ -69,6 +85,14 @@ Kind of ABI parameter: `'inputs' | 'outputs'`
 
 ```ts
 import { AbiParameterKind } from 'abitype'
+```
+
+## `AbiReceive`
+
+ABI [Receive](https://docs.soliditylang.org/en/latest/contracts.html#receive-ether-function) type
+
+```ts
+import { AbiReceive } from 'abitype'
 ```
 
 ## `AbiStateMutability`

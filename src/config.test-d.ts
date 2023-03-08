@@ -19,7 +19,7 @@ test('Config', () => {
 
   type BytesType = ResolvedConfig['BytesType']
   assertType<BytesType>({
-    inputs: new Uint8Array(Buffer.from('0xfoobarbaz')),
+    inputs: '0xfoobarbaz',
     outputs: '0xfoobarbaz',
   })
 
