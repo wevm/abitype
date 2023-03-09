@@ -15,7 +15,7 @@ titleTemplate: false
   </picture>
 </p>
 
-<div style="margin-top:1rem;display:flex;gap:0.5rem;min-height:28px;justify-content:center;margin-bottom:3rem;">
+<div style="margin-top:1rem;display:flex;gap:0.5rem;min-height:28px;max-width:350px;flex-wrap:wrap;margin-right:auto;margin-left:auto;justify-content:center;margin-bottom:3rem;">
   <a href="https://www.npmjs.com/package/abitype">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/npm/v/abitype?colorA=2e2e33&colorB=2e2e33&style=flat">
@@ -38,6 +38,12 @@ titleTemplate: false
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/github/stars/wagmi-dev/abitype?colorA=2e2e33&colorB=2e2e33&style=flat">
       <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/wagmi-dev/abitype?colorA=fafafa&colorB=fafafa&style=flat">
+    </picture>
+  </a>
+  <a href="https://bestofjs.org/projects/abitype">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/endpoint?colorA=2e2e33&colorB=2e2e33&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wagmi-dev%2Fabitype%26since=daily">
+      <img src="https://img.shields.io/endpoint?colorA=fafafa&colorB=fafafa&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wagmi-dev%2Fabitype%26since=daily" alt="Best of JS">
     </picture>
   </a>
 </div>
@@ -69,7 +75,7 @@ Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/st
 ABIType might be a good option for your project if:
 
 - You want to [typecheck](/api/types) your ABIs or EIP-712 Typed Data.
-- You want to add type inference and autocomplete to your library based on user-provided ABIs or EIP-712 Typed Data, like [wagmi](https://wagmi.sh) does.
+- You want to add type inference and autocomplete to your library based on user-provided ABIs or EIP-712 Typed Data, like [wagmi](https://wagmi.sh) and [viem](https://viem.sh).
 - You need to [convert ABI types](/api/utilities#abiparameterstoprimitivetypes) (e.g. `'string'`) to TypeScript types (e.g. `string`) or other type transformations.
 - You need to validate ABIs at [runtime](/api/zod) (e.g. after fetching from external resource).
 - You don’t want to set up a build process to generate types (e.g. TypeChain).
