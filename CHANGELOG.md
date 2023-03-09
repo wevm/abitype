@@ -1,5 +1,21 @@
 # abitype
 
+## 0.7.0
+
+### Minor Changes
+
+- [#111](https://github.com/wagmi-dev/abitype/pull/111) [`5d17c7c`](https://github.com/wagmi-dev/abitype/commit/5d17c7ce01c008a99c7de5d702641e555830c89a) Thanks [@tmm](https://github.com/tmm)! - Changed `TypedDataDomain['chainId']` to `number`.
+
+- [#106](https://github.com/wagmi-dev/abitype/pull/106) [`355647b`](https://github.com/wagmi-dev/abitype/commit/355647bbb01698e7b3260facd237cd92d27bd371) Thanks [@tmm](https://github.com/tmm)! - Refactored `AbiFunction` into `AbiConstructor`, `AbiFallback`, `AbiFunction`, and `AbiReceive`.
+
+  `AbiFunction` (e.g. `type: 'function'`) was frequently used and the only way to narrow that specific type from the others (e.g. `type: 'constructor' | 'fallback' | 'receive'`) was to add a bunch of `& { type: 'function' }` to the `AbiFunction` type.
+
+  Changed default value of `BytesType['inputs']` back to `` `0x${string}` ``. This ends up being the most strict and sensible default so you can opt in to handling `Uint8Array` (or any other type) instead of opting out of it.
+
+### Patch Changes
+
+- [#110](https://github.com/wagmi-dev/abitype/pull/110) [`4544125`](https://github.com/wagmi-dev/abitype/commit/4544125f118208babfce02f0c03d47e9d2324b5d) Thanks [@tmm](https://github.com/tmm)! - Fixed constructor, fallback, and receive signature parsing.
+
 ## 0.6.8
 
 ### Patch Changes

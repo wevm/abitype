@@ -2,7 +2,7 @@ import { expectTypeOf, test } from 'vitest'
 
 import type { Abi } from '../abi'
 
-import type { seaportHumanReadableAbi } from '../test'
+import { seaportHumanReadableAbi } from '../test'
 import type { IsAbi } from '../utils'
 import type { ParseAbi } from './parseAbi'
 import { parseAbi } from './parseAbi'
@@ -155,4 +155,35 @@ test('parseAbi', () => {
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   const param: string[] = abi2
   expectTypeOf(parseAbi(param)).toEqualTypeOf<Abi>()
+
+  const getOrderType = parseAbi(seaportHumanReadableAbi)[10]
+  expectTypeOf<typeof getOrderType>().toEqualTypeOf<{
+    readonly name: 'getOrderStatus'
+    readonly type: 'function'
+    readonly stateMutability: 'view'
+    readonly inputs: readonly [
+      {
+        readonly type: 'bytes32'
+        readonly name: 'orderHash'
+      },
+    ]
+    readonly outputs: readonly [
+      {
+        readonly type: 'bool'
+        readonly name: 'isValidated'
+      },
+      {
+        readonly type: 'bool'
+        readonly name: 'isCancelled'
+      },
+      {
+        readonly type: 'uint256'
+        readonly name: 'totalFilled'
+      },
+      {
+        readonly type: 'uint256'
+        readonly name: 'totalSize'
+      },
+    ]
+  }>()
 })
