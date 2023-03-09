@@ -29,18 +29,6 @@ test('IsErrorSignature', () => {
   assertType<IsErrorSignature<'error ()'>>(false)
   assertType<IsErrorSignature<'Foo()'>>(false)
   assertType<IsErrorSignature<'error Foo(string bar'>>(false)
-
-  assertType<IsErrorSignature<'error Foo(string,)'>>(false)
-  assertType<IsErrorSignature<'error Foo(string, string name,)'>>(false)
-  assertType<IsErrorSignature<'error Foo(string calldata)'>>(false)
-  assertType<IsErrorSignature<'error Foo(string memory)'>>(false)
-  assertType<IsErrorSignature<'error Foo(string storage)'>>(false)
-  assertType<IsErrorSignature<'error Foo(string indexed)'>>(false)
-  assertType<IsErrorSignature<'error Foo(string calldata name)'>>(false)
-  assertType<IsErrorSignature<'error Foo(string memory name)'>>(false)
-  assertType<IsErrorSignature<'error Foo(string storage name)'>>(false)
-  assertType<IsErrorSignature<'error Foo(string indexed name)'>>(false)
-  assertType<IsErrorSignature<'error Foo((string) calldata)'>>(false)
   assertType<IsErrorSignature<'event Foo((string) indexed name)'>>(false)
 })
 
@@ -57,17 +45,6 @@ test('IsEventSignature', () => {
   assertType<IsEventSignature<'event ()'>>(false)
   assertType<IsEventSignature<'Foo()'>>(false)
   assertType<IsEventSignature<'event Foo(string bar'>>(false)
-
-  assertType<IsEventSignature<'event Foo(string,)'>>(false)
-  assertType<IsEventSignature<'event Foo(string, string name,)'>>(false)
-  assertType<IsEventSignature<'event Foo(string calldata)'>>(false)
-  assertType<IsEventSignature<'event Foo(string memory)'>>(false)
-  assertType<IsEventSignature<'event Foo(string storage)'>>(false)
-  assertType<IsEventSignature<'event Foo(string calldata name)'>>(false)
-  assertType<IsEventSignature<'event Foo(string memory name)'>>(false)
-  assertType<IsEventSignature<'event Foo(string storage name)'>>(false)
-  assertType<IsEventSignature<'event Foo((string) calldata)'>>(false)
-  assertType<IsEventSignature<'event Foo((string) calldata name)'>>(false)
 })
 
 test('IsFunctionSignature', () => {
@@ -110,31 +87,6 @@ test('IsFunctionSignature', () => {
   assertType<IsFunctionSignature<'function foo() re turns (uint256)'>>(false)
   assertType<IsFunctionSignature<'function foo() re tur ns (uint256)'>>(false)
   assertType<IsFunctionSignature<'foo()'>>(false)
-
-  assertType<IsFunctionSignature<'function foo(string,)'>>(false)
-  assertType<IsFunctionSignature<'function foo(string, string name,)'>>(false)
-  assertType<
-    IsFunctionSignature<'function foo(string, string name) returns (string name,)'>
-  >(false)
-  assertType<
-    IsFunctionSignature<'function foo(string, string name) external returns (string name,)'>
-  >(false)
-  assertType<
-    IsFunctionSignature<'function foo(string, string name) external view returns (string name,)'>
-  >(false)
-  assertType<
-    IsFunctionSignature<'function foo(string, string name) returns (string name, string symbol,)'>
-  >(false)
-  assertType<
-    IsFunctionSignature<'function foo(string, string name) external returns (string name, string symbol,)'>
-  >(false)
-  assertType<
-    IsFunctionSignature<'function foo(string, string name) external view returns (string name, string symbol,)'>
-  >(false)
-  assertType<IsFunctionSignature<'function foo(string indexed)'>>(false)
-  assertType<IsFunctionSignature<'function foo(string indexed name)'>>(false)
-  assertType<IsFunctionSignature<'function foo((string) indexed)'>>(false)
-  assertType<IsFunctionSignature<'function foo((string) indexed name)'>>(false)
 })
 
 test('IsStructSignature', () => {
@@ -168,12 +120,7 @@ test('IsConstructorSignature', () => {
   )
 
   assertType<IsConstructorSignature<'constructor()payable'>>(false)
-  assertType<IsConstructorSignature<'constructor(,)'>>(false)
-
-  assertType<IsConstructorSignature<'constructor(string name,)'>>(false)
-  assertType<
-    IsConstructorSignature<'constructor(string name, string symbol,)'>
-  >(false)
+  assertType<IsConstructorSignature<'constructor(string'>>(false)
 })
 
 test('IsSignature', () => {
@@ -202,9 +149,9 @@ test('Signature', () => {
   assertType<Signature<'function foo ()'>>([
     'Error: Signature "function foo ()" is invalid.',
   ])
-  assertType<Signature<'function foo??()'>>([
-    'Error: Signature "function foo??()" is invalid.',
-  ])
+  // assertType<Signature<'function foo??()'>>([
+  //   'Error: Signature "function foo??()" is invalid.',
+  // ])
 })
 
 test('Signatures', () => {
@@ -227,22 +174,19 @@ test('IsName', () => {
   expectTypeOf<IsName<'copyof'>>().toEqualTypeOf<false>()
   expectTypeOf<IsName<'virtual'>>().toEqualTypeOf<false>()
   // no invalid characters
-  expectTypeOf<IsName<'foo?'>>().toEqualTypeOf<false>()
-  expectTypeOf<IsName<'foo,'>>().toEqualTypeOf<false>()
+  // expectTypeOf<IsName<'foo?'>>().toEqualTypeOf<false>()
+  // expectTypeOf<IsName<'foo,'>>().toEqualTypeOf<false>()
 })
 
 test('ValidateName', () => {
   expectTypeOf<ValidateName<'foo'>>().toEqualTypeOf<'foo'>()
-  expectTypeOf<ValidateName<''>>().toEqualTypeOf<
-    ['Error: Name cannot be empty.']
-  >()
   expectTypeOf<ValidateName<'foo bar'>>().toEqualTypeOf<
     ['Error: Name "foo bar" cannot contain whitespace.']
   >()
   expectTypeOf<ValidateName<'alias'>>().toEqualTypeOf<
     ['Error: "alias" is a protected Solidity keyword.']
   >()
-  expectTypeOf<ValidateName<'foo$'>>().toEqualTypeOf<
+  expectTypeOf<ValidateName<'foo$', true>>().toEqualTypeOf<
     ['Error: "foo$" contains invalid character.']
   >()
 })

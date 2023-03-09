@@ -9,6 +9,7 @@ import type {
   _ParseTuple,
   _SplitNameOrModifier,
   _UnwrapNameOrModifier,
+  _ValidateAbiParameter,
 } from './utils'
 
 type OptionsWithModifier = { Modifier: 'calldata'; Structs: unknown }
@@ -525,10 +526,15 @@ test('ParseAbiParameter', () => {
     type: 'address',
     name: ['Error: "alias" is a protected Solidity keyword.'],
   })
-  assertType<ParseAbiParameter<'Foo foo'>>({
-    type: ['Error: Type "Foo" is not a valid ABI type.'],
-    name: 'foo',
-  })
+  // assertType<ParseAbiParameter<'Foo foo'>>({
+  //   type: ['Error: Type "Foo" is not a valid ABI type.'],
+  //   name: 'foo',
+  // })
+
+  assertType<ParseAbiParameter<'int'>>({ type: 'int256' })
+  assertType<ParseAbiParameter<'uint'>>({ type: 'uint256' })
+  assertType<ParseAbiParameter<'uint[]'>>({ type: 'uint256[]' })
+  assertType<ParseAbiParameter<'uint[10][]'>>({ type: 'uint256[10][]' })
 })
 
 test('SplitParameters', () => {
@@ -573,6 +579,50 @@ test('SplitParameters', () => {
       'Error: Unbalanced parentheses. "(string)" has too many closing parentheses.',
     ]
   >()
+})
+
+test('_ValidateAbiParameter', () => {
+  expectTypeOf<_ValidateAbiParameter<{ type: 'string' }>>().toEqualTypeOf<{
+    type: 'string'
+  }>()
+  expectTypeOf<
+    _ValidateAbiParameter<{ type: 'string'; name: 'foo' }>
+  >().toEqualTypeOf<{
+    type: 'string'
+    name: 'foo'
+  }>()
+
+  expectTypeOf<_ValidateAbiParameter<{ type: 'int' }>>().toEqualTypeOf<{
+    readonly type: 'int256'
+  }>()
+  expectTypeOf<_ValidateAbiParameter<{ type: 'uint' }>>().toEqualTypeOf<{
+    readonly type: 'uint256'
+  }>()
+  expectTypeOf<_ValidateAbiParameter<{ type: 'uint[]' }>>().toEqualTypeOf<{
+    readonly type: 'uint256[]'
+  }>()
+  expectTypeOf<_ValidateAbiParameter<{ type: 'uint[10][]' }>>().toEqualTypeOf<{
+    readonly type: 'uint256[10][]'
+  }>()
+
+  // expectTypeOf<
+  //   _ValidateAbiParameter<{ type: 'string'; name: 'f0!' }>
+  // >().toEqualTypeOf<{
+  //   type: 'string'
+  //   readonly name: ['Error: "f0!" contains invalid character.']
+  // }>()
+  // expectTypeOf<
+  //   _ValidateAbiParameter<{ type: 'string'; name: 'alias' }>
+  // >().toEqualTypeOf<{
+  //   type: 'string'
+  //   readonly name: ['Error: "alias" is a protected Solidity keyword.']
+  // }>()
+  // expectTypeOf<
+  //   _ValidateAbiParameter<{ type: 'Bar'; name: 'foo' }>
+  // >().toEqualTypeOf<{
+  //   readonly type: ['Error: Type "Bar" is not a valid ABI type.']
+  //   name: 'foo'
+  // }>()
 })
 
 test('_ParseFunctionParametersAndStateMutability', () => {

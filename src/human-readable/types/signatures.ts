@@ -1,5 +1,5 @@
 import type { AbiStateMutability } from '../../abi'
-import type { Error, IsNever } from '../../types'
+import type { Error } from '../../types'
 
 export type ErrorSignature<
   TName extends string = string,
@@ -69,7 +69,6 @@ export type IsStructSignature<T extends string> = T extends StructSignature<
   ? IsName<Name>
   : false
 
-// TODO: Add state mutability
 export type ConstructorSignature<TTail extends string = string> =
   `constructor(${TTail}`
 export type IsConstructorSignature<T> = T extends ConstructorSignature
@@ -81,7 +80,6 @@ type ValidConstructorSignatures =
   | `constructor(${string})`
   | `constructor(${string}) payable`
 
-// TODO: State mutability
 export type FallbackSignature<
   TAbiStateMutability extends '' | ' payable' = '',
 > = `fallback() external${TAbiStateMutability}`
@@ -98,7 +96,7 @@ export type IsSignature<T extends string> =
   | (IsConstructorSignature<T> extends true ? true : never)
   | (T extends FallbackSignature ? true : never)
   | (T extends ReceiveSignature ? true : never) extends infer Condition
-  ? IsNever<Condition> extends true
+  ? [Condition] extends [never]
     ? false
     : true
   : false
@@ -123,20 +121,23 @@ export type FunctionModifier = Extract<
 >
 export type EventModifier = Extract<Modifier, 'indexed'>
 
-export type IsName<TName extends string> = ValidateName<TName> extends TName
+export type IsName<TName extends string> = TName extends ''
+  ? false
+  : ValidateName<TName> extends TName
   ? true
   : false
-export type ValidateName<TName extends string> = TName extends
-  | ''
-  | `${string}${' '}${string}`
-  ? TName extends ''
-    ? Error<`Name cannot be empty.`>
-    : Error<`Name "${TName}" cannot contain whitespace.`>
+export type ValidateName<
+  TName extends string,
+  CheckCharacters extends boolean = false,
+> = TName extends `${string}${' '}${string}`
+  ? Error<`Name "${TName}" cannot contain whitespace.`>
   : IsSolidityKeyword<TName> extends true
   ? Error<`"${TName}" is a protected Solidity keyword.`>
-  : IsValidCharacter<TName> extends true
-  ? TName
-  : Error<`"${TName}" contains invalid character.`>
+  : CheckCharacters extends true
+  ? IsValidCharacter<TName> extends true
+    ? TName
+    : Error<`"${TName}" contains invalid character.`>
+  : TName
 
 export type IsSolidityKeyword<T extends string> = T extends SolidityKeywords
   ? true

@@ -163,3 +163,7 @@ declare module 'abitype' {
   }
 }
 ```
+
+::: warning
+You probably only want to set this to `true` if parsed types are returning as `unknown` and you want to figure out why. This will slow down type checking significantly.
+:::

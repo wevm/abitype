@@ -3,7 +3,6 @@ import { assertType, expectTypeOf, test } from 'vitest'
 import type {
   Error,
   Filter,
-  IsNever,
   IsUnknown,
   Merge,
   Range,
@@ -26,12 +25,6 @@ test('Filter', () => {
   expectTypeOf<Filter<[1, 'foo', false, 'baz'], boolean>>().toEqualTypeOf<
     readonly [1, 'foo', 'baz']
   >()
-})
-
-test('IsNever', () => {
-  expectTypeOf<IsNever<unknown>>().toEqualTypeOf<false>()
-  expectTypeOf<IsNever<number | bigint>>().toEqualTypeOf<false>()
-  expectTypeOf<IsNever<never>>().toEqualTypeOf<true>()
 })
 
 test('IsUnknown', () => {

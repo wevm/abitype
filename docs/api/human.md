@@ -149,7 +149,7 @@ constructor(parameters) mutability
 ```
 
 - `parameters` constructor parameters (optional).
-- `mutability` constructor state mutability (optional). Supports `'nonpayable' | 'payable'`.
+- `mutability` constructor state mutability (optional). Supports `'payable'`.
 
 #### Examples
 
@@ -174,7 +174,7 @@ fallback() scope mutability
 'fallback() external payable' // scope, mutability
 ```
 
-- `scope` fallback scope. Only supports `'external'`.
+- `scope` fallback scope. Supports `'external'`.
 - `mutability` fallback state mutability (optional). Supports `'payable'`.
 
 ### Receive

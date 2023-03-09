@@ -201,7 +201,6 @@ export const Abi = z.array(
           | AbiFunctionType
           | AbiReceiveType
         if (abiItem.type === 'receive') return abiItem
-
         // Calculate `stateMutability` for deprecated fields: `constant` and `payable`
         if (
           (val as { stateMutability: AbiFunctionType['stateMutability'] })
