@@ -2,7 +2,9 @@
   "name": "abitype/docs-twoslash",
   "private": true,
   "devDependencies": {
-    "abitype": "*"
+    "abitype": "*",
+    "ethers": "*",
+    "@ethersproject/abi": "*"
   },
   "dependencies": {}
 }
