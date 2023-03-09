@@ -9,6 +9,7 @@ import type {
   _ParseTuple,
   _SplitNameOrModifier,
   _UnwrapNameOrModifier,
+  _ValidateAbiParameter,
 } from './utils'
 
 type OptionsWithModifier = { Modifier: 'calldata'; Structs: unknown }
@@ -103,9 +104,19 @@ test('ParseSignature', () => {
     stateMutability: 'nonpayable',
     inputs: [],
   })
+  assertType<ParseSignature<'constructor() payable'>>({
+    type: 'constructor',
+    stateMutability: 'payable',
+    inputs: [],
+  })
   assertType<ParseSignature<'constructor(string)'>>({
     type: 'constructor',
     stateMutability: 'nonpayable',
+    inputs: [{ type: 'string' }],
+  })
+  assertType<ParseSignature<'constructor(string) payable'>>({
+    type: 'constructor',
+    stateMutability: 'payable',
     inputs: [{ type: 'string' }],
   })
   assertType<ParseSignature<'constructor(string foo)'>>({
@@ -125,8 +136,13 @@ test('ParseSignature', () => {
   })
 
   // Fallback
-  assertType<ParseSignature<'fallback()'>>({
+  assertType<ParseSignature<'fallback() external'>>({
     type: 'fallback',
+    stateMutability: 'nonpayable',
+  })
+  assertType<ParseSignature<'fallback() external payable'>>({
+    type: 'fallback',
+    stateMutability: 'payable',
   })
 
   // Receive
@@ -191,6 +207,31 @@ test('ParseSignature', () => {
     name: 'foo',
     stateMutability: 'nonpayable',
     inputs: [{ type: 'string' }],
+    outputs: [],
+  })
+
+  assertType<ParseSignature<'function foo(string indexed)'>>({
+    name: 'foo',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      {
+        type: 'string',
+        name: ['Error: "indexed" is a protected Solidity keyword.'],
+      },
+    ],
+    outputs: [],
+  })
+  assertType<ParseSignature<'function foo(string indexed bar)'>>({
+    name: 'foo',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      {
+        type: 'string',
+        name: ['Error: Name "indexed bar" cannot contain whitespace.'],
+      },
+    ],
     outputs: [],
   })
 
@@ -390,7 +431,7 @@ test('ParseAbiParameter', () => {
   })
   assertType<ParseAbiParameter<'string indexed'>>({
     type: 'string',
-    name: 'indexed',
+    name: ['Error: "indexed" is a protected Solidity keyword.'],
   })
   assertType<ParseAbiParameter<'string calldata', OptionsWithModifier>>({
     type: 'string',
@@ -480,24 +521,108 @@ test('ParseAbiParameter', () => {
       },
     ],
   })
+
+  assertType<ParseAbiParameter<'address alias'>>({
+    type: 'address',
+    name: ['Error: "alias" is a protected Solidity keyword.'],
+  })
+  // assertType<ParseAbiParameter<'Foo foo'>>({
+  //   type: ['Error: Type "Foo" is not a valid ABI type.'],
+  //   name: 'foo',
+  // })
+
+  assertType<ParseAbiParameter<'int'>>({ type: 'int256' })
+  assertType<ParseAbiParameter<'uint'>>({ type: 'uint256' })
+  assertType<ParseAbiParameter<'uint[]'>>({ type: 'uint256[]' })
+  assertType<ParseAbiParameter<'uint[10][]'>>({ type: 'uint256[10][]' })
 })
 
 test('SplitParameters', () => {
-  assertType<SplitParameters<''>>([])
-  assertType<SplitParameters<'string'>>(['string'])
-  assertType<SplitParameters<'string, string'>>(['string', 'string'])
-  assertType<SplitParameters<'string indexed foo'>>(['string indexed foo'])
-  assertType<SplitParameters<'string foo, string bar'>>([
-    'string foo',
-    'string bar',
-  ])
-  assertType<
+  expectTypeOf<SplitParameters<''>>().toEqualTypeOf<[]>()
+  expectTypeOf<SplitParameters<'string'>>().toEqualTypeOf<['string']>()
+  expectTypeOf<SplitParameters<'string, string'>>().toEqualTypeOf<
+    ['string', 'string']
+  >()
+  expectTypeOf<SplitParameters<'string indexed foo'>>().toEqualTypeOf<
+    ['string indexed foo']
+  >()
+  expectTypeOf<SplitParameters<'string foo, string bar'>>().toEqualTypeOf<
+    ['string foo', 'string bar']
+  >()
+  expectTypeOf<
     SplitParameters<'address owner, (bool loading, (string[][] names) cats)[] dog, uint tokenId'>
-  >([
-    'address owner',
-    '(bool loading, (string[][] names) cats)[] dog',
-    'uint tokenId',
-  ])
+  >().toEqualTypeOf<
+    [
+      'address owner',
+      '(bool loading, (string[][] names) cats)[] dog',
+      'uint tokenId',
+    ]
+  >()
+
+  expectTypeOf<SplitParameters<'((string)'>>().toEqualTypeOf<
+    [
+      'Error: Unbalanced parentheses. "((string)" has too many opening parentheses.',
+    ]
+  >()
+  expectTypeOf<SplitParameters<'((((string))'>>().toEqualTypeOf<
+    [
+      'Error: Unbalanced parentheses. "((((string))" has too many opening parentheses.',
+    ]
+  >()
+  expectTypeOf<SplitParameters<'(string))'>>().toEqualTypeOf<
+    [
+      'Error: Unbalanced parentheses. "(string)" has too many closing parentheses.',
+    ]
+  >()
+  expectTypeOf<SplitParameters<'(string))))'>>().toEqualTypeOf<
+    [
+      'Error: Unbalanced parentheses. "(string)" has too many closing parentheses.',
+    ]
+  >()
+})
+
+test('_ValidateAbiParameter', () => {
+  expectTypeOf<_ValidateAbiParameter<{ type: 'string' }>>().toEqualTypeOf<{
+    type: 'string'
+  }>()
+  expectTypeOf<
+    _ValidateAbiParameter<{ type: 'string'; name: 'foo' }>
+  >().toEqualTypeOf<{
+    type: 'string'
+    name: 'foo'
+  }>()
+
+  expectTypeOf<_ValidateAbiParameter<{ type: 'int' }>>().toEqualTypeOf<{
+    readonly type: 'int256'
+  }>()
+  expectTypeOf<_ValidateAbiParameter<{ type: 'uint' }>>().toEqualTypeOf<{
+    readonly type: 'uint256'
+  }>()
+  expectTypeOf<_ValidateAbiParameter<{ type: 'uint[]' }>>().toEqualTypeOf<{
+    readonly type: 'uint256[]'
+  }>()
+  expectTypeOf<_ValidateAbiParameter<{ type: 'uint[10][]' }>>().toEqualTypeOf<{
+    readonly type: 'uint256[10][]'
+  }>()
+
+  // expectTypeOf<
+  //   _ValidateAbiParameter<{ type: 'string'; name: 'f0!' }>
+  // >().toEqualTypeOf<{
+  //   type: 'string'
+  //   readonly name: ['Error: "f0!" contains invalid character.']
+  // }>()
+  // expectTypeOf<
+  //   _ValidateAbiParameter<{ type: 'string'; name: 'alias' }>
+  // >().toEqualTypeOf<{
+  //   type: 'string'
+  //   readonly name: ['Error: "alias" is a protected Solidity keyword.']
+  // }>()
+  // expectTypeOf<
+  //   _ValidateAbiParameter<{ type: 'Bar'; name: 'foo' }>
+  // >().toEqualTypeOf<{
+  //   readonly type: ['Error: Type "Bar" is not a valid ABI type.']
+  //   name: 'foo'
+  // }>()
 })
 
 test('_ParseFunctionParametersAndStateMutability', () => {
@@ -562,7 +687,12 @@ test('_ParseTuple', () => {
   })
   assertType<_ParseTuple<'(string calldata)'>>({
     type: 'tuple',
-    components: [{ type: 'string', name: 'calldata' }],
+    components: [
+      {
+        type: 'string',
+        name: ['Error: "calldata" is a protected Solidity keyword.'],
+      },
+    ],
   })
   assertType<_ParseTuple<'(Foo)', OptionsWithStructs>>({
     type: 'tuple',
@@ -763,7 +893,12 @@ test('_ParseTuple', () => {
   assertType<_ParseTuple<'(string indexed)[] foo', OptionsWithIndexed>>({
     type: 'tuple[]',
     name: 'foo',
-    components: [{ type: 'string', name: 'indexed' }],
+    components: [
+      {
+        type: 'string',
+        name: ['Error: "indexed" is a protected Solidity keyword.'],
+      },
+    ],
   })
 
   assertType<_ParseTuple<'((((string baz) bar)[1] foo) boo)'>>({

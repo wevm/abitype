@@ -55,7 +55,7 @@ const abi = [
 
 :::
 
-ABIType contains [type-level](/api/human#types) and [runtime](/api/human#utilities) utilities for parsing human-readable ABIs, ABI items, and parameters.
+ABIType contains parallel [type-level](/api/human#types) and [runtime](/api/human#utilities) utilities for parsing human-readable ABIs, ABI items, and ABI parameters.
 
 ## Signature Types
 
@@ -71,7 +71,7 @@ function name(inputs) scope mutability returns (outputs)
 
 - `name` function name.
 - `inputs` function input parameters (optional).
-- `scope` function scope (optional). Only supports `"public" | "external"`.
+- `scope` function scope (optional). Only supports `'public' | 'external'`.
 - `mutability` function state mutability (optional). Supports [`AbiStateMutability`](/api/types#abistatemutability).
 - `outputs` function outputs (optional).
 
@@ -95,7 +95,7 @@ event name(inputs)
 ```
 
 - `name` event name.
-- `inputs` event input parameters (optional). Parameters support the `indexed` keyword.
+- `inputs` event input parameters (optional). Parameters support the `indexed` modifier.
 
 #### Examples
 
@@ -145,16 +145,18 @@ struct Name { properties }
 Constructor signatures match the following format:
 
 ```ts
-constructor(parameters)
+constructor(parameters) mutability
 ```
 
 - `parameters` constructor parameters (optional).
+- `mutability` constructor state mutability (optional). Supports `'payable'`.
 
 #### Examples
 
 ```ts
 'constructor()' // empty parameters
 'constructor(address conduitController)' // name, parameters
+'constructor(address conduitController) payable' // name, parameters, mutability
 ```
 
 ### Fallback
@@ -162,14 +164,18 @@ constructor(parameters)
 Fallback signatures match the following format:
 
 ```ts
-fallback()
+fallback() scope mutability
 ```
 
 #### Examples
 
 ```ts
-'fallback()' // only fallback
+'fallback() external' // scope
+'fallback() external payable' // scope, mutability
 ```
+
+- `scope` fallback scope. Supports `'external'`.
+- `mutability` fallback state mutability (optional). Supports `'payable'`.
 
 ### Receive
 
@@ -182,7 +188,7 @@ receive() external payable
 #### Examples
 
 ```ts
-'receive() external payable' // only receive
+'receive() external payable'
 ```
 
 ## Syntax Rules

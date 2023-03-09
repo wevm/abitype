@@ -162,7 +162,7 @@ import {
 declare function readContract<
   TAbi extends Abi,
   TFunctionName extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
-  TAbiFunction extends AbiFunction & { type: 'function' } = ExtractAbiFunction<
+  TAbiFunction extends AbiFunction = ExtractAbiFunction<
     TAbi,
     TFunctionName
   >,
@@ -180,7 +180,7 @@ const res = readContract({
 })
 ```
 
-We can refactor our `ExtractAbiFunction` call into a generic slot `TAbiFunction` and set the default to the result of `ExtractAbiFunction`. This allows us to use `TAbiFunction` in for `args` and the return type. `TAbiFunction` is constrained to `AbiFunction & { type: 'function' }` to ensure it's a normal function and not a constructor or fallback function. Lastly, we wire up another `AbiParametersToPrimitiveTypes` call for the return type—this time using outputs.
+We can refactor our `ExtractAbiFunction` call into a generic slot `TAbiFunction` (of type [`AbiFunction`](/api/types#abifunction)) and set the default to the result of `ExtractAbiFunction`. This allows us to use `TAbiFunction` in for `args` and the return type. Lastly, we wire up another `AbiParametersToPrimitiveTypes` call for the return type—this time using outputs.
 
 ## Wrapping up
 

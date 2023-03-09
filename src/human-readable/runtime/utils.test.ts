@@ -133,6 +133,17 @@ test('invalid signature', () => {
     Version: abitype@x.y.z"
   `,
   )
+
+  expect(() =>
+    parseSignature('method foo_(string)'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Unknown signature.
+
+    Details: method foo_(string)
+    Version: abitype@x.y.z"
+  `,
+  )
 })
 
 test('empty string', () => {

@@ -1,10 +1,6 @@
 import type { AbiStateMutability } from '../../abi'
 import type { Error } from '../../types'
 
-type IsName<T extends string> = T extends '' | `${string}${' '}${string}`
-  ? false
-  : true
-
 export type ErrorSignature<
   TName extends string = string,
   TParameters extends string = string,
@@ -73,9 +69,21 @@ export type IsStructSignature<T extends string> = T extends StructSignature<
   ? IsName<Name>
   : false
 
-export type ConstructorSignature<TParameters extends string = string> =
-  `constructor(${TParameters})`
-export type FallbackSignature = 'fallback()'
+export type ConstructorSignature<TTail extends string = string> =
+  `constructor(${TTail}`
+export type IsConstructorSignature<T> = T extends ConstructorSignature
+  ? T extends ValidConstructorSignatures
+    ? true
+    : false
+  : false
+type ValidConstructorSignatures =
+  | `constructor(${string})`
+  | `constructor(${string}) payable`
+
+export type FallbackSignature<
+  TAbiStateMutability extends '' | ' payable' = '',
+> = `fallback() external${TAbiStateMutability}`
+
 export type ReceiveSignature = 'receive() external payable'
 
 // TODO: Maybe use this for signature validation one day
@@ -85,7 +93,7 @@ export type IsSignature<T extends string> =
   | (IsEventSignature<T> extends true ? true : never)
   | (IsFunctionSignature<T> extends true ? true : never)
   | (IsStructSignature<T> extends true ? true : never)
-  | (T extends ConstructorSignature ? true : never)
+  | (IsConstructorSignature<T> extends true ? true : never)
   | (T extends FallbackSignature ? true : never)
   | (T extends ReceiveSignature ? true : never) extends infer Condition
   ? [Condition] extends [never]
@@ -112,6 +120,104 @@ export type FunctionModifier = Extract<
   'calldata' | 'memory' | 'storage'
 >
 export type EventModifier = Extract<Modifier, 'indexed'>
+
+export type IsName<TName extends string> = TName extends ''
+  ? false
+  : ValidateName<TName> extends TName
+  ? true
+  : false
+export type ValidateName<
+  TName extends string,
+  CheckCharacters extends boolean = false,
+> = TName extends `${string}${' '}${string}`
+  ? Error<`Name "${TName}" cannot contain whitespace.`>
+  : IsSolidityKeyword<TName> extends true
+  ? Error<`"${TName}" is a protected Solidity keyword.`>
+  : CheckCharacters extends true
+  ? IsValidCharacter<TName> extends true
+    ? TName
+    : Error<`"${TName}" contains invalid character.`>
+  : TName
+
+export type IsSolidityKeyword<T extends string> = T extends SolidityKeywords
+  ? true
+  : false
+
+export type SolidityKeywords =
+  | 'after'
+  | 'alias'
+  | 'anonymous'
+  | 'apply'
+  | 'auto'
+  | 'byte'
+  | 'calldata'
+  | 'case'
+  | 'catch'
+  | 'constant'
+  | 'copyof'
+  | 'default'
+  | 'defined'
+  | 'error'
+  | 'event'
+  | 'external'
+  | 'false'
+  | 'final'
+  | 'function'
+  | 'immutable'
+  | 'implements'
+  | 'in'
+  | 'indexed'
+  | 'inline'
+  | 'internal'
+  | 'let'
+  | 'mapping'
+  | 'match'
+  | 'memory'
+  | 'mutable'
+  | 'null'
+  | 'of'
+  | 'override'
+  | 'partial'
+  | 'private'
+  | 'promise'
+  | 'public'
+  | 'pure'
+  | 'reference'
+  | 'relocatable'
+  | 'return'
+  | 'returns'
+  | 'sizeof'
+  | 'static'
+  | 'storage'
+  | 'struct'
+  | 'super'
+  | 'supports'
+  | 'switch'
+  | 'this'
+  | 'true'
+  | 'try'
+  | 'typedef'
+  | 'typeof'
+  | 'var'
+  | 'view'
+  | 'virtual'
+
+export type IsValidCharacter<T extends string> =
+  T extends `${ValidCharacters}${infer Tail}`
+    ? Tail extends ''
+      ? true
+      : IsValidCharacter<Tail>
+    : false
+// prettier-ignore
+type ValidCharacters =
+  // uppercase letters
+  | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
+  // lowercase letters
+  | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'
+  // numbers
+  | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  // special characters
+  | '_'
 
 // Template string inference can abosrb `returns`:
 // type Result = `function foo(string) return s (uint256)` extends `function ${string}(${infer Parameters})` ? Parameters : never
