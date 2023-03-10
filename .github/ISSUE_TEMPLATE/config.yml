@@ -2,7 +2,7 @@ blank_issues_enabled: false
 contact_links:
   - name: Ask Question
     url: https://github.com/wagmi-dev/abitype/discussions/new?category=q-a
-    about: Ask questions and discuss with other community members
+    about: Ask questions and discuss with other community members.
   - name: Request Feature
     url: https://github.com/wagmi-dev/abitype/discussions/new?category=ideas
-    about: Requests features or brainstorm ideas for new functionality
+    about: Requests features or brainstorm ideas for new functionality.
