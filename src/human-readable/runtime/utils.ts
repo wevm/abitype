@@ -145,6 +145,7 @@ const abiParameterWithoutTupleRegex =
   /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
 const abiParameterWithTupleRegex =
   /^\((?<type>.+?)\)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z0-9_]+))?$/
+const dynamicIntegerRegex = /^u?int$/
 
 type ParseOptions = {
   modifiers?: Set<Modifier>
@@ -173,7 +174,7 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
       details: param,
     })
 
-  if (match.name && isProtectedSolidityKeyword(match.name))
+  if (match.name && isSolidityKeyword(match.name))
     throw new BaseError('Invalid ABI parameter.', {
       details: param,
       metaMessages: [
@@ -199,6 +200,8 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
   } else if (match.type in structs) {
     type = 'tuple'
     components = { components: structs[match.type] }
+  } else if (dynamicIntegerRegex.test(match.type)) {
+    type = `${match.type}256`
   } else {
     type = match.type
     if (!(options?.type === 'struct') && !isSolidityType(type))
@@ -303,7 +306,7 @@ export function isSolidityType(
 const protectedKeywordsRegex =
   /^(?:after|alias|anonymous|apply|auto|byte|calldata|case|catch|constant|copyof|default|defined|error|event|external|false|final|function|immutable|implements|in|indexed|inline|internal|let|mapping|match|memory|mutable|null|of|override|partial|private|promise|public|pure|reference|relocatable|return|returns|sizeof|static|storage|struct|super|supports|switch|this|true|try|typedef|typeof|var|view|virtual)$/
 
-export function isProtectedSolidityKeyword(name: string) {
+export function isSolidityKeyword(name: string) {
   return (
     name === 'address' ||
     name === 'bool' ||

@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 
 import { functionModifiers } from './signatures'
 import {
-  isProtectedSolidityKeyword,
+  isSolidityKeyword,
   isSolidityType,
   parseAbiParameter,
   parseSignature,
@@ -371,6 +371,19 @@ test.each([
   })
 })
 
+test('dynamic integer', () => {
+  expect(parseAbiParameter('int')).toMatchInlineSnapshot(`
+    {
+      "type": "int256",
+    }
+  `)
+  expect(parseAbiParameter('uint')).toMatchInlineSnapshot(`
+    {
+      "type": "uint256",
+    }
+  `)
+})
+
 test('structs', () => {
   expect(
     parseAbiParameter('Foo foo', { structs: { Foo: [{ type: 'string' }] } }),
@@ -548,7 +561,7 @@ test.each([
   'typedef',
   'typeof',
 ])('isInvalidSolidiyName($name)', (name) => {
-  expect(isProtectedSolidityKeyword(name)).toEqual(true)
+  expect(isSolidityKeyword(name)).toEqual(true)
 })
 
 test('Unbalanced Parethesis', () => {
