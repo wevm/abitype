@@ -1968,7 +1968,7 @@ exports[`parseAbi 1`] = `
       },
       {
         "name": "amount",
-        "type": "uint",
+        "type": "uint256",
       },
     ],
     "name": "BadReturnValueFromERC20OnTransfer",
@@ -2003,15 +2003,15 @@ exports[`parseAbi 1`] = `
     "inputs": [
       {
         "name": "orderIndex",
-        "type": "uint",
+        "type": "uint256",
       },
       {
         "name": "considerationAmount",
-        "type": "uint",
+        "type": "uint256",
       },
       {
         "name": "shortfallAmount",
-        "type": "uint",
+        "type": "uint256",
       },
     ],
     "name": "ConsiderationNotMet",
@@ -2038,11 +2038,11 @@ exports[`parseAbi 1`] = `
       },
       {
         "name": "identifiers",
-        "type": "uint[]",
+        "type": "uint256[]",
       },
       {
         "name": "amounts",
-        "type": "uint[]",
+        "type": "uint256[]",
       },
     ],
     "name": "ERC1155BatchTransferGenericFailure",
@@ -2306,11 +2306,11 @@ exports[`parseAbi 1`] = `
       },
       {
         "name": "identifier",
-        "type": "uint",
+        "type": "uint256",
       },
       {
         "name": "amount",
-        "type": "uint",
+        "type": "uint256",
       },
     ],
     "name": "TokenTransferGenericFailure",
@@ -2320,11 +2320,11 @@ exports[`parseAbi 1`] = `
     "inputs": [
       {
         "name": "orderIndex",
-        "type": "uint",
+        "type": "uint256",
       },
       {
         "name": "considerationIndex",
-        "type": "uint",
+        "type": "uint256",
       },
     ],
     "name": "UnresolvedConsiderationCriteria",
