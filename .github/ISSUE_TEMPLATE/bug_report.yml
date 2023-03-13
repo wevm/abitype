@@ -1,32 +1,24 @@
 name: Bug Report
 description: Report bugs or issues.
-title: 'bug: <title>'
 body:
   - type: markdown
     attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report! The more info you provide, the more we can help you. If you are a [Sponsor](https://github.com/sponsors/wagmi-dev?metadata_campaign=gh_issue), your issues are prioritized.
-
-  - type: input
-    attributes:
-      label: Package Version
-      description: What version of abitype are you using?
-      placeholder: x.y.z
-    validations:
-      required: true
-
-  - type: input
-    attributes:
-      label: TypeScript Version
-      description: What version of TypeScript are you using?
-      placeholder: x.y.z
-    validations:
-      required: true
+      value: Thanks for taking the time to fill out this bug report! The more info you provide, the more we can help you. If you are a [Sponsor](https://github.com/sponsors/wagmi-dev?metadata_campaign=gh_issue), your issues are prioritized.
 
   - type: textarea
     attributes:
-      label: Current Behavior
-      description: A concise description of what you're experiencing.
+      label: Describe the bug
+      description: Clear and concise description of what the bug. If you intend to submit a PR for this issue, tell us in the description. Thanks!
+      placeholder: I am doing… What I expect is… What actually happening is…
+    validations:
+      required: true
+
+  - type: input
+    id: reproduction
+    attributes:
+      label: Link to Minimal Reproducible Example
+      description: Please provide a link to a [TypeScript Playground](https://tsplay.dev/wjQvkW). This makes investigating issues and helping you out significantly easier! For most issues, you will likely get asked to provide a minimal reproducible example so why not add one now :) If a report is vague (e.g. just a generic error message) and has no reproduction, it will receive a "needs reproduction" label. If no reproduction is provided after 3 days, it will be auto-closed.
+      placeholder: https://tsplay.dev/wjQvkW
     validations:
       required: false
 
@@ -39,25 +31,24 @@ body:
 
   - type: input
     attributes:
-      label: Link to Minimal Reproducible Example
-      description: |
-        You can use a [TypeScript Playground](https://tsplay.dev/wjQvkW). This makes investigating issues and helping you out significantly easier! For most issues, you will likely get asked to provide a minimal reproducible example so why not add one now :)
-      placeholder: https://tsplay.dev/wjQvkW
+      label: Package Version
+      description: What version of abitype are you using?
+      placeholder: x.y.z
     validations:
-      required: false
+      required: true
 
-  - type: textarea
+  - type: input
     attributes:
-      label: Expected Behavior
-      description: A concise description of what you expected to happen.
+      label: TypeScript Version
+      description: What version of TypeScript are you using? ABIType requires `typescript@>=4.9.4`.
+      placeholder: x.y.z
     validations:
-      required: false
+      required: true
 
   - type: textarea
     attributes:
       label: Anything else?
-      description: |
-        Browser info? Screenshots? Anything that will give us more context about the issue you are encountering! Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+      description: Anything that will give us more context about the issue you are encountering. (You can attach images or files by clicking this area to highlight and then dragging files in.)
     validations:
       required: false
 
@@ -71,5 +62,5 @@ body:
           required: true
         - label: Read the [Contributing Guide](https://github.com/wagmi-dev/abitype/blob/main/.github/CONTRIBUTING.md).
           required: true
-        - label: Checked there isn't already an issue that exists for the bug you encountered.
+        - label: Checked there isn't [already an issue](https://github.com/wagmi-dev/abitype/issues) that exists for the bug you encountered.
           required: true
