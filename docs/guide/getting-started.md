@@ -62,4 +62,4 @@ After setting up your project with ABIType, you are ready to dive in further! He
 - [Learn about the types](/api/types) and [utilities](/api/utilities) available in ABIType.
 - Follow along with a [walkthrough](/guide/walkthrough) on building a type-safe `readContract` function.
 - Check out comparisons between features in [ABIType and TypeChain](/guide/comparisons#typechain) as well as [ABIType and ethers.js](/guide/comparisons#ethers-js).
-- Make reading and writing ABIs more [human-readable ABI support](/api/human).
+- Make reading and writing ABIs more human with [human-readable ABI support](/api/human).
