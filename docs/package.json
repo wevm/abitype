@@ -8,12 +8,17 @@
     "serve": "vitepress serve"
   },
   "devDependencies": {
+    "@ethersproject/abi": "*",
+    "@types/markdown-it": "^12.2.3",
+    "@types/markdown-it-footnote": "^3.0.0",
+    "abitype": "workspace:*",
+    "ethers": "*",
+    "markdown-it": "^13.0.1",
+    "markdown-it-footnote": "^3.0.3",
+    "markdown-it-shiki-twoslash": "^2.1.1",
+    "remark-shiki-twoslash": "^3.1.1",
+    "shiki-twoslash": "^3.1.1",
     "vitepress": "1.0.0-alpha.48",
     "vue": "^3.2.47"
-  },
-  "dependencies": {
-    "@types/markdown-it-footnote": "^3.0.0",
-    "markdown-it-footnote": "^3.0.3",
-    "markdown-it-shiki-twoslash": "^2.1.1"
   }
 }

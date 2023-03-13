@@ -25,6 +25,7 @@ Converts `AbiParameter` to corresponding TypeScript primitive type.
 import { AbiParameterToPrimitiveType } from 'abitype'
 
 type Result = AbiParameterToPrimitiveType<{
+//   ^?
   name: 'owner'
   type: 'address'
 }>
@@ -45,10 +46,11 @@ Converts array of `AbiParameter` to corresponding TypeScript primitive types.
 
 [TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgQQEbAAoEMpZAUxnygGcAVCDKUYGYAN3zIE8x8S4BfOAMyghBwA5FnQxW+IQCgp4tnABK7AK4AbeAF4U6bLgJFSFKjTqMWbEgB4pAehtwHAPQD8UhwG03DxF+9wAdnj4AFzCMBDSfg5yIcJYACbxUOwkkd6cADS+PlEBQaFC4QDW+P4AkvFpfjEFysD+MABMAKwAbFVcWQ4AulIAfEA)
 
-```ts
+```ts twoslash
 import { AbiParametersToPrimitiveTypes } from 'abitype'
 
 type Result = AbiParametersToPrimitiveTypes<
+//   ^?
   [
     {
       name: 'to'
@@ -110,6 +112,7 @@ const abi = [
 ] as const
 
 type Result = ExtractAbiError<typeof abi, 'ApprovalQueryForNonexistentToken'>
+//   ^?
 ```
 
 ## `ExtractAbiErrorNames`
@@ -499,7 +502,7 @@ Converts [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-st
 
 [TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgFQJ5gKYBMAiBDGPZCABSlGBmADcM1MBnOAXzgDMoIQ4ByPAI0roMPAFCiAxhAB2DeDGFMAvIlFw4JDFAYyAXHADaa9YjjS8IDPp7nLPADRwFma3PLSA5jxb3j6pLZWvADueAA2YRgwDk7C1nhYWFAYDAzezL7qALqZcACyeMBh+kYmpoHWHFwxzkE8mtoy6bn+ZhZ1MBA1cbwNOtLNfuXt1lLSMBjjaY61rjDuXj7GOaKseExjcuK1cABKKQCuYfAq9Nj4hMRkFFS0ZwwAPLUQbLGMAHyiAPRfJgB6AH5REA)
 
-```ts
+```ts twoslash
 import { TypedDataToPrimitiveTypes } from 'abitype'
 
 const types = {
@@ -515,4 +518,5 @@ const types = {
 } as const
 
 type Result = TypedDataToPrimitiveTypes<typeof types>
+//   ^?
 ```
