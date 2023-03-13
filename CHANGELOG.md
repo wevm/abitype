@@ -1,5 +1,11 @@
 # abitype
 
+## 0.7.1
+
+### Patch Changes
+
+- [#112](https://github.com/wagmi-dev/abitype/pull/112) [`1e347ca`](https://github.com/wagmi-dev/abitype/commit/1e347cab3f457a4325062c6c386aa0ed7bc9c6b7) Thanks [@tmm](https://github.com/tmm)! - Updated human-readable ABI parsing to convert dynamic integer alias types (e.g. `int` and `uint`) to fixed types (e.g. `int256` and `uint256`).
+
 ## 0.7.0
 
 ### Minor Changes

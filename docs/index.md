@@ -15,7 +15,7 @@ titleTemplate: false
   </picture>
 </p>
 
-<div style="margin-top:1rem;display:flex;gap:0.5rem;min-height:28px;max-width:350px;flex-wrap:wrap;margin-right:auto;margin-left:auto;justify-content:center;margin-bottom:3rem;">
+<div style="margin-top:1rem;display:flex;gap:0.5rem;min-height:48px;max-width:350px;flex-wrap:wrap;margin-right:auto;margin-left:auto;justify-content:center;margin-bottom:3rem;">
   <a href="https://www.npmjs.com/package/abitype">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/npm/v/abitype?colorA=2e2e33&colorB=2e2e33&style=flat">
