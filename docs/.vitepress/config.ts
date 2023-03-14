@@ -41,7 +41,10 @@ export default async () => {
       ],
       ['meta', { property: 'og:url', content: 'https://abitype.dev' }],
       ['meta', { property: 'og:image', content: 'https://abitype.dev/og.png' }],
-      ['meta', { name: 'twitter:image', content: 'https://abitype.dev/og.png' }],
+      [
+        'meta',
+        { name: 'twitter:image', content: 'https://abitype.dev/og.png' },
+      ],
       ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
       [
         'script',

@@ -3,6 +3,30 @@ description: "Comparisons between ABIType's features and features from similar l
 title: 'Comparisons'
 ---
 
+<script setup>
+window.addEventListener('click', (e) => {
+      const el = e.target 
+
+      if (el.matches('.vp-code-group input')) {
+        // input <- .tabs <- .vp-code-group
+        const group = el.parentElement?.parentElement
+        const i = Array.from(group?.querySelectorAll('input') || []).indexOf(el)
+
+        
+        const filtered = Array.from(
+          group?.querySelectorAll('div[class*="language-"]') || []
+        ).filter((val) => !val.className.match('language-id'))
+
+        const current = group?.querySelector('div[class*="language-"].active')
+        const next = filtered?.[i]
+
+        if (current && next && current !== next) {
+          current.classList.remove('active')
+          next.classList.add('active')
+        }
+      }
+    })
+</script>
 # Comparisons
 
 No other library does what ABIType does (inferring TypeScript types from ABIs and EIP-712 Typed Data), but there are some similarities with other libraries. This page compares ABIType to other libraries that are similar in some way.
@@ -37,28 +61,28 @@ Parses a human-readable ABI into a JSON ABI.
 
 ::: code-group
 
-```ts [abitype]
+```ts twoslash [abitype]
 import { parseAbi } from 'abitype'
 
 const abi = parseAbi([
-  //  ^? const abi: [{ type: 'function', name: 'name', inputs: [{ type: 'tuple', name: 'foo', components: ...
+  //  ^? 
   'function name((string name, uint256 age) foo, uint256 tokenId)',
   'event Foo(address indexed bar)',
 ])
 ```
 
-```ts [abitype (struct)]
+```ts twoslash [abitype (struct)]
 import { parseAbi } from 'abitype'
 
 const abi = parseAbi([
-  //  ^? const abi: [{ type: 'function', name: 'name', inputs: [{ type: 'tuple', name: 'foo', components: ...
+  //  ^? 
   'struct Foo { string name; uint256 age }',
   'function name((string name, uint256 age) foo, uint256 tokenId)',
   'event Foo(address indexed bar)',
 ])
 ```
 
-```ts [ethers@5]
+```ts twoslash [ethers@5]
 import { FormatTypes, Interface } from '@ethersproject/abi'
 
 const iface = new Interface([
@@ -66,10 +90,10 @@ const iface = new Interface([
   'event Foo(address indexed bar)',
 ])
 const abi = iface.fragments
-//    ^? const abi: readonly Fragment[]
+//    ^? 
 ```
 
-```ts [ethers@6]
+```ts twoslash [ethers@6]
 import { Interface } from 'ethers'
 
 const iface = new Interface([
@@ -77,7 +101,7 @@ const iface = new Interface([
   'event Foo(address indexed bar)',
 ])
 const abi = iface.fragments
-//    ^? const abi: readonly Fragment[]
+//    ^? 
 ```
 
 :::
@@ -112,25 +136,25 @@ Parses a human-readable ABI item into a JSON ABI item.
 
 ::: code-group
 
-```ts [abitype]
+```ts twoslash [abitype]
 import { parseAbiItem } from 'abitype'
 
 const abiItem = parseAbiItem('function name((string name, uint256 age) foo, uint256 tokenId)')
-//    ^? const abiItem: { type: 'function', name: 'name', inputs: [{ type: 'tuple', name: 'foo', components: ...
+//    ^? 
 ```
 
-```ts [ethers@5]
+```ts twoslash [ethers@5]
 import { Fragment } from '@ethersproject/abi'
 
 const abiItem = Fragment.from('function name(tuple(string name, uint256 age) foo, uint256 tokenId)')
-//    ^? const abiItem: Fragment
+//    ^? 
 ```
 
-```ts [ethers@6]
+```ts twoslash [ethers@6]
 import { Fragment } from 'ethers'
 
 const abiItem = Fragment.from('function name(tuple(string name, uint256 age) foo, uint256 tokenId)')
-//    ^? const abiItem: Fragment
+//    ^? 
 ```
 
 :::
@@ -161,25 +185,25 @@ Parses a human-readable ABI parameter into a JSON ABI parameter.
 
 ::: code-group
 
-```ts [abitype]
+```ts twoslash [abitype]
 import { parseAbiParameter } from 'abitype'
 
 const abiParameter = parseAbiParameter('string foo')
-//    ^? const abiParameter: { type: 'string', name: 'foo' }
+//    ^? 
 ```
 
-```ts [ethers@5]
+```ts twoslash [ethers@5]
 import { ParamType } from '@ethersproject/abi'
 
 const abiItem = ParamType.from('string foo')
-//    ^? const abiItem: ParamType
+//    ^? 
 ```
 
-```ts [ethers@6]
+```ts twoslash [ethers@6]
 import { ParamType } from 'ethers'
 
 const abiItem = ParamType.from('string foo')
-//    ^? const abiItem: ParamType
+//    ^? 
 ```
 
 :::

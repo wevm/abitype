@@ -3,6 +3,31 @@ description: "Let's use ABIType to create a type-safe function that calls \"read
 title: 'Walkthrough'
 ---
 
+<script setup>
+window.addEventListener('click', (e) => {
+      const el = e.target 
+
+      if (el.matches('.vp-code-group input')) {
+        // input <- .tabs <- .vp-code-group
+        const group = el.parentElement?.parentElement
+        const i = Array.from(group?.querySelectorAll('input') || []).indexOf(el)
+
+        
+        const filtered = Array.from(
+          group?.querySelectorAll('div[class*="language-"]') || []
+        ).filter((val) => !val.className.match('language-id'))
+
+        const current = group?.querySelector('div[class*="language-"].active')
+        const next = filtered?.[i]
+
+        if (current && next && current !== next) {
+          current.classList.remove('active')
+          next.classList.add('active')
+        }
+      }
+    })
+</script>
+
 # Walkthrough
 
 Let's use ABIType to create a type-safe function that calls "read" contract methods. We'll infer function names, argument types, and return types from a user-provided ABI, and make sure it works for function overloads.
@@ -27,16 +52,161 @@ The function accepts a `config` object which includes the ABI, function name, an
 
 ::: code-group
 
-```ts [readContract.ts]
-import { abi } from './abi'
+```ts twoslash [readContract.ts]
+import type {
+  Abi,
+  AbiFunction,
+  AbiParameterToPrimitiveType,
+  AbiParametersToPrimitiveTypes,
+  AbiStateMutability,
+  Address,
+  ExtractAbiFunction,
+  ExtractAbiFunctionNames,
+  Narrow,
+} from 'abitype'
+
+const abi = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'owner', type: 'address' }],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'owner', type: 'address' },
+      { name: 'collectionId', type: 'uint256' },
+    ],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'tokenURI',
+    type: 'function',
+    stateMutability: 'pure',
+    inputs: [{ name: 'id', type: 'uint256' }],
+    outputs: [{ name: 'uri', type: 'string' }],
+  },
+  {
+    name: 'safeTransferFrom',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+] as const
+
+type ReadContractConfig<
+  TAbi extends Abi | readonly unknown[],
+  TFunctionName extends string,
+> = GetConfig<TAbi, TFunctionName, 'pure' | 'view'>
+
+type GetConfig<
+  TAbi extends Abi | readonly unknown[] = Abi,
+  TFunctionName extends string = string,
+  TAbiStateMutability extends AbiStateMutability = AbiStateMutability,
+> = {
+  /** Contract ABI */
+  abi: Narrow<TAbi> // infer `TAbi` type for inline usage
+  /** Contract address */
+  address: Address
+  /** Function to invoke on the contract */
+  functionName: GetFunctionName<TAbi, TFunctionName, TAbiStateMutability>
+} & GetArgs<TAbi, TFunctionName>
+
+type GetFunctionName<
+  TAbi extends Abi | readonly unknown[] = Abi,
+  TFunctionName extends string = string,
+  TAbiStateMutability extends AbiStateMutability = AbiStateMutability,
+> = TAbi extends Abi
+  ? ExtractAbiFunctionNames<
+      TAbi,
+      TAbiStateMutability
+    > extends infer AbiFunctionNames
+    ?
+        | AbiFunctionNames
+        | (TFunctionName extends AbiFunctionNames ? TFunctionName : never)
+        | (Abi extends TAbi ? string : never)
+    : never
+  : TFunctionName
+
+type GetArgs<
+  TAbi extends Abi | readonly unknown[],
+  TFunctionName extends string,
+  TAbiFunction extends AbiFunction = TAbi extends Abi
+    ? ExtractAbiFunction<TAbi, TFunctionName>
+    : AbiFunction,
+  TArgs = AbiParametersToPrimitiveTypes<TAbiFunction['inputs'], 'inputs'>,
+  FailedToParseArgs =
+    | ([TArgs] extends [never] ? true : false)
+    | (readonly unknown[] extends TArgs ? true : false),
+> = true extends FailedToParseArgs
+  ? {
+      /**
+       * Arguments to pass contract method
+       *
+       * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for type inference.
+       */
+      args?: readonly unknown[]
+    }
+  : TArgs extends readonly []
+  ? { args?: never }
+  : {
+      /** Arguments to pass contract method */ args: TArgs
+    }
+
+type GetReturnType<
+  TAbi extends Abi | readonly unknown[] = Abi,
+  TFunctionName extends string = string,
+  TAbiFunction extends AbiFunction & {
+    type: 'function'
+  } = TAbi extends Abi ? ExtractAbiFunction<TAbi, TFunctionName> : AbiFunction,
+  TArgs = AbiParametersToPrimitiveTypes<TAbiFunction['outputs'], 'outputs'>,
+  FailedToParseArgs =
+    | ([TArgs] extends [never] ? true : false)
+    | (readonly unknown[] extends TArgs ? true : false),
+> = true extends FailedToParseArgs
+  ? unknown
+  : TArgs extends readonly []
+  ? void
+  : TArgs extends readonly [infer Arg]
+  ? Arg
+  : TArgs & {
+      // Construct ethers hybrid array-objects for named outputs.
+      [Output in TAbiFunction['outputs'][number] as Output extends {
+        name: infer Name extends string
+      }
+        ? Name extends ''
+          ? never
+          : Name
+        : never]: AbiParameterToPrimitiveType<Output, 'outputs'>
+    }
+
+export declare function readContract<
+  TAbi extends Abi | readonly unknown[],
+  TFunctionName extends string,
+>(
+  config: ReadContractConfig<TAbi, TFunctionName>,
+): GetReturnType<TAbi, TFunctionName>
+
+// ---cut---
+
 
 const res = readContract({
-  //  ^? const res: unknown
+  //  ^? 
+  address: "0x", 
   abi,
   functionName: 'balanceOf',
-  // ^? (property) functionName: string
+  // ^? 
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
-  // ^? (property) args: readonly unknown[]
+  // ^? 
 })
 ```
 
