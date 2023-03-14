@@ -25,9 +25,9 @@ export const markdownItShikiTwoslashSetup = async (
           lang: 'bash',
           theme: 'vitesse-dark',
         })
-        const bothCodeBlocks = light + '\n' + dark
+        const lightAndDarkPreBash = light + dark
 
-        return bothCodeBlocks
+        return lightAndDarkPreBash
       }
 
       return transformAttributesToHTML(
