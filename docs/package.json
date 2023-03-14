@@ -18,6 +18,7 @@
     "remark-shiki-twoslash": "^3.1.1",
     "shiki-twoslash": "^3.1.1",
     "vitepress": "1.0.0-alpha.48",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "shiki": "^0.14.1"
   }
 }

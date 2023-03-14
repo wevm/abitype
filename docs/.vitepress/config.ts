@@ -1,7 +1,7 @@
 import footNote from 'markdown-it-footnote'
 import { defineConfig } from 'vitepress'
 
-import path, { resolve } from 'node:path'
+import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { version } from '../../package.json'
@@ -66,7 +66,6 @@ export default async () => {
         md.use(footNote)
         md.use(shikiTwoslash, {
           themes: ['vitesse-light', 'vitesse-dark'],
-          vfsRoot: resolve(root, 'packages/twoslash'),
           defaultCompilerOptions: {
             target: 'esnext',
           },

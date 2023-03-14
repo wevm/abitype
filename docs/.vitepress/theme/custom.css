@@ -109,7 +109,7 @@ html:not(.dark) .custom-block pre.shiki.vitesse-light {
 
 html.dark pre.shiki.vitesse-dark {
     display: block;
-  }
+}
 
 html.dark pre.shiki.vitesse-light {
     display: none;
