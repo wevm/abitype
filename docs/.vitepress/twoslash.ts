@@ -18,7 +18,16 @@ export const markdownItShikiTwoslashSetup = async (
       code = code.replace(/\r?\n$/, '') // strip trailing newline fed during code block parsing
 
       if (lang === 'bash') {
-        return highlighter.codeToHtml(code, { lang: 'bash' })
+        const light = highlighter.codeToHtml(code, {
+          lang: 'bash',
+        })
+        const dark = highlighter.codeToHtml(code, {
+          lang: 'bash',
+          theme: 'vitesse-dark',
+        })
+        const bothCodeBlocks = light + '\n' + dark
+
+        return bothCodeBlocks
       }
 
       return transformAttributesToHTML(

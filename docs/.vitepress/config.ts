@@ -12,7 +12,7 @@ export default async () => {
   const root = path.resolve(__dirname, '../')
 
   const shikiTwoslash = await markdownItShikiTwoslashSetup({
-    themes: ['vitesse-dark', 'vitesse-light'],
+    themes: ['vitesse-light', 'vitesse-dark'],
     wrapFragments: true,
     vfsRoot: root,
   })

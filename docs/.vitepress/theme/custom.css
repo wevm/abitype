@@ -115,6 +115,28 @@ html.dark pre.shiki.vitesse-light {
     display: none;
 }
 
+html.dark pre .arrow {
+    background-color: var(--vp-c-brand-darker);
+  	border-left: 1px solid var(--vp-c-brand-darker);
+	  border-top: 1px solid var(--vp-c-brand-darker);
+}
+
+html:not(.dark) pre .arrow {
+    background-color: var(--vp-custom-block-tip-bg);
+  	border-left: 1px solid var(--vp-custom-block-tip-bg);
+	  border-top: 1px solid var(--vp-custom-block-tip-bg);
+}
+
+html.dark pre .popover {
+    background-color: var(--vp-c-brand-darker);
+    color: var(--vp-code-tab-active-text-color);
+}
+
+html:not(.dark) pre .popover {
+    background-color: var(--vp-custom-block-tip-bg);
+    color: var(--vp-c-text-2);
+}
+
 
 
 /* Overrides */
@@ -316,14 +338,11 @@ The try button
 }
 /* Queries */
  pre .arrow {
-	/* Transparent background */
-	 background-color: var(--vp-c-brand-darker);
+	/* Transparent background */ 
 	 position: relative;
 	 top: -5px;
 	 margin-left: 0.1rem;
 	/* Edges */
-	 border-left: 1px solid var(--vp-c-brand-darker);
-	 border-top: 1px solid var(--vp-c-brand-darker);
 	 transform: translateY(25%) rotate(45deg);
 	/* Size */
 	 height: 8px;
@@ -331,12 +350,10 @@ The try button
 }
  pre .popover {
 	 margin-bottom: 10px;
-	 background-color: var(--vp-c-brand-darker);
 	 display: inline-block;
 	 padding: 0 0.5rem 0.3rem;
 	 margin-top: 10px;
-	 border-radius: 3px;
-   color: var(--vp-code-tab-active-text-color)
+	 border-radius: 3px; 
 }
 /* Completion */
  pre .inline-completions ul.dropdown {
