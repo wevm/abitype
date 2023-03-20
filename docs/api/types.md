@@ -11,7 +11,7 @@ Types covering the [Contract ABI](https://docs.soliditylang.org/en/latest/abi-sp
 
 Type matching the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html#json)
 
-```ts
+```ts twoslash noplayground
 import { Abi } from 'abitype'
 ```
 
@@ -19,7 +19,7 @@ import { Abi } from 'abitype'
 
 ABI [Constructor](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type
 
-```ts
+```ts twoslash noplayground
 import { AbiConstructor } from 'abitype'
 ```
 
@@ -27,7 +27,7 @@ import { AbiConstructor } from 'abitype'
 
 ABI [Error](https://docs.soliditylang.org/en/latest/abi-spec.html#errors) type
 
-```ts
+```ts twoslash noplayground
 import { AbiError } from 'abitype'
 ```
 
@@ -35,7 +35,7 @@ import { AbiError } from 'abitype'
 
 ABI [Event](https://docs.soliditylang.org/en/latest/abi-spec.html#events) type
 
-```ts
+```ts twoslash noplayground
 import { AbiEvent } from 'abitype'
 ```
 
@@ -43,7 +43,7 @@ import { AbiEvent } from 'abitype'
 
 ABI [Fallback](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type
 
-```ts
+```ts twoslash noplayground
 import { AbiFallback } from 'abitype'
 ```
 
@@ -51,7 +51,7 @@ import { AbiFallback } from 'abitype'
 
 ABI [Function](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type
 
-```ts
+```ts twoslash noplayground
 import { AbiFunction } from 'abitype'
 ```
 
@@ -59,7 +59,7 @@ import { AbiFunction } from 'abitype'
 
 Representation used by Solidity compiler (e.g. `'string'`, `'int256'`, `'struct Foo'`)
 
-```ts
+```ts twoslash noplayground
 import { AbiInternalType } from 'abitype'
 ```
 
@@ -67,7 +67,7 @@ import { AbiInternalType } from 'abitype'
 
 `"type"` name for [`Abi`](#abi) items (e.g. `'type': 'function'` for [`AbiFunction`](#abifunction))
 
-```ts
+```ts twoslash noplayground
 import { AbiInternalType } from 'abitype'
 ```
 
@@ -75,7 +75,7 @@ import { AbiInternalType } from 'abitype'
 
 `inputs` and `ouputs` item for ABI functions, events, errors, and constructors
 
-```ts
+```ts twoslash noplayground
 import { AbiParameter } from 'abitype'
 ```
 
@@ -83,7 +83,7 @@ import { AbiParameter } from 'abitype'
 
 Kind of ABI parameter: `'inputs' | 'outputs'`
 
-```ts
+```ts twoslash noplayground
 import { AbiParameterKind } from 'abitype'
 ```
 
@@ -91,7 +91,7 @@ import { AbiParameterKind } from 'abitype'
 
 ABI [Receive](https://docs.soliditylang.org/en/latest/contracts.html#receive-ether-function) type
 
-```ts
+```ts twoslash noplayground
 import { AbiReceive } from 'abitype'
 ```
 
@@ -99,7 +99,7 @@ import { AbiReceive } from 'abitype'
 
 ABI Function behavior
 
-```ts
+```ts twoslash noplayground
 import { AbiStateMutability } from 'abitype'
 ```
 
@@ -107,7 +107,7 @@ import { AbiStateMutability } from 'abitype'
 
 ABI canonical [types](https://docs.soliditylang.org/en/latest/abi-spec.html#json)
 
-```ts
+```ts twoslash noplayground
 import { AbiType } from 'abitype'
 ```
 
@@ -115,7 +115,7 @@ import { AbiType } from 'abitype'
 
 [Solidity types](https://docs.soliditylang.org/en/latest/abi-spec.html#types) as template strings
 
-```ts
+```ts twoslash noplayground
 import {
   SolidityAddress,
   SolidityArray,
@@ -132,7 +132,7 @@ import {
 
 [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) Typed Data Specification
 
-```ts
+```ts twoslash noplayground
 import { TypedData } from 'abitype'
 ```
 
@@ -140,7 +140,7 @@ import { TypedData } from 'abitype'
 
 [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-domainseparator) Domain
 
-```ts
+```ts twoslash noplayground
 import { TypedDataDomain } from 'abitype'
 ```
 
@@ -148,7 +148,7 @@ import { TypedDataDomain } from 'abitype'
 
 Entry in `TypedData` type items
 
-```ts
+```ts twoslash noplayground
 import { TypedDataParameter } from 'abitype'
 ```
 
@@ -156,6 +156,6 @@ import { TypedDataParameter } from 'abitype'
 
 Subset of `AbiType` that excludes `tuple` and `function`
 
-```ts
+```ts twoslash noplayground
 import { TypedDataType } from 'abitype'
 ```

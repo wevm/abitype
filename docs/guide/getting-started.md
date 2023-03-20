@@ -43,17 +43,12 @@ const erc20Abi = narrow([...])
 
 Once your ABIs are set up correctly, you can use the exported [types](/api/types) and [utilities](/api/utilities) to work with them. You can also import already set-up ABIs from the `abitype/test` entrypoint to get started quickly.
 
-```ts
-import { ExtractAbiFunctions } from 'abitype'
+```ts twoslash
+import { ExtractAbiFunctionNames } from 'abitype'
 import { erc20Abi } from 'abitype/test'
 
 type Result = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
-//   ^? type Result = "symbol" | "name" | "allowance" | "balanceOf" | "decimals" | "totalSupply"
 ```
-
-::: tip
-The [`// ^?`](https://github.com/orta/vscode-twoslash-queries) syntax inlines the type in your editor so you don't need to constantly hover with your mouse. Check out the twoslash [VS Code extension](https://marketplace.visualstudio.com/items?itemName=Orta.vscode-twoslash-queries) or [nvim plugin](https://github.com/marilari88/twoslash-queries.nvim) to get started.
-:::
 
 ## What's next?
 
@@ -62,4 +57,4 @@ After setting up your project with ABIType, you are ready to dive in further! He
 - [Learn about the types](/api/types) and [utilities](/api/utilities) available in ABIType.
 - Follow along with a [walkthrough](/guide/walkthrough) on building a type-safe `readContract` function.
 - Check out comparisons between features in [ABIType and TypeChain](/guide/comparisons#typechain) as well as [ABIType and ethers.js](/guide/comparisons#ethers-js).
-- Make reading and writing ABIs more [human-readable ABI support](/api/human).
+- Make reading and writing ABIs more human with [human-readable ABI support](/api/human).

@@ -9,13 +9,13 @@ ABIType exports some test utilities and constants to make playing around and tes
 
 ## Constants
 
-```ts
+```ts twoslash
 import { address } from 'abitype/test'
 ```
 
 ### ABIs
 
-```ts
+```ts twoslash
 import {
   customSolidityErrorsAbi,
   ensAbi,
@@ -32,7 +32,7 @@ import {
 
 ### Human-Readable ABIs
 
-```ts
+```ts twoslash
 import {
   customSolidityErrorsHumanReadableAbi,
   ensHumanReadableAbi,

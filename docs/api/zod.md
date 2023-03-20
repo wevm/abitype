@@ -31,7 +31,7 @@ yarn add zod
 
 Import and use schemas:
 
-```ts
+```ts twoslash
 import { Abi } from 'abitype/zod'
 
 const result = await fetch(
@@ -42,7 +42,7 @@ const abi = Abi.parse(result)
 
 ## Schemas
 
-```ts
+```ts twoslash
 export {
   Abi,
   AbiConstructor,

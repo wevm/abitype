@@ -128,6 +128,13 @@
   },
   "packageManager": "pnpm@7.5.0",
   "pnpm": {
+    "overrides": {
+      "remark-shiki-twoslash>shiki": "^0.14.1",
+      "shiki-twoslash>shiki": "^0.14.1"
+    },
+    "patchedDependencies": {
+      "shiki-twoslash@3.1.1": "patches/shiki-twoslash@3.1.1.patch"
+    },
     "peerDependencyRules": {
       "ignoreMissing": [
         "@algolia/client-search"

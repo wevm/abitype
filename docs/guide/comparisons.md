@@ -37,28 +37,30 @@ Parses a human-readable ABI into a JSON ABI.
 
 ::: code-group
 
-```ts [abitype]
+```ts twoslash [abitype]
 import { parseAbi } from 'abitype'
 
 const abi = parseAbi([
-  //  ^? const abi: [{ type: 'function', name: 'name', inputs: [{ type: 'tuple', name: 'foo', components: ...
   'function name((string name, uint256 age) foo, uint256 tokenId)',
   'event Foo(address indexed bar)',
 ])
+abi
+//^?
 ```
 
-```ts [abitype (struct)]
+```ts twoslash [abitype (struct)]
 import { parseAbi } from 'abitype'
 
 const abi = parseAbi([
-  //  ^? const abi: [{ type: 'function', name: 'name', inputs: [{ type: 'tuple', name: 'foo', components: ...
   'struct Foo { string name; uint256 age }',
   'function name((string name, uint256 age) foo, uint256 tokenId)',
   'event Foo(address indexed bar)',
 ])
+abi
+//^?
 ```
 
-```ts [ethers@5]
+```ts twoslash [ethers@5]
 import { FormatTypes, Interface } from '@ethersproject/abi'
 
 const iface = new Interface([
@@ -66,10 +68,10 @@ const iface = new Interface([
   'event Foo(address indexed bar)',
 ])
 const abi = iface.fragments
-//    ^? const abi: readonly Fragment[]
+//    ^?
 ```
 
-```ts [ethers@6]
+```ts twoslash [ethers@6]
 import { Interface } from 'ethers'
 
 const iface = new Interface([
@@ -77,7 +79,7 @@ const iface = new Interface([
   'event Foo(address indexed bar)',
 ])
 const abi = iface.fragments
-//    ^? const abi: readonly Fragment[]
+//    ^?
 ```
 
 :::
@@ -112,25 +114,31 @@ Parses a human-readable ABI item into a JSON ABI item.
 
 ::: code-group
 
-```ts [abitype]
+```ts twoslash [abitype]
 import { parseAbiItem } from 'abitype'
 
-const abiItem = parseAbiItem('function name((string name, uint256 age) foo, uint256 tokenId)')
-//    ^? const abiItem: { type: 'function', name: 'name', inputs: [{ type: 'tuple', name: 'foo', components: ...
+const abiItem = parseAbiItem(
+  //  ^?
+  'function name((string name, uint256 age) foo, uint256 tokenId)',
+)
 ```
 
-```ts [ethers@5]
+```ts twoslash [ethers@5]
 import { Fragment } from '@ethersproject/abi'
 
-const abiItem = Fragment.from('function name(tuple(string name, uint256 age) foo, uint256 tokenId)')
-//    ^? const abiItem: Fragment
+const abiItem = Fragment.from(
+  //  ^?
+  'function name(tuple(string name, uint256 age) foo, uint256 tokenId)',
+)
 ```
 
-```ts [ethers@6]
+```ts twoslash [ethers@6]
 import { Fragment } from 'ethers'
 
-const abiItem = Fragment.from('function name(tuple(string name, uint256 age) foo, uint256 tokenId)')
-//    ^? const abiItem: Fragment
+const abiItem = Fragment.from(
+  //  ^?
+  'function name(tuple(string name, uint256 age) foo, uint256 tokenId)',
+)
 ```
 
 :::
@@ -161,25 +169,25 @@ Parses a human-readable ABI parameter into a JSON ABI parameter.
 
 ::: code-group
 
-```ts [abitype]
+```ts twoslash [abitype]
 import { parseAbiParameter } from 'abitype'
 
 const abiParameter = parseAbiParameter('string foo')
-//    ^? const abiParameter: { type: 'string', name: 'foo' }
+//    ^? 
 ```
 
-```ts [ethers@5]
+```ts twoslash [ethers@5]
 import { ParamType } from '@ethersproject/abi'
 
-const abiItem = ParamType.from('string foo')
-//    ^? const abiItem: ParamType
+const abiParameter = ParamType.from('string foo')
+//    ^? 
 ```
 
-```ts [ethers@6]
+```ts twoslash [ethers@6]
 import { ParamType } from 'ethers'
 
-const abiItem = ParamType.from('string foo')
-//    ^? const abiItem: ParamType
+const abiParameter = ParamType.from('string foo')
+//    ^? 
 ```
 
 :::

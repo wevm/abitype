@@ -7,10 +7,13 @@
     "serve": "vitepress serve"
   },
   "devDependencies": {
-    "vitepress": "1.0.0-alpha.48",
+    "@ethersproject/abi": "*",
+    "@types/markdown-it-footnote": "^3.0.0",
+    "abitype": "workspace:*",
+    "ethers": "*",
+    "markdown-it-footnote": "^3.0.3",
+    "vitepress": "1.0.0-alpha.61",
+    "vitepress-plugin-shiki-twoslash": "0.0.4",
     "vue": "^3.2.47"
-  },
-  "dependencies": {
-    "markdown-it-footnote": "^3.0.3"
   }
 }

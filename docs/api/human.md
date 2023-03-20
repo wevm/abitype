@@ -8,7 +8,6 @@ title: 'Human-Readable ABI'
 Human-Readable ABIs compress [JSON ABIs](https://docs.soliditylang.org/en/latest/abi-spec.html#json) into signatures that are nicer to read and less verbose to write. For example:
 
 ::: code-group
-
 ```ts [human-readable.ts]
 const abi = [
   'constructor()',
@@ -52,7 +51,6 @@ const abi = [
   { inputs: [], name: 'ApprovalCallerNotOwnerNorApproved', type: 'error' },
 ] as const
 ```
-
 :::
 
 ABIType contains parallel [type-level](/api/human#types) and [runtime](/api/human#utilities) utilities for parsing human-readable ABIs, ABI items, and ABI parameters.
@@ -217,18 +215,14 @@ Parses human-readable ABI into JSON [`Abi`](/api/types#abi).
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgBQIZQM4FMCCAjYOAXzgDMoIQ4ByVAmATzC2oChXHm4AlLDAVwA28ALwp02fMAA8rOHAD0CuAD0A-HE5YefIaLhQsqACYQAdoIZwA2kjOoQWAFxwARHlSDUZgMZYA8qSuANyaTM5upPy+MMDmIXAYMKgwWACy-MkEgsCMTgB0hXI2xfLUUTFxZnAeXr4BpAAUJsaGGBhwEADuZlhQAJRwAG7AWF0GWDD8UGYdjfzAZjAATACsAGz91AA0pTRYQ1hLcAAqUN4YpH3Nxq18HYvGWAAeWMZkFCDbcC1tD2ZPV7vGAQb4LJZrdY-EAQaIwLa7eQAXVYAD4gA)
-
-```ts
+```ts twoslash
 import { ParseAbi } from 'abitype'
 
-type Result = ParseAbi<
-  // ^? type Result = readonly [{ name: "balanceOf"; type: "function"; stateMutability:...
-  [
-    'function balanceOf(address owner) view returns (uint256)',
-    'event Transfer(address indexed from, address indexed to, uint256 amount)',
-  ]
->
+type Result = ParseAbi<[
+  // ^? 
+  'function balanceOf(address owner) view returns (uint256)',
+  'event Transfer(address indexed from, address indexed to, uint256 amount)',
+]>
 ```
 
 ### `ParseAbiItem`
@@ -242,19 +236,20 @@ Parses human-readable ABI item (e.g. error, event, function) into ABI item.
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgBQIZQM4FMCCAjYASRixDgF84AzKCMgclQJgE8wt6AoT19uAJSwYArgBt4AXk5w4AellwAegH44vLAKFjJiOADtUILAC44AIjypRqPQGMsAeSpmA3GrYnzVYXZjAIeq5wGDCoJACywqEEosCspmYAbsBYAO6uAHRZ0ijo2PhEJCAAPPTevv56cJbWdo5UABSoACbNUEIYcBCpelhQAJRwyWlw7TDCUHqdDcLAejAATACsAGz99AB83OqaIuJwErmYuATEpMU58kqqO4J7OkgGRglUEBBB6i8+tn4BQSFhLCRaLAWLxczDdJuOZgKIYYxZDI5ADaZW+vyqrwgDQAQqgAF7VdCDSGjLDjSbTEJQOYAc3WABo4PRqcIfnA8YSkNS6fpDFg3OR6ABdTgbIA)
-
-```ts
+```ts twoslash
 import { ParseAbiItem } from 'abitype'
 
-type Result =
-  // ^? type Result = { name: "balanceOf"; type: "function"; stateMutability: "view";...
-  ParseAbiItem<'function balanceOf(address owner) view returns (uint256)'>
-
 type Result = ParseAbiItem<
-  // ^? type Result = { name: "foo"; type: "function"; stateMutability: "view"; inputs:...
-  ['function foo(Baz bar) view returns (string)', 'struct Baz { string name; }']
+  // ^? 
+  'function balanceOf(address owner) view returns (uint256)'
 >
+
+
+type ResultStruct = ParseAbiItem<[
+  // ^? 
+  'function foo(Baz bar) view returns (string)',
+  'struct Baz { string name; }',
+]>
 ```
 
 ### `ParseAbiParameter`
@@ -268,18 +263,17 @@ Parses human-readable ABI parameter into [`AbiParameter`](/api/types#abiparamete
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgBQIZQM4FMCCAjYNKVELGLKOAXzgDMoIQ4ByVAmATzC2YChfO3OACUsGAK4AbeAF4U6bPkLoSZCgB5WAEy1QxGOgxDMAfLwD05uNYB6AfjiCsIsVNmJHXLAC44AIlQdPQwMPwBuOAA7VV8-ekZw6n4nFwlpODkiRQIiVXIodV5rSzh7TyFRNPckJ1iYcTBJLESAY0ZISKxImAxfAG0ar1iMGChgSIBzROjSbwA6BaK4PuYAIVQALzg8dGYAGhYRqHEW+HWtpCPxiajVCKpmAF1eEyA)
-
-```ts
+```ts twoslash
 import { ParseAbiParameter } from 'abitype'
 
 type Result = ParseAbiParameter<'address from'>
-//   ^? type Result = { type: "address"; name: "from"; }
+//   ^? 
 
-type Result = ParseAbiParameter<
-  // ^? type Result = { type: "tuple"; components: [{ type: "string"; name:...
-  ['Baz bar', 'struct Baz { string name; }']
->
+type ResultStruct = ParseAbiParameter<[
+  // ^? 
+  'Baz bar',
+  'struct Baz { string name; }',
+]>
 ```
 
 ### `ParseAbiParameters`
@@ -293,18 +287,17 @@ Parses human-readable ABI parameters into [`AbiParameter`s](/api/types#abiparame
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgBQIZQM4FMCCAjYNKVELGLTOAXzgDMoIQ4ByVAmATzC2YChfO3OACUsGAK4AbeAF4U6bPkLoSZChgA8rACbaoYjHQYgANHFS79GQzAhnxwAHYwATAFYAbOZARxz5gB8vAD0wXDhAHoA-HCCWCJiUjAAXHAA2khxqQBEFnoG2QDccI6qOfSMRdRmmVxYOXlWGEUAdG38cQkS0nByRIoERKrkmBq84aFw0bF1XUmpGTPcOTDiYJJYVQDGjJCOWM4YC7XLcNkYMFBOAOZVpaTJbS3j6cwAQqgAXnB46MxmzAuUHEW3gH2+SCBNxKqmKVGYAF1eAEgA)
-
-```ts
+```ts twoslash
 import { ParseAbiParameters } from 'abitype'
 
 type Result = ParseAbiParameters<'address from, address to, uint256 amount'>
-//   ^? type Result: [{ type: "address"; name: "from"; }, { type: "address";...
+//   ^? 
 
-type Result = ParseAbiParameters<
-  // ^? type Result: [{ type: "tuple"; components: [{ type: "string"; name:...
-  ['Baz bar', 'struct Baz { string name; }']
->
+type ResultStruct = ParseAbiParameters<[
+  // ^? 
+  'Baz bar',
+  'struct Baz { string name; }',
+]>
 ```
 
 ## Utilities
@@ -326,11 +319,11 @@ Parses human-readable ABI into JSON [`Abi`](/api/types#abi).
 
 #### Example
 
-```ts
+```ts twoslash
 import { parseAbi } from 'abitype'
 
 const abi = parseAbi([
-  //  ^? const abi: readonly [{ name: "balanceOf"; type: "function"; stateMutability:...
+  //  ^? 
   'function balanceOf(address owner) view returns (uint256)',
   'event Transfer(address indexed from, address indexed to, uint256 amount)',
 ])
@@ -347,16 +340,16 @@ Parses human-readable ABI item (e.g. error, event, function) into ABI item.
 
 #### Example
 
-```ts
+```ts twoslash
 import { parseAbiItem } from 'abitype'
 
 const abiItem = parseAbiItem(
-  //  ^? const abiItem: { name: "balanceOf"; type: "function"; stateMutability: "view";...
+  //  ^? 
   'function balanceOf(address owner) view returns (uint256)',
 )
 
-const abiItem = parseAbiItem([
-  //  ^? const abiItem: { name: "foo"; type: "function"; stateMutability: "view"; inputs:...
+const abiItemStruct = parseAbiItem([
+  //  ^? 
   'function foo(Baz bar) view returns (string)',
   'struct Baz { string name; }',
 ])
@@ -373,14 +366,14 @@ Parses human-readable ABI parameter into [`AbiParameter`](/api/types#abiparamete
 
 #### Example
 
-```ts
+```ts twoslash
 import { parseAbiParameter } from 'abitype'
 
 const abiParameter = parseAbiParameter('address from')
-//    ^? const abiParameter: { type: "address"; name: "from"; }
+//    ^? 
 
-const abiParameter = parseAbiParameter([
-  //  ^? const abiParameter: { type: "tuple"; components: [{ type: "string"; name:...
+const abiParameterStruct = parseAbiParameter([
+  //  ^? 
   'Baz bar',
   'struct Baz { string name; }',
 ])
@@ -397,16 +390,16 @@ Parses human-readable ABI parameters into [`AbiParameter`s](/api/types#abiparame
 
 #### Example
 
-```ts
+```ts twoslash
 import { parseAbiParameters } from 'abitype'
 
 const abiParameters = parseAbiParameters(
-  //  ^? const abiParameters: [{ type: "address"; name: "from"; }, { type: "address";...
+  //  ^?
   'address from, address to, uint256 amount',
 )
 
-const abiParameters = parseAbiParameters([
-  //  ^? const abiParameters: [{ type: "tuple"; components: [{ type: "string"; name:...
+const abiParametersStruct = parseAbiParameters([
+  //  ^? 
   'Baz bar',
   'struct Baz { string name; }',
 ])

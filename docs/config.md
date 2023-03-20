@@ -11,15 +11,17 @@ How to configure ABIType in userland or as a library author.
 
 ABIType's types are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). Just install `abitype` (make sure versions match) and extend the `Config` interface either directly in your code or in a `d.ts` file (e.g. `abi.d.ts`):
 
-```ts
+```ts twoslash
 declare module 'abitype' {
   export interface Config {
-    BigIntType: MyCustomBigIntType
+    BigIntType: bigint & { foo: 'bar' }
   }
 }
-```
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgJQKYGcIBsBuqAmAwhAHYBmwA5nAL5xlQQhwDkAhgEbAwCeYqLAFCDe-OAFkehAK7oYTAEJUAkiRgAVPqjgBeOF0rA1cAGSJ6ECAC5WHNlBa1h+VAGMs97SAj5pWbexcogKIgnBwqAAekLBwRjCoUGRsrtrE5FSh4eFKlKoaWjaSMnKKKmqa-GFONMLBKBh+8HpomLgE6RSUANosufmVAgC6ggD0o9kAegD8gkA)
+import { ResolvedConfig } from 'abitype'
+type Result = ResolvedConfig['BigIntType']
+//   ^?
+```
 
 ::: info Extending Config from third-party packages
 If you are using ABIType via another package (e.g. [`wagmi`](https://wagmi.sh)), you can customize the ABIType's types by targeting the package's `abitype` module:
@@ -48,7 +50,7 @@ TypeScript type to use for `address` values.
 - Type `any`
 - Default `` `0x${string}` ``
 
-```ts
+```ts twoslash
 declare module 'abitype' {
   export interface Config {
     AddressType: `0x${string}`
@@ -63,7 +65,7 @@ Maximum depth for nested array types (e.g. `string[][]`). When `false`, there is
 - Type `number | false`
 - Default `false`
 
-```ts
+```ts twoslash
 declare module 'abitype' {
   export interface Config {
     ArrayMaxDepth: false
@@ -78,7 +80,7 @@ TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48`.
 - Type `any`
 - Default `bigint`
 
-```ts
+```ts twoslash
 declare module 'abitype' {
   export interface Config {
     BigIntType: bigint
@@ -93,7 +95,7 @@ TypeScript type to use for `bytes<M>` values.
 - Type `{ inputs: any; outputs: any }`
 - Default `` { inputs: `0x${string}` | Uint8Array; outputs: `0x${string}` } ``
 
-```ts
+```ts twoslash
 declare module 'abitype' {
   export interface Config {
     BytesType: {
@@ -111,7 +113,7 @@ Lower bound for fixed-length arrays.
 - Type `number`
 - Default `1`
 
-```ts
+```ts twoslash
 declare module 'abitype' {
   export interface Config {
     FixedArrayMinLength: 1
@@ -126,7 +128,7 @@ Upper bound for fixed-length arrays.
 - Type `number`
 - Default `99`
 
-```ts
+```ts twoslash
 declare module 'abitype' {
   export interface Config {
     FixedArrayMinLength: 99
@@ -141,7 +143,7 @@ TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48`.
 - Type `any`
 - Default `number`
 
-```ts
+```ts twoslash
 declare module 'abitype' {
   export interface Config {
     IntType: number
@@ -156,7 +158,7 @@ When set, validates `AbiParameter`'s `type` against `AbiType`.
 - Type `boolean`
 - Default `false`
 
-```ts
+```ts twoslash
 declare module 'abitype' {
   export interface Config {
     StrictAbiType: false

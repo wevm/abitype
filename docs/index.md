@@ -8,57 +8,50 @@ title: 'ABIType: Strict TypeScript types for Ethereum ABIs'
 titleTemplate: false
 ---
 
-<p align="center" style="min-height:45px;">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-dark.svg">
-    <img alt="ABIType" src="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-light.svg" width="auto" height="45">
-  </picture>
+<p align="center" style="min-height:45px;width:100%;">
+  <img img-dark alt="ABIType" src="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-dark.svg" height="45" style="width:auto;">
+  <img img-light alt="ABIType" src="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-light.svg" height="45" style="width:auto;">
 </p>
 
 <div style="margin-top:1rem;display:flex;gap:0.5rem;min-height:48px;max-width:350px;flex-wrap:wrap;margin-right:auto;margin-left:auto;justify-content:center;margin-bottom:3rem;">
   <a href="https://www.npmjs.com/package/abitype">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/npm/v/abitype?colorA=2e2e33&colorB=2e2e33&style=flat">
-      <img src="https://img.shields.io/npm/v/abitype?colorA=fafafa&colorB=fafafa&style=flat" alt="Version">
-    </picture>
+    <img img-dark src="https://img.shields.io/npm/v/abitype?colorA=2e2e33&colorB=2e2e33&style=flat" alt="Version">
+    <img img-light src="https://img.shields.io/npm/v/abitype?colorA=fafafa&colorB=fafafa&style=flat" alt="Version">
   </a>
   <a href="https://www.npmjs.com/package/abitype">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/npm/dm/abitype?colorA=2e2e33&colorB=2e2e33&style=flat">
-      <img src="https://img.shields.io/npm/dm/abitype?colorA=fafafa&colorB=fafafa&style=flat" alt="Downloads per month">
+      <img img-dark src="https://img.shields.io/npm/dm/abitype?colorA=2e2e33&colorB=2e2e33&style=flat" alt="Downloads per month">
+      <img img-light src="https://img.shields.io/npm/dm/abitype?colorA=fafafa&colorB=fafafa&style=flat" alt="Downloads per month">
     </picture>
   </a>
   <a href="https://github.com/wagmi-dev/abitype/blob/main/LICENSE">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/npm/l/abitype?colorA=2e2e33&colorB=2e2e33&style=flat">
-      <img src="https://img.shields.io/npm/l/abitype?colorA=fafafa&colorB=fafafa&style=flat" alt="MIT License">
+      <img img-dark src="https://img.shields.io/npm/l/abitype?colorA=2e2e33&colorB=2e2e33&style=flat" alt="MIT License">
+      <img img-light src="https://img.shields.io/npm/l/abitype?colorA=fafafa&colorB=fafafa&style=flat" alt="MIT License">
     </picture>
   </a>
   <a href="https://github.com/wagmi-dev/abitype">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/github/stars/wagmi-dev/abitype?colorA=2e2e33&colorB=2e2e33&style=flat">
-      <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/wagmi-dev/abitype?colorA=fafafa&colorB=fafafa&style=flat">
+      <img img-dark src="https://img.shields.io/github/stars/wagmi-dev/abitype?colorA=2e2e33&colorB=2e2e33&style=flat" alt="GitHub Repo stars">
+      <img img-light src="https://img.shields.io/github/stars/wagmi-dev/abitype?colorA=fafafa&colorB=fafafa&style=flat" alt="GitHub Repo stars">
     </picture>
   </a>
   <a href="https://bestofjs.org/projects/abitype">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/endpoint?colorA=2e2e33&colorB=2e2e33&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wagmi-dev%2Fabitype%26since=daily">
-      <img src="https://img.shields.io/endpoint?colorA=fafafa&colorB=fafafa&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wagmi-dev%2Fabitype%26since=daily" alt="Best of JS">
+      <img img-dark src="https://img.shields.io/endpoint?colorA=2e2e33&colorB=2e2e33&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wagmi-dev%2Fabitype%26since=daily" alt="Best of JS">
+      <img img-light src="https://img.shields.io/endpoint?colorA=fafafa&colorB=fafafa&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wagmi-dev%2Fabitype%26since=daily" alt="Best of JS">
     </picture>
   </a>
 </div>
 
 Strict TypeScript types for Ethereum ABIs. ABIType provides utilities and type definitions for ABI properties and values, covering the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html), as well as [EIP-712](https://eips.ethereum.org/EIPS/eip-712) Typed Data.
 
-```ts
-import { ExtractAbiFunctions } from 'abitype'
+```ts twoslash
+import { AbiParametersToPrimitiveTypes, ExtractAbiFunction } from 'abitype'
 import { erc20Abi } from 'abitype/test'
 
-type FunctionNames = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
-//   ^? type FunctionNames = "symbol" | "name" | "allowance" | "balanceOf" | "decimals" | "totalSupply"
-
 type TransferInputTypes = AbiParametersToPrimitiveTypes<
-  // ^? type TransferInputTypes = readonly [`0x${string}`, bigint]
+  // ^?
   ExtractAbiFunction<typeof erc20Abi, 'transfer'>['inputs']
 >
 ```
