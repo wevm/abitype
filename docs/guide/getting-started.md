@@ -48,12 +48,7 @@ import { ExtractAbiFunctionNames } from 'abitype'
 import { erc20Abi } from 'abitype/test'
 
 type Result = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
-//   ^?
 ```
-
-::: tip
-The [`// ^?`](https://github.com/orta/vscode-twoslash-queries) syntax inlines the type in your editor so you don't need to constantly hover with your mouse. Check out the twoslash [VS Code extension](https://marketplace.visualstudio.com/items?itemName=Orta.vscode-twoslash-queries) or [nvim plugin](https://github.com/marilari88/twoslash-queries.nvim) to get started.
-:::
 
 ## What's next?
 

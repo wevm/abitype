@@ -1,23 +1,12 @@
 import footNote from 'markdown-it-footnote'
+import { ScriptTarget } from 'typescript'
 import { defineConfig } from 'vitepress'
-
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { withTwoslash } from 'vitepress-plugin-shiki-twoslash'
 
 import { version } from '../../package.json'
-import { markdownItShikiTwoslashSetup } from './twoslash'
 
-export default async () => {
-  const __dirname = path.dirname(fileURLToPath(import.meta.url))
-  const root = path.resolve(__dirname, '../')
-
-  const shikiTwoslash = await markdownItShikiTwoslashSetup({
-    themes: ['vitesse-light', 'vitesse-dark'],
-    wrapFragments: true,
-    vfsRoot: root,
-  })
-
-  return defineConfig({
+export default withTwoslash(
+  defineConfig({
     description:
       'Utilities and type definitions for ABI properties and values, covering the Contract ABI Specification, as well as EIP-712 Typed Data.',
     head: [
@@ -64,12 +53,6 @@ export default async () => {
       },
       config: (md) => {
         md.use(footNote)
-        md.use(shikiTwoslash, {
-          themes: ['vitesse-light', 'vitesse-dark'],
-          defaultCompilerOptions: {
-            target: 'esnext',
-          },
-        })
       },
     },
     themeConfig: {
@@ -175,6 +158,12 @@ export default async () => {
       ],
     },
     title: 'ABIType: Strict TypeScript types for Ethereum ABIs',
+    twoslash: {
+      addTryButton: true,
+      defaultCompilerOptions: {
+        target: ScriptTarget.ESNext,
+      }
+    },
     vue: {
       template: {
         compilerOptions: {
@@ -182,5 +171,5 @@ export default async () => {
         },
       },
     },
-  })
-}
+  }),
+)

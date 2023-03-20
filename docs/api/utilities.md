@@ -20,13 +20,11 @@ Converts `AbiParameter` to corresponding TypeScript primitive type.
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgQQEbAAoEMpZAUxnygBUIMpRgZgA3fEgTzHzgF84AzKCEOAcizoYzfPwBQ4kSzgAlfAGcArgBt4AXhTpsuAkVLlKIanQaiAPAnEB6a3HsA9APzj7AOzz4AXAIgB3N2IJe2lvASwAEwioRQUJNgA+IA)
-
 ```ts twoslash
 import { AbiParameterToPrimitiveType } from 'abitype'
 
 type Result = AbiParameterToPrimitiveType<{
-//   ^?
+  // ^?
   name: 'owner'
   type: 'address'
 }>
@@ -45,22 +43,14 @@ Converts array of `AbiParameter` to corresponding TypeScript primitive types.
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgQQEbAAoEMpZAUxnygGcAVCDKUYGYAN3zIE8x8S4BfOAMyghBwA5FnQxW+IQCgp4tnABK7AK4AbeAF4U6bLgJFSFKjTqMWbEgB4pAehtwHAPQD8UhwG03DxF+9wAdnj4AFzCMBDSfg5yIcJYACbxUOwkkd6cADS+PlEBQaFC4QDW+P4AkvFpfjEFysD+MABMAKwAbFVcWQ4AulIAfEA)
-
 ```ts twoslash
 import { AbiParametersToPrimitiveTypes } from 'abitype'
 
 type Result = AbiParametersToPrimitiveTypes<
-//   ^?
+  // ^?
   [
-    {
-      name: 'to'
-      type: 'address'
-    },
-    {
-      name: 'tokenId'
-      type: 'uint256'
-    },
+    { name: 'to'; type: 'address'; },
+    { name: 'tokenId'; type: 'uint256'; },
   ]
 >
 ```
@@ -81,8 +71,6 @@ Does not include full array or tuple conversion. Use [`AbiParameterToPrimitiveTy
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgQQEbACoE8wFMMQAKUowMwAbvjrnAL5wBmUEIcA5AIbow3sBQ-XnjgAlXAGcArgBt4AXhTpseAsVLkqK3AB4uAE31RJE9gD5+AektxbAPQD8QA)
-
 ```ts twoslash
 import { AbiTypeToPrimitiveType } from 'abitype'
 
@@ -101,8 +89,6 @@ Extracts `AbiError` with name from `Abi`.
 | returns      | ABI Error.     | `AbiError`          |
 
 #### Example
-
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwyUU0cAvnAGZkhwDkmRMAnmAKYMBQ32EAOwDO8ZsDgBeOAG1ucRHAGYQHAFyM8YMGQBumADYBhA-o5QAchBgB5AO4CzlqJu0QdHACYMANHDad1BjMyKB84YAEwAFcYIXVpAF1KbzkFJRVAl10DAEUos1YAMWhLB1RgEQ4BGAAVCABrKrD-NUZg6DCI6Nj4pIoUpMwhOH5hGF4WuAAlDiEo-XgpNAwcfCISEIAeFohqODFfBiy3XPyoIpLBDnLK6rrGgQYAPm4Aelf5OAA9AH5uIA)
 
 ```ts twoslash
 import { ExtractAbiError } from 'abitype'
@@ -127,8 +113,6 @@ Extracts all `AbiError` names from `Abi`.
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwyUU0AcpiAKYDOcAvnAGZkhwDkmRMAnmNQ4AoIdggA7WvG7A4AXjgBtIXERxxVagC5OeMGDIA3TABsAwqZPUo5CDADyAd3HXbUPQYiHqAEw4AaOD4BHQ5rMigAuGBxMABXGFodRQBdRn8VNQ0aUI8jUwBFOOteADEKCWpUYClqcRgAFQgAazqo4O1OcOgomPjE5LSGDLTMejFJGBEOuAAlOjiTeAU0DBx8IhIIyhpaAB4OiGY4GQA+IQB6C9U4AD0AfiEgA)
-
 ```ts twoslash
 import { ExtractAbiErrorNames } from 'abitype'
 
@@ -151,8 +135,6 @@ Extracts all `AbiError` types from `Abi`.
 | returns | ABI Errors. | `AbiError` (union) |
 
 #### Example
-
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwyUU0AznAL5wBmZIcA5JkTAJ5gCmTAUL9ggA7cvFbA4AXjgBtXnERwhmEFwBczPGDBkAbpgA2AYUMGuUAHIQYAeQDuQ81ahadEXVwAmTADRwO3BpM5mRQvnDAQmAArjDkGjIAutQ+8orKqkGueoYAitHm7ABi0FaOqMCiXEIwACoQANbV4QHqzCHQ4ZExcQnJVKnJmJSCIjD8rXAASlzk0Qbw0mgYOPhEJKHkADytELRw4gB8vAD0JwpwAHoA-LxAA)
 
 ```ts twoslash
 import { ExtractAbiErrors } from 'abitype'
@@ -177,8 +159,6 @@ Extracts `AbiEvent` with name from `Abi`.
 | returns      | ABI Event.     | `AbiEvent`          |
 
 #### Example
-
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwyAbgKYB28AvnAGZQQhwDkmRMAnmGSwFB9sECgGd47YHAC8cANp84iBYrgVMIMgC5WeMGEYlMAGxYAaZYq49tLMuSpmLcTBWGcQEAK4jtdYyLJzFThgCjBPGB85J0UkNQ0bCAB3CjIoMzgrLVZMABNcqDIREQzQ3LJUMlztDE8yOGog4MRVdWy2PQMqjKybPIKiktMQinLK6syoOoam4Li2mxgIAGtKAElcnu52z1CYACYAVgA2UtGKqpqp+sanAF0m29inePaAFSxROjTHYN7WOyUGC-FQuNweby+fyBJyhcKRbTyZotV42BhMLbWHL5QrFM5jS6TaZPZrzBKsJaY9r9XFDEYEia1G6zFRk9pLVYUDZUmy7KhHU7DMoXRnXGb3R7mO7OERwISiGACLJwABKRU8RngMjQGBw+CIpCBAB4shA6M4iMMWB8XCJvukAHx8AD0zpUAD0APx8IA)
 
 ```ts twoslash
 import { ExtractAbiEvent } from 'abitype'
@@ -221,8 +201,6 @@ Extracts all `AbiEvent` names from `Abi`.
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwyAbgKYB2MAcpiGQM5wC+cAZlBCHAOSZEwAnmDI8AUGOwQKDeP2BwAvHADaYuInUa4FOmQBcvPGDCcSmADY8ANFo1CRhnmXJUbduJgrTBICAFcGQzZLBjJbbThgCjB-GCDVDw0kXXonCAB3CjIoGzgHA15MABNiqEYGPOjislQyYsMMfzIWCMjEHT0nTBMzeryC7tLyhkrrKIoauob8qGbWpI7Uwp4YCABrSgBJYoHhFf9omAAmAFYANirJ2vrGuZbmNo0AXTbHrQQPZacAFSwZNg5dyRQa8FyUGDA7ReHx+QLBULhDzRWLxQxqdpLLq8DhcPaOIrDCpXKa3Wbzd6YlLY1YQfErEplYnjao3GZNB5PbTUtK8NabCg7elOQ5UM6XFnXaZ3Clc15ad7PTxMKQyGASApwABKjH8FngyjQGBw+CIpAhtHoDAAPAUIGxPEQAHxiAD0ru0AD0APxiIA)
-
 ```ts twoslash
 import { ExtractAbiEventNames } from 'abitype'
 
@@ -263,8 +241,6 @@ Extracts all `AbiEvent` types from `Abi`.
 | returns | ABI Events. | `AbiEvent` (union) |
 
 #### Example
-
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwyAbgKYB2MAznAL5wBmUEIcA5JkTAJ5hnsAUIOwQK1eF2BwAvHADaguIiXK4FTCDIAuDnjBgWJTABt2AGlXLe-XezLkqFq3EwUxPEBACu1XY1NqMks1OGAKMG8aXUVQ5SQNLTsIAHcKMigLOBsdDkwAE3yoMmpqLPD8slQyfN0MbzJ6ELiEzVzOAyMarJy7AqKSsvMwikrq2uyoBqaXePU2uxgIAGtKAEl8nr5273CYACYAVgA2ctGqmrqpxrpm5QBdZtvVBBdE9oAVLHFGDOdQ3ocByUGD-NRuDxeXz+QLBFzhSLRBSzRDzJIcZisLa2PKFYqlM5jS6TabPOKo96LCDY9r9fFDEZEib1G53NStdHsJarCgbGl2XZUI6nYYVC7M64zUKPVTPe6uWiicQwYQ5OAAJRK3hM8DkaAwOHwRFIIOoAB4chBGK4iAA+QQAegdagAegB+QRAA)
 
 ```ts twoslash
 import { ExtractAbiEvents } from 'abitype'
@@ -308,8 +284,6 @@ Extracts `AbiFunction` with name from `Abi`.
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwAYgK4B2uwE5cAvnAGZQQhwDkmRMAnmAKbsAUEOw0AzvC7A4AXjgBtIXETKVccphD8AXBwKYANpkr8A8o3YAaNSt4C97RhSo1rtuJMwx+AWVIw0obAvI4AbsD8AO7u6nDA5GAB4noKSJrajhBR5PxQ1nD2uhyYACalUPzi4uz0ALo2cRABSTApiulaxewGxqYFRY6kCTAATACsAGy1dA1qdI2qcRnd4piM-AAqWOTiG1DELCCx6oMczpQw1OQnKl4+-oFEwaEc5DRgmDxchoKLKglWu0lHEVJ1MucjgM+N0yhUqjV6P91ODujAINCHCVypVqjNkWCNF1HOiANb8cgASVKmO6w3IYym+I8cyaLWSqVZSKEdTgmHEcDEuxgIiKcAASlVSIZ4PI0BgcPgiGRLtcADxFCCMPlEKz6IwmbDmSwAPiEAHpzeoAHoAfiEQA)
-
 ```ts twoslash
 import { ExtractAbiFunction } from 'abitype'
 
@@ -350,8 +324,6 @@ Extracts all `AbiFunction` names from `Abi`.
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwAYgK4B2uwE5AcpiAKYDOcAvnAGZQQhwDkmIjACeYRvwBQk7DWbwhwOAF44AbUlxEmrXHINGALgEFMAG0yVGAeU78ANDq2jxx-pwpUaDp3HmYYRgBZUhhFM2BRNwA3YEYAdx9dOGByMFDmYzUkfSY3CHjyRigHOBcjAUwAEyqoFmZ+dgBdR2SIUPSYTPUcgzdTCytS8rdSVJgAJgBWADZGthadNlbtZNyK-mZMTkYAFSxyZh2oYh4QJN0RgQ9KGGpyC61-QJCwogiogXIaMEwRITMEhWWlSnW6GmSWl6eWuZ2GYg21Vq9XmwN00I2MAg8NclRqdWYDXYaKhej6AixAGtGOQAJJVHEbMbkSazVG+RZtDoZLKc4mSJpwTCsWSHGDScpwABKLFIZngqjQGBw+CIZFu93oTGYAB5yhBOEKiAA+SQAejNugAegB+SRAA)
-
 ```ts twoslash
 import { ExtractAbiFunctionNames } from 'abitype'
 
@@ -390,8 +362,6 @@ Extracts all `AbiFunction` types from `Abi`.
 | returns | ABI Functions. | `AbiFunction` (union) |
 
 #### Example
-
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwAYgK4B2uwE5AznAL5wBmUEIcA5JkTAJ5gAppwBQI7DVrwewOAF44AbRFxEK1XHKYQggFxcCmADaZKggPLNOAGnWr+Q-Z2YUqNG3bhTMMQQFlSGBkjYH4nADdgQQB3Dw04YHIwQNp9RSQtHScIaPJBKBs4Bz0uTAATMqhBWlpORgBdW3iIQOSYVKUM7RLOQxMzQuKnUkSYACYAVgA2OoZG9QYmtXjMntpMZkEAFSw6TahiNhA4jSGuF0oYanIT1W9fAKCiELCuchowTD4eI2El1USbQ6yniqi6WXOR0GAh65Uq1VqjH+GnBPRgEGhjlKFSqNVmyLBmm6TnRAGtBOQAJJlTE9EbkcbTfGeebNVopNKspEiepwTD0CR0GBiYpwABK1VIRngCjQGBw+CIZEu11oAB5ihBmHyiAA+EQAegNGgAegB+ERAA)
 
 ```ts twoslash
 import { ExtractAbiFunctions } from 'abitype'
@@ -438,8 +408,6 @@ Checks if type is `Abi`.
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgSQM4EEBGw4F84BmUEIcA5AIbYwCeYApmQFBMDGEAdqvFTgLxwA2kziIRouBwoh6ALnKYKAGwodW9APIEyAGnGjaDeWQIBXNTGCdd+uNwox6AWVMxeS4LWMA3YPQDuNhJwwBxgrqjygkhSMsYQ-hz0ULpwhnLkFAAmWVD0qKhkeAC6esEQruEwkUIx0hlkiipqjDppdA2moTAATACsAGxFuKXiuGViwbENqBQE9AAqUKqo81AAYsQgQRLpxmYWVhw7ovaOLm7YHl7kHJxgFDRUSq22oVU1wsGidXHkRCRUntMjk8gVhhNgr8GjAIECOsZsrl8oU8JCJNDjLCANb0DjILLwozkLocXqDCG2UblSoRKLUtFMYpwCioODsLgwFjpOAAJXypiU8AEaCwwAAPOkIAQWdgAHxMAD0iokAD0APxMIA)
-
 ```ts twoslash
 import { IsAbi } from 'abitype'
 
@@ -479,8 +447,6 @@ Checks if type is `TypedData`.
 
 #### Example
 
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgSQM4BUCeYCmATAEQEMYi4BfOAMyghDgHIiAjYGbHBgKC4GMIAdqnjtcqOAF5EXOHAAKOKKkEAuOAG0ZsxHAFEQONQz0GGAGjijDjYVGACA5gwpmtspCesMA7kQA2fjgw5pYcRkR4eFA4qKjO5K6yALqJcACyRMB+apraOp5GNHQhVkYKSoLxqe66+l4wECVhjOXKAlVu+XVG-AIwOH1xFqU2MHaOHcmulETivcI8VnAASjEArn7wUmhYuIQkRAA8VhBUoWIAfFwA9NfaAHoA-FxAA)
-
 ```ts twoslash
 import { IsTypedData } from 'abitype'
 
@@ -510,8 +476,6 @@ Converts [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-st
 | returns      | TypeScript representation of schema. | `{ [name: string]: TType }` (inferred) |
 
 #### Example
-
-[TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgFQJ5gKYBMAiBDGPZCABSlGBmADcM1MBnOAXzgDMoIQ4ByPAI0roMPAFCiAxhAB2DeDGFMAvIlFw4JDFAYyAXHADaa9YjjS8IDPp7nLPADRwFma3PLSA5jxb3j6pLZWvADueAA2YRgwDk7C1nhYWFAYDAzezL7qALqZcACyeMBh+kYmpoHWHFwxzkE8mtoy6bn+ZhZ1MBA1cbwNOtLNfuXt1lLSMBjjaY61rjDuXj7GOaKseExjcuK1cABKKQCuYfAq9Nj4hMRkFFS0ZwwAPLUQbLGMAHyiAPRfJgB6AH5REA)
 
 ```ts twoslash
 import { TypedDataToPrimitiveTypes } from 'abitype'

@@ -3,42 +3,17 @@ description: "Let's use ABIType to create a type-safe function that calls \"read
 title: 'Walkthrough'
 ---
 
-<script setup>
-window.addEventListener('click', (e) => {
-      const el = e.target 
-
-      if (el.matches('.vp-code-group input')) {
-        // input <- .tabs <- .vp-code-group
-        const group = el.parentElement?.parentElement
-        const i = Array.from(group?.querySelectorAll('input') || []).indexOf(el)
-
-        
-        const filtered = Array.from(
-          group?.querySelectorAll('div[class*="language-"]') || []
-        ).filter((val) => !val.className.match('language-id'))
-
-        const current = group?.querySelector('div[class*="language-"].active')
-        const next = filtered?.[i]
-
-        if (current && next && current !== next) {
-          current.classList.remove('active')
-          next.classList.add('active')
-        }
-      }
-    })
-</script>
-
 # Walkthrough
 
 Let's use ABIType to create a type-safe function that calls "read" contract methods. We'll infer function names, argument types, and return types from a user-provided ABI, and make sure it works for function overloads.
 
 You can spin up a [TypeScript Playground](https://www.typescriptlang.org/play) to code along.
 
-## Scaffolding `readContract`
+## 1. Scaffolding `readContract`
 
 First, we start off by declaring[^1] the function `readContract` with some basic types:
 
-```ts
+```ts twoslash
 import { Abi } from 'abitype'
 
 declare function readContract(config: {
@@ -51,21 +26,9 @@ declare function readContract(config: {
 The function accepts a `config` object which includes the ABI, function name, and arguments. The return type is `unknown` since we don't know what the function will return quite yet.[^2] Next, let's call the function using the following values:
 
 ::: code-group
-
 ```ts twoslash [readContract.ts]
-import type {
-  Abi,
-  AbiFunction,
-  AbiParameterToPrimitiveType,
-  AbiParametersToPrimitiveTypes,
-  AbiStateMutability,
-  Address,
-  ExtractAbiFunction,
-  ExtractAbiFunctionNames,
-  Narrow,
-} from 'abitype'
-
-const abi = [
+// @filename: abi.ts
+export const abi = [
   {
     name: 'balanceOf',
     type: 'function',
@@ -102,116 +65,26 @@ const abi = [
     outputs: [],
   },
 ] as const
+// @filename: readContract.ts
+import { Abi } from 'abitype'
 
-type ReadContractConfig<
-  TAbi extends Abi | readonly unknown[],
-  TFunctionName extends string,
-> = GetConfig<TAbi, TFunctionName, 'pure' | 'view'>
-
-type GetConfig<
-  TAbi extends Abi | readonly unknown[] = Abi,
-  TFunctionName extends string = string,
-  TAbiStateMutability extends AbiStateMutability = AbiStateMutability,
-> = {
-  /** Contract ABI */
-  abi: Narrow<TAbi> // infer `TAbi` type for inline usage
-  /** Contract address */
-  address: Address
-  /** Function to invoke on the contract */
-  functionName: GetFunctionName<TAbi, TFunctionName, TAbiStateMutability>
-} & GetArgs<TAbi, TFunctionName>
-
-type GetFunctionName<
-  TAbi extends Abi | readonly unknown[] = Abi,
-  TFunctionName extends string = string,
-  TAbiStateMutability extends AbiStateMutability = AbiStateMutability,
-> = TAbi extends Abi
-  ? ExtractAbiFunctionNames<
-      TAbi,
-      TAbiStateMutability
-    > extends infer AbiFunctionNames
-    ?
-        | AbiFunctionNames
-        | (TFunctionName extends AbiFunctionNames ? TFunctionName : never)
-        | (Abi extends TAbi ? string : never)
-    : never
-  : TFunctionName
-
-type GetArgs<
-  TAbi extends Abi | readonly unknown[],
-  TFunctionName extends string,
-  TAbiFunction extends AbiFunction = TAbi extends Abi
-    ? ExtractAbiFunction<TAbi, TFunctionName>
-    : AbiFunction,
-  TArgs = AbiParametersToPrimitiveTypes<TAbiFunction['inputs'], 'inputs'>,
-  FailedToParseArgs =
-    | ([TArgs] extends [never] ? true : false)
-    | (readonly unknown[] extends TArgs ? true : false),
-> = true extends FailedToParseArgs
-  ? {
-      /**
-       * Arguments to pass contract method
-       *
-       * Use a [const assertion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) on {@link abi} for type inference.
-       */
-      args?: readonly unknown[]
-    }
-  : TArgs extends readonly []
-  ? { args?: never }
-  : {
-      /** Arguments to pass contract method */ args: TArgs
-    }
-
-type GetReturnType<
-  TAbi extends Abi | readonly unknown[] = Abi,
-  TFunctionName extends string = string,
-  TAbiFunction extends AbiFunction & {
-    type: 'function'
-  } = TAbi extends Abi ? ExtractAbiFunction<TAbi, TFunctionName> : AbiFunction,
-  TArgs = AbiParametersToPrimitiveTypes<TAbiFunction['outputs'], 'outputs'>,
-  FailedToParseArgs =
-    | ([TArgs] extends [never] ? true : false)
-    | (readonly unknown[] extends TArgs ? true : false),
-> = true extends FailedToParseArgs
-  ? unknown
-  : TArgs extends readonly []
-  ? void
-  : TArgs extends readonly [infer Arg]
-  ? Arg
-  : TArgs & {
-      // Construct ethers hybrid array-objects for named outputs.
-      [Output in TAbiFunction['outputs'][number] as Output extends {
-        name: infer Name extends string
-      }
-        ? Name extends ''
-          ? never
-          : Name
-        : never]: AbiParameterToPrimitiveType<Output, 'outputs'>
-    }
-
-export declare function readContract<
-  TAbi extends Abi | readonly unknown[],
-  TFunctionName extends string,
->(
-  config: ReadContractConfig<TAbi, TFunctionName>,
-): GetReturnType<TAbi, TFunctionName>
-
+declare function readContract(config: {
+  abi: Abi
+  functionName: string
+  args: readonly unknown[]
+}): unknown
 // ---cut---
-
+import { abi } from './abi'
 
 const res = readContract({
-  //  ^? 
-  address: "0x", 
   abi,
   functionName: 'balanceOf',
-  // ^? 
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
-  // ^? 
 })
 ```
 
 ```ts [abi.ts]
-const abi = [
+export const abi = [
   {
     name: 'balanceOf',
     type: 'function',
@@ -249,15 +122,15 @@ const abi = [
   },
 ] as const
 ```
-
 :::
 
-## Adding inference to `functionName`
+## 2. Adding inference to `functionName`
 
 `functionName` and `args` types aren't inferred from the ABI yet so we can pass any value we want. Let's fix that! Often, you'll want to pull types into [generics](https://www.typescriptlang.org/docs/handbook/2/generics.html) when trying to infer parameters. We'll do the same here, starting with `functionName`:
 
 ```ts twoslash
-const abi = [
+// @filename: abi.ts
+export const abi = [
   {
     name: 'balanceOf',
     type: 'function',
@@ -295,8 +168,10 @@ const abi = [
   },
 ] as const
 
+// @filename: readContract.ts
 // ---cut---
 import { Abi, ExtractAbiFunctionNames } from 'abitype'
+import { abi } from './abi'
 
 declare function readContract<
   TAbi extends Abi,
@@ -319,12 +194,10 @@ First, we create two generics `TAbi` and `TFunctionName`, and constrain their ty
 
 If you are following along in a TypeScript Playground or editor, you can try various values for `functionName`. `functionName` will autocomplete and only accept `'balanceOf' | 'tokenURI'`. You can also try renaming the function names in `abi` and types will update as well.
 
-## Adding inference to `args`
-
-With `functionName` complete, we can move on to `args`. This time we don't need to add a generic slot because `args` depends completely on `abi` and `functionName` and doesn't need to infer user input.
-
 ```ts twoslash
-const abi = [
+// @errors: 2322 1002
+// @filename: abi.ts
+export const abi = [
   {
     name: 'balanceOf',
     type: 'function',
@@ -362,14 +235,79 @@ const abi = [
   },
 ] as const
 
+// @filename: readContract.ts
+import { Abi, ExtractAbiFunctionNames } from 'abitype'
+import { abi } from './abi'
+
+declare function readContract<
+  TAbi extends Abi,
+  TFunctionName extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
+>(config: {
+  abi: TAbi
+  functionName: TFunctionName | ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>
+  args: readonly unknown[]
+}): unknown
 // ---cut---
 
+const res = readContract({
+  abi,
+  functionName: '
+  //             ^|
+})
+```
+
+## 3. Adding inference to `args`
+
+With `functionName` complete, we can move on to `args`. This time we don't need to add a generic slot because `args` depends completely on `abi` and `functionName` and doesn't need to infer user input.
+
+```ts twoslash
+// @filename: abi.ts
+export const abi = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'owner', type: 'address' }],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'owner', type: 'address' },
+      { name: 'collectionId', type: 'uint256' },
+    ],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'tokenURI',
+    type: 'function',
+    stateMutability: 'pure',
+    inputs: [{ name: 'id', type: 'uint256' }],
+    outputs: [{ name: 'uri', type: 'string' }],
+  },
+  {
+    name: 'safeTransferFrom',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenId', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+] as const
+// @filename: readContract.ts
+// ---cut---
 import {
   Abi,
   AbiParametersToPrimitiveTypes,
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
 } from 'abitype'
+import { abi } from './abi'
 
 declare function readContract<
   TAbi extends Abi,
@@ -395,12 +333,13 @@ Since `args`'s type can be completely defined inline, we import [`ExtractAbiFunc
 
 For `abi`, you'll notice there are two `'balanceOf'` functions. This means `'balanceOf'` is overloaded on the contract. The cool thing about TypeScript is that we can still infer the correct types for overloaded functions (e.g. union like `` readonly [`0x${string}`] | readonly [`0x${string}`, bigint] ``)! This uses a TypeScript feature called [distributivity](https://jser.dev/typescript/2023/01/22/distributiveness-in-ts.html) and is worth learning more about if you're interested.
 
-## Adding the return type
+## 4. Adding the return type
 
 Finally, we can add the return type:
 
 ```ts twoslash
-const abi = [
+// @filename: abi.ts
+export const abi = [
   {
     name: 'balanceOf',
     type: 'function',
@@ -437,7 +376,7 @@ const abi = [
     outputs: [],
   },
 ] as const
-
+// @filename: readContract.ts
 // ---cut---
 import {
   Abi,
@@ -446,6 +385,7 @@ import {
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
 } from 'abitype'
+import { abi } from './abi'
 
 declare function readContract<
   TAbi extends Abi,
@@ -470,7 +410,7 @@ const res = readContract({
 
 We can refactor our `ExtractAbiFunction` call into a generic slot `TAbiFunction` (of type [`AbiFunction`](/api/types#abifunction)) and set the default to the result of `ExtractAbiFunction`. This allows us to use `TAbiFunction` in for `args` and the return type. Lastly, we wire up another `AbiParametersToPrimitiveTypes` call for the return type—this time using outputs.
 
-## Wrapping up
+## 5. Wrapping up
 
 `readContract`'s types are starting to look solid! It infers the correct types for `functionName` and `args` based on the ABI (and works with overloaded functions). It also infers the correct return type based on the ABI and `functionName`. The only thing left is to implement the function itself.
 
