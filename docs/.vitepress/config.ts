@@ -62,7 +62,7 @@ export default withTwoslash(
         indexName: 'abitype',
       },
       editLink: {
-        pattern: 'https://github.com/wagmi-dev/abitype/edit/main/site/:path',
+        pattern: 'https://github.com/wagmi-dev/abitype/edit/main/docs/:path',
         text: 'Suggest changes to this page',
       },
       footer: {
