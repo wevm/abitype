@@ -119,6 +119,7 @@ test('Find Error Selectors', () => {
     { type: 'error', selector: '0xfb5014fc' },
     { type: 'error', selector: '0x8ffff980' },
     { type: 'error', selector: '0x6ab37ce7' },
+    { type: 'error', selector: '0xf486bc87' },
     { type: 'error', selector: '0x12d3f5a3' },
     { type: 'error', selector: '0x09bde339' },
     { type: 'error', selector: '0xd5da9a1b' },
@@ -131,6 +132,7 @@ test('Find Error Selectors', () => {
     { type: 'error', selector: '0xa11b63ff' },
     { type: 'error', selector: '0x2165628a' },
     { type: 'error', selector: '0xfed398fc' },
+    { type: 'error', selector: '0xf486bc87' },
     { type: 'error', selector: '0x1a515574' },
   ])
 
@@ -256,6 +258,7 @@ test('Extract Selectors', () => {
     { type: 'error', selector: '0xfb5014fc' },
     { type: 'error', selector: '0x8ffff980' },
     { type: 'error', selector: '0x6ab37ce7' },
+    { type: 'error', selector: '0xf486bc87' },
     { type: 'error', selector: '0x12d3f5a3' },
     { type: 'error', selector: '0x09bde339' },
     { type: 'error', selector: '0xd5da9a1b' },
@@ -268,6 +271,7 @@ test('Extract Selectors', () => {
     { type: 'error', selector: '0xa11b63ff' },
     { type: 'error', selector: '0x2165628a' },
     { type: 'error', selector: '0xfed398fc' },
+    { type: 'error', selector: '0xf486bc87' },
     { type: 'error', selector: '0x1a515574' },
     { type: 'event', selector: '0x6bacc01d' },
     { type: 'event', selector: '0x4b9f2d36' },

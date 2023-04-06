@@ -63,6 +63,10 @@ export type IsErrorSelector<T extends string> =
                     : Rest extends `${string}${string}${string}${string}${infer Rest}`
                     ? Rest extends ''
                       ? true
+                      : Rest extends `${string}${string}${string}${string}${string}${string}${infer Rest}`
+                      ? Rest extends ''
+                        ? true
+                        : false
                       : false
                     : false
                   : false

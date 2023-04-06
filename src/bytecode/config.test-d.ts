@@ -27,8 +27,8 @@ test('Parse Event', () => {
     ParseBytecodeEventSelector<FindEventSelectors<typeof weth>[1]['selector']>
   >({
     type: 'event',
-    name: 'Transfer',
-    inputs: [{ type: 'address' }, { type: 'address' }, { type: 'uint256' }],
+    name: '0x8c5be1e5',
+    inputs: [],
   })
 
   assertType<
