@@ -1,26 +1,24 @@
 import type { RevertErrorString, RevertPanicString } from './mask'
 import type { OPCODES } from './opcodes'
-import type { RecurseSelector, ToSelector } from './utils'
+import type {
+  IsErrorSelector,
+  RecurseSelector,
+  Slice,
+  ToSelector,
+} from './utils'
+
+export type FindConstructorArgs<T extends string> =
+  T extends `${string}60033${infer Args}`
+    ? Args
+    : T extends `${string}6343${string}0033${infer Args}`
+    ? Args
+    : T extends `${string}6343${string}000a${infer Args}`
+    ? Args
+    : ''
 
 export type FindFunctionSelectors<T extends string> = T extends ''
   ? []
-  : T extends `${string}${OPCODES['DUP1']}${OPCODES['PUSH4']}${infer Selector}${OPCODES['EQ']}${
-      | OPCODES['PUSH2']
-      | OPCODES['PUSH3']}${string}${OPCODES['JUMPI']}${infer Rest extends string}`
-  ? [
-      {
-        type: 'function'
-        selector: Selector extends `${string}${OPCODES['DUP1']}${OPCODES['PUSH4']}${infer Tail}`
-          ? RecurseSelector<Tail>
-          : `0x${Selector}`
-      },
-      ...FindFunctionSelectors<Rest>,
-    ]
-  : T extends `${string}${OPCODES['DUP1']}${OPCODES['PUSH4']}${infer Selector}${
-      | OPCODES['GT']
-      | OPCODES['LT']}${
-      | OPCODES['PUSH2']
-      | OPCODES['PUSH3']}${string}${OPCODES['JUMPI']}${infer Rest extends string}`
+  : T extends `${string}${OPCODES['DUP1']}${OPCODES['PUSH4']}${infer Selector}${OPCODES['EQ']}${OPCODES['PUSH2']}${string}${OPCODES['JUMPI']}${infer Rest extends string}`
   ? [
       {
         type: 'function'
@@ -32,52 +30,103 @@ export type FindFunctionSelectors<T extends string> = T extends ''
     ]
   : []
 
-export type FindEventSelectors<T extends string> = T extends ''
+export type FindCommonEventSelectors<T extends string> = T extends ''
   ? []
-  : T extends `${string}${OPCODES['AND']}${OPCODES['PUSH32']}${infer Hash}60405180910390${OPCODES['LOG4']}${infer Rest}`
+  : T extends `${string}${OPCODES['AND']}${OPCODES['PUSH32']}${infer Rest}`
+  ? Slice<Rest, 16> extends infer Result extends string
+    ? Result extends `${string}ffff${string}` | `${string}0000${string}`
+      ? FindCommonEventSelectors<Rest>
+      : [
+          { type: 'event'; selector: `0x${ToSelector<Result>}` },
+          ...FindCommonEventSelectors<Rest>,
+        ]
+    : []
+  : []
+
+export type FindUncommonEventSelectors<T extends string> = T extends ''
+  ? []
+  : T extends `${string}${OPCODES['SWAP1']}${OPCODES['PUSH32']}${infer Rest}`
+  ? Slice<Rest, 16> extends infer Result extends string
+    ? Result extends `${string}ffff${string}` | `${string}0000${string}`
+      ? FindUncommonEventSelectors<Rest>
+      : [
+          { type: 'event'; selector: `0x${ToSelector<Result>}` },
+          ...FindUncommonEventSelectors<Rest>,
+        ]
+    : []
+  : []
+
+export type FindSwap2EventSelectors<T extends string> = T extends ''
+  ? []
+  : T extends `${string}${OPCODES['SWAP2']}${OPCODES['PUSH32']}${infer Rest}`
+  ? Slice<Rest, 16> extends infer Result extends string
+    ? Result extends `${string}ffff${string}` | `${string}0000${string}`
+      ? FindSwap2EventSelectors<Rest>
+      : [
+          { type: 'event'; selector: `0x${ToSelector<Result>}` },
+          ...FindSwap2EventSelectors<Rest>,
+        ]
+    : []
+  : []
+
+export type FindEventSelectors<T extends string> = [
+  ...FindCommonEventSelectors<T>,
+  ...FindUncommonEventSelectors<T>,
+  ...FindSwap2EventSelectors<T>,
+]
+
+export type FindYulTypeErrorSelectors<T extends string> = T extends ''
+  ? []
+  : T extends `${string}${OPCODES['JUMPDEST']}${OPCODES['PUSH4']}${infer Hash}4601cfd${infer Rest}`
+  ? IsErrorSelector<Hash> extends infer Result
+    ? Result extends false
+      ? FindYulTypeErrorSelectors<`${Hash}4601cfd${Rest}`>
+      : [
+          { type: 'error'; selector: `0x${ToSelector<Hash>}` },
+          ...FindYulTypeErrorSelectors<Rest>,
+        ]
+    : []
+  : []
+
+export type FindYulUncommonTypeErrorSelectors<T extends string> = T extends ''
+  ? []
+  : T extends `${string}${OPCODES['JUMPDEST']}${OPCODES['POP']}${OPCODES['PUSH4']}${infer Hash}4601cfd${infer Rest}`
+  ? IsErrorSelector<Hash> extends infer Result
+    ? Result extends false
+      ? FindYulUncommonTypeErrorSelectors<`${Hash}4601cfd${Rest}`>
+      : [
+          { type: 'error'; selector: `0x${ToSelector<Hash>}` },
+          ...FindYulUncommonTypeErrorSelectors<Rest>,
+        ]
+    : []
+  : []
+
+export type FindSolidityCommonErrorSelectors<T extends string> = T extends ''
+  ? []
+  : T extends `${string}${OPCODES['MLOAD']}${OPCODES['PUSH32']}${infer Hash}815260040160405180910390fd${infer Rest}`
+  ? Hash extends RevertErrorString | RevertPanicString
+    ? FindSolidityCommonErrorSelectors<Rest>
+    : [
+        { type: 'error'; selector: `0x${ToSelector<Hash>}` },
+        ...FindSolidityCommonErrorSelectors<Rest>,
+      ]
+  : []
+
+export type FindSolidityUncommonErrorSelectors<T extends string> = T extends ''
+  ? []
+  : T extends `${string}${OPCODES['MLOAD']}${OPCODES['PUSH4']}${infer Hash}815260040160405180910390fd${infer Rest}`
   ? [
-      { type: 'event'; selector: `0x${ToSelector<Hash>}` },
-      ...FindEventSelectors<Rest>,
-    ]
-  : T extends `${string}${OPCODES['AND']}${OPCODES['PUSH32']}${infer Hash}60405180910390${OPCODES['LOG3']}${infer Rest}`
-  ? [
-      { type: 'event'; selector: `0x${ToSelector<Hash>}` },
-      ...FindEventSelectors<Rest>,
-    ]
-  : T extends `${string}${OPCODES['AND']}${OPCODES['PUSH32']}${infer Hash}60405180910390${OPCODES['LOG2']}${infer Rest}`
-  ? [
-      { type: 'event'; selector: `0x${ToSelector<Hash>}` },
-      ...FindEventSelectors<Rest>,
-    ]
-  : T extends `${string}${OPCODES['AND']}${OPCODES['PUSH32']}${infer Hash}60405180910390${OPCODES['LOG1']}${infer Rest}`
-  ? [
-      { type: 'event'; selector: `0x${ToSelector<Hash>}` },
-      ...FindEventSelectors<Rest>,
-    ]
-  : T extends `${string}${OPCODES['AND']}${OPCODES['PUSH32']}${infer Hash}60405180910390${OPCODES['LOG0']}${infer Rest}`
-  ? [
-      { type: 'event'; selector: `0x${ToSelector<Hash>}` },
-      ...FindEventSelectors<Rest>,
+      { type: 'error'; selector: `0x${ToSelector<Hash>}` },
+      ...FindSolidityUncommonErrorSelectors<Rest>,
     ]
   : []
 
-export type FindConstructorArgs<T extends string> =
-  T extends `${string}60033${infer Args}` ? Args : ''
-
-export type FindErrorSelectors<T extends string> = T extends ''
-  ? []
-  : // This means that we have a revert string. We don't care since these aren't on the contracts compiled ABI.
-  T extends `${string}${OPCODES['MLOAD']}${OPCODES['PUSH32']}${RevertErrorString}${OPCODES['DUP2']}${OPCODES['MSTORE']}${string}${OPCODES['REVERT']}${infer Rest}`
-  ? [...FindErrorSelectors<Rest>]
-  : // This means that we have a panic error. We don't care since these aren't on the contracts compiled ABI.
-  T extends `${string}${OPCODES['MLOAD']}${OPCODES['PUSH32']}${RevertPanicString}${OPCODES['DUP2']}${OPCODES['MSTORE']}${string}${OPCODES['REVERT']}${infer Rest}`
-  ? [...FindErrorSelectors<Rest>]
-  : T extends `${string}${OPCODES['MLOAD']}${OPCODES['PUSH32']}${infer Error}${OPCODES['DUP2']}${OPCODES['MSTORE']}${string}${OPCODES['REVERT']}${infer Rest}`
-  ? [
-      { type: 'error'; selector: `0x${ToSelector<Error>}` },
-      ...FindErrorSelectors<Rest>,
-    ]
-  : []
+export type FindErrorSelectors<T extends string> = [
+  ...FindYulTypeErrorSelectors<T>,
+  ...FindYulUncommonTypeErrorSelectors<T>,
+  ...FindSolidityCommonErrorSelectors<T>,
+  ...FindSolidityUncommonErrorSelectors<T>,
+]
 
 export type ExtractSelectors<T extends string> = [
   { type: 'constructor'; selector: FindConstructorArgs<T> },

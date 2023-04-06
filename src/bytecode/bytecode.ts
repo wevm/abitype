@@ -73,13 +73,25 @@ export type InferConstructorArguments<T extends string[]> = {
     : T[K] extends `${UINT120_ZERO_MASK}${string}`
     ? { readonly type: 'uint120' } | { readonly type: 'bytes15' }
     : T[K] extends `${UINT128_ZERO_MASK}${string}`
-    ? { readonly type: 'uint128' } | { readonly type: 'bytes16' }
+    ?
+        | { readonly type: 'uint128' }
+        | { readonly type: 'bytes16' }
+        | { readonly type: 'address' }
     : T[K] extends `${UINT136_ZERO_MASK}${string}`
-    ? { readonly type: 'uint136' } | { readonly type: 'bytes17' }
+    ?
+        | { readonly type: 'uint136' }
+        | { readonly type: 'bytes17' }
+        | { readonly type: 'address' }
     : T[K] extends `${UINT144_ZERO_MASK}${string}`
-    ? { readonly type: 'uint144' } | { readonly type: 'bytes18' }
+    ?
+        | { readonly type: 'uint144' }
+        | { readonly type: 'bytes18' }
+        | { readonly type: 'address' }
     : T[K] extends `${UINT152_ZERO_MASK}${string}`
-    ? { readonly type: 'uint152' } | { readonly type: 'bytes19' }
+    ?
+        | { readonly type: 'uint152' }
+        | { readonly type: 'bytes19' }
+        | { readonly type: 'address' }
     : T[K] extends `${ADDRESS_ZERO_MASK}${string}`
     ?
         | { readonly type: 'address' }

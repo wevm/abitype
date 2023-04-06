@@ -34,6 +34,46 @@ export type RecurseSelector<T extends string> =
   T extends `${string}${OPCODES['DUP1']}${OPCODES['PUSH4']}${infer Tail}`
     ? RecurseSelector<Tail>
     : `0x${T}`
+
+export type IsErrorSelector<T extends string> =
+  T extends `${string}${string}${string}${string}${string}${string}${string}${string}${string}${string}${string}${string}${string}${string}${string}${infer Rest}`
+    ? Rest extends ''
+      ? true
+      : Rest extends `${string}${string}${infer Rest}`
+      ? Rest extends ''
+        ? true
+        : Rest extends `${string}${string}${string}${string}${infer Rest}`
+        ? Rest extends ''
+          ? true
+          : Rest extends `${string}${string}${infer Rest}`
+          ? Rest extends ''
+            ? true
+            : Rest extends `${string}${string}${string}${string}${infer Rest}`
+            ? Rest extends ''
+              ? true
+              : Rest extends `${string}${string}${infer Rest}`
+              ? Rest extends ''
+                ? true
+                : Rest extends `${string}${string}${infer Rest}`
+                ? Rest extends ''
+                  ? true
+                  : Rest extends `${string}${string}${string}${string}${infer Rest}`
+                  ? Rest extends ''
+                    ? true
+                    : Rest extends `${string}${string}${string}${string}${infer Rest}`
+                    ? Rest extends ''
+                      ? true
+                      : false
+                    : false
+                  : false
+                : false
+              : false
+            : false
+          : false
+        : false
+      : false
+    : false
+
 export type ExtractName<T> = T extends `${infer Name}(${string})` ? Name : ''
 
 export type ExtractParameters<T> = T extends `${string}(${infer Parameters})`
