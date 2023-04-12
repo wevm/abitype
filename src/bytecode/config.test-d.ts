@@ -1,11 +1,7 @@
 import { assertType, test } from 'vitest'
 
 import type { weth } from '../test/bytecodes'
-import type {
-  ParseBytecodeEventSelector,
-  ParseBytecodeFunctionSelector,
-} from './bytecode'
-import type { FindEventSelectors, FindFunctionSelectors } from './selectors'
+import type { ParseBytecodeEvents, ParseBytecodeFunctions } from './selectors'
 
 declare module './config' {
   export interface Selectors {
@@ -15,27 +11,19 @@ declare module './config' {
 }
 
 test('Parse Event', () => {
-  assertType<
-    ParseBytecodeEventSelector<FindEventSelectors<typeof weth>[0]['selector']>
-  >({
+  assertType<ParseBytecodeEvents<typeof weth>[0]>({
     type: 'event',
     name: '0xe1fffcc4',
     inputs: [],
   })
 
-  assertType<
-    ParseBytecodeEventSelector<FindEventSelectors<typeof weth>[1]['selector']>
-  >({
+  assertType<ParseBytecodeEvents<typeof weth>[1]>({
     type: 'event',
     name: '0x8c5be1e5',
     inputs: [],
   })
 
-  assertType<
-    ParseBytecodeFunctionSelector<
-      FindFunctionSelectors<typeof weth>[4]['selector']
-    >
-  >({
+  assertType<ParseBytecodeFunctions<typeof weth>[4]>({
     type: 'function',
     name: 'withdraw',
     inputs: [{ type: 'uint256' }],

@@ -1,6 +1,10 @@
+import type { ParseAbiParameters } from '../human-readable/types/utils'
+import type { Selectors } from './config'
 import type { RevertErrorString, RevertPanicString } from './mask'
 import type { OPCODES } from './opcodes'
 import type {
+  ExtractName,
+  ExtractParameters,
   IsErrorSelector,
   RecurseSelector,
   Slice,
@@ -16,20 +20,6 @@ export type FindConstructorArgs<T extends string> =
     ? Args
     : ''
 
-export type FindFunctionSelectors<T extends string> = T extends ''
-  ? []
-  : T extends `${string}${OPCODES['DUP1']}${OPCODES['PUSH4']}${infer Selector}${OPCODES['EQ']}${OPCODES['PUSH2']}${string}${OPCODES['JUMPI']}${infer Rest extends string}`
-  ? [
-      {
-        type: 'function'
-        selector: Selector extends `${string}${OPCODES['DUP1']}${OPCODES['PUSH4']}${infer Tail}`
-          ? RecurseSelector<Tail>
-          : `0x${Selector}`
-      },
-      ...FindFunctionSelectors<Rest>,
-    ]
-  : []
-
 export type FindCommonEventSelectors<T extends string> = T extends ''
   ? []
   : T extends `${string}${OPCODES['AND']}${OPCODES['PUSH32']}${infer Rest}`
@@ -37,7 +27,17 @@ export type FindCommonEventSelectors<T extends string> = T extends ''
     ? Result extends `${string}ffff${string}` | `${string}0000${string}`
       ? FindCommonEventSelectors<Rest>
       : [
-          { type: 'event'; selector: `0x${ToSelector<Result>}` },
+          {
+            type: 'event'
+            name: Selectors[`0x${ToSelector<Result>}`] extends string
+              ? ExtractName<Selectors[`0x${ToSelector<Result>}`]>
+              : `0x${ToSelector<Result>}`
+            inputs: Selectors[`0x${ToSelector<Result>}`] extends string
+              ? ParseAbiParameters<
+                  ExtractParameters<Selectors[`0x${ToSelector<Result>}`]>
+                >
+              : readonly []
+          },
           ...FindCommonEventSelectors<Rest>,
         ]
     : []
@@ -50,7 +50,17 @@ export type FindUncommonEventSelectors<T extends string> = T extends ''
     ? Result extends `${string}ffff${string}` | `${string}0000${string}`
       ? FindUncommonEventSelectors<Rest>
       : [
-          { type: 'event'; selector: `0x${ToSelector<Result>}` },
+          {
+            type: 'event'
+            name: Selectors[`0x${ToSelector<Result>}`] extends string
+              ? ExtractName<Selectors[`0x${ToSelector<Result>}`]>
+              : `0x${ToSelector<Result>}`
+            inputs: Selectors[`0x${ToSelector<Result>}`] extends string
+              ? ParseAbiParameters<
+                  ExtractParameters<Selectors[`0x${ToSelector<Result>}`]>
+                >
+              : readonly []
+          },
           ...FindUncommonEventSelectors<Rest>,
         ]
     : []
@@ -63,42 +73,63 @@ export type FindSwap2EventSelectors<T extends string> = T extends ''
     ? Result extends `${string}ffff${string}` | `${string}0000${string}`
       ? FindSwap2EventSelectors<Rest>
       : [
-          { type: 'event'; selector: `0x${ToSelector<Result>}` },
+          {
+            type: 'event'
+            name: Selectors[`0x${ToSelector<Result>}`] extends string
+              ? ExtractName<Selectors[`0x${ToSelector<Result>}`]>
+              : `0x${ToSelector<Result>}`
+            inputs: Selectors[`0x${ToSelector<Result>}`] extends string
+              ? ParseAbiParameters<
+                  ExtractParameters<Selectors[`0x${ToSelector<Result>}`]>
+                >
+              : readonly []
+          },
+
           ...FindSwap2EventSelectors<Rest>,
         ]
     : []
   : []
 
-export type FindEventSelectors<T extends string> = [
-  ...FindCommonEventSelectors<T>,
-  ...FindUncommonEventSelectors<T>,
-  ...FindSwap2EventSelectors<T>,
-]
-
 export type FindYulTypeErrorSelectors<T extends string> = T extends ''
   ? []
   : T extends `${string}${OPCODES['JUMPDEST']}${OPCODES['PUSH4']}${infer Hash}4601cfd${infer Rest}`
-  ? IsErrorSelector<Hash> extends infer Result
-    ? Result extends false
-      ? FindYulTypeErrorSelectors<`${Hash}4601cfd${Rest}`>
-      : [
-          { type: 'error'; selector: `0x${ToSelector<Hash>}` },
-          ...FindYulTypeErrorSelectors<Rest>,
-        ]
-    : []
+  ? IsErrorSelector<Hash> extends false
+    ? FindYulTypeErrorSelectors<`${Hash}4601cfd${Rest}`>
+    : [
+        {
+          type: 'error'
+          name: Selectors[`0x${ToSelector<Hash>}`] extends string
+            ? ExtractName<Selectors[`0x${ToSelector<Hash>}`]>
+            : `0x${ToSelector<Hash>}`
+          inputs: Selectors[`0x${ToSelector<Hash>}`] extends string
+            ? ParseAbiParameters<
+                ExtractParameters<Selectors[`0x${ToSelector<Hash>}`]>
+              >
+            : readonly []
+        },
+        ...FindYulTypeErrorSelectors<Rest>,
+      ]
   : []
 
 export type FindYulUncommonTypeErrorSelectors<T extends string> = T extends ''
   ? []
   : T extends `${string}${OPCODES['JUMPDEST']}${OPCODES['POP']}${OPCODES['PUSH4']}${infer Hash}4601cfd${infer Rest}`
-  ? IsErrorSelector<Hash> extends infer Result
-    ? Result extends false
-      ? FindYulUncommonTypeErrorSelectors<`${Hash}4601cfd${Rest}`>
-      : [
-          { type: 'error'; selector: `0x${ToSelector<Hash>}` },
-          ...FindYulUncommonTypeErrorSelectors<Rest>,
-        ]
-    : []
+  ? IsErrorSelector<Hash> extends false
+    ? FindYulUncommonTypeErrorSelectors<`${Hash}4601cfd${Rest}`>
+    : [
+        {
+          type: 'error'
+          name: Selectors[`0x${ToSelector<Hash>}`] extends string
+            ? ExtractName<Selectors[`0x${ToSelector<Hash>}`]>
+            : `0x${ToSelector<Hash>}`
+          inputs: Selectors[`0x${ToSelector<Hash>}`] extends string
+            ? ParseAbiParameters<
+                ExtractParameters<Selectors[`0x${ToSelector<Hash>}`]>
+              >
+            : readonly []
+        },
+        ...FindYulUncommonTypeErrorSelectors<Rest>,
+      ]
   : []
 
 export type FindSolidityCommonErrorSelectors<T extends string> = T extends ''
@@ -107,7 +138,18 @@ export type FindSolidityCommonErrorSelectors<T extends string> = T extends ''
   ? Hash extends RevertErrorString | RevertPanicString
     ? FindSolidityCommonErrorSelectors<Rest>
     : [
-        { type: 'error'; selector: `0x${ToSelector<Hash>}` },
+        {
+          type: 'error'
+          name: Selectors[`0x${ToSelector<Hash>}`] extends string
+            ? ExtractName<Selectors[`0x${ToSelector<Hash>}`]>
+            : `0x${ToSelector<Hash>}`
+
+          inputs: Selectors[`0x${ToSelector<Hash>}`] extends string
+            ? ParseAbiParameters<
+                ExtractParameters<Selectors[`0x${ToSelector<Hash>}`]>
+              >
+            : readonly []
+        },
         ...FindSolidityCommonErrorSelectors<Rest>,
       ]
   : []
@@ -116,21 +158,55 @@ export type FindSolidityUncommonErrorSelectors<T extends string> = T extends ''
   ? []
   : T extends `${string}${OPCODES['MLOAD']}${OPCODES['PUSH4']}${infer Hash}815260040160405180910390fd${infer Rest}`
   ? [
-      { type: 'error'; selector: `0x${ToSelector<Hash>}` },
+      {
+        type: 'error'
+        name: Selectors[`0x${ToSelector<Hash>}`] extends string
+          ? ExtractName<Selectors[`0x${ToSelector<Hash>}`]>
+          : `0x${ToSelector<Hash>}`
+        inputs: Selectors[`0x${ToSelector<Hash>}`] extends string
+          ? ParseAbiParameters<
+              ExtractParameters<Selectors[`0x${ToSelector<Hash>}`]>
+            >
+          : readonly []
+      },
       ...FindSolidityUncommonErrorSelectors<Rest>,
     ]
   : []
 
-export type FindErrorSelectors<T extends string> = [
+export type ParseBytecodeFunctions<T extends string> = T extends ''
+  ? []
+  : T extends `${string}${OPCODES['DUP1']}${OPCODES['PUSH4']}${infer Selector}${OPCODES['EQ']}${OPCODES['PUSH2']}${string}${OPCODES['JUMPI']}${infer Rest extends string}`
+  ? [
+      {
+        readonly type: 'function'
+        readonly name: Selector extends `${string}${OPCODES['DUP1']}${OPCODES['PUSH4']}${infer Tail}`
+          ? RecurseSelector<Tail> extends infer Result extends string
+            ? Selectors[Result] extends string
+              ? ExtractName<Selectors[Result]>
+              : Result
+            : never
+          : Selectors[`0x${Selector}`] extends string
+          ? ExtractName<Selectors[`0x${Selector}`]>
+          : `0x${Selector}`
+        readonly inputs: Selectors[`0x${Selector}`] extends string
+          ? ParseAbiParameters<ExtractParameters<Selectors[`0x${Selector}`]>>
+          : readonly []
+        readonly stateMutability: 'nonpayable'
+        readonly outputs: []
+      },
+      ...ParseBytecodeFunctions<Rest>,
+    ]
+  : []
+
+export type ParseBytecodeErrors<T extends string> = [
   ...FindYulTypeErrorSelectors<T>,
   ...FindYulUncommonTypeErrorSelectors<T>,
   ...FindSolidityCommonErrorSelectors<T>,
   ...FindSolidityUncommonErrorSelectors<T>,
 ]
 
-export type ExtractSelectors<T extends string> = [
-  { type: 'constructor'; selector: FindConstructorArgs<T> },
-  ...FindErrorSelectors<T>,
-  ...FindEventSelectors<T>,
-  ...FindFunctionSelectors<T>,
+export type ParseBytecodeEvents<T extends string> = [
+  ...FindCommonEventSelectors<T>,
+  ...FindUncommonEventSelectors<T>,
+  ...FindSwap2EventSelectors<T>,
 ]

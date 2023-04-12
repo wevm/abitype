@@ -1,6 +1,4 @@
 import type { Abi } from '../abi'
-import type { ParseAbiParameters } from '../human-readable/types/utils'
-import type { Selectors } from './config'
 import type {
   ADDRESS_ZERO_MASK,
   UINT104_ZERO_MASK,
@@ -34,9 +32,14 @@ import type {
   UINT8_ZERO_MASK,
   UINT96_ZERO_MASK,
 } from './mask'
-import type { ExtractSelectors } from './selectors'
+import type {
+  FindConstructorArgs,
+  ParseBytecodeErrors,
+  ParseBytecodeEvents,
+  ParseBytecodeFunctions,
+} from './selectors'
 
-import type { ExtractName, ExtractParameters, SplitByChunks } from './utils'
+import type { SplitByChunks } from './utils'
 
 export type InferConstructorArguments<T extends string[]> = {
   [K in keyof T]: T[K] extends `${UINT8_ZERO_MASK}${string}`
@@ -124,55 +127,17 @@ export type InferConstructorArguments<T extends string[]> = {
     : { readonly type: 'uint256' } | { readonly type: 'bytes32' }
 }
 
-export type ParseBytecodeFunctionSelector<T extends string> = {
-  readonly name: Selectors[T] extends string ? ExtractName<Selectors[T]> : T
-  readonly stateMutability: 'nonpayable'
-  readonly inputs: Selectors[T] extends string
-    ? ParseAbiParameters<ExtractParameters<Selectors[T]>>
-    : readonly []
-  readonly outputs: readonly []
-  readonly type: 'function'
-}
-
-export type ParseBytecodeEventSelector<T extends string> = {
-  readonly name: Selectors[T] extends string ? ExtractName<Selectors[T]> : T
-  readonly inputs: Selectors[T] extends string
-    ? ParseAbiParameters<ExtractParameters<Selectors[T]>>
-    : readonly []
-  readonly type: 'event'
-}
-
-export type ParseBytecodeErrorSelector<T extends string> = {
-  readonly name: Selectors[T] extends string ? ExtractName<Selectors[T]> : T
-  readonly inputs: Selectors[T] extends string
-    ? ParseAbiParameters<ExtractParameters<Selectors[T]>>
-    : readonly []
-  readonly type: 'error'
-}
-
 export type ParseBytecodeConstructor<T extends string> = {
   readonly type: 'constructor'
   readonly stateMutability: 'nonpayable'
   readonly inputs: InferConstructorArguments<SplitByChunks<T>>
 }
 
-export type ParseSelectors<T extends { type: string; selector: string }[]> = {
-  readonly [K in keyof T]: T[K]['type'] extends 'constructor'
-    ? ParseBytecodeConstructor<T[K]['selector']>
-    : T[K]['type'] extends 'error'
-    ? ParseBytecodeErrorSelector<T[K]['selector']>
-    : T[K]['type'] extends 'event'
-    ? ParseBytecodeEventSelector<T[K]['selector']>
-    : T[K]['type'] extends 'function'
-    ? ParseBytecodeFunctionSelector<T[K]['selector']>
-    : never
-}
-
 export type ParseBytecode<T extends string> = string extends T
   ? Abi
-  : ExtractSelectors<T> extends infer Result extends {
-      type: string
-      selector: string
-    }[]
-  ? ParseSelectors<Result>
-  : readonly []
+  : readonly [
+      ParseBytecodeConstructor<FindConstructorArgs<T>>,
+      ...ParseBytecodeErrors<T>,
+      ...ParseBytecodeEvents<T>,
+      ...ParseBytecodeFunctions<T>,
+    ]
