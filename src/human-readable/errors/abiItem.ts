@@ -1,0 +1,24 @@
+import { BaseError } from '../../errors'
+
+export class InvalidAbiItemError extends BaseError {
+  override name = 'InvalidAbiItemError'
+
+  constructor({ signature }: { signature: string | object }) {
+    super('Failed to parse ABI item.', {
+      details: `parseAbiItem(${JSON.stringify(signature, null, 2)})`,
+      docsPath: '/api/human.html#parseabiitem-1',
+    })
+  }
+}
+
+export class UnknownTypeError extends BaseError {
+  override name = 'UnknownTypeError'
+
+  constructor({ type }: { type: string }) {
+    super('Unknown type.', {
+      metaMessages: [
+        `Type "${type}" is not a valid ABI type. Perhaps you forgot to include a struct signature?`,
+      ],
+    })
+  }
+}

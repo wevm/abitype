@@ -1,6 +1,12 @@
 import type { AbiParameter } from '../../abi'
-import { BaseError } from '../../errors'
 import { execTyped, isTupleRegex } from '../../regex'
+import { UnknownTypeError } from '../errors/abiItem'
+import { InvalidAbiTypeParameterError } from '../errors/abiParameter'
+import {
+  InvalidSignatureError,
+  InvalidStructSignatureError,
+} from '../errors/signature'
+import { CircularReferenceError } from '../errors/struct'
 import type { StructLookup } from '../types'
 import { execStructSignature, isStructSignature } from './signatures'
 import { isSolidityType, parseAbiParameter } from './utils'
@@ -14,10 +20,8 @@ export function parseStructs(signatures: readonly string[]) {
     if (!isStructSignature(signature)) continue
 
     const match = execStructSignature(signature)
-    if (!match)
-      throw new BaseError('Invalid struct signature.', {
-        details: signature,
-      })
+    if (!match) throw new InvalidSignatureError({ signature, type: 'struct' })
+
     const properties = match.properties.split(';')
 
     const components: AbiParameter[] = []
@@ -32,11 +36,7 @@ export function parseStructs(signatures: readonly string[]) {
       components.push(abiParameter)
     }
 
-    if (!components.length)
-      throw new BaseError('Invalid struct signature.', {
-        details: signature,
-        metaMessages: ['No properties exist.'],
-      })
+    if (!components.length) throw new InvalidStructSignatureError({ signature })
     shallowStructs[match.name] = components
   }
 
@@ -71,18 +71,11 @@ function resolveStructs(
         typeWithoutTupleRegex,
         abiParameter.type,
       )
-      if (!match?.type)
-        throw new BaseError('Invalid ABI parameter.', {
-          details: JSON.stringify(abiParameter, null, 2),
-          metaMessages: ['ABI parameter type is invalid.'],
-        })
+      if (!match?.type) throw new InvalidAbiTypeParameterError({ abiParameter })
 
       const { array, type } = match
       if (type in structs) {
-        if (ancestors.has(type))
-          throw new BaseError('Circular reference detected.', {
-            metaMessages: [`Struct "${type}" is a circular reference.`],
-          })
+        if (ancestors.has(type)) throw new CircularReferenceError({ type })
 
         components.push({
           ...abiParameter,
@@ -95,12 +88,7 @@ function resolveStructs(
         })
       } else {
         if (isSolidityType(type)) components.push(abiParameter)
-        else
-          throw new BaseError('Unknown type.', {
-            metaMessages: [
-              `Type "${type}" is not a valid ABI type. Perhaps you forgot to include a struct signature?`,
-            ],
-          })
+        else throw new UnknownTypeError({ type })
       }
     }
   }

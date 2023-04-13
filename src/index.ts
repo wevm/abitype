@@ -68,3 +68,20 @@ export {
   parseAbiParameter,
   parseAbiParameters,
 } from './human-readable'
+
+export {
+  CircularReferenceError,
+  InvalidParenthesisError,
+  UnknownSignatureError,
+  InvalidSignatureError,
+  InvalidStructSignatureError,
+  InvalidAbiParameterError,
+  InvalidAbiParametersError,
+  InvalidParameterError,
+  SolidityProtectedKeywordError,
+  InvalidModifierError,
+  InvalidFunctionModifierError,
+  InvalidAbiTypeParameterError,
+  InvalidAbiItemError,
+  UnknownTypeError,
+} from './human-readable/errors'
