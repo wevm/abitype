@@ -79,7 +79,7 @@ export class InvalidFunctionModifierError extends BaseError {
     modifier,
   }: {
     param: string
-    type?: 'function' | 'constructor'
+    type?: AbiItemType | 'struct'
     modifier: Modifier
   }) {
     super('Invalid ABI parameter.', {
