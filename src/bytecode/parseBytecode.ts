@@ -1,5 +1,6 @@
 import type { Address } from '../abi'
 import {
+  parseConstructor,
   parseErrorSelector,
   parseEventSelector,
   parseFunctionSelector,
@@ -24,12 +25,14 @@ export function parseBytecode<
   )
 
   const eventMatch = bytecode.matchAll(
-    /(16|90|91)7f(?<eventSelector>[a-fA-F0-9]{18})/gm,
+    /(16|90|91)7f(?<eventSelector>[a-fA-F0-9]{32})/gm,
   )
 
   const functionMatch = bytecode.matchAll(
     /8063(?<functionSelector>[a-fA-F0-9]{8})1461[a-fA-F0-9]{4}57/gm,
   )
+
+  result.push(parseConstructor(bytecode))
 
   if (errorMatch) {
     for (const match of errorMatch) {
@@ -72,12 +75,10 @@ export function parseBytecode<
       if (groups.eventSelector === undefined) continue
 
       if (
-        groups.eventSelector.includes('000000') ||
-        groups.eventSelector.includes('ffffff')
+        groups.eventSelector.includes('0000000000') ||
+        groups.eventSelector.includes('ffffffffff')
       )
         continue
-
-      console.log(groups.eventSelector)
 
       const selector = ('0x' + groups.eventSelector.substring(0, 8)) as Address
       if (resolvedSelectors?.has(selector))

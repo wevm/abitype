@@ -1,24 +1,23 @@
 import { assertType, test } from 'vitest'
 
+import type { seaport, uniswap, weth } from '../../test/bytecodes'
 import type {
-  constructorArgs,
-  seaport,
-  uniswap,
-  weth,
-} from '../../test/bytecodes'
-import type { ParseBytecode, ParseBytecodeConstructor } from './bytecode'
-import type {
+  ParseBytecode,
+  ParseBytecodeConstructor,
   ParseBytecodeErrors,
   ParseBytecodeEvents,
   ParseBytecodeFunctions,
-} from './selectors'
+} from './bytecode'
 
 test('Parse Constructor', () => {
-  assertType<ParseBytecodeConstructor<typeof constructorArgs>>({
-    type: 'constructor',
-    stateMutability: 'nonpayable',
-    inputs: [{ type: 'address' }, { type: 'address' }],
-  })
+  assertType<ParseBytecodeConstructor<typeof weth>>([])
+  assertType<ParseBytecodeConstructor<typeof uniswap>>([
+    {
+      type: 'constructor',
+      stateMutability: 'nonpayable',
+      inputs: [],
+    },
+  ])
 })
 
 test('Parse Function', () => {
@@ -457,7 +456,6 @@ test('Parse Error', () => {
 
 test('Parse Bytecode', () => {
   assertType<ParseBytecode<typeof weth>>([
-    { type: 'constructor', stateMutability: 'nonpayable', inputs: [] },
     { type: 'event', name: '0xe1fffcc4', inputs: [] },
     { type: 'event', name: '0x8c5be1e5', inputs: [] },
     {
@@ -549,7 +547,7 @@ test('Parse Bytecode', () => {
     {
       type: 'constructor',
       stateMutability: 'nonpayable',
-      inputs: [{ type: 'address' }, { type: 'address' }],
+      inputs: [],
     },
     {
       type: 'function',
@@ -725,7 +723,7 @@ test('Parse Bytecode', () => {
     {
       type: 'constructor',
       stateMutability: 'nonpayable',
-      inputs: [{ type: 'address' }],
+      inputs: [],
     },
     { type: 'error', name: '0x6ab37ce7', inputs: [] },
     { type: 'error', name: '0x39f3e3fd', inputs: [] },

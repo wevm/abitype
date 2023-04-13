@@ -51,13 +51,7 @@ export function parseErrorSelector<
 export function parseConstructor<TBytecode extends string>(
   bytecode: TBytecode,
 ) {
-  if (bytecode.match(/60033(?<constructorArgs>.+)/gm))
-    return {
-      type: 'constructor',
-      stateMutability: 'nonpayable',
-      //TODO
-      inputs: [],
-    }
+  if (!(bytecode.match(/60033/gm) || bytecode.match(/634300/gm))) return
 
   return {
     type: 'constructor',

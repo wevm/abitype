@@ -12,4 +12,5 @@ test('Run', () => {
   console.log('WETH: ', parseBytecode(weth, resolved))
   console.log('Uniswap: ', parseBytecode(uniswap))
   console.log('Seaport: ', parseBytecode(seaport))
+  console.log('Fail:', parseBytecode('nope'))
 })
