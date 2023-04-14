@@ -8,11 +8,12 @@ export type StructLookup = Record<string, readonly AbiParameter[]>
 export type ParseStructs<TSignatures extends readonly string[]> =
   // Create "shallow" version of each struct (and filter out non-structs or invalid structs)
   {
-    [Signature in TSignatures[number] as ParseStruct<Signature> extends infer Struct extends {
-      name: string
-    }
-      ? Struct['name']
-      : never]: ParseStruct<Signature>['components']
+    [Signature in
+      TSignatures[number] as ParseStruct<Signature> extends infer Struct extends {
+        name: string
+      }
+        ? Struct['name']
+        : never]: ParseStruct<Signature>['components']
   } extends infer Structs extends Record<
     string,
     readonly (AbiParameter & { type: string })[]
@@ -42,7 +43,8 @@ export type ResolveStructs<
   TKeyReferences extends { [_: string]: unknown } | unknown = unknown,
 > = readonly [
   ...{
-    [K in keyof TAbiParameters]: TAbiParameters[K]['type'] extends `${infer Head extends string &
+    [K in
+      keyof TAbiParameters]: TAbiParameters[K]['type'] extends `${infer Head extends string &
       keyof TStructs}[${infer Tail}]` // Struct arrays (e.g. `type: 'Struct[]'`, `type: 'Struct[10]'`, `type: 'Struct[][]'`)
       ? Head extends keyof TKeyReferences
         ? Error<`Circular reference detected. Struct "${TAbiParameters[K]['type']}" is a circular reference.`>

@@ -42,12 +42,7 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "/config",
-    "/test",
-    "/zod",
-    "/dist"
-  ],
+  "files": ["/config", "/test", "/zod", "/dist"],
   "peerDependencies": {
     "typescript": ">=4.9.4",
     "zod": "^3 >=3.19.1"
@@ -69,29 +64,17 @@
     "@typescript-eslint/parser": "^5.48.0",
     "@vitest/coverage-c8": "^0.24.3",
     "bun": "^0.5.7",
-    "eslint": "8.17.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-import-resolver-typescript": "^2.7.1",
-    "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.0.0",
     "ethers": "^6.0.5",
     "fs-extra": "^11.1.0",
     "lint-staged": "^12.4.1",
-    "prettier": "^2.8.1",
+    "rome": "^12.0.0",
     "simple-git-hooks": "^2.8.1",
     "tsup": "^6.6.3",
     "typescript": "^4.9.4",
     "vitest": "^0.26.3",
     "zod": "^3.20.6"
   },
-  "keywords": [
-    "abi",
-    "eth",
-    "ethereum",
-    "typescript",
-    "web3"
-  ],
+  "keywords": ["abi", "eth", "ethereum", "typescript", "web3"],
   "scripts": {
     "bench": "vitest bench --no-threads",
     "build": "tsup",
@@ -102,9 +85,9 @@
     "docs:dev": "pnpm -r --filter docs dev",
     "docs:build": "pnpm -r --filter docs build",
     "docs:preview": "pnpm -r --filter docs preview",
-    "lint": "eslint . --cache",
-    "lint:fix": "pnpm lint --fix",
-    "lint:format": "prettier --write",
+    "lint": "rome check .",
+    "lint:fix": "pnpm lint --apply",
+    "lint:format": "rome format . --write",
     "postinstall": "pnpm dev",
     "prepare": "npx simple-git-hooks",
     "prepublishOnly": "pnpm bun scripts/prepublishOnly.ts",
@@ -119,12 +102,8 @@
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": [
-      "pnpm lint:fix"
-    ],
-    "*.{json,md,mdx,yml}": [
-      "pnpm lint:format"
-    ]
+    "*.{js,ts,tsx}": ["pnpm lint:fix"],
+    "*.{json,md,mdx,yml}": ["pnpm lint:format"]
   },
   "packageManager": "pnpm@7.5.0",
   "pnpm": {
@@ -136,9 +115,7 @@
       "shiki-twoslash@3.1.1": "patches/shiki-twoslash@3.1.1.patch"
     },
     "peerDependencyRules": {
-      "ignoreMissing": [
-        "@algolia/client-search"
-      ]
+      "ignoreMissing": ["@algolia/client-search"]
     }
   },
   "engines": {

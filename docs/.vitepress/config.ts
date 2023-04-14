@@ -162,7 +162,7 @@ export default withTwoslash(
       addTryButton: true,
       defaultCompilerOptions: {
         target: ScriptTarget.ESNext,
-      }
+      },
     },
     vue: {
       template: {

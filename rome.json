@@ -1,0 +1,44 @@
+{
+  "files": {
+    "ignore": [
+      "**/node_modules", "CHANGELOG.md", "cache", "coverage", "dist",
+      "tsconfig.json", "pnpm-lock.yaml", "**/trace"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentSize": 2,
+    "lineWidth": 80
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUnusedVariables": "error"
+      },
+      "performance": {
+        "noDelete": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "useShorthandArrayType": "off",
+        "noUnusedTemplateLiteral": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off",
+        "noExplicitAny": "off",
+        "noShadowRestrictedNames": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingComma": "all",
+      "semicolons": "asNeeded"
+    }
+  }
+}

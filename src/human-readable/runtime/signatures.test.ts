@@ -48,8 +48,9 @@ test('execEventSignature', () => {
       "parameters": "string",
     }
   `)
-  expect(execEventSignature('event Name(string indexed foo)'))
-    .toMatchInlineSnapshot(`
+  expect(
+    execEventSignature('event Name(string indexed foo)'),
+  ).toMatchInlineSnapshot(`
       {
         "name": "Name",
         "parameters": "string indexed foo",

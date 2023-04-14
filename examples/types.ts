@@ -92,13 +92,14 @@ export type GetReturnType<
   ? Arg
   : TArgs & {
       // Construct ethers hybrid array-objects for named outputs.
-      [Output in TAbiFunction['outputs'][number] as Output extends {
-        name: infer Name extends string
-      }
-        ? Name extends ''
-          ? never
-          : Name
-        : never]: AbiParameterToPrimitiveType<Output, 'outputs'>
+      [Output in
+        TAbiFunction['outputs'][number] as Output extends {
+          name: infer Name extends string
+        }
+          ? Name extends ''
+            ? never
+            : Name
+          : never]: AbiParameterToPrimitiveType<Output, 'outputs'>
     }
 
 export type DeepPartial<
