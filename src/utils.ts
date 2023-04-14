@@ -131,10 +131,10 @@ export type AbiParameterToPrimitiveType<
   ? /**
      * Then, infer in the opposite direction, using the known `Head` to infer the exact `Size` value.
      *
-     * | Input              | Head         |
-     * | ------------------ | ------------ |
-     * | `${string}[]`      | `string`     |
-     * | `${string}[][][3]` | `string[][]` |
+     * | Input        | Size |
+     * | ------------ | ---- |
+     * | `${Head}[]`  | `""` |
+     * | `${Head}[3]` | `3`  |
      */
     TAbiParameter['type'] extends `${Head}[${infer Size}]`
     ? // Check if size is within range for fixed-length arrays, if so create a tuple.
