@@ -2,7 +2,7 @@
   "files": {
     "ignore": [
       "**/node_modules", "CHANGELOG.md", "cache", "coverage", "dist",
-      "tsconfig.json", "pnpm-lock.yaml", "**/trace"
+      "tsconfig.json", "pnpm-lock.yaml", "trace"
     ]
   },
   "formatter": {
@@ -40,5 +40,8 @@
       "trailingComma": "all",
       "semicolons": "asNeeded"
     }
+  },
+  "organizeImports": {
+    "enabled": true
   }
 }
