@@ -267,9 +267,8 @@ export type _ParseConstructorParametersAndStateMutability<
 export type _ParseTuple<
   T extends `(${string})${string}`,
   Options extends ParseOptions = DefaultParseOptions,
-> = T extends `(${
-  infer Parameters // Tuples without name or modifier (e.g. `(string)`, `(string foo)`)
-})`
+> = /** Tuples without name or modifier (e.g. `(string)`, `(string foo)`) */
+T extends `(${infer Parameters})`
   ? {
       readonly type: 'tuple'
       readonly components: ParseAbiParameters<
