@@ -105,7 +105,7 @@ test('parseAbiParameters', () => {
       },
     ]
   >()
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+
   const param: string = 'address, string'
   expectTypeOf(parseAbiParameters(param)).toEqualTypeOf<
     readonly AbiParameter[]
