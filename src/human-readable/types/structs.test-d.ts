@@ -98,13 +98,11 @@ test('ParseStructs', () => {
 
   expectTypeOf<
     ParseStructs<['struct Person { Name name;']>
-    // eslint-disable-next-line @typescript-eslint/ban-types
   >().toEqualTypeOf<{}>()
-  // eslint-disable-next-line @typescript-eslint/ban-types
+
   expectTypeOf<ParseStructs<[]>>().toEqualTypeOf<{}>()
   expectTypeOf<
     ParseStructs<['function addPerson(Person person)']>
-    // eslint-disable-next-line @typescript-eslint/ban-types
   >().toEqualTypeOf<{}>()
 })
 

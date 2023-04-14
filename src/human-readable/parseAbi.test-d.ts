@@ -152,7 +152,6 @@ test('parseAbi', () => {
   // @ts-expect-error invalid signature
   expectTypeOf(parseAbi(['function foo ()'])).toEqualTypeOf<never>()
 
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   const param: string[] = abi2
   expectTypeOf(parseAbi(param)).toEqualTypeOf<Abi>()
 
