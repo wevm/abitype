@@ -248,6 +248,7 @@ export function splitParameters(
   }
 
   const length = params.length
+  // rome-ignore lint/correctness/noUnreachable: recursive
   for (let i = 0; i < length; i++) {
     const char = params[i]
     const tail = params.slice(i + 1)

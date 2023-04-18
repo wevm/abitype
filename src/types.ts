@@ -75,7 +75,6 @@ export type Merge<Object1, Object2> = Omit<Object1, keyof Object2> & Object2
  */
 export type Prettify<T> = {
   [K in keyof T]: T[K]
-  // eslint-disable-next-line @typescript-eslint/ban-types
 } & {}
 
 /**

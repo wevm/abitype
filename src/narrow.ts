@@ -9,7 +9,6 @@
  */
 // s/o https://twitter.com/hd_nvim/status/1578567206190780417
 export type Narrow<TType> =
-  // eslint-disable-next-line @typescript-eslint/ban-types
   | (TType extends Function ? TType : never)
   | (TType extends string | number | boolean | bigint ? TType : never)
   | (TType extends [] ? [] : never)
