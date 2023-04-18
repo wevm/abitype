@@ -1,9 +1,12 @@
 {
+  "editor.defaultFormatter": "rome.rome",
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "eslint.packageManager": "pnpm",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.rome": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "rome.rome"
+  }
 }
