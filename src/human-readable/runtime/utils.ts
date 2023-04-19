@@ -6,8 +6,8 @@ import type {
   SolidityString,
   SolidityTuple,
 } from '../../abi'
-import { BaseError } from '../../errors'
 import { bytesRegex, execTyped, integerRegex, isTupleRegex } from '../../regex'
+import { UnknownSolidityTypeError } from '../errors/abiItem'
 import {
   InvalidFunctionModifierError,
   InvalidModifierError,
@@ -198,9 +198,7 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
   } else {
     type = match.type
     if (!(options?.type === 'struct') && !isSolidityType(type))
-      throw new BaseError('Unknown type.', {
-        metaMessages: [`Type "${type}" is not a valid ABI type.`],
-      })
+      throw new UnknownSolidityTypeError({ type })
   }
 
   if (match.modifier) {
@@ -244,7 +242,9 @@ export function splitParameters(
   if (params === '') {
     if (current === '') return result
     if (depth !== 0) throw new InvalidParenthesisError({ current, depth })
-    return [...result, current.trim()]
+
+    result.push(current.trim())
+    return result
   }
 
   const length = params.length

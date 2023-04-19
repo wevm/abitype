@@ -22,3 +22,13 @@ export class UnknownTypeError extends BaseError {
     })
   }
 }
+
+export class UnknownSolidityTypeError extends BaseError {
+  override name = 'UnknownSolidityTypeError'
+
+  constructor({ type }: { type: string }) {
+    super('Unknown type.', {
+      metaMessages: [`Type "${type}" is not a valid ABI type.`],
+    })
+  }
+}

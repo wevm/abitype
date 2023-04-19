@@ -69,8 +69,9 @@ test('InvalidSignatureError', () => {
 })
 
 test('UnknownSignatureError', () => {
-  expect(new UnknownSignatureError({ signature: 'invalid' }))
-    .toMatchInlineSnapshot(`
+  expect(
+    new UnknownSignatureError({ signature: 'invalid' }),
+  ).toMatchInlineSnapshot(`
     [UnknownSignatureError: Unknown signature.
 
     Details: invalid
@@ -79,8 +80,9 @@ test('UnknownSignatureError', () => {
 })
 
 test('InvalidStructSignatureError', () => {
-  expect(new InvalidStructSignatureError({ signature: 'struct Foo{}' }))
-    .toMatchInlineSnapshot(`
+  expect(
+    new InvalidStructSignatureError({ signature: 'struct Foo{}' }),
+  ).toMatchInlineSnapshot(`
     [InvalidStructSignatureError: Invalid struct signature.
     
     No properties exist.
