@@ -305,7 +305,7 @@ type ResultStruct = ParseAbiParameters<[
 Runtime functions for parsing human-readable ABIs.
 
 ::: warning
-These functions throw errors for invalid inputs. Make sure you handle errors appropriately.
+These functions throw [errors](#errors-1) for invalid inputs. Make sure you handle errors appropriately.
 :::
 
 ### `parseAbi`
@@ -403,4 +403,25 @@ const abiParametersStruct = parseAbiParameters([
   'Baz bar',
   'struct Baz { string name; }',
 ])
+```
+
+## Errors
+
+```ts twoslash
+import {
+  CircularReferenceError,
+  InvalidParenthesisError,
+  UnknownSignatureError,
+  InvalidSignatureError,
+  InvalidStructSignatureError,
+  InvalidAbiParameterError,
+  InvalidAbiParametersError,
+  InvalidParameterError,
+  SolidityProtectedKeywordError,
+  InvalidModifierError,
+  InvalidFunctionModifierError,
+  InvalidAbiTypeParameterError,
+  InvalidAbiItemError,
+  UnknownTypeError,
+} from 'abitype'
 ```

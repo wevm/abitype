@@ -11,6 +11,20 @@ it('should expose correct exports', () => {
       "parseAbiItem",
       "parseAbiParameter",
       "parseAbiParameters",
+      "CircularReferenceError",
+      "InvalidParenthesisError",
+      "UnknownSignatureError",
+      "InvalidSignatureError",
+      "InvalidStructSignatureError",
+      "InvalidAbiParameterError",
+      "InvalidAbiParametersError",
+      "InvalidParameterError",
+      "SolidityProtectedKeywordError",
+      "InvalidModifierError",
+      "InvalidFunctionModifierError",
+      "InvalidAbiTypeParameterError",
+      "InvalidAbiItemError",
+      "UnknownTypeError",
     ]
   `)
 })
