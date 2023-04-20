@@ -7,17 +7,15 @@ import type {
   SolidityTuple,
 } from '../../abi'
 import { bytesRegex, execTyped, integerRegex, isTupleRegex } from '../../regex'
-import { UnknownSolidityTypeError } from '../errors/abiItem'
 import {
   InvalidFunctionModifierError,
   InvalidModifierError,
   InvalidParameterError,
-  SolidityProtectedKeywordError,
-} from '../errors/abiParameter'
-import {
   InvalidSignatureError,
+  SolidityProtectedKeywordError,
   UnknownSignatureError,
-} from '../errors/signature'
+  UnknownSolidityTypeError,
+} from '../errors'
 import { InvalidParenthesisError } from '../errors/splitParameters'
 import type { FunctionModifier, Modifier, StructLookup } from '../types'
 import { getParameterCacheKey, parameterCache } from './cache'

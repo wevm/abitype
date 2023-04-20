@@ -1,4 +1,8 @@
-export { UnknownTypeError, InvalidAbiItemError } from './abiItem'
+export {
+  UnknownTypeError,
+  InvalidAbiItemError,
+  UnknownSolidityTypeError,
+} from './abiItem'
 
 export {
   InvalidAbiTypeParameterError,

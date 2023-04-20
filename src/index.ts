@@ -67,9 +67,6 @@ export {
   parseAbiItem,
   parseAbiParameter,
   parseAbiParameters,
-} from './human-readable'
-
-export {
   CircularReferenceError,
   InvalidParenthesisError,
   UnknownSignatureError,
@@ -84,4 +81,4 @@ export {
   InvalidAbiTypeParameterError,
   InvalidAbiItemError,
   UnknownTypeError,
-} from './human-readable/errors'
+} from './human-readable'
