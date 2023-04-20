@@ -1,9 +1,10 @@
+import type { Address } from '../abi'
 import { test } from 'vitest'
 
 import { seaport, uniswap, weth } from '../test/bytecodes'
 import { parseBytecode } from './parseBytecode'
 
-const resolved = new Map([
+const resolved = new Map<Address, string>([
   ['0xddf252ad', 'Transfer(address,address,uint256)'],
   ['0x2e1a7d4d', 'withdraw(uint256)'],
 ])

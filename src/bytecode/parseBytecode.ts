@@ -9,7 +9,7 @@ import type { ParseBytecode } from './types/bytecode'
 
 export function parseBytecode<
   TBytecode extends string,
-  TResolvedSelectors extends Map<string, string>,
+  TResolvedSelectors extends Map<Address, string>,
 >(
   bytecode: TBytecode,
   resolvedSelectors?: TResolvedSelectors,
@@ -40,7 +40,7 @@ export function parseBytecode<
 
       if (groups.errorSelector === undefined) continue
 
-      const selector = ('0x' + groups.errorSelector.substring(0, 8)) as Address
+      const selector = `0x${groups.errorSelector.substring(0, 8)}` as Address
 
       if (resolvedSelectors?.has(selector))
         result.push(
@@ -57,7 +57,7 @@ export function parseBytecode<
 
       if (groups.errorPushFour === undefined) continue
 
-      const selector = ('0x' + groups.errorPushFour) as Address
+      const selector = `0x${groups.errorPushFour}` as Address
 
       if (resolvedSelectors?.has(selector))
         result.push(
@@ -80,7 +80,7 @@ export function parseBytecode<
       )
         continue
 
-      const selector = ('0x' + groups.eventSelector.substring(0, 8)) as Address
+      const selector = `0x${groups.eventSelector.substring(0, 8)}` as Address
       if (resolvedSelectors?.has(selector))
         result.push(
           parseEventSelector(selector, resolvedSelectors.get(selector)),
@@ -96,7 +96,7 @@ export function parseBytecode<
 
       if (groups.functionSelector === undefined) continue
 
-      const selector = ('0x' + groups.functionSelector) as Address
+      const selector = `0x${groups.functionSelector}` as Address
 
       if (resolvedSelectors?.has(selector))
         result.push(

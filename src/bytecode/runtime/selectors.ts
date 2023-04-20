@@ -6,7 +6,7 @@ export function parseFunctionSelector<
   TResolvedSelector extends string,
 >(selector: TSelector, resolvedSelector?: TResolvedSelector): AbiFunction {
   if (resolvedSelector) {
-    return parseSignature('function ' + resolvedSelector) as AbiFunction
+    return parseSignature(`function ${resolvedSelector}`) as AbiFunction
   }
 
   return {
@@ -23,7 +23,7 @@ export function parseEventSelector<
   TResolvedSelector extends string,
 >(selector: TSelector, resolvedSelector?: TResolvedSelector): AbiEvent {
   if (resolvedSelector) {
-    return parseSignature('event ' + resolvedSelector) as AbiEvent
+    return parseSignature(`event ${resolvedSelector}`) as AbiEvent
   }
 
   return {
@@ -38,7 +38,7 @@ export function parseErrorSelector<
   TResolvedSelector extends string,
 >(selector: TSelector, resolvedSelector?: TResolvedSelector): AbiError {
   if (resolvedSelector) {
-    return parseSignature('error ' + resolvedSelector) as AbiError
+    return parseSignature(`error ${resolvedSelector}`) as AbiError
   }
 
   return {

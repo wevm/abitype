@@ -90,7 +90,6 @@ export type FindSwap2EventSelectors<T extends string> = T extends ''
                 >
               : readonly []
           },
-
           ...FindSwap2EventSelectors<Rest>,
         ]
     : []
