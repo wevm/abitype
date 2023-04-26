@@ -3,7 +3,7 @@ import { expect, test } from 'vitest'
 
 test('InvalidBytecodeError', () => {
   expect(new InvalidBytecodeError()).toMatchInlineSnapshot(`
-    [InvalidBytecodeError: Invalid bytecode.
+    [InvalidBytecodeError: Invalid bytecode
 
     Cannot infer any values from the provided bytecode string.
 
