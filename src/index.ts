@@ -82,3 +82,14 @@ export {
   InvalidAbiItemError,
   UnknownTypeError,
 } from './human-readable'
+
+export type {
+  ParseBytecode,
+  BytecodeSelectors,
+  ErrorSelectors,
+  EventSelectors,
+  FunctionSelectors,
+  Selectors,
+} from './bytecode'
+
+export { parseBytecode } from './bytecode'

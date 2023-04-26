@@ -23,3 +23,11 @@ export type {
   SplitByChunks,
   ToSelector,
 } from './utils'
+
+export type {
+  BytecodeSelectors,
+  ErrorSelectors,
+  EventSelectors,
+  FunctionSelectors,
+  Selectors,
+} from './config'

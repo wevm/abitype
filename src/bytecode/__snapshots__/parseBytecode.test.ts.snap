@@ -1,0 +1,2166 @@
+// Vitest Snapshot v1
+
+exports[`parse seaport bytecode 1`] = `
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+  },
+  {
+    "inputs": [],
+    "name": "0x4e487b71",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x6ab37ce7",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xffffffff",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x39f3e3fd",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x466aa616",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x21ccfeb7",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x8ffff980",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x8ffff980",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x69f95827",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xa61be9f0",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x6ab37ce7",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xbc806b96",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x91b3e514",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xf486bc87",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xd13d53d4",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xd13d53d4",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x1cf99b26",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xc63cf089",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x12d3f5a3",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x133c37c6",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xa8930e9a",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xd6929332",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x94eb6af6",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x09bde339",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x09bde339",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xd5da9a1b",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x375c24c1",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x375c24c1",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x7fda7279",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x4e487b71",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xa5f54208",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xbced929d",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x98e9db6e",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xee9e0e63",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x1a515574",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x5a052b32",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xa11b63ff",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x93979285",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x2165628a",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xfed398fc",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x7fa8a987",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xf486bc87",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xf486bc87",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x4f7fb80d",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x1f003d0a",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x8baa579f",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x1a515574",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x10fda3e1",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xfb5014fc",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xfb5014fc",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x6bacc01d",
+    "type": "event",
+  },
+  {
+    "inputs": [],
+    "name": "0x4b9f2d36",
+    "type": "event",
+  },
+  {
+    "inputs": [],
+    "name": "0x06fdde03",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x46423aa7",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x5b34b966",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x79df72bd",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x87201b41",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x88147732",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xa8174404",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xa900866b",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xb3a34c4c",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xe7acab24",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xed98a574",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xf07ec373",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xf2d12b12",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xf47b7740",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xfb0f3ee1",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+]
+`;
+
+exports[`parse seaport bytecode with resolved selectors 1`] = `
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "Panic",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "UnusedItemParameters",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0xffffffff",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "InvalidBasicOrderParameterEncoding",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "MissingOriginalConsiderationItems",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint256",
+      },
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "InvalidTime",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "InsufficientNativeTokensSupplied",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "InsufficientNativeTokensSupplied",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "InvalidERC721TransferAmount",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "InvalidMsgValue",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "UnusedItemParameters",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "address",
+      },
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "NativeTokenTransferGenericFailure",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "MissingItemAmount",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "address",
+      },
+      {
+        "type": "address",
+      },
+      {
+        "type": "address",
+      },
+      {
+        "type": "uint256",
+      },
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "TokenTransferGenericFailure",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "address",
+      },
+    ],
+    "name": "InvalidCallToConduit",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "address",
+      },
+    ],
+    "name": "InvalidCallToConduit",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "bytes32",
+      },
+      {
+        "type": "address",
+      },
+    ],
+    "name": "InvalidConduit",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "InexactFraction",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "InvalidNativeOfferItem",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint8",
+      },
+    ],
+    "name": "OrderCriteriaResolverOutOfRange",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint256",
+      },
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "UnresolvedConsiderationCriteria",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint256",
+      },
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "UnresolvedOfferCriteria",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "CriteriaNotEnabledForItem",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "InvalidProof",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "InvalidProof",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "NoSpecifiedOrdersAvailable",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint8",
+      },
+    ],
+    "name": "MissingFulfillmentComponentOnAggregation",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint8",
+      },
+    ],
+    "name": "MissingFulfillmentComponentOnAggregation",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "InvalidFulfillmentComponentData",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "Panic",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint256",
+      },
+      {
+        "type": "uint256",
+      },
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "ConsiderationNotMet",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "MismatchedFulfillmentOfferAndConsiderationComponents",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "OfferAndConsiderationRequiredOnFulfillment",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "bytes32",
+      },
+    ],
+    "name": "OrderPartiallyFilled",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "bytes32",
+      },
+    ],
+    "name": "OrderIsCancelled",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "BadFraction",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "PartialFillsNotEnabledForOrder",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "bytes32",
+      },
+    ],
+    "name": "InvalidContractOrder",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "ConsiderationLengthNotEqualToTotalOriginal",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "CannotCancelOrder",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "NoReentrantCalls",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "address",
+      },
+      {
+        "type": "address",
+      },
+      {
+        "type": "address",
+      },
+      {
+        "type": "uint256",
+      },
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "TokenTransferGenericFailure",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "address",
+      },
+      {
+        "type": "address",
+      },
+      {
+        "type": "address",
+      },
+      {
+        "type": "uint256",
+      },
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "TokenTransferGenericFailure",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "BadContractSignature",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint8",
+      },
+    ],
+    "name": "BadSignatureV",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "InvalidSignature",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "bytes32",
+      },
+    ],
+    "name": "OrderIsCancelled",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "bytes32",
+      },
+    ],
+    "name": "OrderAlreadyFilled",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "bytes32",
+      },
+    ],
+    "name": "InvalidRestrictedOrder",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "bytes32",
+      },
+    ],
+    "name": "InvalidRestrictedOrder",
+    "type": "error",
+  },
+  {
+    "inputs": [
+      {
+        "type": "bytes32",
+      },
+      {
+        "type": "address",
+      },
+      {
+        "type": "address",
+      },
+    ],
+    "name": "OrderCancelled",
+    "type": "event",
+  },
+  {
+    "inputs": [
+      {
+        "type": "bytes32[]",
+      },
+    ],
+    "name": "OrdersMatched",
+    "type": "event",
+  },
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [
+      {
+        "type": "bytes32",
+      },
+    ],
+    "name": "getOrderStatus",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "incrementCounter",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "type": "address",
+          },
+          {
+            "type": "address",
+          },
+          {
+            "components": [
+              {
+                "type": "uint8",
+              },
+              {
+                "type": "address",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+            ],
+            "type": "tuple[]",
+          },
+          {
+            "components": [
+              {
+                "type": "uint8",
+              },
+              {
+                "type": "address",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "address",
+              },
+            ],
+            "type": "tuple[]",
+          },
+          {
+            "type": "uint8",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "bytes32",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "bytes32",
+          },
+          {
+            "type": "uint256",
+          },
+        ],
+        "type": "tuple",
+      },
+    ],
+    "name": "getOrderHash",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "type": "address",
+              },
+              {
+                "type": "address",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "address",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "type": "uint8",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+            ],
+            "type": "tuple",
+          },
+          {
+            "type": "uint120",
+          },
+          {
+            "type": "uint120",
+          },
+          {
+            "type": "bytes",
+          },
+          {
+            "type": "bytes",
+          },
+        ],
+        "type": "tuple[]",
+      },
+      {
+        "components": [
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint8",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "bytes32[]",
+          },
+        ],
+        "type": "tuple[]",
+      },
+      {
+        "components": [
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint256",
+          },
+        ],
+        "type": "tuple[][]",
+      },
+      {
+        "components": [
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint256",
+          },
+        ],
+        "type": "tuple[][]",
+      },
+      {
+        "type": "bytes32",
+      },
+      {
+        "type": "address",
+      },
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "fulfillAvailableAdvancedOrders",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "type": "address",
+              },
+              {
+                "type": "address",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "address",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "type": "uint8",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+            ],
+            "type": "tuple",
+          },
+          {
+            "type": "bytes",
+          },
+        ],
+        "type": "tuple[]",
+      },
+    ],
+    "name": "validate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "type": "address",
+              },
+              {
+                "type": "address",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "address",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "type": "uint8",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+            ],
+            "type": "tuple",
+          },
+          {
+            "type": "bytes",
+          },
+        ],
+        "type": "tuple[]",
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+            ],
+            "type": "tuple[]",
+          },
+          {
+            "components": [
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+            ],
+            "type": "tuple[]",
+          },
+        ],
+        "type": "tuple[]",
+      },
+    ],
+    "name": "matchOrders",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [
+      {
+        "type": "address",
+      },
+    ],
+    "name": "getContractOffererNonce",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "type": "address",
+              },
+              {
+                "type": "address",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "address",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "type": "uint8",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+            ],
+            "type": "tuple",
+          },
+          {
+            "type": "bytes",
+          },
+        ],
+        "type": "tuple",
+      },
+      {
+        "type": "bytes32",
+      },
+    ],
+    "name": "fulfillOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "type": "address",
+              },
+              {
+                "type": "address",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "address",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "type": "uint8",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+            ],
+            "type": "tuple",
+          },
+          {
+            "type": "uint120",
+          },
+          {
+            "type": "uint120",
+          },
+          {
+            "type": "bytes",
+          },
+          {
+            "type": "bytes",
+          },
+        ],
+        "type": "tuple",
+      },
+      {
+        "components": [
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint8",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "bytes32[]",
+          },
+        ],
+        "type": "tuple[]",
+      },
+      {
+        "type": "bytes32",
+      },
+      {
+        "type": "address",
+      },
+    ],
+    "name": "fulfillAdvancedOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "type": "address",
+              },
+              {
+                "type": "address",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "address",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "type": "uint8",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+            ],
+            "type": "tuple",
+          },
+          {
+            "type": "bytes",
+          },
+        ],
+        "type": "tuple[]",
+      },
+      {
+        "components": [
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint256",
+          },
+        ],
+        "type": "tuple[][]",
+      },
+      {
+        "components": [
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint256",
+          },
+        ],
+        "type": "tuple[][]",
+      },
+      {
+        "type": "bytes32",
+      },
+      {
+        "type": "uint256",
+      },
+    ],
+    "name": "fulfillAvailableOrders",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [
+      {
+        "type": "address",
+      },
+    ],
+    "name": "getCounter",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "type": "address",
+              },
+              {
+                "type": "address",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "components": [
+                  {
+                    "type": "uint8",
+                  },
+                  {
+                    "type": "address",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "uint256",
+                  },
+                  {
+                    "type": "address",
+                  },
+                ],
+                "type": "tuple[]",
+              },
+              {
+                "type": "uint8",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "bytes32",
+              },
+              {
+                "type": "uint256",
+              },
+            ],
+            "type": "tuple",
+          },
+          {
+            "type": "uint120",
+          },
+          {
+            "type": "uint120",
+          },
+          {
+            "type": "bytes",
+          },
+          {
+            "type": "bytes",
+          },
+        ],
+        "type": "tuple[]",
+      },
+      {
+        "components": [
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint8",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "bytes32[]",
+          },
+        ],
+        "type": "tuple[]",
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+            ],
+            "type": "tuple[]",
+          },
+          {
+            "components": [
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "uint256",
+              },
+            ],
+            "type": "tuple[]",
+          },
+        ],
+        "type": "tuple[]",
+      },
+      {
+        "type": "address",
+      },
+    ],
+    "name": "matchAdvancedOrders",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "information",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "type": "address",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "address",
+          },
+          {
+            "type": "address",
+          },
+          {
+            "type": "address",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint8",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "bytes32",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "type": "bytes32",
+          },
+          {
+            "type": "bytes32",
+          },
+          {
+            "type": "uint256",
+          },
+          {
+            "components": [
+              {
+                "type": "uint256",
+              },
+              {
+                "type": "address",
+              },
+            ],
+            "type": "tuple[]",
+          },
+          {
+            "type": "bytes",
+          },
+        ],
+        "type": "tuple",
+      },
+    ],
+    "name": "fulfillBasicOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+]
+`;
+
+exports[`parse uniswap bytecode 1`] = `
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+  },
+  {
+    "inputs": [],
+    "name": "0xe8e33700",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xf305d719",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xfb3bdb41",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xc45a0155",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xd06ca61f",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xded9382a",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xaf2979eb",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xb6f9de95",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xbaa2abde",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x8803dbee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xad5c4648",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xad615dec",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x791ac947",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x7ff36ab5",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x85f8c259",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x4a25d94a",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x5b0d5984",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x5c11d795",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x1f00ca74",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x2195995c",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x38ed1739",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x02751cec",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x054d50d4",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x18cbafe5",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+]
+`;
+
+exports[`parse weth bytecode 1`] = `
+[
+  {
+    "inputs": [],
+    "name": "0xe1fffcc4",
+    "type": "event",
+  },
+  {
+    "inputs": [],
+    "name": "0x8c5be1e5",
+    "type": "event",
+  },
+  {
+    "inputs": [],
+    "name": "0xddf252ad",
+    "type": "event",
+  },
+  {
+    "inputs": [],
+    "name": "0x7fcf532c",
+    "type": "event",
+  },
+  {
+    "inputs": [],
+    "name": "0x06fdde03",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x095ea7b3",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x18160ddd",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x23b872dd",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x2e1a7d4d",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x313ce567",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x70a08231",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0x95d89b41",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xa9059cbb",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xd0e30db0",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+  {
+    "inputs": [],
+    "name": "0xdd62ed3e",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
+]
+`;

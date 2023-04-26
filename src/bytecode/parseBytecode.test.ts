@@ -1,17 +1,35 @@
-import type { Address } from "../abi";
-import { test } from "vitest";
+import { expect, test } from 'vitest'
 
-import { seaport, uniswap, weth } from "../test/bytecodes";
-import { parseBytecode } from "./parseBytecode";
+import { seaport, uniswap, weth } from '../test/bytecodes'
+import { parseBytecode } from './parseBytecode'
+import { resolvedSelectors } from './runtime'
 
-const resolved = new Map<Address, string>([
-  ["0xddf252ad", "Transfer(address,address,uint256)"],
-  ["0x2e1a7d4d", "withdraw(uint256)"],
-]);
+test('Invalid bytecode', () => {
+  expect(() => parseBytecode('invalid')).toThrowErrorMatchingInlineSnapshot(`
+    "Invalid bytecode
 
-test("Run", () => {
-  console.log("WETH: ", parseBytecode(weth, resolved));
-  console.log("Uniswap: ", parseBytecode(uniswap));
-  console.log("Seaport: ", parseBytecode(seaport));
-  console.log("Fail:", parseBytecode("nope"));
-});
+    Cannot infer any values from the provided bytecode string.
+
+    Version: abitype@x.y.z"
+  `)
+})
+
+test('parse weth bytecode', () => {
+  const result = parseBytecode(weth)
+  expect(result).toMatchSnapshot()
+})
+
+test('parse uniswap bytecode', () => {
+  const result = parseBytecode(uniswap)
+  expect(result).toMatchSnapshot()
+})
+
+test('parse seaport bytecode', () => {
+  const result = parseBytecode(seaport)
+  expect(result).toMatchSnapshot()
+})
+
+test('parse seaport bytecode with resolved selectors', () => {
+  const result = parseBytecode(seaport, resolvedSelectors)
+  expect(result).toMatchSnapshot()
+})

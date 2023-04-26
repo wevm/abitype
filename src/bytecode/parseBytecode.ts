@@ -1,23 +1,57 @@
-import type { Address } from "../abi";
+import type { Abi, Address } from '../abi'
+import { Narrow } from '../narrow'
+import type { Error } from '../types'
+import { InvalidBytecodeError } from './errors/invalidBytecode'
 import {
   parseConstructor,
   parseErrorSelectors,
   parseEventSelectors,
   parseFunctionSelectors,
-} from "./runtime/selectors";
-import type { ParseBytecode } from "./types/bytecode";
+} from './runtime/selectors'
+import type {
+  ParseBytecodeConstructor,
+  ParseBytecodeErrors,
+  ParseBytecodeEvents,
+  ParseBytecodeFunctions,
+} from './types/bytecode'
+
+export type ParseBytecode<T extends string> = string extends T
+  ? Abi
+  : readonly [
+      ...ParseBytecodeConstructor<T>,
+      ...ParseBytecodeErrors<T>,
+      ...ParseBytecodeEvents<T>,
+      ...ParseBytecodeFunctions<T>,
+    ] extends infer Result
+  ? Result extends readonly []
+    ? Error<['Cannot infer abi from provided bytecode']>
+    : Result
+  : never
 
 export function parseBytecode<
   TBytecode extends string,
-  TResolvedSelectors extends Map<Address, string>
+  TResolvedSelectors extends Map<Address, string>,
 >(
-  bytecode: TBytecode,
-  resolvedSelectors?: TResolvedSelectors
+  bytecode: Narrow<TBytecode>,
+  resolvedSelectors?: TResolvedSelectors,
 ): ParseBytecode<TBytecode> {
-  return [
-    parseConstructor(bytecode),
-    ...parseErrorSelectors(bytecode, resolvedSelectors),
-    ...parseEventSelectors(bytecode, resolvedSelectors),
-    ...parseFunctionSelectors(bytecode, resolvedSelectors),
-  ] as unknown as ParseBytecode<TBytecode>;
+  const constructor = parseConstructor(bytecode as string)
+
+  const parsedBytecode = constructor
+    ? [
+        constructor,
+        ...parseErrorSelectors(bytecode as string, resolvedSelectors),
+        ...parseEventSelectors(bytecode as string, resolvedSelectors),
+        ...parseFunctionSelectors(bytecode as string, resolvedSelectors),
+      ]
+    : [
+        ...parseErrorSelectors(bytecode as string, resolvedSelectors),
+        ...parseEventSelectors(bytecode as string, resolvedSelectors),
+        ...parseFunctionSelectors(bytecode as string, resolvedSelectors),
+      ]
+
+  if (typeof parsedBytecode[parseBytecode.length - 1] === 'undefined')
+    throw new InvalidBytecodeError()
+
+  return parsedBytecode as unknown as ParseBytecode<TBytecode>
 }

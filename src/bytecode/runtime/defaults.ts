@@ -42,13 +42,11 @@ export const resolvedErrors = new Map<Address, string>([
   ['0x8baa579f', 'InvalidSignature()'],
   ['0x10fda3e1', 'OrderAlreadyFilled(bytes32)'],
   ['0xfb5014fc', 'InvalidRestrictedOrder(bytes32)'],
-  ['0x6ab37ce7', 'UnusedItemParameters()'],
   [
     '0xf486bc87',
     'TokenTransferGenericFailure(address,address,address,uint256,uint256)',
   ],
   ['0x12d3f5a3', 'InvalidNativeOfferItem()'],
-  ['0x09bde339', 'InvalidProof()'],
   ['0xd5da9a1b', 'NoSpecifiedOrdersAvailable()'],
   ['0x7fda7279', 'InvalidFulfillmentComponentData()'],
   ['0x4e487b71', 'Panic(uint256)'],
@@ -59,7 +57,6 @@ export const resolvedErrors = new Map<Address, string>([
   ['0xa11b63ff', 'PartialFillsNotEnabledForOrder()'],
   ['0x2165628a', 'ConsiderationLengthNotEqualToTotalOriginal()'],
   ['0xfed398fc', 'CannotCancelOrder()'],
-  ['0x1a515574', 'OrderIsCancelled(bytes32)'],
 ])
 
 export const resolvedEvents = new Map<Address, string>([
@@ -203,5 +200,5 @@ export const resolvedFunctions = new Map<Address, string>([
 export const resolvedSelectors = new Map<Address, string>([
   ...resolvedErrors,
   ...resolvedEvents,
-  ...resolvedEvents,
+  ...resolvedFunctions,
 ])

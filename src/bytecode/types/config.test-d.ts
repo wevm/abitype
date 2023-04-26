@@ -1,7 +1,7 @@
 import { assertType, test } from 'vitest'
 
 import type { weth } from '../../test/bytecodes'
-import type { ParseBytecodeEvents, ParseBytecodeFunctions } from './selectors'
+import type { ParseBytecodeEvents, ParseBytecodeFunctions } from './bytecode'
 
 declare module './config' {
   export interface Selectors {
