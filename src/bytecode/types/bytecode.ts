@@ -1,7 +1,7 @@
-import type { Abi } from '../../abi'
-import type { ParseAbiParameters } from '../../human-readable/types/utils'
-import type { Selectors } from './config'
-import type { OPCODES, RevertErrorString, RevertPanicString } from './opcodes'
+import type { Abi } from "../../abi";
+import type { ParseAbiParameters } from "../../human-readable/types/utils";
+import type { Selectors } from "./config";
+import type { OPCODES, RevertErrorString, RevertPanicString } from "./opcodes";
 import type {
   ExtractName,
   ExtractParameters,
@@ -9,7 +9,7 @@ import type {
   RecurseSelector,
   Slice,
   ToSelector,
-} from './utils'
+} from "./utils";
 
 export type HasConstructor<T extends string> =
   T extends `${string}60033${string}`
@@ -18,11 +18,11 @@ export type HasConstructor<T extends string> =
     ? true
     : T extends `${string}6343${string}000a${string}`
     ? true
-    : false
+    : false;
 
-export type FindCommonEventSelectors<T extends string> = T extends ''
+export type FindCommonEventSelectors<T extends string> = T extends ""
   ? []
-  : T extends `${string}${OPCODES['AND']}${OPCODES['PUSH32']}${infer Rest}`
+  : T extends `${string}${OPCODES["AND"]}${OPCODES["PUSH32"]}${infer Rest}`
   ? Slice<Rest, 32> extends infer Result extends string
     ? Result extends
         | `${string}ffffffffff${string}`
@@ -30,24 +30,24 @@ export type FindCommonEventSelectors<T extends string> = T extends ''
       ? FindCommonEventSelectors<Rest>
       : [
           {
-            type: 'event'
+            type: "event";
             name: Selectors[`0x${ToSelector<Result>}`] extends string
               ? ExtractName<Selectors[`0x${ToSelector<Result>}`]>
-              : `0x${ToSelector<Result>}`
+              : `0x${ToSelector<Result>}`;
             inputs: Selectors[`0x${ToSelector<Result>}`] extends string
               ? ParseAbiParameters<
                   ExtractParameters<Selectors[`0x${ToSelector<Result>}`]>
                 >
-              : readonly []
+              : readonly [];
           },
-          ...FindCommonEventSelectors<Rest>,
+          ...FindCommonEventSelectors<Rest>
         ]
     : []
-  : []
+  : [];
 
-export type FindUncommonEventSelectors<T extends string> = T extends ''
+export type FindUncommonEventSelectors<T extends string> = T extends ""
   ? []
-  : T extends `${string}${OPCODES['SWAP1']}${OPCODES['PUSH32']}${infer Rest}`
+  : T extends `${string}${OPCODES["SWAP1"]}${OPCODES["PUSH32"]}${infer Rest}`
   ? Slice<Rest, 32> extends infer Result extends string
     ? Result extends
         | `${string}ffffffffff${string}`
@@ -55,24 +55,24 @@ export type FindUncommonEventSelectors<T extends string> = T extends ''
       ? FindUncommonEventSelectors<Rest>
       : [
           {
-            type: 'event'
+            type: "event";
             name: Selectors[`0x${ToSelector<Result>}`] extends string
               ? ExtractName<Selectors[`0x${ToSelector<Result>}`]>
-              : `0x${ToSelector<Result>}`
+              : `0x${ToSelector<Result>}`;
             inputs: Selectors[`0x${ToSelector<Result>}`] extends string
               ? ParseAbiParameters<
                   ExtractParameters<Selectors[`0x${ToSelector<Result>}`]>
                 >
-              : readonly []
+              : readonly [];
           },
-          ...FindUncommonEventSelectors<Rest>,
+          ...FindUncommonEventSelectors<Rest>
         ]
     : []
-  : []
+  : [];
 
-export type FindSwap2EventSelectors<T extends string> = T extends ''
+export type FindSwap2EventSelectors<T extends string> = T extends ""
   ? []
-  : T extends `${string}${OPCODES['SWAP2']}${OPCODES['PUSH32']}${infer Rest}`
+  : T extends `${string}${OPCODES["SWAP2"]}${OPCODES["PUSH32"]}${infer Rest}`
   ? Slice<Rest, 32> extends infer Result extends string
     ? Result extends
         | `${string}ffffffffff${string}`
@@ -80,111 +80,111 @@ export type FindSwap2EventSelectors<T extends string> = T extends ''
       ? FindSwap2EventSelectors<Rest>
       : [
           {
-            type: 'event'
+            type: "event";
             name: Selectors[`0x${ToSelector<Result>}`] extends string
               ? ExtractName<Selectors[`0x${ToSelector<Result>}`]>
-              : `0x${ToSelector<Result>}`
+              : `0x${ToSelector<Result>}`;
             inputs: Selectors[`0x${ToSelector<Result>}`] extends string
               ? ParseAbiParameters<
                   ExtractParameters<Selectors[`0x${ToSelector<Result>}`]>
                 >
-              : readonly []
+              : readonly [];
           },
-          ...FindSwap2EventSelectors<Rest>,
+          ...FindSwap2EventSelectors<Rest>
         ]
     : []
-  : []
+  : [];
 
-export type FindYulTypeErrorSelectors<T extends string> = T extends ''
+export type FindYulTypeErrorSelectors<T extends string> = T extends ""
   ? []
-  : T extends `${string}${OPCODES['JUMPDEST']}${OPCODES['PUSH4']}${infer Hash}4601cfd${infer Rest}`
+  : T extends `${string}${OPCODES["JUMPDEST"]}${OPCODES["PUSH4"]}${infer Hash}4601cfd${infer Rest}`
   ? IsErrorSelector<Hash> extends false
     ? FindYulTypeErrorSelectors<`${Hash}4601cfd${Rest}`>
     : [
         {
-          type: 'error'
+          type: "error";
           name: Selectors[`0x${ToSelector<Hash>}`] extends string
             ? ExtractName<Selectors[`0x${ToSelector<Hash>}`]>
-            : `0x${ToSelector<Hash>}`
+            : `0x${ToSelector<Hash>}`;
           inputs: Selectors[`0x${ToSelector<Hash>}`] extends string
             ? ParseAbiParameters<
                 ExtractParameters<Selectors[`0x${ToSelector<Hash>}`]>
               >
-            : readonly []
+            : readonly [];
         },
-        ...FindYulTypeErrorSelectors<Rest>,
+        ...FindYulTypeErrorSelectors<Rest>
       ]
-  : []
+  : [];
 
-export type FindYulUncommonTypeErrorSelectors<T extends string> = T extends ''
+export type FindYulUncommonTypeErrorSelectors<T extends string> = T extends ""
   ? []
-  : T extends `${string}${OPCODES['JUMPDEST']}${OPCODES['POP']}${OPCODES['PUSH4']}${infer Hash}4601cfd${infer Rest}`
+  : T extends `${string}${OPCODES["JUMPDEST"]}${OPCODES["POP"]}${OPCODES["PUSH4"]}${infer Hash}4601cfd${infer Rest}`
   ? IsErrorSelector<Hash> extends false
     ? FindYulUncommonTypeErrorSelectors<`${Hash}4601cfd${Rest}`>
     : [
         {
-          type: 'error'
+          type: "error";
           name: Selectors[`0x${ToSelector<Hash>}`] extends string
             ? ExtractName<Selectors[`0x${ToSelector<Hash>}`]>
-            : `0x${ToSelector<Hash>}`
+            : `0x${ToSelector<Hash>}`;
           inputs: Selectors[`0x${ToSelector<Hash>}`] extends string
             ? ParseAbiParameters<
                 ExtractParameters<Selectors[`0x${ToSelector<Hash>}`]>
               >
-            : readonly []
+            : readonly [];
         },
-        ...FindYulUncommonTypeErrorSelectors<Rest>,
+        ...FindYulUncommonTypeErrorSelectors<Rest>
       ]
-  : []
+  : [];
 
-export type FindSolidityCommonErrorSelectors<T extends string> = T extends ''
+export type FindSolidityCommonErrorSelectors<T extends string> = T extends ""
   ? []
-  : T extends `${string}${OPCODES['MLOAD']}${OPCODES['PUSH32']}${infer Hash}815260040160405180910390fd${infer Rest}`
+  : T extends `${string}${OPCODES["MLOAD"]}${OPCODES["PUSH32"]}${infer Hash}815260040160405180910390fd${infer Rest}`
   ? Hash extends RevertErrorString | RevertPanicString
     ? FindSolidityCommonErrorSelectors<Rest>
     : [
         {
-          type: 'error'
+          type: "error";
           name: Selectors[`0x${ToSelector<Hash>}`] extends string
             ? ExtractName<Selectors[`0x${ToSelector<Hash>}`]>
-            : `0x${ToSelector<Hash>}`
+            : `0x${ToSelector<Hash>}`;
 
           inputs: Selectors[`0x${ToSelector<Hash>}`] extends string
             ? ParseAbiParameters<
                 ExtractParameters<Selectors[`0x${ToSelector<Hash>}`]>
               >
-            : readonly []
+            : readonly [];
         },
-        ...FindSolidityCommonErrorSelectors<Rest>,
+        ...FindSolidityCommonErrorSelectors<Rest>
       ]
-  : []
+  : [];
 
-export type FindSolidityUncommonErrorSelectors<T extends string> = T extends ''
+export type FindSolidityUncommonErrorSelectors<T extends string> = T extends ""
   ? []
-  : T extends `${string}${OPCODES['MLOAD']}${OPCODES['PUSH4']}${infer Hash}815260040160405180910390fd${infer Rest}`
+  : T extends `${string}${OPCODES["MLOAD"]}${OPCODES["PUSH4"]}${infer Hash}815260040160405180910390fd${infer Rest}`
   ? [
       {
-        type: 'error'
+        type: "error";
         name: Selectors[`0x${ToSelector<Hash>}`] extends string
           ? ExtractName<Selectors[`0x${ToSelector<Hash>}`]>
-          : `0x${ToSelector<Hash>}`
+          : `0x${ToSelector<Hash>}`;
         inputs: Selectors[`0x${ToSelector<Hash>}`] extends string
           ? ParseAbiParameters<
               ExtractParameters<Selectors[`0x${ToSelector<Hash>}`]>
             >
-          : readonly []
+          : readonly [];
       },
-      ...FindSolidityUncommonErrorSelectors<Rest>,
+      ...FindSolidityUncommonErrorSelectors<Rest>
     ]
-  : []
+  : [];
 
-export type ParseBytecodeFunctions<T extends string> = T extends ''
+export type ParseBytecodeFunctions<T extends string> = T extends ""
   ? []
-  : T extends `${string}${OPCODES['DUP1']}${OPCODES['PUSH4']}${infer Selector}${OPCODES['EQ']}${OPCODES['PUSH2']}${string}${OPCODES['JUMPI']}${infer Rest extends string}`
+  : T extends `${string}${OPCODES["DUP1"]}${OPCODES["PUSH4"]}${infer Selector}${OPCODES["EQ"]}${OPCODES["PUSH2"]}${string}${OPCODES["JUMPI"]}${infer Rest extends string}`
   ? [
       {
-        readonly type: 'function'
-        readonly name: Selector extends `${string}${OPCODES['DUP1']}${OPCODES['PUSH4']}${infer Tail}`
+        readonly type: "function";
+        readonly name: Selector extends `${string}${OPCODES["DUP1"]}${OPCODES["PUSH4"]}${infer Tail}`
           ? RecurseSelector<Tail> extends infer Result extends string
             ? Selectors[Result] extends string
               ? ExtractName<Selectors[Result]>
@@ -192,40 +192,40 @@ export type ParseBytecodeFunctions<T extends string> = T extends ''
             : never
           : Selectors[`0x${Selector}`] extends string
           ? ExtractName<Selectors[`0x${Selector}`]>
-          : `0x${Selector}`
+          : `0x${Selector}`;
         readonly inputs: Selectors[`0x${Selector}`] extends string
           ? ParseAbiParameters<ExtractParameters<Selectors[`0x${Selector}`]>>
-          : readonly []
-        readonly stateMutability: 'nonpayable'
-        readonly outputs: []
+          : readonly [];
+        readonly stateMutability: "nonpayable";
+        readonly outputs: [];
       },
-      ...ParseBytecodeFunctions<Rest>,
+      ...ParseBytecodeFunctions<Rest>
     ]
-  : []
+  : [];
 
 export type ParseBytecodeErrors<T extends string> = [
   ...FindYulTypeErrorSelectors<T>,
   ...FindYulUncommonTypeErrorSelectors<T>,
   ...FindSolidityCommonErrorSelectors<T>,
-  ...FindSolidityUncommonErrorSelectors<T>,
-]
+  ...FindSolidityUncommonErrorSelectors<T>
+];
 
 export type ParseBytecodeEvents<T extends string> = [
   ...FindCommonEventSelectors<T>,
   ...FindUncommonEventSelectors<T>,
-  ...FindSwap2EventSelectors<T>,
-]
+  ...FindSwap2EventSelectors<T>
+];
 
 export type ParseBytecodeConstructor<T extends string> =
   HasConstructor<T> extends true
     ? [
         {
-          readonly type: 'constructor'
-          readonly stateMutability: 'nonpayable'
-          readonly inputs: []
-        },
+          readonly type: "constructor";
+          readonly stateMutability: "nonpayable";
+          readonly inputs: [];
+        }
       ]
-    : []
+    : [];
 
 export type ParseBytecode<T extends string> = string extends T
   ? Abi
@@ -233,5 +233,5 @@ export type ParseBytecode<T extends string> = string extends T
       ...ParseBytecodeConstructor<T>,
       ...ParseBytecodeErrors<T>,
       ...ParseBytecodeEvents<T>,
-      ...ParseBytecodeFunctions<T>,
-    ]
+      ...ParseBytecodeFunctions<T>
+    ];
