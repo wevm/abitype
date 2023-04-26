@@ -2,7 +2,7 @@
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs",
   "license": "MIT",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/wagmi-dev/abitype.git"
@@ -42,7 +42,12 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["/config", "/test", "/zod", "/dist"],
+  "files": [
+    "/config",
+    "/test",
+    "/zod",
+    "/dist"
+  ],
   "peerDependencies": {
     "typescript": ">=4.9.4",
     "zod": "^3 >=3.19.1"
@@ -70,7 +75,13 @@
     "vitest": "^0.26.3",
     "zod": "^3.20.6"
   },
-  "keywords": ["abi", "eth", "ethereum", "typescript", "web3"],
+  "keywords": [
+    "abi",
+    "eth",
+    "ethereum",
+    "typescript",
+    "web3"
+  ],
   "scripts": {
     "bench": "vitest bench --no-threads",
     "build": "tsup",
@@ -98,8 +109,12 @@
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": ["pnpm lint:fix"],
-    "*.{json,md,mdx,yml}": ["pnpm lint:format"]
+    "*.{js,ts,tsx}": [
+      "pnpm lint:fix"
+    ],
+    "*.{json,md,mdx,yml}": [
+      "pnpm lint:format"
+    ]
   },
   "packageManager": "pnpm@7.5.0",
   "pnpm": {
@@ -111,7 +126,9 @@
       "shiki-twoslash@3.1.1": "patches/shiki-twoslash@3.1.1.patch"
     },
     "peerDependencyRules": {
-      "ignoreMissing": ["@algolia/client-search"]
+      "ignoreMissing": [
+        "@algolia/client-search"
+      ]
     }
   },
   "engines": {

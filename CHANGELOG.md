@@ -1,5 +1,11 @@
 # abitype
 
+## 0.8.0
+
+### Minor Changes
+
+- [#122](https://github.com/wagmi-dev/abitype/pull/122) [`0c38841`](https://github.com/wagmi-dev/abitype/commit/0c388413287ba565897ef9da5b5a22d1c5d9a300) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Changed errors for `parseAbiItem`, `parseAbiParameter` and `parseAbiParameters` into to custom error classes.
+
 ## 0.7.1
 
 ### Patch Changes
@@ -106,10 +112,10 @@
 - [#78](https://github.com/wagmi-dev/abitype/pull/78) [`0df9b94`](https://github.com/wagmi-dev/abitype/commit/0df9b9473cefa6ad0d0227eb9d8ed805e15c4ea6) Thanks [@Raiden1411](https://github.com/Raiden1411)! - **Breaking**: Changed `BytesType` configuration property to support ABI item inputs and outputs types. To keep the previous behavior set `BytesType` to the following:
 
   ```ts
-  declare module 'abitype' {
+  declare module "abitype" {
     BytesType: {
-      inputs: `0x${string}`
-      outputs: `0x${string}`
+      inputs: `0x${string}`;
+      outputs: `0x${string}`;
     }
   }
   ```

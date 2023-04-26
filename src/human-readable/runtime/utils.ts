@@ -6,8 +6,17 @@ import type {
   SolidityString,
   SolidityTuple,
 } from '../../abi'
-import { BaseError } from '../../errors'
 import { bytesRegex, execTyped, integerRegex, isTupleRegex } from '../../regex'
+import {
+  InvalidFunctionModifierError,
+  InvalidModifierError,
+  InvalidParameterError,
+  InvalidSignatureError,
+  SolidityProtectedKeywordError,
+  UnknownSignatureError,
+  UnknownSolidityTypeError,
+} from '../errors'
+import { InvalidParenthesisError } from '../errors/splitParameters'
 import type { FunctionModifier, Modifier, StructLookup } from '../types'
 import { getParameterCacheKey, parameterCache } from './cache'
 import {
@@ -28,10 +37,7 @@ import {
 export function parseSignature(signature: string, structs: StructLookup = {}) {
   if (isFunctionSignature(signature)) {
     const match = execFunctionSignature(signature)
-    if (!match)
-      throw new BaseError('Invalid function signature.', {
-        details: signature,
-      })
+    if (!match) throw new InvalidSignatureError({ signature, type: 'function' })
 
     const inputParams = splitParameters(match.parameters)
     const inputs = []
@@ -72,10 +78,8 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
 
   if (isEventSignature(signature)) {
     const match = execEventSignature(signature)
-    if (!match)
-      throw new BaseError('Invalid event signature.', {
-        details: signature,
-      })
+    if (!match) throw new InvalidSignatureError({ signature, type: 'event' })
+
     const params = splitParameters(match.parameters)
     const abiParameters = []
     const length = params.length
@@ -93,10 +97,8 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
 
   if (isErrorSignature(signature)) {
     const match = execErrorSignature(signature)
-    if (!match)
-      throw new BaseError('Invalid error signature.', {
-        details: signature,
-      })
+    if (!match) throw new InvalidSignatureError({ signature, type: 'error' })
+
     const params = splitParameters(match.parameters)
     const abiParameters = []
     const length = params.length
@@ -111,9 +113,8 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
   if (isConstructorSignature(signature)) {
     const match = execConstructorSignature(signature)
     if (!match)
-      throw new BaseError('Invalid constructor signature.', {
-        details: signature,
-      })
+      throw new InvalidSignatureError({ signature, type: 'constructor' })
+
     const params = splitParameters(match.parameters)
     const abiParameters = []
     const length = params.length
@@ -136,9 +137,7 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
       stateMutability: 'payable',
     }
 
-  throw new BaseError('Unknown signature.', {
-    details: signature,
-  })
+  throw new UnknownSignatureError({ signature })
 }
 
 const abiParameterWithoutTupleRegex =
@@ -169,18 +168,10 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     isTuple ? abiParameterWithTupleRegex : abiParameterWithoutTupleRegex,
     param,
   )
-  if (!match)
-    throw new BaseError('Invalid ABI parameter.', {
-      details: param,
-    })
+  if (!match) throw new InvalidParameterError({ param })
 
   if (match.name && isSolidityKeyword(match.name))
-    throw new BaseError('Invalid ABI parameter.', {
-      details: param,
-      metaMessages: [
-        `"${match.name}" is a protected Solidity keyword. More info: https://docs.soliditylang.org/en/latest/cheatsheet.html`,
-      ],
-    })
+    throw new SolidityProtectedKeywordError({ param, name: match.name })
 
   const name = match.name ? { name: match.name } : {}
   const indexed = match.modifier === 'indexed' ? { indexed: true } : {}
@@ -205,21 +196,16 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
   } else {
     type = match.type
     if (!(options?.type === 'struct') && !isSolidityType(type))
-      throw new BaseError('Unknown type.', {
-        metaMessages: [`Type "${type}" is not a valid ABI type.`],
-      })
+      throw new UnknownSolidityTypeError({ type })
   }
 
   if (match.modifier) {
     // Check if modifier exists, but is not allowed (e.g. `indexed` in `functionModifiers`)
     if (!options?.modifiers?.has?.(match.modifier))
-      throw new BaseError('Invalid ABI parameter.', {
-        details: param,
-        metaMessages: [
-          `Modifier "${match.modifier}" not allowed${
-            options?.type ? ` in "${options.type}" type` : ''
-          }.`,
-        ],
+      throw new InvalidModifierError({
+        param,
+        type: options?.type,
+        modifier: match.modifier,
       })
 
     // Check if resolved `type` is valid if there is a function modifier
@@ -227,14 +213,10 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
       functionModifiers.has(match.modifier as FunctionModifier) &&
       !isValidDataLocation(type, !!match.array)
     )
-      throw new BaseError('Invalid ABI parameter.', {
-        details: param,
-        metaMessages: [
-          `Modifier "${match.modifier}" not allowed${
-            options?.type ? ` in "${options.type}" type` : ''
-          }.`,
-          `Data location can only be specified for array, struct, or mapping types, but "${match.modifier}" was given.`,
-        ],
+      throw new InvalidFunctionModifierError({
+        param,
+        type: options?.type,
+        modifier: match.modifier,
       })
   }
 
@@ -257,16 +239,10 @@ export function splitParameters(
 ): readonly string[] {
   if (params === '') {
     if (current === '') return result
-    if (depth !== 0)
-      throw new BaseError('Unbalanced parentheses.', {
-        metaMessages: [
-          `"${current.trim()}" has too many ${
-            depth > 0 ? 'opening' : 'closing'
-          } parentheses.`,
-        ],
-        details: `Depth "${depth}"`,
-      })
-    return [...result, current.trim()]
+    if (depth !== 0) throw new InvalidParenthesisError({ current, depth })
+
+    result.push(current.trim())
+    return result
   }
 
   const length = params.length

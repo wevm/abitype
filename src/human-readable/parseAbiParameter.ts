@@ -1,7 +1,7 @@
 import type { AbiParameter } from '../abi'
-import { BaseError } from '../errors'
 import type { Narrow } from '../narrow'
 import type { Error, Filter } from '../types'
+import { InvalidAbiParameterError } from './errors/abiParameter'
 import {
   isStructSignature,
   modifiers,
@@ -116,10 +116,7 @@ export function parseAbiParameter<
     }
   }
 
-  if (!abiParameter)
-    throw new BaseError('Failed to parse ABI parameter.', {
-      details: `parseAbiParameter(${JSON.stringify(param, null, 2)})`,
-      docsPath: '/api/human.html#parseabiparameter-1',
-    })
+  if (!abiParameter) throw new InvalidAbiParameterError({ param })
+
   return abiParameter as ParseAbiParameter<TParam>
 }

@@ -43,7 +43,7 @@ const abi = Abi.parse(result)
 ## Schemas
 
 ```ts twoslash
-export {
+import {
   Abi,
   AbiConstructor,
   AbiEvent,
