@@ -2,12 +2,13 @@ import { assertType, test } from 'vitest'
 
 import type { seaport, uniswap, weth } from '../../test/bytecodes'
 import type {
-  ParseBytecode,
   ParseBytecodeConstructor,
   ParseBytecodeErrors,
   ParseBytecodeEvents,
   ParseBytecodeFunctions,
 } from './bytecode'
+
+import type { ParseBytecode } from '../parseBytecode'
 
 test('Parse Constructor', () => {
   assertType<ParseBytecodeConstructor<typeof weth>>([])

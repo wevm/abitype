@@ -7,7 +7,6 @@ export type {
   FindYulTypeErrorSelectors,
   FindYulUncommonTypeErrorSelectors,
   HasConstructor,
-  ParseBytecode,
   ParseBytecodeConstructor,
   ParseBytecodeErrors,
   ParseBytecodeEvents,
