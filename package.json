@@ -103,7 +103,7 @@
     "prepublishOnly": "pnpm bun scripts/prepublishOnly.ts",
     "test": "vitest",
     "test:cov": "vitest run --coverage",
-    "test:typecheck": "vitest typecheck",
+    "test:typecheck": "SKIP_GLOBAL_SETUP=true vitest typecheck",
     "test:update": "vitest --update",
     "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project playground/tsconfig.json",
     "typecheck": "tsc --noEmit"
