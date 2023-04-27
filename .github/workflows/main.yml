@@ -49,8 +49,6 @@ jobs:
       - name: Install Dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: pnpm i --ignore-scripts
-      - name: Link packages
-        run: pnpm dev
 
   lint:
     name: Lint
