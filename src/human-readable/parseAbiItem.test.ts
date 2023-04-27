@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { parseAbiItem } from './parseAbiItem'
+import { parseAbiItem } from './parseAbiItem.js'
 
 test('parseAbiItem', () => {
   // @ts-expect-error invalid signature type

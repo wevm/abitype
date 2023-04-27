@@ -1,5 +1,5 @@
-import type { ResolvedConfig } from './config'
-import type { Prettify, Range } from './types'
+import type { ResolvedConfig } from './config.js'
+import type { Prettify, Range } from './types.js'
 
 export type Address = ResolvedConfig['AddressType']
 
@@ -9,17 +9,75 @@ export type Address = ResolvedConfig['AddressType']
 // Could use `Range`, but listed out for zero overhead
 // rome-ignore format: no formatting
 export type MBytes =
-  | '' | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9
-  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19
-  | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29
-  | 30 | 31 | 32
+  | ""
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12
+  | 13
+  | 14
+  | 15
+  | 16
+  | 17
+  | 18
+  | 19
+  | 20
+  | 21
+  | 22
+  | 23
+  | 24
+  | 25
+  | 26
+  | 27
+  | 28
+  | 29
+  | 30
+  | 31
+  | 32;
 
 // rome-ignore format: no formatting
 export type MBits =
-  | ''  | 8   | 16  | 24  | 32  | 40  | 48  | 56  | 64  | 72
-  | 80  | 88  | 96  | 104 | 112 | 120 | 128 | 136 | 144 | 152
-  | 160 | 168 | 176 | 184 | 192 | 200 | 208 | 216 | 224 | 232
-  | 240 | 248 | 256
+  | ""
+  | 8
+  | 16
+  | 24
+  | 32
+  | 40
+  | 48
+  | 56
+  | 64
+  | 72
+  | 80
+  | 88
+  | 96
+  | 104
+  | 112
+  | 120
+  | 128
+  | 136
+  | 144
+  | 152
+  | 160
+  | 168
+  | 176
+  | 184
+  | 192
+  | 200
+  | 208
+  | 216
+  | 224
+  | 232
+  | 240
+  | 248
+  | 256;
 
 // From https://docs.soliditylang.org/en/latest/abi-spec.html#types
 export type SolidityAddress = 'address'
@@ -99,9 +157,9 @@ export type AbiInternalType =
 export type AbiParameter = Prettify<
   {
     type: ResolvedAbiType
-    name?: string
+    name?: string | undefined
     /** Representation used by Solidity compiler */
-    internalType?: AbiInternalType
+    internalType?: AbiInternalType | undefined
   } & (
     | { type: Exclude<ResolvedAbiType, SolidityTuple | SolidityArrayWithTuple> }
     | {
@@ -128,12 +186,12 @@ export type AbiFunction = {
    * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
    * @see https://github.com/ethereum/solidity/issues/992
    */
-  constant?: boolean
+  constant?: boolean | undefined
   /**
    * @deprecated Vyper used to provide gas estimates
    * @see https://github.com/vyperlang/vyper/issues/2151
    */
-  gas?: number
+  gas?: number | undefined
   inputs: readonly AbiParameter[]
   name: string
   outputs: readonly AbiParameter[]
@@ -141,7 +199,7 @@ export type AbiFunction = {
    * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
    * @see https://github.com/ethereum/solidity/issues/992
    */
-  payable?: boolean
+  payable?: boolean | undefined
   stateMutability: AbiStateMutability
 }
 
@@ -153,19 +211,19 @@ export type AbiConstructor = {
    * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
    * @see https://github.com/ethereum/solidity/issues/992
    */
-  payable?: boolean
+  payable?: boolean | undefined
   stateMutability: Extract<AbiStateMutability, 'payable' | 'nonpayable'>
 }
 
 /** ABI ["fallback"](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type */
 export type AbiFallback = {
   type: 'fallback'
-  inputs?: readonly []
+  inputs?: readonly [] | undefined
   /**
    * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
    * @see https://github.com/ethereum/solidity/issues/992
    */
-  payable?: boolean
+  payable?: boolean | undefined
   stateMutability: Extract<AbiStateMutability, 'payable' | 'nonpayable'>
 }
 
@@ -178,7 +236,7 @@ export type AbiReceive = {
 /** ABI ["event"](https://docs.soliditylang.org/en/latest/abi-spec.html#events) type */
 export type AbiEvent = {
   type: 'event'
-  anonymous?: boolean
+  anonymous?: boolean | undefined
   inputs: readonly (AbiParameter & { indexed?: boolean })[]
   name: string
 }
@@ -215,11 +273,11 @@ export type Abi = readonly (
 // Typed Data Types
 
 export type TypedDataDomain = {
-  chainId?: number
-  name?: string
-  salt?: ResolvedConfig['BytesType']['outputs']
-  verifyingContract?: Address
-  version?: string
+  chainId?: number | undefined
+  name?: string | undefined
+  salt?: ResolvedConfig['BytesType']['outputs'] | undefined
+  verifyingContract?: Address | undefined
+  version?: string | undefined
 }
 
 // Subset of `AbiType` that excludes `tuple`, `function`, and dynamic aliases `int` and `uint`
@@ -241,6 +299,6 @@ export type TypedData = Prettify<
     [key: string]: readonly TypedDataParameter[]
   } & {
     // Disallow `TypedDataType` as key names (e.g. `address`)
-    [_ in TypedDataType]?: never
+    [_ in TypedDataType]?: never | undefined
   }
 >

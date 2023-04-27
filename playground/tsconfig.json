@@ -1,4 +1,16 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["trace.ts"]
+  "include": [
+    "trace.ts"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "abitype": [
+        "../../src"
+      ],
+      "abitype/*": [
+        "../../src/*"
+      ]
+    }
+  }
 }

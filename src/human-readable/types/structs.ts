@@ -1,7 +1,7 @@
-import type { AbiParameter } from '../../abi'
-import type { Error, Trim } from '../../types'
-import type { StructSignature } from './signatures'
-import type { ParseAbiParameter } from './utils'
+import type { AbiParameter } from '../../abi.js'
+import type { Error, Trim } from '../../types.js'
+import type { StructSignature } from './signatures.js'
+import type { ParseAbiParameter } from './utils.js'
 
 export type StructLookup = Record<string, readonly AbiParameter[]>
 

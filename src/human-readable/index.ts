@@ -13,15 +13,18 @@ export {
   InvalidAbiTypeParameterError,
   InvalidAbiItemError,
   UnknownTypeError,
-} from './errors'
+} from './errors/index.js'
 
-export { parseAbi, type ParseAbi } from './parseAbi'
+export { parseAbi, type ParseAbi } from './parseAbi.js'
 
-export { parseAbiItem, type ParseAbiItem } from './parseAbiItem'
+export { parseAbiItem, type ParseAbiItem } from './parseAbiItem.js'
 
-export { parseAbiParameter, type ParseAbiParameter } from './parseAbiParameter'
+export {
+  parseAbiParameter,
+  type ParseAbiParameter,
+} from './parseAbiParameter.js'
 
 export {
   parseAbiParameters,
   type ParseAbiParameters,
-} from './parseAbiParameters'
+} from './parseAbiParameters.js'

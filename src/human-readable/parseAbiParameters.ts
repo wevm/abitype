@@ -1,21 +1,21 @@
-import type { AbiParameter } from '../abi'
-import type { Narrow } from '../narrow'
-import type { Error, Filter } from '../types'
-import { InvalidAbiParametersError } from './errors/abiParameter'
+import type { AbiParameter } from '../abi.js'
+import type { Narrow } from '../narrow.js'
+import type { Error, Filter } from '../types.js'
+import { InvalidAbiParametersError } from './errors/abiParameter.js'
 import {
   isStructSignature,
   modifiers,
   parseAbiParameter as parseAbiParameter_,
   parseStructs,
   splitParameters,
-} from './runtime'
+} from './runtime/index.js'
 import type {
   IsStructSignature,
   Modifier,
   ParseAbiParameters as ParseAbiParameters_,
   ParseStructs,
   SplitParameters,
-} from './types'
+} from './types/index.js'
 
 /**
  * Parses human-readable ABI parameters into {@link AbiParameter}s
@@ -111,7 +111,7 @@ export function parseAbiParameters<
     }
   } else {
     const structs = parseStructs(params as readonly string[])
-    const length = params.length
+    const length = params.length as number
     for (let i = 0; i < length; i++) {
       const signature = (params as readonly string[])[i]!
       if (isStructSignature(signature)) continue

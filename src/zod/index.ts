@@ -19,4 +19,4 @@ export {
   SolidityInt,
   SolidityString,
   SolidityTuple,
-} from './zod'
+} from './zod.js'

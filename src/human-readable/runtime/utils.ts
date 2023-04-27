@@ -5,8 +5,13 @@ import type {
   SolidityBytes,
   SolidityString,
   SolidityTuple,
-} from '../../abi'
-import { bytesRegex, execTyped, integerRegex, isTupleRegex } from '../../regex'
+} from '../../abi.js'
+import {
+  bytesRegex,
+  execTyped,
+  integerRegex,
+  isTupleRegex,
+} from '../../regex.js'
 import {
   InvalidFunctionModifierError,
   InvalidModifierError,
@@ -15,10 +20,14 @@ import {
   SolidityProtectedKeywordError,
   UnknownSignatureError,
   UnknownSolidityTypeError,
-} from '../errors'
-import { InvalidParenthesisError } from '../errors/splitParameters'
-import type { FunctionModifier, Modifier, StructLookup } from '../types'
-import { getParameterCacheKey, parameterCache } from './cache'
+} from '../errors/index.js'
+import { InvalidParenthesisError } from '../errors/splitParameters.js'
+import type {
+  FunctionModifier,
+  Modifier,
+  StructLookup,
+} from '../types/index.js'
+import { getParameterCacheKey, parameterCache } from './cache.js'
 import {
   eventModifiers,
   execConstructorSignature,
@@ -32,7 +41,7 @@ import {
   isFallbackSignature,
   isFunctionSignature,
   isReceiveSignature,
-} from './signatures'
+} from './signatures.js'
 
 export function parseSignature(signature: string, structs: StructLookup = {}) {
   if (isFunctionSignature(signature)) {

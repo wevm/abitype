@@ -1,26 +1,26 @@
 import { name, version } from '../package.json'
 
 type BaseErrorArgs = {
-  docsPath?: string
-  metaMessages?: string[]
+  docsPath?: string | undefined
+  metaMessages?: string[] | undefined
 } & (
   | {
-      cause?: never
-      details?: string
+      cause?: never | undefined
+      details?: string | undefined
     }
   | {
-      cause: BaseError | Error
-      details?: never
+      cause?: BaseError | Error
+      details?: never | undefined
     }
 )
 
 export class BaseError extends Error {
   details: string
-  docsPath?: string
-  metaMessages?: string[]
+  docsPath?: string | undefined
+  metaMessages?: string[] | undefined
   shortMessage: string
 
-  name = 'AbiTypeError'
+  override name = 'AbiTypeError'
 
   constructor(shortMessage: string, args: BaseErrorArgs = {}) {
     const details =

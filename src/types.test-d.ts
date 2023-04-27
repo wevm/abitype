@@ -8,7 +8,7 @@ import type {
   Range,
   Trim,
   Tuple,
-} from './types'
+} from './types.js'
 
 test('Error', () => {
   expectTypeOf<Error<'Custom error message'>>().toEqualTypeOf<

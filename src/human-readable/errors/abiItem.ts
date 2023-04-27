@@ -1,4 +1,4 @@
-import { BaseError } from '../../errors'
+import { BaseError } from '../../errors.js'
 
 export class InvalidAbiItemError extends BaseError {
   override name = 'InvalidAbiItemError'

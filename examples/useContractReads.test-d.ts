@@ -8,7 +8,7 @@ import {
 } from 'abitype/test'
 import { assertType, test } from 'vitest'
 
-import { useContractReads } from './useContractReads'
+import { useContractReads } from './useContractReads.js'
 
 test('useContractReads', () => {
   test('args', () => {

@@ -1,6 +1,6 @@
 import type { Abi } from 'abitype'
 
-import type { GetConfig, GetReturnType } from './types'
+import type { GetConfig, GetReturnType } from './types.js'
 
 export declare function writeContract<
   TAbi extends Abi | readonly unknown[],

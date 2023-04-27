@@ -3,9 +3,9 @@ import type {
   AbiStateMutability,
   AbiType,
   SolidityFixedArrayRange,
-} from '../../abi'
-import type { ResolvedConfig } from '../../config'
-import type { Error, IsUnknown, Merge, Prettify, Trim } from '../../types'
+} from '../../abi.js'
+import type { ResolvedConfig } from '../../config.js'
+import type { Error, IsUnknown, Merge, Prettify, Trim } from '../../types.js'
 import type {
   ErrorSignature,
   EventModifier,
@@ -21,8 +21,8 @@ import type {
   ReceiveSignature,
   Scope,
   ValidateName,
-} from './signatures'
-import type { StructLookup } from './structs'
+} from './signatures.js'
+import type { StructLookup } from './structs.js'
 
 export type ParseSignature<
   TSignature extends string,

@@ -1,5 +1,5 @@
-import type { AbiItemType } from '../../abi'
-import { BaseError } from '../../errors'
+import type { AbiItemType } from '../../abi.js'
+import { BaseError } from '../../errors.js'
 
 export class InvalidSignatureError extends BaseError {
   override name = 'InvalidSignatureError'

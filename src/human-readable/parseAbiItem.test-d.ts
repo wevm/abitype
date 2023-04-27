@@ -1,8 +1,8 @@
 import { expectTypeOf, test } from 'vitest'
 
-import type { Abi } from '../abi'
-import type { ParseAbiItem } from './parseAbiItem'
-import { parseAbiItem } from './parseAbiItem'
+import type { Abi } from '../abi.js'
+import type { ParseAbiItem } from './parseAbiItem.js'
+import { parseAbiItem } from './parseAbiItem.js'
 
 test('ParseAbiItem', () => {
   expectTypeOf<ParseAbiItem<''>>().toEqualTypeOf<never>()

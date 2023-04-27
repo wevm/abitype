@@ -2,7 +2,7 @@ import { Interface as InterfaceV5 } from '@ethersproject/abi'
 import { Interface } from 'ethers'
 import { bench, describe } from 'vitest'
 
-import { parseAbi } from './parseAbi'
+import { parseAbi } from './parseAbi.js'
 
 describe('Parse ABI', () => {
   bench('abitype', () => {

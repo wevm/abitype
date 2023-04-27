@@ -13,7 +13,7 @@ import {
   isFunctionSignature,
   isReceiveSignature,
   isStructSignature,
-} from './signatures'
+} from './signatures.js'
 
 test('isErrorSignature', () => {
   expect(isErrorSignature('error Name(string)')).toMatchInlineSnapshot('true')

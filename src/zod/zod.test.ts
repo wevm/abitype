@@ -9,8 +9,8 @@ import {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
-} from '../test'
-import { Abi } from './zod'
+} from '../test/index.js'
+import { Abi } from './zod.js'
 
 describe('AbiSchema', () => {
   it('returns valid schema', () => {

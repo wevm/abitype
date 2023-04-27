@@ -1,13 +1,13 @@
 import { expect, test } from 'vitest'
 
-import { functionModifiers } from './signatures'
+import { functionModifiers } from './signatures.js'
 import {
   isSolidityKeyword,
   isSolidityType,
   parseAbiParameter,
   parseSignature,
   splitParameters,
-} from './utils'
+} from './utils.js'
 
 const baseFunctionExpected = {
   name: 'foo',

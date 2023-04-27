@@ -1,7 +1,10 @@
 import type { Abi } from 'abitype'
 
-import type { ReadContractsConfig, ReadContractsResult } from './readContracts'
-import type { Contract, DeepPartial } from './types'
+import type {
+  ReadContractsConfig,
+  ReadContractsResult,
+} from './readContracts.js'
+import type { Contract, DeepPartial } from './types.js'
 
 export declare function useContractReads<
   TAbi extends Abi | readonly unknown[],

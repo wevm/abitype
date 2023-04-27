@@ -11,7 +11,7 @@ export {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
-} from './abis'
+} from './abis.js'
 
 export {
   customSolidityErrorsHumanReadableAbi,
@@ -24,4 +24,4 @@ export {
   wagmiMintExampleHumanReadableAbi,
   wethHumanReadableAbi,
   writingEditionsFactoryHumanReadableAbi,
-} from './human-readable'
+} from './human-readable.js'

@@ -1,9 +1,9 @@
 import { expectTypeOf, test } from 'vitest'
 
-import type { AbiParameter } from '../abi'
+import type { AbiParameter } from '../abi.js'
 
-import type { ParseAbiParameters } from './parseAbiParameters'
-import { parseAbiParameters } from './parseAbiParameters'
+import type { ParseAbiParameters } from './parseAbiParameters.js'
+import { parseAbiParameters } from './parseAbiParameters.js'
 
 test('ParseAbiParameters', () => {
   expectTypeOf<ParseAbiParameters<''>>().toEqualTypeOf<never>()

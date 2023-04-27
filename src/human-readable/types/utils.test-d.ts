@@ -10,7 +10,7 @@ import type {
   _SplitNameOrModifier,
   _UnwrapNameOrModifier,
   _ValidateAbiParameter,
-} from './utils'
+} from './utils.js'
 
 type OptionsWithModifier = { Modifier: 'calldata'; Structs: unknown }
 type OptionsWithIndexed = { Modifier: 'indexed'; Structs: unknown }
