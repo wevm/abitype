@@ -25,7 +25,7 @@ jobs:
       - name: Set up Node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          cache: 'pnpm'
+          cache: "pnpm"
           node-version: ${{ matrix.node-version }}
       - name: Cache pnpm
         uses: actions/cache@v3
@@ -66,7 +66,7 @@ jobs:
       - name: Set up Node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          cache: 'pnpm'
+          cache: "pnpm"
           node-version: ${{ matrix.node-version }}
       - name: Cache node_modules
         uses: actions/cache@v3
@@ -99,7 +99,7 @@ jobs:
       - name: Set up Node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          cache: 'pnpm'
+          cache: "pnpm"
           node-version: ${{ matrix.node-version }}
       - name: Cache node_modules
         uses: actions/cache@v3
@@ -132,7 +132,7 @@ jobs:
       - name: Set up Node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          cache: 'pnpm'
+          cache: "pnpm"
           node-version: ${{ matrix.node-version }}
       - name: Cache node_modules
         uses: actions/cache@v3
@@ -148,6 +148,8 @@ jobs:
           key: modules-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Test
         run: pnpm test:cov
+      - name: Pre build
+        run: pnpm build
       - name: Test types
         run: pnpm test:typecheck
 
@@ -167,7 +169,7 @@ jobs:
       - name: Set up Node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          cache: 'pnpm'
+          cache: "pnpm"
           node-version: ${{ matrix.node-version }}
       - name: Cache node_modules
         uses: actions/cache@v3
