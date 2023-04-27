@@ -1,6 +1,6 @@
 import { assertType, test } from 'vitest'
 
-import type { weth } from '../../test/bytecodes'
+import type { wethBytecode } from '../../test/bytecodes'
 import type { ParseBytecodeEvents, ParseBytecodeFunctions } from './bytecode'
 
 declare module './config' {
@@ -11,19 +11,19 @@ declare module './config' {
 }
 
 test('Parse Event', () => {
-  assertType<ParseBytecodeEvents<typeof weth>[0]>({
+  assertType<ParseBytecodeEvents<typeof wethBytecode>[0]>({
     type: 'event',
     name: '0xe1fffcc4',
     inputs: [],
   })
 
-  assertType<ParseBytecodeEvents<typeof weth>[1]>({
+  assertType<ParseBytecodeEvents<typeof wethBytecode>[1]>({
     type: 'event',
     name: '0x8c5be1e5',
     inputs: [],
   })
 
-  assertType<ParseBytecodeFunctions<typeof weth>[4]>({
+  assertType<ParseBytecodeFunctions<typeof wethBytecode>[4]>({
     type: 'function',
     name: 'withdraw',
     inputs: [{ type: 'uint256' }],

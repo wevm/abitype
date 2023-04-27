@@ -25,3 +25,5 @@ export {
   wethHumanReadableAbi,
   writingEditionsFactoryHumanReadableAbi,
 } from './human-readable'
+
+export { wethBytecode, uniswapBytecode, seaportBytecode } from './bytecodes'

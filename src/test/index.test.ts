@@ -26,6 +26,9 @@ it('should expose correct exports', () => {
       "wagmiMintExampleHumanReadableAbi",
       "wethHumanReadableAbi",
       "writingEditionsFactoryHumanReadableAbi",
+      "wethBytecode",
+      "uniswapBytecode",
+      "seaportBytecode",
     ]
   `)
 })

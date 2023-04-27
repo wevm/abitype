@@ -41,16 +41,16 @@
 Strict TypeScript types for Ethereum ABIs. ABIType provides utilities and type definitions for ABI properties and values, covering the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html), as well as [EIP-712](https://eips.ethereum.org/EIPS/eip-712) Typed Data.
 
 ```ts
-import { ExtractAbiFunctions } from 'abitype'
-import { erc20Abi } from 'abitype/test'
+import { ExtractAbiFunctions } from "abitype";
+import { erc20Abi } from "abitype/test";
 
-type FunctionNames = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
+type FunctionNames = ExtractAbiFunctionNames<typeof erc20Abi, "view">;
 //   ^? type FunctionNames = "symbol" | "name" | "allowance" | "balanceOf" | "decimals" | "totalSupply"
 
 type TransferInputTypes = AbiParametersToPrimitiveTypes<
   // ^? type TransferInputTypes = readonly [`0x${string}`, bigint]
-  ExtractAbiFunction<typeof erc20Abi, 'transfer'>['inputs']
->
+  ExtractAbiFunction<typeof erc20Abi, "transfer">["inputs"]
+>;
 ```
 
 Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions, variables, or your own types. No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
@@ -64,6 +64,8 @@ ABIType might be a good option for your project if:
 - You need to [convert ABI types](https://abitype.dev/api/utilities.html#abiparameterstoprimitivetypes) (e.g. `'string'`) to TypeScript types (e.g. `string`) or other type transformations.
 - You need to validate ABIs at [runtime](https://abitype.dev/api/zod.html) (e.g. after fetching from external resource).
 - You don’t want to set up a build process to generate types (e.g. TypeChain).
+- You want to parse human readable ABIs into strongly typed ABIs
+- You want to infer smart contract bytecode into ABIs
 
 ## Install
 

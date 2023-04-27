@@ -29,4 +29,5 @@ export type {
   EventSelectors,
   FunctionSelectors,
   Selectors,
+  SelectorsByType,
 } from './config'

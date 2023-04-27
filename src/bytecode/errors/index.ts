@@ -1,0 +1,1 @@
+export { InvalidBytecodeError } from './invalidBytecode'

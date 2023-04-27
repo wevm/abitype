@@ -1,6 +1,10 @@
 import { expect, test } from 'vitest'
 
-import { seaport, uniswap, weth } from '../test/bytecodes'
+import {
+  seaportBytecode,
+  uniswapBytecode,
+  wethBytecode,
+} from '../test/bytecodes'
 import { parseBytecode } from './parseBytecode'
 import { resolvedSelectors } from './runtime'
 
@@ -15,21 +19,21 @@ test('Invalid bytecode', () => {
 })
 
 test('parse weth bytecode', () => {
-  const result = parseBytecode(weth)
+  const result = parseBytecode(wethBytecode)
   expect(result).toMatchSnapshot()
 })
 
 test('parse uniswap bytecode', () => {
-  const result = parseBytecode(uniswap)
+  const result = parseBytecode(uniswapBytecode)
   expect(result).toMatchSnapshot()
 })
 
 test('parse seaport bytecode', () => {
-  const result = parseBytecode(seaport)
+  const result = parseBytecode(seaportBytecode)
   expect(result).toMatchSnapshot()
 })
 
 test('parse seaport bytecode with resolved selectors', () => {
-  const result = parseBytecode(seaport, resolvedSelectors)
+  const result = parseBytecode(seaportBytecode, resolvedSelectors)
   expect(result).toMatchSnapshot()
 })

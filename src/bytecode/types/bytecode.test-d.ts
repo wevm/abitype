@@ -1,6 +1,10 @@
 import { assertType, test } from 'vitest'
 
-import type { seaport, uniswap, weth } from '../../test/bytecodes'
+import type {
+  seaportBytecode,
+  uniswapBytecode,
+  wethBytecode,
+} from '../../test/bytecodes'
 import type {
   ParseBytecodeConstructor,
   ParseBytecodeErrors,
@@ -11,8 +15,8 @@ import type {
 import type { ParseBytecode } from '../parseBytecode'
 
 test('Parse Constructor', () => {
-  assertType<ParseBytecodeConstructor<typeof weth>>([])
-  assertType<ParseBytecodeConstructor<typeof uniswap>>([
+  assertType<ParseBytecodeConstructor<typeof wethBytecode>>([])
+  assertType<ParseBytecodeConstructor<typeof uniswapBytecode>>([
     {
       type: 'constructor',
       stateMutability: 'nonpayable',
@@ -22,7 +26,7 @@ test('Parse Constructor', () => {
 })
 
 test('Parse Function', () => {
-  assertType<ParseBytecodeFunctions<typeof weth>>([
+  assertType<ParseBytecodeFunctions<typeof wethBytecode>>([
     {
       name: '0x06fdde03',
       type: 'function',
@@ -102,7 +106,7 @@ test('Parse Function', () => {
     },
   ])
 
-  assertType<ParseBytecodeFunctions<typeof uniswap>>([
+  assertType<ParseBytecodeFunctions<typeof uniswapBytecode>>([
     {
       type: 'function',
       name: '0xe8e33700',
@@ -273,7 +277,7 @@ test('Parse Function', () => {
     },
   ])
 
-  assertType<ParseBytecodeFunctions<typeof seaport>>([
+  assertType<ParseBytecodeFunctions<typeof seaportBytecode>>([
     {
       type: 'function',
       name: '0x06fdde03',
@@ -383,7 +387,7 @@ test('Parse Function', () => {
 })
 
 test('Parse Event', () => {
-  assertType<ParseBytecodeEvents<typeof weth>>([
+  assertType<ParseBytecodeEvents<typeof wethBytecode>>([
     { type: 'event', name: '0xe1fffcc4', inputs: [] },
     { type: 'event', name: '0x8c5be1e5', inputs: [] },
     {
@@ -394,19 +398,19 @@ test('Parse Event', () => {
     { type: 'event', name: '0x7fcf532c', inputs: [] },
   ])
 
-  assertType<ParseBytecodeEvents<typeof uniswap>>([])
+  assertType<ParseBytecodeEvents<typeof uniswapBytecode>>([])
 
-  assertType<ParseBytecodeEvents<typeof seaport>>([
+  assertType<ParseBytecodeEvents<typeof seaportBytecode>>([
     { type: 'event', name: '0x6bacc01d', inputs: [] },
     { type: 'event', name: '0x4b9f2d36', inputs: [] },
   ])
 })
 
 test('Parse Error', () => {
-  assertType<ParseBytecodeErrors<typeof uniswap>>([])
-  assertType<ParseBytecodeErrors<typeof weth>>([])
+  assertType<ParseBytecodeErrors<typeof uniswapBytecode>>([])
+  assertType<ParseBytecodeErrors<typeof wethBytecode>>([])
 
-  assertType<ParseBytecodeErrors<typeof seaport>>([
+  assertType<ParseBytecodeErrors<typeof seaportBytecode>>([
     { type: 'error', name: '0x6ab37ce7', inputs: [] },
     { type: 'error', name: '0x39f3e3fd', inputs: [] },
     { type: 'error', name: '0x466aa616', inputs: [] },
@@ -456,7 +460,7 @@ test('Parse Error', () => {
 })
 
 test('Parse Bytecode', () => {
-  assertType<ParseBytecode<typeof weth>>([
+  assertType<ParseBytecode<typeof wethBytecode>>([
     { type: 'event', name: '0xe1fffcc4', inputs: [] },
     { type: 'event', name: '0x8c5be1e5', inputs: [] },
     {
@@ -544,7 +548,7 @@ test('Parse Bytecode', () => {
     },
   ])
 
-  assertType<ParseBytecode<typeof uniswap>>([
+  assertType<ParseBytecode<typeof uniswapBytecode>>([
     {
       type: 'constructor',
       stateMutability: 'nonpayable',
@@ -720,7 +724,7 @@ test('Parse Bytecode', () => {
     },
   ])
 
-  assertType<ParseBytecode<typeof seaport>>([
+  assertType<ParseBytecode<typeof seaportBytecode>>([
     {
       type: 'constructor',
       stateMutability: 'nonpayable',

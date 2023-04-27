@@ -25,7 +25,12 @@ it('should expose correct exports', () => {
       "InvalidAbiTypeParameterError",
       "InvalidAbiItemError",
       "UnknownTypeError",
+      "InvalidBytecodeError",
       "parseBytecode",
+      "resolvedSelectors",
+      "resolvedFunctions",
+      "resolvedErrors",
+      "resolvedEvents",
     ]
   `)
 })

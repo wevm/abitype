@@ -1,11 +1,21 @@
 import { describe, expectTypeOf, test } from 'vitest'
 
-import { seaport, uniswap, weth } from '../test/bytecodes'
+import {
+  seaportBytecode,
+  uniswapBytecode,
+  wethBytecode,
+} from '../test/bytecodes'
 import { parseBytecode } from './parseBytecode'
 
 describe('Return type of different bytecodes', () => {
-  test('weth', () => {
-    expectTypeOf(parseBytecode(weth)).toEqualTypeOf<
+  test('error', () => {
+    expectTypeOf(parseBytecode('invalid')).toEqualTypeOf<
+      ['Error: Cannot infer abi from provided bytecode']
+    >()
+  })
+
+  test('wethBytecode', () => {
+    expectTypeOf(parseBytecode(wethBytecode)).toEqualTypeOf<
       readonly [
         {
           readonly type: 'event'
@@ -112,8 +122,8 @@ describe('Return type of different bytecodes', () => {
     >()
   })
 
-  test('uniswap', () => {
-    expectTypeOf(parseBytecode(uniswap)).toEqualTypeOf<
+  test('uniswapBytecode', () => {
+    expectTypeOf(parseBytecode(uniswapBytecode)).toEqualTypeOf<
       readonly [
         {
           readonly type: 'constructor'
@@ -292,8 +302,8 @@ describe('Return type of different bytecodes', () => {
     >()
   })
 
-  test('seaport', () => {
-    expectTypeOf(parseBytecode(seaport)).toEqualTypeOf<
+  test('seaportBytecode', () => {
+    expectTypeOf(parseBytecode(seaportBytecode)).toEqualTypeOf<
       readonly [
         {
           readonly type: 'constructor'

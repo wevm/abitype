@@ -138,6 +138,10 @@ export default withTwoslash(
                 text: 'Zod',
                 link: '/api/zod',
               },
+              {
+                text: 'Bytecode',
+                link: '/api/bytecode',
+              },
             ],
           },
           {

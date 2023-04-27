@@ -90,6 +90,14 @@ export type {
   EventSelectors,
   FunctionSelectors,
   Selectors,
+  SelectorsByType,
 } from './bytecode'
 
-export { parseBytecode } from './bytecode'
+export {
+  InvalidBytecodeError,
+  parseBytecode,
+  resolvedSelectors,
+  resolvedFunctions,
+  resolvedErrors,
+  resolvedEvents,
+} from './bytecode'
