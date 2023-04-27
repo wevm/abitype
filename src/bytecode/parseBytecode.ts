@@ -1,5 +1,5 @@
 import type { Abi, Address } from '../abi'
-import { Narrow } from '../narrow'
+import type { Narrow } from '../narrow'
 import type { Error } from '../types'
 import { InvalidBytecodeError } from './errors/invalidBytecode'
 import {

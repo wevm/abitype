@@ -1,4 +1,6 @@
 import type { SplitParameters } from '../../human-readable/types'
+import type { ValidateName } from '../../human-readable/types/signatures'
+import type { Error } from '../../types'
 import type { OPCODES } from './opcodes'
 
 export type Slice<
@@ -78,7 +80,13 @@ export type IsErrorSelector<T extends string> =
       : false
     : false
 
-export type ExtractName<T> = T extends `${infer Name}(${string})` ? Name : ''
+export type ExtractName<T> = T extends `${infer Name}(${string})`
+  ? ValidateName<Name> extends infer Result
+    ? Result extends true
+      ? Name
+      : Result
+    : Error<['Failed to infer name']>
+  : Error<['Invalid format']>
 
 export type ExtractParameters<T> = T extends `${string}(${infer Parameters})`
   ? SplitParameters<Parameters>
