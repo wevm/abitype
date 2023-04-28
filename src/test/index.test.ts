@@ -5,6 +5,7 @@ import * as Exports from './index.js'
 it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
     [
+      "address",
       "customSolidityErrorsAbi",
       "ensAbi",
       "ensRegistryWithFallbackAbi",
@@ -25,7 +26,6 @@ it('should expose correct exports', () => {
       "wagmiMintExampleHumanReadableAbi",
       "wethHumanReadableAbi",
       "writingEditionsFactoryHumanReadableAbi",
-      "address",
     ]
   `)
 })
