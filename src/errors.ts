@@ -1,4 +1,4 @@
-import { name, version } from '../package.json'
+import { version } from './version.js'
 
 type BaseErrorArgs = {
   docsPath?: string | undefined
@@ -39,7 +39,7 @@ export class BaseError extends Error {
       ...(args.metaMessages ? [...args.metaMessages, ''] : []),
       ...(docsPath ? [`Docs: https://abitype.dev${docsPath}`] : []),
       ...(details ? [`Details: ${details}`] : []),
-      `Version: ${name}@${version}`,
+      `Version: abitype@${version}`,
     ].join('\n')
 
     super(message)

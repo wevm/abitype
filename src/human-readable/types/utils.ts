@@ -176,7 +176,7 @@ export type SplitParameters<
   T extends string,
   Result extends unknown[] = [],
   Current extends string = '',
-  Depth extends ReadonlyArray<number> = [],
+  Depth extends readonly number[] = [],
 > = T extends ''
   ? Current extends ''
     ? [...Result] // empty string was passed in to `SplitParameters`
@@ -196,7 +196,7 @@ export type SplitParameters<
       : SplitParameters<Tail, Result, `${Current}${Char}`, Pop<Depth>>
     : SplitParameters<Tail, Result, `${Current}${Char}`, Depth>
   : []
-type Pop<T extends ReadonlyArray<number>> = T extends [...infer R, any] ? R : []
+type Pop<T extends readonly number[]> = T extends [...infer R, any] ? R : []
 
 export type _ValidateAbiParameter<TAbiParameter extends AbiParameter> =
   // Validate `name`

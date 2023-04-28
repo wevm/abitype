@@ -85,7 +85,7 @@ test.each([
       inputs: [{ type: 'string', name: 'foo' }],
     },
   },
-])(`parseSignature($signature)`, ({ signature, expected }) => {
+])('parseSignature($signature)', ({ signature, expected }) => {
   expect(parseSignature(signature)).toEqual(expected)
 })
 
@@ -491,7 +491,7 @@ test.each([
       'uint tokenId',
     ],
   },
-])(`splitParameters($params)`, ({ params, expected }) => {
+])('splitParameters($params)', ({ params, expected }) => {
   expect(splitParameters(params)).toEqual(expected)
 })
 

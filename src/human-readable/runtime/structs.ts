@@ -1,12 +1,12 @@
 import type { AbiParameter } from '../../abi.js'
 import { execTyped, isTupleRegex } from '../../regex.js'
-import { UnknownTypeError } from '../errors/abiItem.js'
-import { InvalidAbiTypeParameterError } from '../errors/abiParameter.js'
+import { UnknownTypeError } from '../errors/index.js'
 import {
+  CircularReferenceError,
+  InvalidAbiTypeParameterError,
   InvalidSignatureError,
   InvalidStructSignatureError,
-} from '../errors/signature.js'
-import { CircularReferenceError } from '../errors/struct.js'
+} from '../errors/index.js'
 import type { StructLookup } from '../types/index.js'
 import { execStructSignature, isStructSignature } from './signatures.js'
 import { isSolidityType, parseAbiParameter } from './utils.js'

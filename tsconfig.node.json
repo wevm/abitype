@@ -1,4 +1,5 @@
 {
+  // This configuration is used for local development and type checking of configuration and script files that are not part of the build.
   "include": ["vite.config.ts", "scripts"],
   "compilerOptions": {
     "strict": true,

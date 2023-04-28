@@ -109,7 +109,7 @@ export type SolidityFixedArraySizeLookup = {
  */
 type _BuildArrayTypes<
   T extends string,
-  Depth extends ReadonlyArray<number> = [],
+  Depth extends readonly number[] = [],
 > = ResolvedConfig['ArrayMaxDepth'] extends false
   ? `${T}[${string}]`
   : Depth['length'] extends ResolvedConfig['ArrayMaxDepth']

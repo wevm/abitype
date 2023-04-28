@@ -21,7 +21,7 @@ import {
   UnknownSignatureError,
   UnknownSolidityTypeError,
 } from '../errors/index.js'
-import { InvalidParenthesisError } from '../errors/splitParameters.js'
+import { InvalidParenthesisError } from '../errors/index.js'
 import type {
   FunctionModifier,
   Modifier,

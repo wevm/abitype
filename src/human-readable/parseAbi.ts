@@ -1,8 +1,11 @@
 import type { Abi } from '../abi.js'
 import type { Narrow } from '../narrow.js'
 import type { Error, Filter } from '../types.js'
-import { isStructSignature, parseStructs } from './runtime/index.js'
-import { parseSignature } from './runtime/utils.js'
+import {
+  isStructSignature,
+  parseSignature,
+  parseStructs,
+} from './runtime/index.js'
 import type { ParseSignature, ParseStructs, Signatures } from './types/index.js'
 
 /**

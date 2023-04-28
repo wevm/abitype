@@ -1,7 +1,7 @@
 import type { AbiParameter } from '../abi.js'
 import type { Narrow } from '../narrow.js'
 import type { Error, Filter } from '../types.js'
-import { InvalidAbiParametersError } from './errors/abiParameter.js'
+import { InvalidAbiParametersError } from './errors/index.js'
 import {
   isStructSignature,
   modifiers,

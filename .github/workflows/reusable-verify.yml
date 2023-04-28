@@ -1,0 +1,125 @@
+name: Verify
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Lint code
+        run: pnpm lint
+
+  build:
+    name: Build
+    needs: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Cache dist
+        uses: actions/cache@v3
+        id: cache-dist
+        with:
+          path: dist
+          key: dist-${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+
+      - name: Build
+        run: pnpm build
+
+  types:
+    name: Types
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Restore dist
+        uses: actions/cache@v3
+        id: cache-dist
+        with:
+          path: dist
+          key: dist-${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+
+      - name: Check types
+        run: pnpm typecheck
+
+      - name: Check types
+        run: pnpm test:typecheck
+
+  test:
+    name: Test
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Restore dist
+        uses: actions/cache@v3
+        id: cache-dist
+        with:
+          path: dist
+          key: dist-${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+
+      - name: Run tests
+        run: pnpm test:cov
+
+  size:
+    name: Size
+    needs: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Report build size
+        uses: preactjs/compressed-size-action@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  bench:
+    name: Benchmark
+    if: ${{ github.event.issue.pull_request && (github.event.comment.body == '/bench' || github.event.comment.body == '/benchmark') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Bench
+        run: pnpm bench

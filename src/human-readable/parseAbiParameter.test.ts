@@ -96,7 +96,7 @@ test.each([
       ],
     },
   },
-])(`parseAbiParameter($signature)`, ({ signature, expected }) => {
+])('parseAbiParameter($signature)', ({ signature, expected }) => {
   expect(parseAbiParameter(signature)).toEqual(expected)
 })
 
@@ -122,7 +122,7 @@ test.each([
       components: [{ name: 'bar', type: 'string' }],
     },
   },
-])(`parseAbiParameter($signatures)`, ({ signatures, expected }) => {
+])('parseAbiParameter($signatures)', ({ signatures, expected }) => {
   expect(parseAbiParameter(signatures)).toEqual(expected)
 })
 

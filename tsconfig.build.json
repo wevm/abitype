@@ -10,6 +10,6 @@
   ],
   "compilerOptions": {
     "sourceMap": true,
-    "rootDir": "./"
+    "rootDir": "./src"
   }
 }

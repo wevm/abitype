@@ -61,7 +61,7 @@ test.each([
       ],
     },
   },
-])(`parseAbiItem($signature)`, ({ signature, expected }) => {
+])('parseAbiItem($signature)', ({ signature, expected }) => {
   expect(parseAbiItem(signature)).toEqual(expected)
 })
 
@@ -78,6 +78,6 @@ test.each([
       stateMutability: 'nonpayable',
     },
   },
-])(`parseAbiItem($signature)`, ({ signature, expected }) => {
+])('parseAbiItem($signature)', ({ signature, expected }) => {
   expect(parseAbiItem(signature)).toEqual(expected)
 })

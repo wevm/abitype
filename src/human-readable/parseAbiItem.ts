@@ -1,7 +1,7 @@
 import type { Abi } from '../abi.js'
 import type { Narrow } from '../narrow.js'
 import type { Error, Filter } from '../types.js'
-import { InvalidAbiItemError } from './errors/abiItem.js'
+import { InvalidAbiItemError } from './errors/index.js'
 import {
   isStructSignature,
   parseSignature,
