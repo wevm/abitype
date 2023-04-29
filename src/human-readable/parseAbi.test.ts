@@ -3,8 +3,8 @@ import { expect, test } from 'vitest'
 import {
   customSolidityErrorsHumanReadableAbi,
   seaportHumanReadableAbi,
-} from '../test'
-import { parseAbi } from './parseAbi'
+} from '../test/index.js'
+import { parseAbi } from './parseAbi.js'
 
 test('parseAbi', () => {
   const result = parseAbi(seaportHumanReadableAbi)

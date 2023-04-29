@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { parseStructs } from './structs'
+import { parseStructs } from './structs.js'
 
 test('no structs', () => {
   expect(parseStructs([])).toMatchInlineSnapshot('{}')

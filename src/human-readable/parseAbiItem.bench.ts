@@ -2,7 +2,7 @@ import { Fragment as FragmentV5 } from '@ethersproject/abi'
 import { Fragment } from 'ethers'
 import { bench, describe } from 'vitest'
 
-import { parseAbiItem } from './parseAbiItem'
+import { parseAbiItem } from './parseAbiItem.js'
 
 describe('Parse basic ABI function', () => {
   const basic = 'function foo(string bar, string baz)'

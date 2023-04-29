@@ -1,55 +1,75 @@
 {
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs",
-  "license": "MIT",
   "version": "0.8.1",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wagmi-dev/abitype.git"
+  "scripts": {
+    "bench": "vitest bench",
+    "build": "pnpm run clean && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types",
+    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir ./dist/cjs --removeComments --verbatimModuleSyntax false && echo > ./dist/cjs/package.json '{\"type\":\"commonjs\"}'",
+    "build:esm": "tsc --project tsconfig.build.json --module es2015 --outDir ./dist/esm --removeComments && echo > ./dist/esm/package.json '{\"type\":\"module\"}'",
+    "build:types": "tsc --project tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
+    "changeset": "changeset",
+    "changeset:release": "pnpm build && changeset publish",
+    "changeset:version": "changeset version && pnpm install --lockfile-only && pnpm bun scripts/updateVersion.ts",
+    "clean": "rimraf dist *.tsbuildinfo",
+    "docs:dev": "pnpm -r --filter docs dev",
+    "docs:build": "pnpm -r --filter docs build",
+    "docs:preview": "pnpm -r --filter docs preview",
+    "format": "rome format . --write",
+    "lint": "rome check .",
+    "lint:fix": "pnpm lint --apply",
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "npx simple-git-hooks",
+    "prepublishOnly": "pnpm bun scripts/prepublishOnly.ts",
+    "test": "vitest",
+    "test:cov": "vitest run --coverage",
+    "test:typecheck": "vitest typecheck",
+    "test:update": "vitest --update",
+    "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project playground/tsconfig.json",
+    "typecheck": "tsc --noEmit"
   },
-  "author": "awkweb.eth",
-  "ethereum": "wagmi-dev.eth",
-  "funding": [
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/wagmi-dev"
-    }
-  ],
-  "module": "dist/index.mjs",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "typings": "./dist/types/index.d.ts",
   "sideEffects": false,
+  "files": [
+    "dist", "!dist/**/*.tsbuildinfo", "src/**/*.ts", "!src/**/*.test.ts",
+    "!src/**/*.test-d.ts", "!src/**/*.bench.ts", "!src/_test/**/*"
+  ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "module": "./dist/index.mts",
-      "default": "./dist/index.js"
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
     },
     "./config": {
-      "types": "./dist/config.d.ts",
-      "module": "./dist/config.mts",
-      "default": "./dist/config.js"
+      "types": "./dist/types/config.d.ts",
+      "import": "./dist/esm/config.js",
+      "require": "./dist/cjs/config.js"
     },
     "./test": {
-      "types": "./dist/test/index.d.ts",
-      "module": "./dist/test/index.mts",
-      "default": "./dist/test/index.js"
+      "types": "./dist/types/test/index.d.ts",
+      "import": "./dist/esm/test/index.js",
+      "require": "./dist/cjs/test/index.js"
     },
     "./zod": {
-      "types": "./dist/zod/index.d.ts",
-      "module": "./dist/zod/index.mts",
-      "default": "./dist/zod/index.js"
+      "types": "./dist/types/zod/index.d.ts",
+      "import": "./dist/esm/zod/index.mts",
+      "require": "./dist/cjs/zod/index.js"
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "/config",
-    "/test",
-    "/zod",
-    "/dist"
-  ],
+  "typesVersions": {
+    "*": {
+      "config": ["./dist/types/config.d.ts"],
+      "test": ["./dist/types/test/index.d.ts"],
+      "zod": ["./dist/types/zod/index.d.ts"]
+    }
+  },
   "peerDependencies": {
-    "typescript": ">=4.9.4",
+    "typescript": ">=5.0.4",
     "zod": "^3 >=3.19.1"
   },
   "peerDependenciesMeta": {
@@ -67,71 +87,34 @@
     "bun": "^0.5.7",
     "ethers": "^6.0.5",
     "fs-extra": "^11.1.0",
-    "lint-staged": "^12.4.1",
+    "rimraf": "^5.0.0",
     "rome": "^12.0.0",
     "simple-git-hooks": "^2.8.1",
-    "tsup": "^6.6.3",
-    "typescript": "^4.9.4",
+    "typescript": "^5.0.4",
     "vitest": "^0.26.3",
     "zod": "^3.20.6"
   },
-  "keywords": [
-    "abi",
-    "eth",
-    "ethereum",
-    "typescript",
-    "web3"
+  "license": "MIT",
+  "repository": "wagmi-dev/abitype",
+  "authors": ["awkweb.eth", "jxom.eth"],
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/wagmi-dev"
+    }
   ],
-  "scripts": {
-    "bench": "vitest bench --no-threads",
-    "build": "tsup",
-    "changeset:release": "pnpm build && changeset publish",
-    "changeset:version": "changeset version && pnpm install --lockfile-only",
-    "clean": "rm -rf config dist node_modules test trace zod **/node_modules",
-    "dev": "DEV=true tsup",
-    "docs:dev": "pnpm -r --filter docs dev",
-    "docs:build": "pnpm -r --filter docs build",
-    "docs:preview": "pnpm -r --filter docs preview",
-    "lint": "rome check .",
-    "lint:fix": "pnpm lint --apply",
-    "lint:format": "rome format . --write",
-    "postinstall": "pnpm dev",
-    "prepare": "npx simple-git-hooks",
-    "prepublishOnly": "pnpm bun scripts/prepublishOnly.ts",
-    "test": "vitest",
-    "test:cov": "vitest run --coverage",
-    "test:typecheck": "vitest typecheck",
-    "test:update": "vitest --update",
-    "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project playground/tsconfig.json",
-    "typecheck": "tsc --noEmit"
-  },
+  "keywords": ["abi", "eth", "ethereum", "typescript", "web3"],
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
+    "pre-commit": "pnpm format && pnpm lint:fix"
   },
-  "lint-staged": {
-    "*.{js,ts,tsx}": [
-      "pnpm lint:fix"
-    ],
-    "*.{json,md,mdx,yml}": [
-      "pnpm lint:format"
-    ]
-  },
-  "packageManager": "pnpm@7.5.0",
+  "packageManager": "pnpm@8.3.1",
   "pnpm": {
     "overrides": {
       "remark-shiki-twoslash>shiki": "^0.14.1",
       "shiki-twoslash>shiki": "^0.14.1"
     },
-    "patchedDependencies": {
-      "shiki-twoslash@3.1.1": "patches/shiki-twoslash@3.1.1.patch"
-    },
     "peerDependencyRules": {
-      "ignoreMissing": [
-        "@algolia/client-search"
-      ]
+      "ignoreMissing": ["@algolia/client-search"]
     }
-  },
-  "engines": {
-    "pnpm": ">=7"
   }
 }

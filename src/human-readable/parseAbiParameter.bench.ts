@@ -2,7 +2,7 @@ import { ParamType as ParamTypeV5 } from '@ethersproject/abi'
 import { ParamType } from 'ethers'
 import { bench, describe } from 'vitest'
 
-import { parseAbiParameter } from './parseAbiParameter'
+import { parseAbiParameter } from './parseAbiParameter.js'
 
 describe('Parse basic ABI Parameter', () => {
   const basic = 'string foo'

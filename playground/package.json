@@ -1,6 +1,6 @@
 {
-  "name": "playground",
   "private": true,
+  "type": "module",
   "devDependencies": {
     "abitype": "workspace:*"
   }

@@ -6,7 +6,7 @@ import {
 } from 'abitype/test'
 import { assertType, test } from 'vitest'
 
-import { watchContractEvent } from './watchContractEvent'
+import { watchContractEvent } from './watchContractEvent.js'
 
 test('watchContractEvent', () => {
   test('args', () => {

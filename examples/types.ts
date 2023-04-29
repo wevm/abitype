@@ -105,7 +105,7 @@ export type GetReturnType<
 export type DeepPartial<
   T,
   MaxDepth extends number,
-  Depth extends ReadonlyArray<number> = [],
+  Depth extends readonly number[] = [],
 > = Depth['length'] extends MaxDepth
   ? T
   : T extends object

@@ -12,7 +12,7 @@ export {
   wethAbi,
   writingEditionsFactoryAbi,
   eip165Abi,
-} from './abis'
+} from './abis.js'
 
 export {
   customSolidityErrorsHumanReadableAbi,
@@ -26,4 +26,4 @@ export {
   wethHumanReadableAbi,
   writingEditionsFactoryHumanReadableAbi,
   eip165HumanReadableAbi,
-} from './human-readable'
+} from './human-readable.js'

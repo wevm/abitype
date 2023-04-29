@@ -1,7 +1,7 @@
 import { assertType, test } from 'vitest'
 
-import type { Abi } from './abi'
-import { zeroAddress } from './test'
+import type { Abi } from './abi.js'
+import { zeroAddress } from './test/index.js'
 import type {
   customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
@@ -10,7 +10,7 @@ import type {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
-} from './test'
+} from './test/index.js'
 import type {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
@@ -27,7 +27,7 @@ import type {
   IsAbi,
   IsTypedData,
   TypedDataToPrimitiveTypes,
-} from './utils'
+} from './utils.js'
 
 test('AbiTypeToPrimitiveType', () => {
   test('address', () => {

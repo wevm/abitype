@@ -3,8 +3,8 @@ export {
   functionModifiers,
   isStructSignature,
   modifiers,
-} from './signatures'
+} from './signatures.js'
 
-export { parseStructs } from './structs'
+export { parseStructs } from './structs.js'
 
-export { parseAbiParameter, parseSignature, splitParameters } from './utils'
+export { parseAbiParameter, parseSignature, splitParameters } from './utils.js'

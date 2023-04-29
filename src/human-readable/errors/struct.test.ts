@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { CircularReferenceError } from './struct'
+import { CircularReferenceError } from './struct.js'
 
 test('CircularReferenceError', () => {
   expect(new CircularReferenceError({ type: 'Foo' })).toMatchInlineSnapshot(`

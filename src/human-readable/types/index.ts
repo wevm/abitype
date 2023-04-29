@@ -6,13 +6,13 @@ export type {
   Modifier,
   Signature,
   Signatures,
-} from './signatures'
+} from './signatures.js'
 
-export type { ParseStructs, StructLookup } from './structs'
+export type { ParseStructs, StructLookup } from './structs.js'
 
 export type {
   ParseAbiParameter,
   ParseAbiParameters,
   ParseSignature,
   SplitParameters,
-} from './utils'
+} from './utils.js'

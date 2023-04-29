@@ -2,7 +2,7 @@ export {
   UnknownTypeError,
   InvalidAbiItemError,
   UnknownSolidityTypeError,
-} from './abiItem'
+} from './abiItem.js'
 
 export {
   InvalidAbiTypeParameterError,
@@ -12,14 +12,14 @@ export {
   InvalidParameterError,
   InvalidAbiParametersError,
   InvalidAbiParameterError,
-} from './abiParameter'
+} from './abiParameter.js'
 
 export {
   InvalidStructSignatureError,
   InvalidSignatureError,
   UnknownSignatureError,
-} from './signature'
+} from './signature.js'
 
-export { InvalidParenthesisError } from './splitParameters'
+export { InvalidParenthesisError } from './splitParameters.js'
 
-export { CircularReferenceError } from './struct'
+export { CircularReferenceError } from './struct.js'

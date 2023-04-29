@@ -18,9 +18,9 @@ import type {
   TypedData,
   TypedDataParameter,
   TypedDataType,
-} from './abi'
-import type { ResolvedConfig } from './config'
-import type { Error, Merge, Tuple } from './types'
+} from './abi.js'
+import type { ResolvedConfig } from './config.js'
+import type { Error, Merge, Tuple } from './types.js'
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.

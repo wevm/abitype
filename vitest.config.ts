@@ -11,7 +11,7 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
     },
     environment: 'node',
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'examples/*.test.ts'],
     setupFiles: ['./src/_test/setup.ts'],
   },
 })

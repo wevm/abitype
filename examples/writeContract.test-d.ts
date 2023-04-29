@@ -11,7 +11,7 @@ import {
 } from 'abitype/test'
 import { assertType, test } from 'vitest'
 
-import { writeContract } from './writeContract'
+import { writeContract } from './writeContract.js'
 
 test('writeContract', () => {
   test('args', () => {

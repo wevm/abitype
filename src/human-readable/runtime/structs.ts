@@ -1,15 +1,15 @@
-import type { AbiParameter } from '../../abi'
-import { execTyped, isTupleRegex } from '../../regex'
-import { UnknownTypeError } from '../errors/abiItem'
-import { InvalidAbiTypeParameterError } from '../errors/abiParameter'
+import type { AbiParameter } from '../../abi.js'
+import { execTyped, isTupleRegex } from '../../regex.js'
+import { UnknownTypeError } from '../errors/index.js'
 import {
+  CircularReferenceError,
+  InvalidAbiTypeParameterError,
   InvalidSignatureError,
   InvalidStructSignatureError,
-} from '../errors/signature'
-import { CircularReferenceError } from '../errors/struct'
-import type { StructLookup } from '../types'
-import { execStructSignature, isStructSignature } from './signatures'
-import { isSolidityType, parseAbiParameter } from './utils'
+} from '../errors/index.js'
+import type { StructLookup } from '../types/index.js'
+import { execStructSignature, isStructSignature } from './signatures.js'
+import { isSolidityType, parseAbiParameter } from './utils.js'
 
 export function parseStructs(signatures: readonly string[]) {
   // Create "shallow" version of each struct (and filter out non-structs or invalid structs)

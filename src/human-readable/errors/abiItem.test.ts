@@ -4,7 +4,7 @@ import {
   InvalidAbiItemError,
   UnknownSolidityTypeError,
   UnknownTypeError,
-} from './abiItem'
+} from './abiItem.js'
 
 test('InvalidAbiItemError', () => {
   expect(

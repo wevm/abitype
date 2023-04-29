@@ -1,14 +1,18 @@
-import type { Abi } from '../abi'
-import type { Narrow } from '../narrow'
-import type { Error, Filter } from '../types'
-import { InvalidAbiItemError } from './errors/abiItem'
-import { isStructSignature, parseSignature, parseStructs } from './runtime'
+import type { Abi } from '../abi.js'
+import type { Narrow } from '../narrow.js'
+import type { Error, Filter } from '../types.js'
+import { InvalidAbiItemError } from './errors/index.js'
+import {
+  isStructSignature,
+  parseSignature,
+  parseStructs,
+} from './runtime/index.js'
 import type {
   ParseSignature,
   ParseStructs,
   Signature,
   Signatures,
-} from './types'
+} from './types/index.js'
 
 /**
  * Parses human-readable ABI item (e.g. error, event, function) into {@link Abi} item
@@ -99,7 +103,7 @@ export function parseAbiItem<
     abiItem = parseSignature(signature) as ParseAbiItem<TSignature>
   else {
     const structs = parseStructs(signature as readonly string[])
-    const length = signature.length
+    const length = signature.length as number
     for (let i = 0; i < length; i++) {
       const signature_ = (signature as readonly string[])[i]!
       if (isStructSignature(signature_)) continue

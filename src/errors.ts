@@ -1,26 +1,26 @@
-import { name, version } from '../package.json'
+import { version } from './version.js'
 
 type BaseErrorArgs = {
-  docsPath?: string
-  metaMessages?: string[]
+  docsPath?: string | undefined
+  metaMessages?: string[] | undefined
 } & (
   | {
-      cause?: never
-      details?: string
+      cause?: never | undefined
+      details?: string | undefined
     }
   | {
-      cause: BaseError | Error
-      details?: never
+      cause?: BaseError | Error
+      details?: never | undefined
     }
 )
 
 export class BaseError extends Error {
   details: string
-  docsPath?: string
-  metaMessages?: string[]
+  docsPath?: string | undefined
+  metaMessages?: string[] | undefined
   shortMessage: string
 
-  name = 'AbiTypeError'
+  override name = 'AbiTypeError'
 
   constructor(shortMessage: string, args: BaseErrorArgs = {}) {
     const details =
@@ -39,7 +39,7 @@ export class BaseError extends Error {
       ...(args.metaMessages ? [...args.metaMessages, ''] : []),
       ...(docsPath ? [`Docs: https://abitype.dev${docsPath}`] : []),
       ...(details ? [`Details: ${details}`] : []),
-      `Version: ${name}@${version}`,
+      `Version: abitype@${version}`,
     ].join('\n')
 
     super(message)

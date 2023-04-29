@@ -1,6 +1,6 @@
 {
-  "name": "examples",
   "private": true,
+  "type": "module",
   "devDependencies": {
     "abitype": "workspace:*"
   }

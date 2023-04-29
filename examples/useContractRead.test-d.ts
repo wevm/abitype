@@ -6,7 +6,7 @@ import {
 } from 'abitype/test'
 import { assertType, test } from 'vitest'
 
-import { useContractRead, useWagmiMintExampleRead } from './useContractRead'
+import { useContractRead, useWagmiMintExampleRead } from './useContractRead.js'
 
 test('useContractRead', () => {
   test('args', () => {

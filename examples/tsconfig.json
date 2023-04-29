@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "abitype": ["../src"],
+      "abitype/*": ["../src/*"]
+    }
+  },
+  "include": ["*.ts"],
+  "exclude": [],
+}

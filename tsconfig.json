@@ -1,23 +1,7 @@
 {
-  "compilerOptions": {
-    "allowJs": false,
-    "downlevelIteration": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "noEmit": true,
-    "noImplicitAny": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "target": "ESNext",
-    "types": ["node"]
-  },
-  "exclude": ["**/node_modules/**", "dist"],
-  "include": ["examples", "playground", "scripts", "src", "*.ts"]
+  // This configuration is used for local development and type checking.
+  "extends": "./tsconfig.base.json",
+  "include": ["src"],
+  "exclude": [],
+  "references": [{ "path": "./tsconfig.node.json" }],
 }

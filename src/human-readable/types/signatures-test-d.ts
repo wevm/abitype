@@ -14,7 +14,7 @@ import type {
   Signatures,
   SolidityKeywords,
   ValidateName,
-} from './signatures'
+} from './signatures.js'
 
 test('IsErrorSignature', () => {
   // basic

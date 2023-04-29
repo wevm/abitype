@@ -2,7 +2,7 @@
   "files": {
     "ignore": [
       "**/node_modules", "CHANGELOG.md", "cache", "coverage", "dist",
-      "tsconfig.json", "pnpm-lock.yaml", "trace"
+      "tsconfig.json", "tsconfig.*.json", "trace", "pnpm-lock.yaml"
     ]
   },
   "formatter": {
@@ -24,8 +24,7 @@
       },
       "style": {
         "noNonNullAssertion": "off",
-        "useShorthandArrayType": "off",
-        "noUnusedTemplateLiteral": "off"
+        "useShorthandArrayType": "error"
       },
       "suspicious": {
         "noArrayIndexKey": "off",
