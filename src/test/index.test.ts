@@ -16,6 +16,7 @@ it('should expose correct exports', () => {
       "wagmiMintExampleAbi",
       "wethAbi",
       "writingEditionsFactoryAbi",
+      "eip165Abi",
       "customSolidityErrorsHumanReadableAbi",
       "ensHumanReadableAbi",
       "ensRegistryWithFallbackHumanReadableAbi",
@@ -26,6 +27,7 @@ it('should expose correct exports', () => {
       "wagmiMintExampleHumanReadableAbi",
       "wethHumanReadableAbi",
       "writingEditionsFactoryHumanReadableAbi",
+      "eip165HumanReadableAbi",
     ]
   `)
 })

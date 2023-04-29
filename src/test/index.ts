@@ -11,6 +11,7 @@ export {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
+  eip165Abi,
 } from './abis'
 
 export {
@@ -24,4 +25,5 @@ export {
   wagmiMintExampleHumanReadableAbi,
   wethHumanReadableAbi,
   writingEditionsFactoryHumanReadableAbi,
+  eip165HumanReadableAbi,
 } from './human-readable'

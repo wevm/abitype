@@ -303,3 +303,7 @@ export const writingEditionsFactoryHumanReadableAbi = [
   'function transferOwnership(address nextOwner_)',
   'function treasuryConfiguration() view returns (address)',
 ] as const
+
+export const eip165HumanReadableAbi = [
+  'function supportsInterface(bytes4 interfaceId) view returns (bool)',
+]
