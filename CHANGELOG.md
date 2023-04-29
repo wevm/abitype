@@ -1,5 +1,11 @@
 # abitype
 
+## 0.8.1
+
+### Patch Changes
+
+- [#127](https://github.com/wagmi-dev/abitype/pull/127) [`a71c5ce`](https://github.com/wagmi-dev/abitype/commit/a71c5cec48aec8f08198cca861fda2ad7edee0fc) Thanks [@izayl](https://github.com/izayl)! - Added EIP-165 abi, and rename `address` to `zeroAddress`
+
 ## 0.8.0
 
 ### Minor Changes
