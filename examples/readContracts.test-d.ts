@@ -1,10 +1,10 @@
 import type { ResolvedConfig } from 'abitype'
 import {
-  address,
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
+  zeroAddress,
 } from 'abitype/test'
 import { assertType, test } from 'vitest'
 
@@ -16,12 +16,12 @@ test('readContracts', () => {
       const result = readContracts({
         contracts: [
           {
-            address,
+            address: zeroAddress,
             abi: wagmiMintExampleAbi,
             functionName: 'name',
           },
           {
-            address,
+            address: zeroAddress,
             abi: nounsAuctionHouseAbi,
             functionName: 'auction',
           },
@@ -53,13 +53,13 @@ test('readContracts', () => {
       const result = readContracts({
         contracts: [
           {
-            address,
+            address: zeroAddress,
             abi: wagmiMintExampleAbi,
             functionName: 'balanceOf',
-            args: [address],
+            args: [zeroAddress],
           },
           {
-            address,
+            address: zeroAddress,
             abi: wagmiMintExampleAbi,
             functionName: 'ownerOf',
             args: [123n],
@@ -75,7 +75,7 @@ test('readContracts', () => {
       const result = readContracts({
         contracts: [
           {
-            address,
+            address: zeroAddress,
             abi: wagmiMintExampleAbi,
             functionName: 'supportsInterface',
             args: ['0xfoobar'],
@@ -90,7 +90,7 @@ test('readContracts', () => {
       const result = readContracts({
         contracts: [
           {
-            address,
+            address: zeroAddress,
             abi: nestedTupleArrayAbi,
             functionName: 'v',
             args: [
@@ -103,11 +103,11 @@ test('readContracts', () => {
             ],
           },
           {
-            address,
+            address: zeroAddress,
             abi: writingEditionsFactoryAbi,
             functionName: 'getSalt',
             args: [
-              address,
+              zeroAddress,
               {
                 name: 'Test',
                 symbol: '$TEST',
@@ -116,8 +116,8 @@ test('readContracts', () => {
                 contentURI: 'arweave://digest',
                 price: 0.1,
                 limit: 100n,
-                fundingRecipient: address,
-                renderer: address,
+                fundingRecipient: zeroAddress,
+                renderer: zeroAddress,
                 nonce: 123n,
                 fee: 0,
               },
@@ -134,7 +134,7 @@ test('readContracts', () => {
       const result = readContracts({
         contracts: [
           {
-            address,
+            address: zeroAddress,
             abi: wagmiMintExampleAbi,
             // @ts-expect-error Trying to use non-read function
             functionName: 'approve',
@@ -148,19 +148,19 @@ test('readContracts', () => {
       const result = readContracts({
         contracts: [
           {
-            address,
+            address: zeroAddress,
             abi: wagmiMintExampleAbi,
             functionName: 'tokenURI',
             args: [1n],
           },
           {
-            address,
+            address: zeroAddress,
             abi: writingEditionsFactoryAbi,
             functionName: 'predictDeterministicAddress',
-            args: [address, address],
+            args: [zeroAddress, zeroAddress],
           },
           {
-            address,
+            address: zeroAddress,
             abi: [
               {
                 type: 'function',
@@ -175,7 +175,7 @@ test('readContracts', () => {
               },
             ],
             functionName: 'balanceOf',
-            args: [[address], [address], 1n],
+            args: [[zeroAddress], [zeroAddress], 1n],
           },
         ],
       })
@@ -190,13 +190,13 @@ test('readContracts', () => {
     test('without const assertion', () => {
       const contracts = [
         {
-          address,
+          address: zeroAddress,
           abi: wagmiMintExampleAbi,
           functionName: 'tokenURI',
           args: [1n],
         },
         {
-          address,
+          address: zeroAddress,
           abi: wagmiMintExampleAbi,
           functionName: 'balanceOf',
           args: ['0x…'],

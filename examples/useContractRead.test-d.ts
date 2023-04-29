@@ -1,8 +1,8 @@
 import type { Abi, Address, ResolvedConfig } from 'abitype'
 import {
-  address,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
+  zeroAddress,
 } from 'abitype/test'
 import { assertType, test } from 'vitest'
 
@@ -12,7 +12,7 @@ test('useContractRead', () => {
   test('args', () => {
     test('zero', () => {
       const result = useContractRead({
-        address,
+        address: zeroAddress,
         abi: wagmiMintExampleAbi,
         functionName: 'name',
         // ^?
@@ -22,7 +22,7 @@ test('useContractRead', () => {
 
     test('one', () => {
       const result = useContractRead({
-        address,
+        address: zeroAddress,
         abi: wagmiMintExampleAbi,
         functionName: 'tokenURI',
         args: [123n],
@@ -32,10 +32,10 @@ test('useContractRead', () => {
 
     test('two or more', () => {
       const result = useContractRead({
-        address,
+        address: zeroAddress,
         abi: writingEditionsFactoryAbi,
         functionName: 'predictDeterministicAddress',
-        args: [address, '0xfoo'],
+        args: [zeroAddress, '0xfoo'],
       })
       assertType<{ data: Address }>(result)
     })
@@ -44,7 +44,7 @@ test('useContractRead', () => {
   test('return types', () => {
     test('string', () => {
       const result = useContractRead({
-        address,
+        address: zeroAddress,
         abi: wagmiMintExampleAbi,
         functionName: 'name',
       })
@@ -53,7 +53,7 @@ test('useContractRead', () => {
 
     test('Address', () => {
       const result = useContractRead({
-        address,
+        address: zeroAddress,
         abi: wagmiMintExampleAbi,
         functionName: 'ownerOf',
         args: [123n],
@@ -63,10 +63,10 @@ test('useContractRead', () => {
 
     test('number', () => {
       const result = useContractRead({
-        address,
+        address: zeroAddress,
         abi: wagmiMintExampleAbi,
         functionName: 'balanceOf',
-        args: [address],
+        args: [zeroAddress],
       })
       assertType<{ data: ResolvedConfig['BigIntType'] }>(result)
     })
@@ -75,7 +75,7 @@ test('useContractRead', () => {
   test('behavior', () => {
     test('write function not allowed', () => {
       const result = useContractRead({
-        address,
+        address: zeroAddress,
         abi: wagmiMintExampleAbi,
         // @ts-expect-error Trying to use non-read function
         functionName: 'approve',
@@ -101,15 +101,15 @@ test('useContractRead', () => {
         },
       ]
       const result1 = useContractRead({
-        address,
+        address: zeroAddress,
         abi: abi,
         functionName: 'foo',
       })
       const result2 = useContractRead({
-        address,
+        address: zeroAddress,
         abi: abi,
         functionName: 'bar',
-        args: [address],
+        args: [zeroAddress],
       })
       type Result1 = typeof result1
       type Result2 = typeof result2
@@ -135,15 +135,15 @@ test('useContractRead', () => {
         },
       ]
       const result1 = useContractRead({
-        address,
+        address: zeroAddress,
         abi: abi,
         functionName: 'foo',
       })
       const result2 = useContractRead({
-        address,
+        address: zeroAddress,
         abi: abi,
         functionName: 'bar',
-        args: [address],
+        args: [zeroAddress],
       })
       type Result1 = typeof result1
       type Result2 = typeof result2
@@ -153,7 +153,7 @@ test('useContractRead', () => {
 
     test('defined inline', () => {
       const result1 = useContractRead({
-        address,
+        address: zeroAddress,
         abi: [
           {
             name: 'foo',
@@ -173,7 +173,7 @@ test('useContractRead', () => {
         functionName: 'foo',
       })
       const result2 = useContractRead({
-        address,
+        address: zeroAddress,
         abi: [
           {
             name: 'foo',
@@ -191,7 +191,7 @@ test('useContractRead', () => {
           },
         ],
         functionName: 'bar',
-        args: [address],
+        args: [zeroAddress],
       })
       type Result1 = typeof result1
       type Result2 = typeof result2
@@ -205,7 +205,7 @@ test('useWagmiMintExampleRead', () => {
   test('args', () => {
     test('zero', () => {
       const result = useWagmiMintExampleRead({
-        address,
+        address: zeroAddress,
         functionName: 'name',
         // ^?
       })
@@ -214,7 +214,7 @@ test('useWagmiMintExampleRead', () => {
 
     test('one', () => {
       const result = useWagmiMintExampleRead({
-        address,
+        address: zeroAddress,
         functionName: 'balanceOf',
         args: ['0x…'],
       })
