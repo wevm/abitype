@@ -10,7 +10,7 @@ ABIType exports some test utilities and constants to make playing around and tes
 ## Constants
 
 ```ts twoslash
-import { address } from 'abitype/test'
+import { zeroAddress } from 'abitype/test'
 ```
 
 ### ABIs
