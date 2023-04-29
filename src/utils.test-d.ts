@@ -1,7 +1,7 @@
 import { assertType, test } from 'vitest'
 
 import type { Abi } from './abi'
-import { address } from './test'
+import { zeroAddress } from './test'
 import type {
   customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
@@ -31,7 +31,7 @@ import type {
 
 test('AbiTypeToPrimitiveType', () => {
   test('address', () => {
-    assertType<AbiTypeToPrimitiveType<'address'>>(address)
+    assertType<AbiTypeToPrimitiveType<'address'>>(zeroAddress)
   })
 
   test('bool', () => {
@@ -48,7 +48,7 @@ test('AbiTypeToPrimitiveType', () => {
   })
 
   test('function', () => {
-    assertType<AbiTypeToPrimitiveType<'function'>>(`${address}foo`)
+    assertType<AbiTypeToPrimitiveType<'function'>>(`${zeroAddress}foo`)
   })
 
   test('string', () => {
@@ -97,7 +97,7 @@ test('AbiParameterToPrimitiveType', () => {
       name: 'owner'
       type: 'address'
     }>
-    assertType<Result>(address)
+    assertType<Result>(zeroAddress)
     // @ts-expect-error missing "0x" prefix
     assertType<Result>('foo')
   })
@@ -120,7 +120,7 @@ test('AbiParameterToPrimitiveType', () => {
     type FunctionResult = AbiParameterToPrimitiveType<{
       type: 'function'
     }>
-    assertType<FunctionResult>(`${address}foo`)
+    assertType<FunctionResult>(`${zeroAddress}foo`)
   })
 
   test('string', () => {
@@ -128,7 +128,7 @@ test('AbiParameterToPrimitiveType', () => {
       type: 'string'
     }>
     assertType<Result>('foo')
-    assertType<Result>(address)
+    assertType<Result>(zeroAddress)
   })
 
   test('tuple', () => {
@@ -161,8 +161,8 @@ test('AbiParameterToPrimitiveType', () => {
       contentURI: 'arweave://digest',
       price: 1n,
       limit: 100n,
-      fundingRecipient: address,
-      renderer: address,
+      fundingRecipient: zeroAddress,
+      renderer: zeroAddress,
       nonce: 123n,
       fee: 0,
     })
@@ -182,8 +182,8 @@ test('AbiParameterToPrimitiveType', () => {
       // @ts-expect-error invalid value
       price: '0.1',
       limit: 100n,
-      fundingRecipient: address,
-      renderer: address,
+      fundingRecipient: zeroAddress,
+      renderer: zeroAddress,
       nonce: 123n,
       fee: 0,
     })
@@ -242,8 +242,8 @@ test('AbiParameterToPrimitiveType', () => {
       'arweave://digest',
       1n,
       100n,
-      address,
-      address,
+      zeroAddress,
+      zeroAddress,
       123n,
       0,
     ])
@@ -447,7 +447,7 @@ test('AbiParametersToPrimitiveTypes', () => {
         { name: 'trait'; type: 'string[]' },
       ]
     >
-    assertType<Result>([address, 1n, ['foo']])
+    assertType<Result>([zeroAddress, 1n, ['foo']])
   })
 
   test('deeply nested parameters', () => {

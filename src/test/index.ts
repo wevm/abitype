@@ -1,4 +1,4 @@
-export const address = '0x0000000000000000000000000000000000000000' as const
+export const zeroAddress = '0x0000000000000000000000000000000000000000' as const
 
 export {
   customSolidityErrorsAbi,
@@ -11,6 +11,7 @@ export {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
+  eip165Abi,
 } from './abis'
 
 export {
@@ -24,4 +25,5 @@ export {
   wagmiMintExampleHumanReadableAbi,
   wethHumanReadableAbi,
   writingEditionsFactoryHumanReadableAbi,
+  eip165HumanReadableAbi,
 } from './human-readable'
