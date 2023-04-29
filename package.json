@@ -11,7 +11,7 @@
     "changeset": "changeset",
     "changeset:release": "pnpm build && changeset publish",
     "changeset:version": "changeset version && pnpm install --lockfile-only && pnpm bun scripts/updateVersion.ts",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist *.tsbuildinfo",
     "docs:dev": "pnpm -r --filter docs dev",
     "docs:build": "pnpm -r --filter docs build",
     "docs:preview": "pnpm -r --filter docs preview",
@@ -112,9 +112,6 @@
     "overrides": {
       "remark-shiki-twoslash>shiki": "^0.14.1",
       "shiki-twoslash>shiki": "^0.14.1"
-    },
-    "patchedDependencies": {
-      "shiki-twoslash@3.1.1": "patches/shiki-twoslash@3.1.1.patch"
     },
     "peerDependencyRules": {
       "ignoreMissing": ["@algolia/client-search"]
