@@ -10,7 +10,7 @@ concurrency:
 jobs:
   verify:
     name: Verify
-    uses: ./.github/workflows/reusable-verify.yml
+    uses: ./.github/workflows/verify.yml
     secrets: inherit
 
   snapshot:
