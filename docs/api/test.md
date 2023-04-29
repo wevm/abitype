@@ -27,6 +27,7 @@ import {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
+  eip165Abi,
 } from 'abitype/test'
 ```
 

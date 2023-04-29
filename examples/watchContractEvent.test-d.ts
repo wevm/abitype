@@ -1,8 +1,8 @@
 import type { Abi, ResolvedConfig } from 'abitype'
 import {
-  address,
   wagmiMintExampleAbi,
   writingEditionsFactoryAbi,
+  zeroAddress,
 } from 'abitype/test'
 import { assertType, test } from 'vitest'
 
@@ -12,7 +12,7 @@ test('watchContractEvent', () => {
   test('args', () => {
     test('zero', () => {
       watchContractEvent({
-        address,
+        address: zeroAddress,
         abi: [
           {
             name: 'Foo',
@@ -36,7 +36,7 @@ test('watchContractEvent', () => {
 
     test('one', () => {
       watchContractEvent({
-        address,
+        address: zeroAddress,
         abi: writingEditionsFactoryAbi,
         eventName: 'FactoryGuardSet',
         listener(guard) {
@@ -47,7 +47,7 @@ test('watchContractEvent', () => {
 
     test('two or more', () => {
       watchContractEvent({
-        address,
+        address: zeroAddress,
         abi: wagmiMintExampleAbi,
         eventName: 'Transfer',
         listener(from, to, tokenId) {
@@ -76,7 +76,7 @@ test('watchContractEvent', () => {
         },
       ]
       watchContractEvent({
-        address,
+        address: zeroAddress,
         abi,
         eventName: 'Foo',
         listener(name) {
@@ -101,7 +101,7 @@ test('watchContractEvent', () => {
         },
       ]
       watchContractEvent({
-        address,
+        address: zeroAddress,
         abi,
         eventName: 'Foo',
         listener(name) {
@@ -112,7 +112,7 @@ test('watchContractEvent', () => {
 
     test('defined inline', () => {
       watchContractEvent({
-        address,
+        address: zeroAddress,
         abi: [
           {
             name: 'Foo',

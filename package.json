@@ -1,7 +1,7 @@
 {
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "scripts": {
     "bench": "vitest bench",
     "build": "pnpm run clean && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types",
