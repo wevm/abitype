@@ -12,3 +12,18 @@ jobs:
     name: Verify
     uses: ./.github/workflows/reusable-verify.yml
     secrets: inherit
+
+  bench:
+    name: Benchmark
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Bench
+        run: pnpm bench
