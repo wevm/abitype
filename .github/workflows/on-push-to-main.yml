@@ -13,8 +13,8 @@ jobs:
     uses: ./.github/workflows/verify.yml
     secrets: inherit
 
-  snapshot:
-    name: Snapshot
+  canary:
+    name: Release canary
     needs: verify
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -26,13 +26,19 @@ jobs:
       - name: Install dependencies
         uses: ./.github/actions/install-dependencies
 
-      - name: Publish snapshots
-        uses: seek-oss/changesets-snapshot@v0
-        with:
-          pre-publish: pnpm build
+      - name: Set version
+        run: |
+          npm --no-git-tag-version version minor
+          npm --no-git-tag-version version $(npm pkg get version | sed 's/"//g')-canary.$(date +'%Y%m%dT%H%M%S')
+          pnpm bun scripts/updateVersion.ts
+
+      - name: Build
+        run: pnpm build
+
+      - name: Publish to npm
+        run: npm publish --tag canary
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   changesets:
     name: Changesets
