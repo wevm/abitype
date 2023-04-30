@@ -4,6 +4,7 @@ import { functionModifiers } from './signatures.js'
 import {
   isSolidityKeyword,
   isSolidityType,
+  isValidDataLocation,
   parseAbiParameter,
   parseSignature,
   splitParameters,
@@ -83,6 +84,13 @@ test.each([
       name: 'Foo',
       type: 'error',
       inputs: [{ type: 'string', name: 'foo' }],
+    },
+  },
+  {
+    signature: 'receive() external payable',
+    expected: {
+      type: 'receive',
+      stateMutability: 'payable',
     },
   },
 ])('parseSignature($signature)', ({ signature, expected }) => {
@@ -567,6 +575,13 @@ test.each([
 ])('isInvalidSolidiyName($name)', (name) => {
   expect(isSolidityKeyword(name)).toEqual(true)
 })
+
+test.each(['bytes', 'string', 'tuple'])(
+  'isValidDataLocation($type)',
+  (type) => {
+    expect(isValidDataLocation(type as any, false)).toEqual(true)
+  },
+)
 
 test('Unbalanced Parethesis', () => {
   expect(() =>
