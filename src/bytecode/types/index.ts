@@ -11,7 +11,7 @@ export type {
   ParseBytecodeErrors,
   ParseBytecodeEvents,
   ParseBytecodeFunctions,
-} from './bytecode'
+} from './bytecode.js'
 
 export type {
   ExtractName,
@@ -21,7 +21,7 @@ export type {
   Slice,
   SplitByChunks,
   ToSelector,
-} from './utils'
+} from './utils.js'
 
 export type {
   BytecodeSelectors,
@@ -30,4 +30,4 @@ export type {
   FunctionSelectors,
   Selectors,
   SelectorsByType,
-} from './config'
+} from './config.js'

@@ -4,15 +4,15 @@ import type {
   seaportBytecode,
   uniswapBytecode,
   wethBytecode,
-} from '../../test/bytecodes'
+} from '../../test/bytecodes.js'
 import type {
   ParseBytecodeConstructor,
   ParseBytecodeErrors,
   ParseBytecodeEvents,
   ParseBytecodeFunctions,
-} from './bytecode'
+} from './bytecode.js'
 
-import type { ParseBytecode } from '../parseBytecode'
+import type { ParseBytecode } from '../parseBytecode.js'
 
 test('Parse Constructor', () => {
   assertType<ParseBytecodeConstructor<typeof wethBytecode>>([])

@@ -4,9 +4,9 @@ import {
   seaportBytecode,
   uniswapBytecode,
   wethBytecode,
-} from '../test/bytecodes'
-import { parseBytecode } from './parseBytecode'
-import { resolvedSelectors } from './runtime'
+} from '../test/bytecodes.js'
+import { parseBytecode } from './parseBytecode.js'
+import { resolvedSelectors } from './runtime/index.js'
 
 test('Invalid bytecode', () => {
   expect(() => parseBytecode('invalid')).toThrowErrorMatchingInlineSnapshot(`

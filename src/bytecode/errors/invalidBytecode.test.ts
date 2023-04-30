@@ -1,4 +1,4 @@
-import { InvalidBytecodeError } from './invalidBytecode'
+import { InvalidBytecodeError } from './invalidBytecode.js'
 import { expect, test } from 'vitest'
 
 test('InvalidBytecodeError', () => {

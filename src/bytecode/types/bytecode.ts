@@ -1,6 +1,10 @@
-import type { ParseAbiParameters } from '../../human-readable/types/utils'
-import type { Selectors } from './config'
-import type { OPCODES, RevertErrorString, RevertPanicString } from './opcodes'
+import type { ParseAbiParameters } from '../../human-readable/types/utils.js'
+import type { Selectors } from './config.js'
+import type {
+  OPCODES,
+  RevertErrorString,
+  RevertPanicString,
+} from './opcodes.js'
 import type {
   ExtractName,
   ExtractParameters,
@@ -8,7 +12,7 @@ import type {
   RecurseSelector,
   Slice,
   ToSelector,
-} from './utils'
+} from './utils.js'
 
 export type HasConstructor<T extends string> =
   T extends `${string}60033${string}`

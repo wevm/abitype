@@ -1,34 +1,60 @@
 import { readJsonSync, writeJsonSync } from 'fs-extra'
-
 import path from 'path'
 
+generatePackageJson()
+
 // Generates a package.json to be published to NPM with only the necessary fields.
-;(function generatePackageJson() {
+function generatePackageJson() {
   const packageJsonPath = path.join(__dirname, '../package.json')
   const tmpPackageJson = readJsonSync(packageJsonPath)
 
   writeJsonSync(`${packageJsonPath}.tmp`, tmpPackageJson, { spaces: 2 })
+
+  const {
+    name,
+    description,
+    dependencies,
+    peerDependencies,
+    peerDependenciesMeta,
+    version,
+    files,
+    exports: exports_,
+    // NOTE: We explicitly don't want to publish the type field. We create a separate package.json for `dist/cjs` and `dist/esm` that has the type field.
+    // type,
+    main,
+    module,
+    types,
+    typings,
+    typesVersions,
+    sideEffects,
+    license,
+    repository,
+    authors,
+    keywords,
+  } = tmpPackageJson
   writeJsonSync(
     packageJsonPath,
     {
-      name: tmpPackageJson.name,
-      description: tmpPackageJson.description,
-      license: tmpPackageJson.license,
-      version: tmpPackageJson.version,
-      repository: tmpPackageJson.repository,
-      authors: tmpPackageJson.authors,
-      ethereum: tmpPackageJson.ethereum,
-      type: tmpPackageJson.type,
-      types: tmpPackageJson.types,
-      main: tmpPackageJson.main,
-      module: tmpPackageJson.module,
-      exports: tmpPackageJson.exports,
-      files: tmpPackageJson.files,
-      sideEffects: tmpPackageJson.sideEffects,
-      peerDependencies: tmpPackageJson.peerDependencies,
-      peerDependenciesMeta: tmpPackageJson.peerDependenciesMeta,
-      keywords: tmpPackageJson.keywords,
+      name,
+      description,
+      dependencies,
+      peerDependencies,
+      peerDependenciesMeta,
+      version,
+      files,
+      exports: exports_,
+      // type,
+      main,
+      module,
+      types,
+      typings,
+      typesVersions,
+      sideEffects,
+      license,
+      repository,
+      authors,
+      keywords,
     },
     { spaces: 2 },
   )
-})()
+}

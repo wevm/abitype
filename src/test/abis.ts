@@ -3503,3 +3503,29 @@ export const writingEditionsFactoryAbi = [
     type: 'function',
   },
 ] as const
+
+/**
+ * EIP-165
+ * https://eips.ethereum.org/EIPS/eip-165
+ */
+export const eip165Abi = [
+  {
+    inputs: [
+      {
+        internalType: 'bytes4',
+        name: 'interfaceId',
+        type: 'bytes4',
+      },
+    ],
+    name: 'supportsInterface',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const

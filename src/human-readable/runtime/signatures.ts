@@ -1,6 +1,10 @@
-import type { AbiStateMutability } from '../../abi'
-import { execTyped } from '../../regex'
-import type { EventModifier, FunctionModifier, Modifier } from '../types'
+import type { AbiStateMutability } from '../../abi.js'
+import { execTyped } from '../../regex.js'
+import type {
+  EventModifier,
+  FunctionModifier,
+  Modifier,
+} from '../types/index.js'
 
 // https://regexr.com/78tsr
 const errorSignatureRegex =

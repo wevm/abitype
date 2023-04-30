@@ -1,6 +1,6 @@
 import type { Abi } from 'abitype'
 
-import type { Contract, GetConfig, GetReturnType } from './types'
+import type { Contract, GetConfig, GetReturnType } from './types.js'
 
 export declare function readContracts<
   TAbi extends Abi | readonly unknown[],
@@ -24,7 +24,7 @@ type MAXIMUM_DEPTH = 20
 type ContractsConfig<
   TContracts extends Contract[],
   Result extends any[] = [],
-  Depth extends ReadonlyArray<number> = [],
+  Depth extends readonly number[] = [],
 > = Depth['length'] extends MAXIMUM_DEPTH
   ? GetConfig[]
   : TContracts extends []
@@ -57,7 +57,7 @@ type ContractsConfig<
 type ContractsResult<
   TContracts extends Contract[],
   Result extends any[] = [],
-  Depth extends ReadonlyArray<number> = [],
+  Depth extends readonly number[] = [],
 > = Depth['length'] extends MAXIMUM_DEPTH
   ? GetReturnType[]
   : TContracts extends []

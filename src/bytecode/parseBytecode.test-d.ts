@@ -4,8 +4,8 @@ import {
   seaportBytecode,
   uniswapBytecode,
   wethBytecode,
-} from '../test/bytecodes'
-import { parseBytecode } from './parseBytecode'
+} from '../test/bytecodes.js'
+import { parseBytecode } from './parseBytecode.js'
 
 describe('Return type of different bytecodes', () => {
   test('error', () => {

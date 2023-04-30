@@ -7,7 +7,7 @@ import type {
   Slice,
   SplitByChunks,
   ToSelector,
-} from './utils'
+} from './utils.js'
 
 test('Slice', () => {
   assertType<Slice<'HelloWorld', 5>>('Hello')

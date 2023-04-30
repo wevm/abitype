@@ -1,4 +1,4 @@
-import { BaseError } from '../../errors'
+import { BaseError } from '../../errors.js'
 
 export class InvalidBytecodeError extends BaseError {
   override name = 'InvalidBytecodeError'

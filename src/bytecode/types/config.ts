@@ -1,4 +1,4 @@
-import { Prettify } from '../../types'
+import type { Prettify } from '../../types.js'
 
 export interface Selectors {
   [x: string]: unknown

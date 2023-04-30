@@ -1,4 +1,4 @@
-import type { IsUnknown } from './types'
+import type { IsUnknown } from './types.js'
 
 /**
  * Override `Config` to customize type options

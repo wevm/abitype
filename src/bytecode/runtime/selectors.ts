@@ -1,6 +1,6 @@
-import type { AbiError, AbiEvent, AbiFunction, Address } from '../../abi'
-import { parseSignature } from '../../human-readable/runtime'
-import { ParseBytecodeConstructor } from '../types'
+import type { AbiError, AbiEvent, AbiFunction, Address } from '../../abi.js'
+import { parseSignature } from '../../human-readable/runtime/index.js'
+import type { ParseBytecodeConstructor } from '../types/index.js'
 
 export function parseFunctionSelector<
   TSelector extends Address,

@@ -1,4 +1,4 @@
-export const address = '0x0000000000000000000000000000000000000000' as const
+export const zeroAddress = '0x0000000000000000000000000000000000000000' as const
 
 export {
   customSolidityErrorsAbi,
@@ -11,7 +11,8 @@ export {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
-} from './abis'
+  eip165Abi,
+} from './abis.js'
 
 export {
   customSolidityErrorsHumanReadableAbi,
@@ -24,6 +25,7 @@ export {
   wagmiMintExampleHumanReadableAbi,
   wethHumanReadableAbi,
   writingEditionsFactoryHumanReadableAbi,
-} from './human-readable'
+  eip165HumanReadableAbi,
+} from './human-readable.js'
 
-export { wethBytecode, uniswapBytecode, seaportBytecode } from './bytecodes'
+export { wethBytecode, uniswapBytecode, seaportBytecode } from './bytecodes.js'

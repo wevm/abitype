@@ -13,7 +13,7 @@
     "ethers": "*",
     "markdown-it-footnote": "^3.0.3",
     "vitepress": "1.0.0-alpha.61",
-    "vitepress-plugin-shiki-twoslash": "0.0.4",
+    "vitepress-plugin-shiki-twoslash": "0.0.6",
     "vue": "^3.2.47"
   }
 }

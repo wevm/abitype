@@ -1,5 +1,5 @@
-import type { AbiItemType } from '../../abi'
-import { BaseError } from '../../errors'
+import type { AbiItemType } from '../../abi.js'
+import { BaseError } from '../../errors.js'
 
 export class InvalidSignatureError extends BaseError {
   override name = 'InvalidSignatureError'
@@ -21,7 +21,7 @@ export class UnknownSignatureError extends BaseError {
   override name = 'UnknownSignatureError'
 
   constructor({ signature }: { signature: string }) {
-    super(`Unknown signature.`, {
+    super('Unknown signature.', {
       details: signature,
     })
   }
@@ -31,7 +31,7 @@ export class InvalidStructSignatureError extends BaseError {
   override name = 'InvalidStructSignatureError'
 
   constructor({ signature }: { signature: string }) {
-    super(`Invalid struct signature.`, {
+    super('Invalid struct signature.', {
       details: signature,
       metaMessages: ['No properties exist.'],
     })

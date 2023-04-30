@@ -1,7 +1,7 @@
-import type { SplitParameters } from '../../human-readable/types'
-import type { ValidateName } from '../../human-readable/types/signatures'
-import type { Error } from '../../types'
-import type { OPCODES } from './opcodes'
+import type { SplitParameters } from '../../human-readable/types/index.js'
+import type { ValidateName } from '../../human-readable/types/signatures.js'
+import type { Error } from '../../types.js'
+import type { OPCODES } from './opcodes.js'
 
 export type Slice<
   T extends string,

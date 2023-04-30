@@ -1,6 +1,6 @@
-import type { AbiItemType, AbiParameter } from '../../abi'
-import { BaseError } from '../../errors'
-import type { Modifier } from '../types'
+import type { AbiItemType, AbiParameter } from '../../abi.js'
+import { BaseError } from '../../errors.js'
+import type { Modifier } from '../types/index.js'
 
 export class InvalidAbiParameterError extends BaseError {
   override name = 'InvalidAbiParameterError'
@@ -56,7 +56,7 @@ export class InvalidModifierError extends BaseError {
     modifier,
   }: {
     param: string
-    type?: AbiItemType | 'struct'
+    type?: AbiItemType | 'struct' | undefined
     modifier: Modifier
   }) {
     super('Invalid ABI parameter.', {
@@ -79,7 +79,7 @@ export class InvalidFunctionModifierError extends BaseError {
     modifier,
   }: {
     param: string
-    type?: AbiItemType | 'struct'
+    type?: AbiItemType | 'struct' | undefined
     modifier: Modifier
   }) {
     super('Invalid ABI parameter.', {
@@ -100,7 +100,7 @@ export class InvalidAbiTypeParameterError extends BaseError {
   constructor({
     abiParameter,
   }: {
-    abiParameter: AbiParameter & { indexed?: boolean }
+    abiParameter: AbiParameter & { indexed?: boolean | undefined }
   }) {
     super('Invalid ABI parameter.', {
       details: JSON.stringify(abiParameter, null, 2),

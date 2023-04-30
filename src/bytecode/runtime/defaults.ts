@@ -1,4 +1,4 @@
-import type { Address } from '../../abi'
+import type { Address } from '../../abi.js'
 
 export const resolvedErrors = new Map<Address, string>([
   ['0xa14c4b50', 'URIQueryForNonexistentToken()'],

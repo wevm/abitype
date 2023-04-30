@@ -1,7 +1,7 @@
 import type { Abi } from 'abitype'
 import type { wagmiMintExampleAbi } from 'abitype/test'
 
-import type { GetConfig, GetReturnType } from './types'
+import type { GetConfig, GetReturnType } from './types.js'
 
 export declare function readContract<
   TAbi extends Abi | readonly unknown[],

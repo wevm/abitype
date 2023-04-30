@@ -8,7 +8,7 @@ import {
   InvalidModifierError,
   InvalidParameterError,
   SolidityProtectedKeywordError,
-} from './abiParameter'
+} from './abiParameter.js'
 
 test('InvalidAbiParamterError', () => {
   expect(

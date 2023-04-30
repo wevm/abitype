@@ -4,7 +4,7 @@ import {
   InvalidSignatureError,
   InvalidStructSignatureError,
   UnknownSignatureError,
-} from './signature'
+} from './signature.js'
 
 test('InvalidSignatureError', () => {
   expect(

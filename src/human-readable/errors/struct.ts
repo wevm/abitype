@@ -1,4 +1,4 @@
-import { BaseError } from '../../errors'
+import { BaseError } from '../../errors.js'
 
 export class CircularReferenceError extends BaseError {
   override name = 'CircularReferenceError'

@@ -1,9 +1,9 @@
 import { assertType, test } from 'vitest'
 
-import type { wethBytecode } from '../../test/bytecodes'
-import type { ParseBytecodeEvents, ParseBytecodeFunctions } from './bytecode'
+import type { wethBytecode } from '../../test/bytecodes.js'
+import type { ParseBytecodeEvents, ParseBytecodeFunctions } from './bytecode.js'
 
-declare module './config' {
+declare module './config.js' {
   export interface Selectors {
     '0xddf252ad': 'Transfer(address,address,uint256)'
     '0x2e1a7d4d': 'withdraw(uint256)'

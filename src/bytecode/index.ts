@@ -5,17 +5,17 @@ export type {
   FunctionSelectors,
   Selectors,
   SelectorsByType,
-} from './types'
+} from './types/index.js'
 
-export type { ParseBytecode } from './parseBytecode'
+export type { ParseBytecode } from './parseBytecode.js'
 
-export { InvalidBytecodeError } from './errors'
+export { InvalidBytecodeError } from './errors/index.js'
 
 export {
   resolvedEvents,
   resolvedErrors,
   resolvedFunctions,
   resolvedSelectors,
-} from './runtime'
+} from './runtime/index.js'
 
-export { parseBytecode } from './parseBytecode'
+export { parseBytecode } from './parseBytecode.js'

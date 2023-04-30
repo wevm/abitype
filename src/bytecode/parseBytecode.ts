@@ -1,19 +1,19 @@
-import type { Abi, Address } from '../abi'
-import type { Narrow } from '../narrow'
-import type { Error } from '../types'
-import { InvalidBytecodeError } from './errors/invalidBytecode'
+import type { Abi, Address } from '../abi.js'
+import type { Narrow } from '../narrow.js'
+import type { Error } from '../types.js'
+import { InvalidBytecodeError } from './errors/invalidBytecode.js'
 import {
   parseConstructor,
   parseErrorSelectors,
   parseEventSelectors,
   parseFunctionSelectors,
-} from './runtime/selectors'
+} from './runtime/selectors.js'
 import type {
   ParseBytecodeConstructor,
   ParseBytecodeErrors,
   ParseBytecodeEvents,
   ParseBytecodeFunctions,
-} from './types/bytecode'
+} from './types/bytecode.js'
 
 export type ParseBytecode<T extends string> = string extends T
   ? Abi

@@ -1,4 +1,14 @@
 {
-  "extends": "../tsconfig.json",
-  "include": ["trace.ts"]
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "abitype": ["../src"],
+      "abitype/*": ["../src/*"]
+    }
+  },
+  "include": ["trace.ts"],
+  "exclude": [],
 }
+

@@ -29,14 +29,14 @@ export type {
   TypedDataDomain,
   TypedDataParameter,
   TypedDataType,
-} from './abi'
+} from './abi.js'
 
-export type { Config, DefaultConfig, ResolvedConfig } from './config'
+export type { Config, DefaultConfig, ResolvedConfig } from './config.js'
 
-export { BaseError } from './errors'
+export { BaseError } from './errors.js'
 
-export type { Narrow } from './narrow'
-export { narrow } from './narrow'
+export type { Narrow } from './narrow.js'
+export { narrow } from './narrow.js'
 
 export type {
   AbiParameterToPrimitiveType,
@@ -54,14 +54,14 @@ export type {
   IsAbi,
   IsTypedData,
   TypedDataToPrimitiveTypes,
-} from './utils'
+} from './utils.js'
 
 export type {
   ParseAbi,
   ParseAbiItem,
   ParseAbiParameter,
   ParseAbiParameters,
-} from './human-readable'
+} from './human-readable/index.js'
 export {
   parseAbi,
   parseAbiItem,
@@ -81,7 +81,7 @@ export {
   InvalidAbiTypeParameterError,
   InvalidAbiItemError,
   UnknownTypeError,
-} from './human-readable'
+} from './human-readable/index.js'
 
 export type {
   ParseBytecode,
@@ -91,7 +91,7 @@ export type {
   FunctionSelectors,
   Selectors,
   SelectorsByType,
-} from './bytecode'
+} from './bytecode/index.js'
 
 export {
   InvalidBytecodeError,
@@ -100,4 +100,4 @@ export {
   resolvedFunctions,
   resolvedErrors,
   resolvedEvents,
-} from './bytecode'
+} from './bytecode/index.js'

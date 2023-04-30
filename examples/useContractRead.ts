@@ -1,8 +1,8 @@
 import type { Abi } from 'abitype'
 import type { wagmiMintExampleAbi } from 'abitype/test'
 
-import type { ReadContractConfig } from './readContract'
-import type { GetReturnType, InferOptional } from './types'
+import type { ReadContractConfig } from './readContract.js'
+import type { GetReturnType, InferOptional } from './types.js'
 
 export declare function useContractRead<
   TAbi extends Abi | readonly unknown[],

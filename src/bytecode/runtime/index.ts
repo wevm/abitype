@@ -3,4 +3,4 @@ export {
   resolvedEvents,
   resolvedFunctions,
   resolvedSelectors,
-} from './defaults'
+} from './defaults.js'

@@ -23,8 +23,8 @@ import type {
   SolidityTuple,
   TypedData,
   TypedDataType,
-} from './abi'
-import { wagmiMintExampleAbi } from './test'
+} from './abi.js'
+import { wagmiMintExampleAbi } from './test/index.js'
 
 test('Address', () => {
   assertType<Address>('0xA0Cf798816D4b9b9866b5330EEa46a18382f251e')

@@ -1,9 +1,12 @@
-import type { Abi } from '../abi'
-import type { Narrow } from '../narrow'
-import type { Error, Filter } from '../types'
-import { isStructSignature, parseStructs } from './runtime'
-import { parseSignature } from './runtime/utils'
-import type { ParseSignature, ParseStructs, Signatures } from './types'
+import type { Abi } from '../abi.js'
+import type { Narrow } from '../narrow.js'
+import type { Error, Filter } from '../types.js'
+import {
+  isStructSignature,
+  parseSignature,
+  parseStructs,
+} from './runtime/index.js'
+import type { ParseSignature, ParseStructs, Signatures } from './types/index.js'
 
 /**
  * Parses human-readable ABI into JSON {@link Abi}
@@ -69,7 +72,7 @@ export function parseAbi<
 ): ParseAbi<TSignatures> {
   const structs = parseStructs(signatures as readonly string[])
   const abi = []
-  const length = signatures.length
+  const length = signatures.length as number
   for (let i = 0; i < length; i++) {
     const signature = (signatures as readonly string[])[i]!
     if (isStructSignature(signature)) continue

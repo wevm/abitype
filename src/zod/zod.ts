@@ -6,8 +6,8 @@ import type {
   AbiFunction as AbiFunctionType,
   AbiParameter as AbiParameterType,
   AbiReceive as AbiReceiveType,
-} from '../abi'
-import { bytesRegex, integerRegex } from '../regex'
+} from '../abi.js'
+import { bytesRegex, integerRegex } from '../regex.js'
 
 // From https://docs.soliditylang.org/en/latest/abi-spec.html#types
 export const SolidityAddress = z.literal('address')

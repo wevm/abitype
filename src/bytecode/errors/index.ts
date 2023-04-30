@@ -1,1 +1,1 @@
-export { InvalidBytecodeError } from './invalidBytecode'
+export { InvalidBytecodeError } from './invalidBytecode.js'

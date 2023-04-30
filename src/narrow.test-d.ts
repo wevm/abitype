@@ -1,7 +1,7 @@
 import { assertType, test } from 'vitest'
 
-import type { Narrow } from './narrow'
-import { narrow } from './narrow'
+import type { Narrow } from './narrow.js'
+import { narrow } from './narrow.js'
 
 test('Narrow', () => {
   assertType<Narrow<['foo', 'bar', 1]>>(['foo', 'bar', 1])

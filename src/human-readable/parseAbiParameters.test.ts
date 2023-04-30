@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { parseAbiParameters } from './parseAbiParameters'
+import { parseAbiParameters } from './parseAbiParameters.js'
 
 test('parseAbiParameters', () => {
   // @ts-expect-error invalid signature type
@@ -59,7 +59,7 @@ test.each([
       { type: 'string', name: 'bar' },
     ],
   },
-])(`parseAbiParameters($signatures)`, ({ signatures, expected }) => {
+])('parseAbiParameters($signatures)', ({ signatures, expected }) => {
   expect(parseAbiParameters(signatures)).toEqual(expected)
 })
 
@@ -78,6 +78,6 @@ test.each([
       { name: 'bar', type: 'string' },
     ],
   },
-])(`parseAbiParameters($signatures)`, ({ signatures, expected }) => {
+])('parseAbiParameters($signatures)', ({ signatures, expected }) => {
   expect(parseAbiParameters(signatures)).toEqual(expected)
 })

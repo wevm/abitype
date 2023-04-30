@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { InvalidParenthesisError } from './splitParameters'
+import { InvalidParenthesisError } from './splitParameters.js'
 
 test('InvalidParenthesisError', () => {
   expect(
