@@ -1,5 +1,45 @@
 // Vitest Snapshot v1
 
+exports[`parse custom bytecode 1`] = `
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+  },
+  {
+    "inputs": [],
+    "name": "0x00000000000000000000000000000000000000000000000000000000",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x00000000000000000000000000000000000000000000000000000000",
+    "type": "error",
+  },
+]
+`;
+
+exports[`parse custom bytecode with resolvedSelectors 1`] = `
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+  },
+  {
+    "inputs": [],
+    "name": "0x00000000000000000000000000000000000000000000000000000000",
+    "type": "error",
+  },
+  {
+    "inputs": [],
+    "name": "0x00000000000000000000000000000000000000000000000000000000",
+    "type": "error",
+  },
+]
+`;
+
 exports[`parse seaport bytecode 1`] = `
 [
   {

@@ -137,7 +137,7 @@ export function parseErrorSelectors<
 
       if (groups.errorSelector === undefined) continue
 
-      const selector = `0x${groups.errorSelector.substring(0, 8)}` as Address
+      const selector = `0x${groups.errorSelector.substring(8)}` as Address
 
       if (resolvedSelectors?.has?.(selector)) {
         result.push(

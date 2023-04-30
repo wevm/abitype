@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest'
 
 import {
+  customBytecode,
   seaportBytecode,
   uniswapBytecode,
   wethBytecode,
@@ -35,5 +36,15 @@ test('parse seaport bytecode', () => {
 
 test('parse seaport bytecode with resolved selectors', () => {
   const result = parseBytecode(seaportBytecode, resolvedSelectors)
+  expect(result).toMatchSnapshot()
+})
+
+test('parse custom bytecode', () => {
+  const result = parseBytecode(customBytecode)
+  expect(result).toMatchSnapshot()
+})
+
+test('parse custom bytecode with resolvedSelectors', () => {
+  const result = parseBytecode(customBytecode, resolvedSelectors)
   expect(result).toMatchSnapshot()
 })
