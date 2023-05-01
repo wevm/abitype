@@ -9,12 +9,12 @@ exports[`parse custom bytecode 1`] = `
   },
   {
     "inputs": [],
-    "name": "0x00000000000000000000000000000000000000000000000000000000",
+    "name": "0x30cd7471",
     "type": "error",
   },
   {
     "inputs": [],
-    "name": "0x00000000000000000000000000000000000000000000000000000000",
+    "name": "0x2e522d00",
     "type": "error",
   },
 ]
@@ -29,12 +29,12 @@ exports[`parse custom bytecode with resolvedSelectors 1`] = `
   },
   {
     "inputs": [],
-    "name": "0x00000000000000000000000000000000000000000000000000000000",
+    "name": "NotOwner",
     "type": "error",
   },
   {
     "inputs": [],
-    "name": "0x00000000000000000000000000000000000000000000000000000000",
+    "name": "0x2e522d00",
     "type": "error",
   },
 ]
