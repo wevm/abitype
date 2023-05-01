@@ -1,7 +1,7 @@
 {
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "scripts": {
     "bench": "vitest bench",
     "build": "pnpm run clean && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types",
@@ -35,8 +35,13 @@
   "typings": "./dist/types/index.d.ts",
   "sideEffects": false,
   "files": [
-    "dist", "!dist/**/*.tsbuildinfo", "src/**/*.ts", "!src/**/*.test.ts",
-    "!src/**/*.test-d.ts", "!src/**/*.bench.ts", "!src/_test/**/*"
+    "dist",
+    "!dist/**/*.tsbuildinfo",
+    "src/**/*.ts",
+    "!src/**/*.test.ts",
+    "!src/**/*.test-d.ts",
+    "!src/**/*.bench.ts",
+    "!src/_test/**/*"
   ],
   "exports": {
     ".": {
@@ -63,9 +68,15 @@
   },
   "typesVersions": {
     "*": {
-      "config": ["./dist/types/config.d.ts"],
-      "test": ["./dist/types/test/index.d.ts"],
-      "zod": ["./dist/types/zod/index.d.ts"]
+      "config": [
+        "./dist/types/config.d.ts"
+      ],
+      "test": [
+        "./dist/types/test/index.d.ts"
+      ],
+      "zod": [
+        "./dist/types/zod/index.d.ts"
+      ]
     }
   },
   "peerDependencies": {
@@ -82,8 +93,8 @@
     "@changesets/cli": "^2.26.0",
     "@ethersproject/abi": "^5.7.0",
     "@types/fs-extra": "^11.0.1",
-    "@types/node": "17.0.21",
-    "@vitest/coverage-c8": "^0.24.3",
+    "@types/node": "18.16.3",
+    "@vitest/coverage-c8": "^0.30.1",
     "bun": "^0.5.7",
     "ethers": "^6.0.5",
     "fs-extra": "^11.1.0",
@@ -91,19 +102,28 @@
     "rome": "^12.0.0",
     "simple-git-hooks": "^2.8.1",
     "typescript": "^5.0.4",
-    "vitest": "^0.26.3",
+    "vitest": "^0.30.1",
     "zod": "^3.20.6"
   },
   "license": "MIT",
   "repository": "wagmi-dev/abitype",
-  "authors": ["awkweb.eth", "jxom.eth"],
+  "authors": [
+    "awkweb.eth",
+    "jxom.eth"
+  ],
   "funding": [
     {
       "type": "github",
       "url": "https://github.com/sponsors/wagmi-dev"
     }
   ],
-  "keywords": ["abi", "eth", "ethereum", "typescript", "web3"],
+  "keywords": [
+    "abi",
+    "eth",
+    "ethereum",
+    "typescript",
+    "web3"
+  ],
   "simple-git-hooks": {
     "pre-commit": "pnpm format && pnpm lint:fix"
   },
@@ -114,7 +134,9 @@
       "shiki-twoslash>shiki": "^0.14.1"
     },
     "peerDependencyRules": {
-      "ignoreMissing": ["@algolia/client-search"]
+      "ignoreMissing": [
+        "@algolia/client-search"
+      ]
     }
   }
 }

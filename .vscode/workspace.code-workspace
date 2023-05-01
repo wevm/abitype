@@ -5,6 +5,10 @@
       "path": "../"
     },
     {
+      "name": "docs",
+      "path": "../docs"
+    },
+    {
       "name": "examples",
       "path": "../examples"
     },

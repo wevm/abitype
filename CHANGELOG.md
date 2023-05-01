@@ -1,5 +1,11 @@
 # abitype
 
+## 0.8.2
+
+### Patch Changes
+
+- [#126](https://github.com/wagmi-dev/abitype/pull/126) [`7ccc347`](https://github.com/wagmi-dev/abitype/commit/7ccc347a7e53d1c08bd84d8f1876e3621e45398c) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Switched from `tsup` to `tsc`.
+
 ## 0.8.1
 
 ### Patch Changes

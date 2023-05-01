@@ -12,6 +12,7 @@ runs:
       with:
         cache: pnpm
         node-version: 18
+        registry-url: https://registry.npmjs.org
 
     - name: Install dependencies
       shell: bash

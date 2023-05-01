@@ -69,10 +69,16 @@ ABIType might be a good option for your project if:
 
 ## Install
 
-```fish
-npm i abitype
-yarn add abitype
+```bash
 pnpm add abitype
+```
+
+```bash
+npm i abitype
+```
+
+```bash
+yarn add abitype
 ```
 
 ## Documentation
