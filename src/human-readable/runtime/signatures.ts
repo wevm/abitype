@@ -34,7 +34,7 @@ export function execEventSignature(signature: string) {
 
 // https://regexr.com/78u1b
 const functionSignatureRegex =
-  /^function (?<name>[a-zA-Z0-9_]+)\((?<parameters>.*?)\)(?: (?<scope>external|public{1}))?(?: (?<stateMutability>pure|view|nonpayable|payable{1}))?(?: returns \((?<returns>.*?)\))?$/
+  /^function (?<name>[a-zA-Z0-9_]+)\((?<parameters>.*?)\)(?: (?<scope>external|public{1}))?(?: (?<stateMutability>pure|view|nonpayable|payable{1}))?(?: returns\s?\((?<returns>.*?)\))?$/
 export function isFunctionSignature(signature: string) {
   return functionSignatureRegex.test(signature)
 }
