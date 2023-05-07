@@ -51,17 +51,25 @@ test('IsFunctionSignature', () => {
   // basic
   assertType<IsFunctionSignature<'function foo()'>>(true)
   assertType<IsFunctionSignature<'function foo() returns (uint256)'>>(true)
+  assertType<IsFunctionSignature<'function foo() returns(uint256)'>>(true)
   assertType<IsFunctionSignature<'function foo() view'>>(true)
   assertType<IsFunctionSignature<'function foo() public'>>(true)
   // combinations
   assertType<IsFunctionSignature<'function foo() view returns (uint256)'>>(true)
+  assertType<IsFunctionSignature<'function foo() view returns(uint256)'>>(true)
   assertType<IsFunctionSignature<'function foo() public view'>>(true)
   assertType<
     IsFunctionSignature<'function foo() public view returns (uint256)'>
   >(true)
+  assertType<
+    IsFunctionSignature<'function foo() public view returns(uint256)'>
+  >(true)
   // params
   assertType<IsFunctionSignature<'function foo(uint256, uint256)'>>(true)
   assertType<IsFunctionSignature<'function foo(uint256) returns (uint256)'>>(
+    true,
+  )
+  assertType<IsFunctionSignature<'function foo(uint256) returns(uint256)'>>(
     true,
   )
   assertType<IsFunctionSignature<'function foo(uint256) view'>>(true)
@@ -69,15 +77,27 @@ test('IsFunctionSignature', () => {
   assertType<
     IsFunctionSignature<'function foo(uint256) view returns (uint256)'>
   >(true)
+  assertType<
+    IsFunctionSignature<'function foo(uint256) view returns(uint256)'>
+  >(true)
   assertType<IsFunctionSignature<'function foo(uint256) public view'>>(true)
   assertType<
     IsFunctionSignature<'function foo(uint256) public view returns (uint256)'>
   >(true)
   assertType<
+    IsFunctionSignature<'function foo(uint256) public view returns(uint256)'>
+  >(true)
+  assertType<
     IsFunctionSignature<'function foo(uint256) public view returns (uint256 tokenId)'>
   >(true)
   assertType<
+    IsFunctionSignature<'function foo(uint256) public view returns(uint256 tokenId)'>
+  >(true)
+  assertType<
     IsFunctionSignature<'function foo(uint256) public view returns (uint256 tokenId, uint256 balance)'>
+  >(true)
+  assertType<
+    IsFunctionSignature<'function foo(uint256) public view returns(uint256 tokenId, uint256 balance)'>
   >(true)
 
   // invalid

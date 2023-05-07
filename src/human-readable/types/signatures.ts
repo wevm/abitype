@@ -37,7 +37,7 @@ export type IsFunctionSignature<T> = T extends FunctionSignature<infer Name>
     : false
   : false
 export type Scope = 'public' | 'external' // `internal` or `private` functions wouldn't make it to ABI so can ignore
-type Returns = `returns (${string})`
+type Returns = `returns (${string})` | `returns(${string})`
 // Almost all valid function signatures, except `function ${string}(${infer Parameters})` since `Parameters` can absorb returns
 type ValidFunctionSignatures =
   | `function ${string}()`
