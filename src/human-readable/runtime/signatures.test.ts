@@ -65,6 +65,12 @@ test('isFunctionSignature', () => {
   expect(isFunctionSignature('function name(string)')).toMatchInlineSnapshot(
     'true',
   )
+  expect(
+    isFunctionSignature('function name(string) returns (uint256)'),
+  ).toMatchInlineSnapshot('true')
+  expect(
+    isFunctionSignature('function name(string) returns(uint256)'),
+  ).toMatchInlineSnapshot('true')
   expect(isFunctionSignature('struct Name { string; }')).toMatchInlineSnapshot(
     'false',
   )
@@ -78,6 +84,28 @@ test('execFunctionSignature', () => {
       "returns": undefined,
       "scope": undefined,
       "stateMutability": undefined,
+    }
+  `)
+  expect(
+    execFunctionSignature('function foo() view returns (uint256)'),
+  ).toMatchInlineSnapshot(`
+    {
+      "name": "foo",
+      "parameters": "",
+      "returns": "uint256",
+      "scope": undefined,
+      "stateMutability": "view",
+    }
+  `)
+  expect(
+    execFunctionSignature('function foo() view returns(uint256)'),
+  ).toMatchInlineSnapshot(`
+    {
+      "name": "foo",
+      "parameters": "",
+      "returns": "uint256",
+      "scope": undefined,
+      "stateMutability": "view",
     }
   `)
   expect(
