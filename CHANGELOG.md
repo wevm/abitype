@@ -1,5 +1,11 @@
 # abitype
 
+## 0.8.3
+
+### Patch Changes
+
+- [#131](https://github.com/wagmi-dev/abitype/pull/131) [`3bc566a`](https://github.com/wagmi-dev/abitype/commit/3bc566a434b6d75745bc1c6359b3996669c85586) Thanks [@izayl](https://github.com/izayl)! - support no-space returns
+
 ## 0.8.2
 
 ### Patch Changes
