@@ -61,6 +61,7 @@ jobs:
         with:
           title: 'chore: version packages'
           commit: 'chore: version packages'
+          cwd: "./dev"
           publish: pnpm changeset:release
           version: pnpm changeset:version
         env:
