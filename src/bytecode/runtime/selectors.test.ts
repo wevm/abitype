@@ -1,20 +1,20 @@
-import { customBytecode, wethBytecode } from "../../test/bytecodes.js";
-import { resolvedEvents } from "./defaults.js";
-import { resolvedErrors } from "./defaults.js";
-import { resolvedFunctions } from "./defaults.js";
-import { parseErrorSelector } from "./selectors.js";
-import { parseErrorSelectors } from "./selectors.js";
+import { customBytecode, wethBytecode } from '../../test/bytecodes.js'
+import { resolvedEvents } from './defaults.js'
+import { resolvedErrors } from './defaults.js'
+import { resolvedFunctions } from './defaults.js'
+import { parseErrorSelector } from './selectors.js'
+import { parseErrorSelectors } from './selectors.js'
 import {
   parseEventSelector,
   parseEventSelectors,
   parseFunctionSelector,
   parseFunctionSelectors,
-} from "./selectors.js";
-import { describe, expect, test } from "vitest";
+} from './selectors.js'
+import { describe, expect, test } from 'vitest'
 
-describe("Parse selector/s", () => {
-  test("parse function selector", () => {
-    expect(parseFunctionSelector("0x06fdde03")).toMatchInlineSnapshot(`
+describe('Parse selector/s', () => {
+  test('parse function selector', () => {
+    expect(parseFunctionSelector('0x06fdde03')).toMatchInlineSnapshot(`
       {
         "inputs": [],
         "name": "0x06fdde03",
@@ -22,12 +22,12 @@ describe("Parse selector/s", () => {
         "stateMutability": "nonpayable",
         "type": "function",
       }
-    `);
-  });
+    `)
+  })
 
-  test("parse function selector with resolved selector", () => {
+  test('parse function selector with resolved selector', () => {
     expect(
-      parseFunctionSelector("0x06fdde03", resolvedFunctions.get("0x06fdde03"))
+      parseFunctionSelector('0x06fdde03', resolvedFunctions.get('0x06fdde03')),
     ).toMatchInlineSnapshot(`
       {
         "inputs": [],
@@ -36,10 +36,10 @@ describe("Parse selector/s", () => {
         "stateMutability": "nonpayable",
         "type": "function",
       }
-    `);
-  });
+    `)
+  })
 
-  test("parse function selectors", () => {
+  test('parse function selectors', () => {
     expect(parseFunctionSelectors(wethBytecode)).toMatchInlineSnapshot(`
       [
         {
@@ -120,11 +120,11 @@ describe("Parse selector/s", () => {
           "type": "function",
         },
       ]
-    `);
-  });
+    `)
+  })
 
-  test("parse event selector", () => {
-    expect(parseFunctionSelector("0xddf252ad")).toMatchInlineSnapshot(`
+  test('parse event selector', () => {
+    expect(parseFunctionSelector('0xddf252ad')).toMatchInlineSnapshot(`
       {
         "inputs": [],
         "name": "0xddf252ad",
@@ -132,12 +132,13 @@ describe("Parse selector/s", () => {
         "stateMutability": "nonpayable",
         "type": "function",
       }
-    `);
-  });
+    `)
+  })
 
-  test("parse event selector with resolved selector", () => {
-    expect(parseEventSelector("0xddf252ad", resolvedEvents.get("0xddf252ad")))
-      .toMatchInlineSnapshot(`
+  test('parse event selector with resolved selector', () => {
+    expect(
+      parseEventSelector('0xddf252ad', resolvedEvents.get('0xddf252ad')),
+    ).toMatchInlineSnapshot(`
       {
         "inputs": [
           {
@@ -153,10 +154,10 @@ describe("Parse selector/s", () => {
         "name": "Transfer",
         "type": "event",
       }
-    `);
-  });
+    `)
+  })
 
-  test("parse event selectors", () => {
+  test('parse event selectors', () => {
     expect(parseEventSelectors(wethBytecode)).toMatchInlineSnapshot(`
       [
         {
@@ -180,21 +181,22 @@ describe("Parse selector/s", () => {
           "type": "event",
         },
       ]
-    `);
-  });
-  test("parse event selector", () => {
-    expect(parseEventSelector("0xddf252ad")).toMatchInlineSnapshot(`
+    `)
+  })
+  test('parse event selector', () => {
+    expect(parseEventSelector('0xddf252ad')).toMatchInlineSnapshot(`
       {
         "inputs": [],
         "name": "0xddf252ad",
         "type": "event",
       }
-    `);
-  });
+    `)
+  })
 
-  test("parse event selector with resolved selector", () => {
-    expect(parseEventSelector("0xddf252ad", resolvedEvents.get("0xddf252ad")))
-      .toMatchInlineSnapshot(`
+  test('parse event selector with resolved selector', () => {
+    expect(
+      parseEventSelector('0xddf252ad', resolvedEvents.get('0xddf252ad')),
+    ).toMatchInlineSnapshot(`
       {
         "inputs": [
           {
@@ -210,10 +212,10 @@ describe("Parse selector/s", () => {
         "name": "Transfer",
         "type": "event",
       }
-    `);
-  });
+    `)
+  })
 
-  test("parse event selectors", () => {
+  test('parse event selectors', () => {
     expect(parseEventSelectors(wethBytecode)).toMatchInlineSnapshot(`
       [
         {
@@ -237,31 +239,32 @@ describe("Parse selector/s", () => {
           "type": "event",
         },
       ]
-    `);
-  });
+    `)
+  })
 
-  test("parse event selector", () => {
-    expect(parseErrorSelector("0x30cd7471")).toMatchInlineSnapshot(`
+  test('parse event selector', () => {
+    expect(parseErrorSelector('0x30cd7471')).toMatchInlineSnapshot(`
       {
         "inputs": [],
         "name": "0x30cd7471",
         "type": "error",
       }
-    `);
-  });
+    `)
+  })
 
-  test("parse error selector with resolved selector", () => {
-    expect(parseErrorSelector("0x30cd7471", resolvedErrors.get("0x30cd7471")))
-      .toMatchInlineSnapshot(`
+  test('parse error selector with resolved selector', () => {
+    expect(
+      parseErrorSelector('0x30cd7471', resolvedErrors.get('0x30cd7471')),
+    ).toMatchInlineSnapshot(`
       {
         "inputs": [],
         "name": "NotOwner",
         "type": "error",
       }
-    `);
-  });
+    `)
+  })
 
-  test("parse error selectors", () => {
+  test('parse error selectors', () => {
     expect(parseErrorSelectors(customBytecode)).toMatchInlineSnapshot(`
       [
         {
@@ -275,6 +278,6 @@ describe("Parse selector/s", () => {
           "type": "error",
         },
       ]
-    `);
-  });
-});
+    `)
+  })
+})
