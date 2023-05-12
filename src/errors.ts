@@ -1,18 +1,21 @@
+import type { Prettify } from './types.js'
 import { version } from './version.js'
 
-type BaseErrorArgs = {
-  docsPath?: string | undefined
-  metaMessages?: string[] | undefined
-} & (
-  | {
-      cause?: never | undefined
-      details?: string | undefined
-    }
-  | {
-      cause?: BaseError | Error
-      details?: never | undefined
-    }
-)
+type BaseErrorArgs = Prettify<
+  {
+    docsPath?: string | undefined
+    metaMessages?: string[] | undefined
+  } & (
+    | {
+        cause?: never | undefined
+        details?: string | undefined
+      }
+    | {
+        cause?: BaseError | Error
+        details?: never | undefined
+      }
+  )
+>
 
 export class BaseError extends Error {
   details: string
