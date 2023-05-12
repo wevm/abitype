@@ -30,14 +30,7 @@ test('readContracts', () => {
       assertType<
         [
           string,
-          {
-            nounId: ResolvedConfig['BigIntType']
-            amount: ResolvedConfig['BigIntType']
-            startTime: ResolvedConfig['BigIntType']
-            endTime: ResolvedConfig['BigIntType']
-            bidder: ResolvedConfig['AddressType']
-            settled: boolean
-          } & readonly [
+          readonly [
             ResolvedConfig['BigIntType'],
             ResolvedConfig['BigIntType'],
             ResolvedConfig['BigIntType'],

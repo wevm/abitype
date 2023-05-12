@@ -5,11 +5,10 @@ import type {
   Address,
   ExtractAbiEvent,
   ExtractAbiEventNames,
-  Narrow,
 } from 'abitype'
 
 export declare function watchContractEvent<
-  TAbi extends Abi | readonly unknown[],
+  const TAbi extends Abi | readonly unknown[],
   TEventName extends string,
 >(config: GetConfig<TAbi, TEventName>): void
 
@@ -18,7 +17,7 @@ type GetConfig<
   TEventName extends string = string,
 > = {
   /** Contract ABI */
-  abi: Narrow<TAbi> // infer `TAbi` type for inline usage
+  abi: TAbi
   /** Contract address */
   address: Address
   /** Function to invoke on the contract */
@@ -40,13 +39,13 @@ type GetEventName<
 type GetListener<
   TAbi extends Abi | readonly unknown[],
   TEventName extends string,
-  TAbiEvent extends AbiEvent = TAbi extends Abi
+  _AbiEvent extends AbiEvent = TAbi extends Abi
     ? ExtractAbiEvent<TAbi, TEventName>
     : AbiEvent,
-  TArgs = AbiParametersToPrimitiveTypes<TAbiEvent['inputs'], 'inputs'>,
+  _Args = AbiParametersToPrimitiveTypes<_AbiEvent['inputs'], 'inputs'>,
   FailedToParseArgs =
-    | ([TArgs] extends [never] ? true : false)
-    | (readonly unknown[] extends TArgs ? true : false),
+    | ([_Args] extends [never] ? true : false)
+    | (readonly unknown[] extends _Args ? true : false),
 > = true extends FailedToParseArgs
   ? {
       /**
@@ -58,6 +57,6 @@ type GetListener<
     }
   : {
       /** Callback when event is emitted */ listener: (
-        ...args: TArgs extends readonly unknown[] ? TArgs : unknown[]
+        ...args: _Args extends readonly unknown[] ? _Args : unknown[]
       ) => void
     }
