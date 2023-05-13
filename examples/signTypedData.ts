@@ -1,27 +1,26 @@
 import type {
   Address,
-  Narrow,
   TypedData,
   TypedDataDomain,
   TypedDataToPrimitiveTypes,
 } from 'abitype'
 
 export declare function signTypedData<
-  TTypedData extends TypedData | { [key: string]: unknown },
+  const TTypedData extends TypedData | { [key: string]: unknown },
 >(config: SignTypedDataConfig<TTypedData>): Address
 
 type SignTypedDataConfig<
   TTypedData extends TypedData | { [key: string]: unknown } = TypedData,
-  TSchema = TTypedData extends TypedData
+  _Schema = TTypedData extends TypedData
     ? TypedDataToPrimitiveTypes<TTypedData>
     : { [key: string]: any },
-  TValue = TSchema[keyof TSchema],
+  _Value = _Schema[keyof _Schema],
 > = {
   /** Domain info */
   domain: TypedDataDomain
   /** Named list of all type definitions */
-  types: Narrow<TTypedData>
-} & ({ [key: string]: any } extends TValue // Check if we were able to infer the shape of typed data
+  types: TTypedData
+} & ({ [key: string]: any } extends _Value // Check if we were able to infer the shape of typed data
   ? {
       /**
        * Data to sign
@@ -32,5 +31,5 @@ type SignTypedDataConfig<
     }
   : {
       /** Data to sign */
-      value: TValue
+      value: _Value
     })
