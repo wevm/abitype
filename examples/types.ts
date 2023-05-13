@@ -1,7 +1,6 @@
 import type {
   Abi,
   AbiFunction,
-  AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
   AbiStateMutability,
   Address,
@@ -30,10 +29,10 @@ export type GetConfig<
   /** Contract address */
   address: Address
   /** Function to invoke on the contract */
-  functionName: GetFunctionName<TAbi, TFunctionName, TAbiStateMutability>
+  functionName: InferFunctionName<TAbi, TFunctionName, TAbiStateMutability>
 } & GetArgs<TAbi, TFunctionName>
 
-export type GetFunctionName<
+export type InferFunctionName<
   TAbi extends Abi | readonly unknown[] = Abi,
   TFunctionName extends string = string,
   TAbiStateMutability extends AbiStateMutability = AbiStateMutability,
@@ -52,13 +51,13 @@ export type GetFunctionName<
 export type GetArgs<
   TAbi extends Abi | readonly unknown[],
   TFunctionName extends string,
-  TAbiFunction extends AbiFunction = TAbi extends Abi
+  _AbiFunction extends AbiFunction = TAbi extends Abi
     ? ExtractAbiFunction<TAbi, TFunctionName>
     : AbiFunction,
-  TArgs = AbiParametersToPrimitiveTypes<TAbiFunction['inputs'], 'inputs'>,
+  _Args = AbiParametersToPrimitiveTypes<_AbiFunction['inputs'], 'inputs'>,
   FailedToParseArgs =
-    | ([TArgs] extends [never] ? true : false)
-    | (readonly unknown[] extends TArgs ? true : false),
+    | ([_Args] extends [never] ? true : false)
+    | (readonly unknown[] extends _Args ? true : false),
 > = true extends FailedToParseArgs
   ? {
       /**
@@ -68,39 +67,29 @@ export type GetArgs<
        */
       args?: readonly unknown[]
     }
-  : TArgs extends readonly []
+  : _Args extends readonly []
   ? { args?: never }
   : {
-      /** Arguments to pass contract method */ args: TArgs
+      /** Arguments to pass contract method */ args: _Args
     }
 
 export type GetReturnType<
   TAbi extends Abi | readonly unknown[] = Abi,
   TFunctionName extends string = string,
-  TAbiFunction extends AbiFunction & {
+  _AbiFunction extends AbiFunction & {
     type: 'function'
   } = TAbi extends Abi ? ExtractAbiFunction<TAbi, TFunctionName> : AbiFunction,
-  TArgs = AbiParametersToPrimitiveTypes<TAbiFunction['outputs'], 'outputs'>,
+  _Args = AbiParametersToPrimitiveTypes<_AbiFunction['outputs'], 'outputs'>,
   FailedToParseArgs =
-    | ([TArgs] extends [never] ? true : false)
-    | (readonly unknown[] extends TArgs ? true : false),
+    | ([_Args] extends [never] ? true : false)
+    | (readonly unknown[] extends _Args ? true : false),
 > = true extends FailedToParseArgs
   ? unknown
-  : TArgs extends readonly []
+  : _Args extends readonly []
   ? void
-  : TArgs extends readonly [infer Arg]
+  : _Args extends readonly [infer Arg]
   ? Arg
-  : TArgs & {
-      // Construct ethers hybrid array-objects for named outputs.
-      [Output in
-        TAbiFunction['outputs'][number] as Output extends {
-          name: infer Name extends string
-        }
-          ? Name extends ''
-            ? never
-            : Name
-          : never]: AbiParameterToPrimitiveType<Output, 'outputs'>
-    }
+  : _Args
 
 export type DeepPartial<
   T,
@@ -111,3 +100,26 @@ export type DeepPartial<
   : T extends object
   ? { [P in keyof T]?: DeepPartial<T[P], MaxDepth, [...Depth, 1]> }
   : T
+
+/**
+ * @description Checks if {@link T} can be narrowed further than {@link U}
+ * @param T - Type to check
+ * @param U - Type to against
+ * @example
+ * type Result = IsNarrowable<'foo', string>
+ * //   ^? true
+ */
+export type IsNarrowable<T, U> = IsNever<
+  (T extends U ? true : false) & (U extends T ? false : true)
+> extends true
+  ? false
+  : true
+
+/**
+ * @description Checks if {@link T} is `never`
+ * @param T - Type to check
+ * @example
+ * type Result = IsNever<never>
+ * //   ^? type Result = true
+ */
+export type IsNever<T> = [T] extends [never] ? true : false
