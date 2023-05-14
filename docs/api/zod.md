@@ -32,12 +32,12 @@ yarn add zod
 Import and use schemas:
 
 ```ts twoslash
-import { Abi } from 'abitype/zod'
+import { Abi } from 'abitype/zod';
 
 const result = await fetch(
-  'https://api.etherscan.io/api?module=contract&action=getabi&address=0x…',
-)
-const abi = Abi.parse(result)
+  'https://api.etherscan.io/api?module=contract&action=getabi&address=0x…'
+);
+const abi = Abi.parse(result);
 ```
 
 ## Schemas
@@ -47,6 +47,7 @@ import {
   Abi,
   AbiConstructor,
   AbiEvent,
+  AbiEventParameter
   AbiError,
   AbiFallback,
   AbiFunction,
