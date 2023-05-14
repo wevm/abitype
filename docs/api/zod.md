@@ -47,7 +47,7 @@ import {
   Abi,
   AbiConstructor,
   AbiEvent,
-  AbiEventParameter
+  AbiEventParameter,
   AbiError,
   AbiFallback,
   AbiFunction,
