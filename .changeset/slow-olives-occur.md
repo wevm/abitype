@@ -3,4 +3,4 @@
 ---
 
 Prettified types.
-Created new `AbiEventParameters` type.
+Created new `AbiEventParameter` type.
