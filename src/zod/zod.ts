@@ -2,7 +2,6 @@ import { z } from 'zod'
 
 import type {
   AbiConstructor as AbiConstructorType,
-  AbiEventParameter as AbiEventParameterType,
   AbiFallback as AbiFallbackType,
   AbiFunction as AbiFunctionType,
   AbiParameter as AbiParameterType,
@@ -58,8 +57,10 @@ export const AbiParameter: z.ZodType<AbiParameterType> = z.lazy(() =>
   ),
 )
 
-export const AbiEventParameter: z.ZodType<AbiEventParameterType> =
-  z.intersection(AbiParameter, z.object({ indexed: z.boolean().optional() }))
+export const AbiEventParameter = z.intersection(
+  AbiParameter,
+  z.object({ indexed: z.boolean().optional() }),
+)
 
 export const AbiStateMutability = z.union([
   z.literal('pure'),

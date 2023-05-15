@@ -66,7 +66,24 @@ export type IsUnknown<T> = unknown extends T ? true : false
 export type Merge<Object1, Object2> = Omit<Object1, keyof Object2> & Object2
 
 /**
- * @description Combines members of an intersection into a readable type.
+ * Makes objects destructurable.
+ *
+ * @param Union - Union to distribute.
+ *
+ * @example
+ * type Result = OneOf<{ foo: boolean } | { bar: boolean }>
+ * //   ^? type Result = { foo: boolean; bar?: undefined; } | { bar: boolean; foo?: undefined; }
+ */
+export type OneOf<
+  Union extends object,
+  AllKeys extends KeyofUnion<Union> = KeyofUnion<Union>,
+> = Union extends infer Item
+  ? Prettify<Item & { [K in Exclude<AllKeys, keyof Item>]?: never }>
+  : never
+type KeyofUnion<T> = T extends T ? keyof T : never
+
+/**
+ * Combines members of an intersection into a readable type.
  *
  * @link https://twitter.com/mattpocockuk/status/1622730173446557697?s=20&t=NdpAcmEFXY01xkqU3KO0Mg
  * @example
@@ -108,7 +125,7 @@ export type Range<
   : Range<Start, Stop, [...Result, Current], Padding>
 
 /**
- * @description Trims empty space from type T.
+ * Trims empty space from type T.
  *
  * @param T - Type to trim
  * @param Chars - Characters to trim
@@ -130,7 +147,7 @@ type TrimRight<T, Chars extends string = ' '> = T extends `${infer R}${Chars}`
   : T
 
 /**
- * @description Create tuple of {@link Type} type with {@link Size} size
+ * Create tuple of {@link Type} type with {@link Size} size
  *
  * @param Type - Type of tuple
  * @param Size - Size of tuple
