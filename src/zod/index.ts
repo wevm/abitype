@@ -2,6 +2,7 @@ export {
   Abi,
   AbiConstructor,
   AbiEvent,
+  AbiEventParameter,
   AbiError,
   AbiFallback,
   AbiFunction,

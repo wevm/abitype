@@ -57,6 +57,11 @@ export const AbiParameter: z.ZodType<AbiParameterType> = z.lazy(() =>
   ),
 )
 
+export const AbiEventParameter = z.intersection(
+  AbiParameter,
+  z.object({ indexed: z.boolean().optional() }),
+)
+
 export const AbiStateMutability = z.union([
   z.literal('pure'),
   z.literal('view'),
@@ -159,9 +164,7 @@ export const AbiReceive = z.object({
 export const AbiEvent = z.object({
   type: z.literal('event'),
   anonymous: z.boolean().optional(),
-  inputs: z.array(
-    z.intersection(AbiParameter, z.object({ indexed: z.boolean().optional() })),
-  ),
+  inputs: z.array(AbiEventParameter),
   name: z.string(),
 })
 

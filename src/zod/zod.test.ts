@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, test } from 'vitest'
 
 import {
   customSolidityErrorsAbi,
@@ -10,7 +10,29 @@ import {
   wethAbi,
   writingEditionsFactoryAbi,
 } from '../test/index.js'
-import { Abi, AbiConstructor, AbiFallback, AbiFunction } from './zod.js'
+import {
+  Abi,
+  AbiConstructor,
+  AbiError,
+  AbiEvent,
+  AbiEventParameter,
+  AbiFallback,
+  AbiFunction,
+  AbiItemType,
+  AbiParameter,
+  AbiReceive,
+  AbiStateMutability,
+  SolidityAddress,
+  SolidityArray,
+  SolidityArrayWithTuple,
+  SolidityArrayWithoutTuple,
+  SolidityBool,
+  SolidityBytes,
+  SolidityFunction,
+  SolidityInt,
+  SolidityString,
+  SolidityTuple,
+} from './zod.js'
 
 describe('AbiSchema', () => {
   it('returns valid schema', () => {
@@ -180,6 +202,24 @@ describe('AbiSchema', () => {
             "payable": true,
             "stateMutability": "payable",
             "type": "function",
+          },
+        ]
+      `)
+    })
+
+    it('returns for receive', () => {
+      expect(
+        Abi.parse([
+          {
+            stateMutability: 'payable',
+            type: 'receive',
+          },
+        ]),
+      ).toMatchInlineSnapshot(`
+        [
+          {
+            "stateMutability": "payable",
+            "type": "receive",
           },
         ]
       `)
@@ -482,4 +522,136 @@ describe('AbiFallback', () => {
       `)
     })
   })
+})
+
+test('AbiReceive', () => {
+  expect(
+    AbiReceive.parse({
+      stateMutability: 'payable',
+      type: 'receive',
+    }),
+  ).toMatchInlineSnapshot(`
+    {
+      "stateMutability": "payable",
+      "type": "receive",
+    }
+  `)
+})
+
+test('AbiEvent', () => {
+  expect(
+    AbiEvent.parse({
+      type: 'event',
+      name: 'TestEvent',
+      inputs: [],
+    }),
+  ).toMatchInlineSnapshot(`
+    {
+      "inputs": [],
+      "name": "TestEvent",
+      "type": "event",
+    }
+  `)
+})
+
+test('AbiError', () => {
+  expect(
+    AbiError.parse({
+      type: 'error',
+      name: 'TestError',
+      inputs: [],
+    }),
+  ).toMatchInlineSnapshot(`
+    {
+      "inputs": [],
+      "name": "TestError",
+      "type": "error",
+    }
+  `)
+})
+
+describe('AbiParameter', () => {
+  it('returns valid schema', () => {
+    expect(
+      AbiParameter.parse({
+        type: 'address',
+      }),
+    ).toMatchInlineSnapshot(`
+      {
+        "type": "address",
+      }
+    `)
+  })
+})
+
+describe('AbiEventParameter', () => {
+  it('returns valid schema', () => {
+    expect(
+      AbiEventParameter.parse({
+        type: 'address',
+        indexed: true,
+      }),
+    ).toMatchInlineSnapshot(`
+      {
+        "indexed": true,
+        "type": "address",
+      }
+    `)
+  })
+})
+
+test('SolidityAddress', () => {
+  expect(SolidityAddress.parse('address')).toMatchInlineSnapshot('"address"')
+})
+test('SolidityBool', () => {
+  expect(SolidityBool.parse('bool')).toMatchInlineSnapshot('"bool"')
+})
+test('SolidityBytes', () => {
+  expect(SolidityBytes.parse('bytes32')).toMatchInlineSnapshot('"bytes32"')
+})
+test('SolidityFunction', () => {
+  expect(SolidityFunction.parse('function')).toMatchInlineSnapshot('"function"')
+})
+test('SolidityString', () => {
+  expect(SolidityString.parse('string')).toMatchInlineSnapshot('"string"')
+})
+test('SolidityTuple', () => {
+  expect(SolidityTuple.parse('tuple')).toMatchInlineSnapshot('"tuple"')
+})
+test('SolidityInt', () => {
+  expect(SolidityInt.parse('uint256')).toMatchInlineSnapshot('"uint256"')
+})
+test('SolidityArrayWithoutTuple', () => {
+  expect(SolidityArrayWithoutTuple.parse('uint256[]')).toMatchInlineSnapshot(
+    '"uint256[]"',
+  )
+})
+test('SolidityArrayWithTuple', () => {
+  expect(SolidityArrayWithTuple.parse('tuple[]')).toMatchInlineSnapshot(
+    '"tuple[]"',
+  )
+})
+test('SolidityArray', () => {
+  expect(SolidityArray.parse('uint256[]')).toMatchInlineSnapshot('"uint256[]"')
+  expect(SolidityArray.parse('tuple[]')).toMatchInlineSnapshot('"tuple[]"')
+})
+
+test('AbiStateMutability', () => {
+  expect(AbiStateMutability.parse('nonpayable')).toMatchInlineSnapshot(
+    '"nonpayable"',
+  )
+  expect(AbiStateMutability.parse('payable')).toMatchInlineSnapshot('"payable"')
+  expect(AbiStateMutability.parse('pure')).toMatchInlineSnapshot('"pure"')
+  expect(AbiStateMutability.parse('view')).toMatchInlineSnapshot('"view"')
+})
+
+test('AbiItemType', () => {
+  expect(AbiItemType.parse('constructor')).toMatchInlineSnapshot(
+    '"constructor"',
+  )
+  expect(AbiItemType.parse('event')).toMatchInlineSnapshot('"event"')
+  expect(AbiItemType.parse('error')).toMatchInlineSnapshot('"error"')
+  expect(AbiItemType.parse('fallback')).toMatchInlineSnapshot('"fallback"')
+  expect(AbiItemType.parse('function')).toMatchInlineSnapshot('"function"')
+  expect(AbiItemType.parse('receive')).toMatchInlineSnapshot('"receive"')
 })

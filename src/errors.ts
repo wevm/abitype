@@ -1,18 +1,12 @@
+import type { OneOf, Prettify } from './types.js'
 import { version } from './version.js'
 
-type BaseErrorArgs = {
-  docsPath?: string | undefined
-  metaMessages?: string[] | undefined
-} & (
-  | {
-      cause?: never | undefined
-      details?: string | undefined
-    }
-  | {
-      cause?: BaseError | Error
-      details?: never | undefined
-    }
-)
+type BaseErrorArgs = Prettify<
+  {
+    docsPath?: string | undefined
+    metaMessages?: string[] | undefined
+  } & OneOf<{ details?: string | undefined } | { cause?: BaseError | Error }>
+>
 
 export class BaseError extends Error {
   details: string
