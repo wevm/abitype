@@ -1,6 +1,7 @@
 import type { AbiParameter } from '../abi.js'
 import type { Narrow } from '../narrow.js'
-import type { Error, Filter } from '../types.js'
+import type { Error, Filter, Flatten } from '../types.js'
+import type { ExtractAbiParseErrors } from '../utils.js'
 import { InvalidAbiParametersError } from './errors/index.js'
 import {
   isStructSignature,
@@ -17,6 +18,10 @@ import type {
   SplitParameters,
 } from './types/index.js'
 
+export type ValidateAbiParameters<T extends readonly string[]> =
+  ParseAbiParameters<T> extends infer ParsedParams extends readonly unknown[]
+    ? Flatten<ExtractAbiParseErrors<ParsedParams>>
+    : never
 /**
  * Parses human-readable ABI parameters into {@link AbiParameter}s
  *
@@ -98,7 +103,13 @@ export function parseAbiParameters<
             ? Error<'At least one parameter required.'>
             : string[] extends TParams
             ? unknown
-            : unknown // TODO: Validate param string
+            : ValidateAbiParameters<TParams> extends infer Parsed
+            ? Parsed extends readonly []
+              ? unknown
+              : Parsed extends readonly string[]
+              ? Parsed[number]
+              : Parsed
+            : never
           : never)
     ),
 ): ParseAbiParameters<TParams> {

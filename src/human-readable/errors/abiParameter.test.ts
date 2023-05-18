@@ -115,7 +115,7 @@ test('InvalidFunctionModifierError', () => {
 test('InvalidAbiTypeParameterError', () => {
   expect(
     new InvalidAbiTypeParameterError({
-      abiParameter: { type: 'addres' },
+      abiParameter: { type: 'address' },
     }),
   ).toMatchInlineSnapshot(`
     [InvalidAbiTypeParameterError: Invalid ABI parameter.
@@ -123,7 +123,7 @@ test('InvalidAbiTypeParameterError', () => {
     ABI parameter type is invalid.
 
     Details: {
-      "type": "addres"
+      "type": "address"
     }
     Version: abitype@x.y.z]
   `)

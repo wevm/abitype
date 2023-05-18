@@ -3,9 +3,9 @@ import { assertType, test } from 'vitest'
 import type { ResolvedConfig } from './config.js'
 
 // For testing updates to config properties:
-// declare module './config' {
+// declare module './config.js' {
 //   export interface Config {
-//     FixedArrayMaxLength: 6
+//     Strict: true
 //   }
 // }
 
@@ -29,6 +29,6 @@ test('Config', () => {
   type BigIntType = ResolvedConfig['BigIntType']
   assertType<BigIntType>(123n)
 
-  type StrictAbiType = ResolvedConfig['StrictAbiType']
-  assertType<StrictAbiType>(false)
+  type Strict = ResolvedConfig['Strict']
+  assertType<Strict>(false)
 })

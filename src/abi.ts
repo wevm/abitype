@@ -84,8 +84,8 @@ export type AbiType =
   | SolidityInt
   | SolidityString
   | SolidityTuple
-type ResolvedAbiType = ResolvedConfig['StrictAbiType'] extends true
-  ? AbiType
+type ResolvedAbiType = ResolvedConfig['Strict'] extends true
+  ? AbiType & string
   : string
 
 export type AbiInternalType =
@@ -94,6 +94,21 @@ export type AbiInternalType =
   | `contract ${string}`
   | `enum ${string}`
   | `struct ${string}`
+
+export type GenericAbiParameter = Prettify<
+  {
+    type: string
+    name?: string | undefined
+    /** Representation used by Solidity compiler */
+    internalType?: string | undefined
+  } & (
+    | { type: string }
+    | {
+        type: string
+        components: readonly GenericAbiParameter[]
+      }
+  )
+>
 
 export type AbiParameter = Prettify<
   {

@@ -39,8 +39,8 @@ export interface DefaultConfig {
   /** TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48` */
   IntType: number
 
-  /** When set, validates {@link AbiParameter}'s `type` against {@link AbiType} */
-  StrictAbiType: false
+  /** When set, validates {@link AbiParameter}'s `type` against {@link AbiType} and enforces stricter checks on human readable ABIs */
+  Strict: false
 }
 
 /**
@@ -110,14 +110,14 @@ export interface ResolvedConfig {
     : Config['IntType']
 
   /**
-   * When set, validates {@link AbiParameter}'s `type` against {@link AbiType}
+   *  When set, validates {@link AbiParameter}'s `type` against {@link AbiType} and enforces stricter checks on human readable ABIs
    *
    * Note: You probably only want to set this to `true` if parsed types are returning as `unknown`
-   * and you want to figure out why.
+   * and you want to figure out why or if you want stricter validation on your types.
    *
    * @default false
    */
-  StrictAbiType: Config['StrictAbiType'] extends true
-    ? Config['StrictAbiType']
-    : DefaultConfig['StrictAbiType']
+  Strict: Config['Strict'] extends true
+    ? Config['Strict']
+    : DefaultConfig['Strict']
 }

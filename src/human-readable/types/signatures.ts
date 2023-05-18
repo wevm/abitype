@@ -1,4 +1,5 @@
 import type { AbiStateMutability } from '../../abi.js'
+import type { ResolvedConfig } from '../../config.js'
 import type { Error } from '../../types.js'
 
 export type ErrorSignature<
@@ -128,7 +129,7 @@ export type IsName<TName extends string> = TName extends ''
   : false
 export type ValidateName<
   TName extends string,
-  CheckCharacters extends boolean = false,
+  CheckCharacters extends boolean = ResolvedConfig['Strict'],
 > = TName extends `${string}${' '}${string}`
   ? Error<`Name "${TName}" cannot contain whitespace.`>
   : IsSolidityKeyword<TName> extends true

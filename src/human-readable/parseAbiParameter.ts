@@ -1,6 +1,6 @@
 import type { AbiParameter } from '../abi.js'
 import type { Narrow } from '../narrow.js'
-import type { Error, Filter } from '../types.js'
+import type { Error, Filter, IsEmptyObject } from '../types.js'
 import { InvalidAbiParameterError } from './errors/index.js'
 import {
   isStructSignature,
@@ -14,6 +14,23 @@ import type {
   ParseAbiParameter as ParseAbiParameter_,
   ParseStructs,
 } from './types/index.js'
+
+export type ValidateAbiParameter<TParams extends readonly string[]> =
+  ParseStructs<TParams> extends infer ParsedStructs extends object
+    ? IsEmptyObject<ParsedStructs> extends true
+      ? Error<'No Struct signature found. Please provide valid struct signatures.'>
+      : {
+          [K in keyof TParams]: IsStructSignature<TParams[K]> extends true
+            ? never
+            : TParams[K] extends `${infer Type} ${string}`
+            ? Type extends keyof ParsedStructs
+              ? never
+              : Error<`Invalid Parameter "${TParams[K]}". Only Struct parameters are allowed`>
+            : TParams[K] extends keyof ParsedStructs
+            ? never
+            : Error<`Invalid Parameter "${TParams[K]}". Only Struct parameters are allowed`>
+        }
+    : unknown
 
 /**
  * Parses human-readable ABI parameter into {@link AbiParameter}
@@ -44,21 +61,25 @@ export type ParseAbiParameter<
   | (TParam extends readonly string[]
       ? string[] extends TParam
         ? AbiParameter // Return generic AbiParameter item since type was no inferrable
-        : ParseStructs<TParam> extends infer Structs
-        ? {
-            [K in keyof TParam]: TParam[K] extends string
-              ? IsStructSignature<TParam[K]> extends true
-                ? never
-                : ParseAbiParameter_<
-                    TParam[K],
-                    { Modifier: Modifier; Structs: Structs }
-                  >
+        : ValidateAbiParameter<TParam> extends infer Validated
+        ? Validated extends never[]
+          ? ParseStructs<TParam> extends infer Structs
+            ? {
+                [K in keyof TParam]: TParam[K] extends string
+                  ? IsStructSignature<TParam[K]> extends true
+                    ? never
+                    : ParseAbiParameter_<
+                        TParam[K],
+                        { Modifier: Modifier; Structs: Structs }
+                      >
+                  : never
+              } extends infer Mapped extends readonly unknown[]
+              ? Filter<Mapped, never>[0] extends infer Result
+                ? Result extends undefined
+                  ? never
+                  : Result
+                : never
               : never
-          } extends infer Mapped extends readonly unknown[]
-          ? Filter<Mapped, never>[0] extends infer Result
-            ? Result extends undefined
-              ? never
-              : Result
             : never
           : never
         : never
@@ -96,7 +117,11 @@ export function parseAbiParameter<
             ? Error<'At least one parameter required.'>
             : string[] extends TParam
             ? unknown
-            : unknown // TODO: Validate param string
+            : ValidateAbiParameter<TParam> extends infer ValidatedParams extends readonly unknown[]
+            ? ValidatedParams extends never[]
+              ? unknown
+              : ValidatedParams
+            : never
           : never)
     ),
 ): ParseAbiParameter<TParam> {

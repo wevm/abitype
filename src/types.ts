@@ -153,3 +153,19 @@ type _TupleOf<
 > = R['length'] extends TSize
   ? R
   : _TupleOf<TNumber, TSize, readonly [TNumber, ...R]>
+
+export type IsEmptyObject<
+  T extends object,
+  AllKeys extends keyof T = keyof T,
+> = [AllKeys] extends [never] ? true : false
+
+export type Flatten<
+  T extends readonly unknown[],
+  Result extends readonly unknown[] = [],
+> = T extends readonly [infer Head, ...infer Rest extends readonly unknown[]]
+  ? [Head] extends [never]
+    ? Flatten<[...Rest], Result>
+    : Head extends readonly any[]
+    ? Flatten<[...Head, ...Rest], Result>
+    : Flatten<[...Rest], [...Result, Head]>
+  : Result

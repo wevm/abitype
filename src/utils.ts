@@ -156,7 +156,7 @@ export type AbiParameterToPrimitiveType<
   : // 4. If type is not basic, tuple, or array, we don't know what the type is.
   // This can happen when a fixed-length array is out of range (`Size` doesn't exist in `SolidityFixedArraySizeLookup`),
   // the array has depth greater than `Config['ArrayMaxDepth']`, etc.
-  ResolvedConfig['StrictAbiType'] extends true
+  ResolvedConfig['Strict'] extends true
   ? TAbiParameter['type'] extends infer TAbiType extends string
     ? Error<`Unknown type '${TAbiType}'.`>
     : never
@@ -314,6 +314,16 @@ export type ExtractAbiError<
   TAbi extends Abi,
   TErrorName extends ExtractAbiErrorNames<TAbi>,
 > = Extract<ExtractAbiErrors<TAbi>, { name: TErrorName }>
+
+export type ExtractAbiParseErrors<TAbi extends readonly unknown[]> = {
+  [K in keyof TAbi]: {
+    [K2 in keyof TAbi[K]]: TAbi[K][K2] extends readonly string[]
+      ? TAbi[K][K2]
+      : TAbi[K][K2] extends readonly unknown[]
+      ? ExtractAbiParseErrors<TAbi[K][K2]>
+      : never
+  }[keyof TAbi[K]]
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Typed Data

@@ -1,8 +1,10 @@
 import type {
-  AbiParameter,
   AbiStateMutability,
   AbiType,
+  GenericAbiParameter,
+  SolidityArray,
   SolidityFixedArrayRange,
+  SolidityString,
 } from '../../abi.js'
 import type { ResolvedConfig } from '../../config.js'
 import type { Error, IsUnknown, Merge, Prettify, Trim } from '../../types.js'
@@ -101,10 +103,13 @@ export type ParseSignature<
       : never)
 
 export type ParseOptions = {
-  Modifier?: Modifier
+  Modifier?: Modifier | undefined
   Structs?: StructLookup | unknown
+  Strict?: boolean | undefined
 }
-export type DefaultParseOptions = object
+export type DefaultParseOptions = object & {
+  Strict: ResolvedConfig['Strict']
+}
 
 export type ParseAbiParameters<
   T extends readonly string[],
@@ -128,12 +133,20 @@ export type ParseAbiParameter<
 
     T extends `${infer Type} ${infer Tail}`
     ? Trim<Tail> extends infer Trimmed extends string
-      ? // TODO: data location modifiers only allowed for struct/array types
-        { readonly type: Trim<Type> } & _SplitNameOrModifier<Trimmed, Options>
+      ? { readonly type: Trim<Type> } & _SplitNameOrModifier<
+          Trimmed,
+          Options & {
+            type: Trim<Type> extends `${infer ArrayType}[${string}]`
+              ? ArrayType extends keyof Options['Structs']
+                ? ArrayType
+                : Trim<Type>
+              : Trim<Type>
+          }
+        >
       : never
     : // Must be `${Type}` format (e.g. `uint256`)
       { readonly type: T }
-) extends infer ShallowParameter extends AbiParameter & {
+) extends infer ShallowParameter extends GenericAbiParameter & {
   type: string
   indexed?: boolean
 }
@@ -164,11 +177,18 @@ export type ParseAbiParameter<
               : object)
         : // Not a struct, just return
           ShallowParameter
-    ) extends infer Parameter extends AbiParameter & {
+    ) extends infer Parameter extends GenericAbiParameter & {
       type: string
       indexed?: boolean
     }
-    ? Prettify<_ValidateAbiParameter<Parameter>>
+    ? Prettify<
+        _ValidateAbiParameter<
+          Parameter,
+          Options['Strict'] extends boolean
+            ? Options['Strict']
+            : ResolvedConfig['Strict']
+        >
+      >
     : never
   : never
 
@@ -198,43 +218,57 @@ export type SplitParameters<
   : []
 type Pop<T extends readonly number[]> = T extends [...infer R, any] ? R : []
 
-export type _ValidateAbiParameter<TAbiParameter extends AbiParameter> =
-  // Validate `name`
-  (
-    TAbiParameter extends { name: string }
-      ? ValidateName<TAbiParameter['name']> extends infer Name
-        ? Name extends TAbiParameter['name']
-          ? TAbiParameter
-          : // Add `Error` as `name`
-            Merge<TAbiParameter, { readonly name: Name }>
-        : never
-      : TAbiParameter
-  ) extends infer Parameter
-    ? // Validate `type` against `AbiType`
-      (
-        ResolvedConfig['StrictAbiType'] extends true
-          ? Parameter extends { type: AbiType }
-            ? Parameter
-            : Merge<
-                Parameter,
-                {
-                  readonly type: Error<`Type "${Parameter extends {
-                    type: string
-                  }
-                    ? Parameter['type']
-                    : string}" is not a valid ABI type.`>
-                }
-              >
-          : Parameter
-      ) extends infer Parameter2 extends { type: unknown }
-      ? // Convert `(u)int` to `(u)int256`
-        Parameter2['type'] extends `${infer Prefix extends
-          | 'u'
-          | ''}int${infer Suffix extends `[${string}]` | ''}`
-        ? Merge<Parameter2, { readonly type: `${Prefix}int256${Suffix}` }>
-        : Parameter2
+export type ValidateType<
+  TType extends string,
+  Strict extends boolean = ResolvedConfig['Strict'],
+> = Strict extends true ? (TType extends AbiType ? true : false) : true
+
+export type ValidateModifier<
+  TModifer extends Modifier,
+  Options extends { type?: string; Structs?: StructLookup | unknown },
+> = Options extends Required<Options>
+  ? ResolvedConfig['Strict'] extends true
+    ? TModifer extends Exclude<Modifier, 'indexed'>
+      ? Options['type'] extends SolidityArray | SolidityString | 'bytes'
+        ? true
+        : Options['type'] extends keyof Options['Structs']
+        ? true
+        : Error<`Invalid modifier. ${TModifer} not allowed in ${Options['type']} type.`>
+      : true
+    : true
+  : unknown
+
+export type _ValidateAbiParameter<
+  TAbiParameter extends GenericAbiParameter & { type: string },
+  Strict extends boolean = ResolvedConfig['Strict'],
+> = ( // Validate `name`
+  TAbiParameter extends { name: string }
+    ? ValidateName<TAbiParameter['name']> extends infer Name
+      ? Name extends TAbiParameter['name']
+        ? TAbiParameter
+        : // Add `Error` as `name`
+          Merge<TAbiParameter, { readonly name: Name }>
       : never
+    : TAbiParameter
+) extends infer Parameter extends { type: string }
+  ? (
+      ValidateType<Parameter['type'], Strict> extends true
+        ? Parameter
+        : Merge<
+            Parameter,
+            {
+              readonly type: Error<`Type "${Parameter['type']}" is not a valid ABI type.`>
+            }
+          >
+    ) extends infer Parameter2 extends { type: unknown }
+    ? // Convert `(u)int` to `(u)int256`
+      Parameter2['type'] extends `${infer Prefix extends
+        | 'u'
+        | ''}int${infer Suffix extends `[${string}]` | ''}`
+      ? Merge<Parameter2, { readonly type: `${Prefix}int256${Suffix}` }>
+      : Parameter2
     : never
+  : never
 
 export type _ParseFunctionParametersAndStateMutability<
   TSignature extends string,
@@ -341,14 +375,22 @@ T extends `(${infer Parameters})`
 // Split name and modifier (e.g. `indexed foo` => `{ name: 'foo', indexed: true }`)
 export type _SplitNameOrModifier<
   T extends string,
-  Options extends ParseOptions = DefaultParseOptions,
+  Options extends ParseOptions & { type?: string } = DefaultParseOptions,
 > = Trim<T> extends infer Trimmed
   ? Options extends { Modifier: Modifier }
-    ? // TODO: Check that modifier is allowed
-      Trimmed extends `${infer Mod extends Options['Modifier']} ${infer Name}`
-      ? { readonly name: Trim<Name> } & (Mod extends 'indexed'
-          ? { readonly indexed: true }
-          : object)
+    ? Trimmed extends `${infer Mod extends Options['Modifier']} ${infer Name}`
+      ? Options extends { type: string; Structs: StructLookup | unknown }
+        ? ValidateModifier<Mod, Options> extends infer Validated
+          ? Validated extends string[]
+            ? { readonly name: Validated }
+            : { readonly name: Trim<Name> } & (Mod extends 'indexed'
+                ? { readonly indexed: true }
+                : // This is safe since this will get squashed by the intersection
+                  {})
+          : never
+        : { readonly name: Trim<Name> } & (Mod extends 'indexed'
+            ? { readonly indexed: true }
+            : {})
       : Trimmed extends Options['Modifier']
       ? Trimmed extends 'indexed'
         ? { readonly indexed: true }

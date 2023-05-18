@@ -94,6 +94,7 @@ test('parseAbiParameters', () => {
   // @ts-expect-error empty array not allowed
   expectTypeOf(parseAbiParameters([])).toEqualTypeOf<never>()
   expectTypeOf(
+    // @ts-expect-error invalid no parameter given
     parseAbiParameters(['struct Foo { string name; }']),
   ).toEqualTypeOf<never>()
 

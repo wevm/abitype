@@ -151,9 +151,9 @@ declare module 'abitype' {
 }
 ```
 
-### `StrictAbiType`
+### `Strict`
 
-When set, validates `AbiParameter`'s `type` against `AbiType`.
+When set, validates `AbiParameter`'s `type` against `AbiType` and enforces stricter checks on human readable ABIs.
 
 - Type `boolean`
 - Default `false`
@@ -161,7 +161,7 @@ When set, validates `AbiParameter`'s `type` against `AbiType`.
 ```ts twoslash
 declare module 'abitype' {
   export interface Config {
-    StrictAbiType: false
+    Strict: false
   }
 }
 ```
