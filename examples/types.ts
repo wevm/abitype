@@ -102,7 +102,7 @@ export type DeepPartial<
   : T
 
 /**
- * @description Checks if {@link T} can be narrowed further than {@link U}
+ * Checks if {@link T} can be narrowed further than {@link U}
  * @param T - Type to check
  * @param U - Type to against
  * @example
@@ -116,7 +116,7 @@ export type IsNarrowable<T, U> = IsNever<
   : true
 
 /**
- * @description Checks if {@link T} is `never`
+ * Checks if {@link T} is `never`
  * @param T - Type to check
  * @example
  * type Result = IsNever<never>

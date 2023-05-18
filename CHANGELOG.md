@@ -1,5 +1,11 @@
 # abitype
 
+## 0.8.4
+
+### Patch Changes
+
+- [#134](https://github.com/wagmi-dev/abitype/pull/134) [`ece6da6`](https://github.com/wagmi-dev/abitype/commit/ece6da6658a2c42e8a18316060d8fc133aa1c940) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Added `AbiEventParameter` type.
+
 ## 0.8.3
 
 ### Patch Changes

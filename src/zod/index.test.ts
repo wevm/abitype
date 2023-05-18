@@ -8,6 +8,7 @@ it('should expose correct exports', () => {
       "Abi",
       "AbiConstructor",
       "AbiEvent",
+      "AbiEventParameter",
       "AbiError",
       "AbiFallback",
       "AbiFunction",

@@ -73,10 +73,18 @@ import { AbiInternalType } from 'abitype'
 
 ## `AbiParameter`
 
-`inputs` and `ouputs` item for ABI functions, events, errors, and constructors
+`inputs` and `ouputs` item for ABI functions, errors, and constructors
 
 ```ts twoslash noplayground
 import { AbiParameter } from 'abitype'
+```
+
+## `AbiEventParameter`
+
+`inputs` for ABI events
+
+```ts twoslash noplayground
+import { AbiEventParameter } from 'abitype'
 ```
 
 ## `AbiParameterKind`

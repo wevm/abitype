@@ -125,6 +125,10 @@ export type AbiParameter = Prettify<
   )
 >
 
+export type AbiEventParameter = Prettify<
+  AbiParameter & { indexed?: boolean | undefined }
+>
+
 /**
  * State mutability for {@link AbiFunction}
  *
@@ -193,7 +197,7 @@ export type AbiReceive = {
 export type AbiEvent = {
   type: 'event'
   anonymous?: boolean | undefined
-  inputs: readonly (AbiParameter & { indexed?: boolean })[]
+  inputs: readonly AbiEventParameter[]
   name: string
 }
 
