@@ -1,7 +1,7 @@
 import type {
   AbiStateMutability,
   AbiType,
-  GenericAbiParameter,
+  InferredAbiParameter,
   SolidityArray,
   SolidityFixedArrayRange,
   SolidityString,
@@ -146,7 +146,7 @@ export type ParseAbiParameter<
       : never
     : // Must be `${Type}` format (e.g. `uint256`)
       { readonly type: T }
-) extends infer ShallowParameter extends GenericAbiParameter & {
+) extends infer ShallowParameter extends InferredAbiParameter & {
   type: string
   indexed?: boolean
 }
@@ -177,7 +177,7 @@ export type ParseAbiParameter<
               : object)
         : // Not a struct, just return
           ShallowParameter
-    ) extends infer Parameter extends GenericAbiParameter & {
+    ) extends infer Parameter extends InferredAbiParameter & {
       type: string
       indexed?: boolean
     }
@@ -239,7 +239,7 @@ export type ValidateModifier<
   : unknown
 
 export type _ValidateAbiParameter<
-  TAbiParameter extends GenericAbiParameter & { type: string },
+  TAbiParameter extends InferredAbiParameter & { type: string },
   Strict extends boolean = ResolvedConfig['Strict'],
 > = ( // Validate `name`
   TAbiParameter extends { name: string }

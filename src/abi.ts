@@ -95,7 +95,7 @@ export type AbiInternalType =
   | `enum ${string}`
   | `struct ${string}`
 
-export type GenericAbiParameter = Prettify<
+export type InferredAbiParameter = Prettify<
   {
     type: string
     name?: string | undefined
@@ -105,7 +105,7 @@ export type GenericAbiParameter = Prettify<
     | { type: string }
     | {
         type: string
-        components: readonly GenericAbiParameter[]
+        components: readonly InferredAbiParameter[]
       }
   )
 >

@@ -1,9 +1,9 @@
-import type { GenericAbiParameter } from '../../abi.js'
+import type { InferredAbiParameter } from '../../abi.js'
 import type { Error, Trim } from '../../types.js'
 import type { StructSignature } from './signatures.js'
 import type { ParseAbiParameter } from './utils.js'
 
-export type StructLookup = Record<string, readonly GenericAbiParameter[]>
+export type StructLookup = Record<string, readonly InferredAbiParameter[]>
 
 export type ParseStructs<TSignatures extends readonly string[]> =
   // Create "shallow" version of each struct (and filter out non-structs or invalid structs)
@@ -16,7 +16,7 @@ export type ParseStructs<TSignatures extends readonly string[]> =
         : never]: ParseStruct<Signature>['components']
   } extends infer Structs extends Record<
     string,
-    readonly (GenericAbiParameter & { type: string })[]
+    readonly (InferredAbiParameter & { type: string })[]
   >
     ? // Resolve nested structs inside each struct
       {
@@ -38,10 +38,10 @@ export type ParseStruct<
   : never
 
 export type ResolveStructs<
-  TAbiParameters extends readonly (GenericAbiParameter & { type: string })[],
+  TAbiParameters extends readonly (InferredAbiParameter & { type: string })[],
   TStructs extends Record<
     string,
-    readonly (GenericAbiParameter & { type: string })[]
+    readonly (InferredAbiParameter & { type: string })[]
   >,
   TKeyReferences extends { [_: string]: unknown } | unknown = unknown,
 > = readonly [
