@@ -1,6 +1,6 @@
-import { assertType, test } from "vitest";
+import { assertType, test } from 'vitest'
 
-import type { ResolvedConfig } from "./config.js";
+import type { ResolvedConfig } from './config.js'
 
 // For testing updates to config properties:
 // declare module "./config.js" {
@@ -9,26 +9,26 @@ import type { ResolvedConfig } from "./config.js";
 //   }
 // }
 
-test("Config", () => {
-  assertType<ResolvedConfig["ArrayMaxDepth"]>(false);
-  assertType<ResolvedConfig["FixedArrayMinLength"]>(1);
-  assertType<ResolvedConfig["FixedArrayMaxLength"]>(99);
+test('Config', () => {
+  assertType<ResolvedConfig['ArrayMaxDepth']>(false)
+  assertType<ResolvedConfig['FixedArrayMinLength']>(1)
+  assertType<ResolvedConfig['FixedArrayMaxLength']>(99)
 
-  type AddressType = ResolvedConfig["AddressType"];
-  assertType<AddressType>("0x0000000000000000000000000000000000000000");
+  type AddressType = ResolvedConfig['AddressType']
+  assertType<AddressType>('0x0000000000000000000000000000000000000000')
 
-  type BytesType = ResolvedConfig["BytesType"];
+  type BytesType = ResolvedConfig['BytesType']
   assertType<BytesType>({
-    inputs: "0xfoobarbaz",
-    outputs: "0xfoobarbaz",
-  });
+    inputs: '0xfoobarbaz',
+    outputs: '0xfoobarbaz',
+  })
 
-  type IntType = ResolvedConfig["IntType"];
-  assertType<IntType>(123);
+  type IntType = ResolvedConfig['IntType']
+  assertType<IntType>(123)
 
-  type BigIntType = ResolvedConfig["BigIntType"];
-  assertType<BigIntType>(123n);
+  type BigIntType = ResolvedConfig['BigIntType']
+  assertType<BigIntType>(123n)
 
-  type Strict = ResolvedConfig["Strict"];
-  assertType<Strict>(false);
-});
+  type Strict = ResolvedConfig['Strict']
+  assertType<Strict>(false)
+})

@@ -1,24 +1,24 @@
-import type { AbiParameter } from "../abi.js";
-import type { Narrow } from "../narrow.js";
-import type { Error, Filter, IsArrayString, IsEmptyObject } from "../types.js";
-import { InvalidAbiParameterError } from "./errors/index.js";
+import type { AbiParameter } from '../abi.js'
+import type { Narrow } from '../narrow.js'
+import type { Error, Filter, IsArrayString, IsEmptyObject } from '../types.js'
+import { InvalidAbiParameterError } from './errors/index.js'
 import {
   isStructSignature,
   modifiers,
   parseAbiParameter as parseAbiParameter_,
   parseStructs,
-} from "./runtime/index.js";
+} from './runtime/index.js'
 import type {
   IsStructSignature,
   Modifier,
   ParseAbiParameter as ParseAbiParameter_,
   ParseStructs,
-} from "./types/index.js";
+} from './types/index.js'
 
 export type ValidateAbiParameter<TParams extends readonly string[]> =
   ParseStructs<TParams> extends infer ParsedStructs extends object
     ? IsEmptyObject<ParsedStructs> extends true
-      ? Error<"No Struct signature found. Please provide valid struct signatures.">
+      ? Error<'No Struct signature found. Please provide valid struct signatures.'>
       : {
           [K in keyof TParams]: IsStructSignature<TParams[K]> extends true
             ? never
@@ -28,9 +28,9 @@ export type ValidateAbiParameter<TParams extends readonly string[]> =
               : Error<`Invalid Parameter "${TParams[K]}". Only Struct parameters are allowed`>
             : IsArrayString<TParams[K]> extends keyof ParsedStructs
             ? never
-            : Error<`Invalid Parameter "${TParams[K]}". Only Struct parameters are allowed`>;
+            : Error<`Invalid Parameter "${TParams[K]}". Only Struct parameters are allowed`>
         }
-    : unknown;
+    : unknown
 
 /**
  * Parses human-readable ABI parameter into {@link AbiParameter}
@@ -49,10 +49,10 @@ export type ValidateAbiParameter<TParams extends readonly string[]> =
  * >
  */
 export type ParseAbiParameter<
-  TParam extends string | readonly string[] | readonly unknown[]
+  TParam extends string | readonly string[] | readonly unknown[],
 > =
   | (TParam extends string
-      ? TParam extends ""
+      ? TParam extends ''
         ? never
         : string extends TParam
         ? AbiParameter
@@ -72,7 +72,7 @@ export type ParseAbiParameter<
                         TParam[K],
                         { Modifier: Modifier; Structs: Structs }
                       >
-                  : never;
+                  : never
               } extends infer Mapped extends readonly unknown[]
               ? Filter<Mapped, never>[0] extends infer Result
                 ? Result extends undefined
@@ -83,7 +83,7 @@ export type ParseAbiParameter<
             : never
           : never
         : never
-      : never);
+      : never)
 
 /**
  * Parses human-readable ABI parameter into {@link AbiParameter}
@@ -103,18 +103,18 @@ export type ParseAbiParameter<
  * ])
  */
 export function parseAbiParameter<
-  TParam extends string | readonly string[] | readonly unknown[]
+  TParam extends string | readonly string[] | readonly unknown[],
 >(
   param: Narrow<TParam> &
     (
       | (TParam extends string
-          ? TParam extends ""
-            ? Error<"Empty string is not allowed.">
+          ? TParam extends ''
+            ? Error<'Empty string is not allowed.'>
             : unknown
           : never)
       | (TParam extends readonly string[]
           ? TParam extends readonly [] // empty array
-            ? Error<"At least one parameter required.">
+            ? Error<'At least one parameter required.'>
             : string[] extends TParam
             ? unknown
             : ValidateAbiParameter<TParam> extends infer ValidatedParams extends readonly unknown[]
@@ -123,25 +123,25 @@ export function parseAbiParameter<
               : ValidatedParams
             : never
           : never)
-    )
+    ),
 ): ParseAbiParameter<TParam> {
-  let abiParameter;
-  if (typeof param === "string")
+  let abiParameter
+  if (typeof param === 'string')
     abiParameter = parseAbiParameter_(param, {
       modifiers,
-    }) as ParseAbiParameter<TParam>;
+    }) as ParseAbiParameter<TParam>
   else {
-    const structs = parseStructs(param as readonly string[]);
-    const length = param.length as number;
+    const structs = parseStructs(param as readonly string[])
+    const length = param.length as number
     for (let i = 0; i < length; i++) {
-      const signature = (param as readonly string[])[i]!;
-      if (isStructSignature(signature)) continue;
-      abiParameter = parseAbiParameter_(signature, { modifiers, structs });
-      break;
+      const signature = (param as readonly string[])[i]!
+      if (isStructSignature(signature)) continue
+      abiParameter = parseAbiParameter_(signature, { modifiers, structs })
+      break
     }
   }
 
-  if (!abiParameter) throw new InvalidAbiParameterError({ param });
+  if (!abiParameter) throw new InvalidAbiParameterError({ param })
 
-  return abiParameter as ParseAbiParameter<TParam>;
+  return abiParameter as ParseAbiParameter<TParam>
 }
