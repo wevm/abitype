@@ -11,13 +11,13 @@
 export type Error<T extends string | string[]> = T extends string
   ? [
       // Surrounding with array to prevent `T` from being widened to `string`
-      `Error: ${T}`,
+      `Error: ${T}`
     ]
   : {
       [K in keyof T]: T[K] extends infer Message extends string
         ? `Error: ${Message}`
-        : never
-    }
+        : never;
+    };
 
 /**
  * Filters out all members of {@link T} that are {@link P}
@@ -33,12 +33,12 @@ export type Error<T extends string | string[]> = T extends string
 export type Filter<
   T extends readonly unknown[],
   U,
-  Acc extends readonly unknown[] = [],
+  Acc extends readonly unknown[] = []
 > = T extends readonly [infer F, ...infer Rest extends readonly unknown[]]
   ? [F] extends [U]
     ? Filter<Rest, U, Acc>
     : Filter<Rest, U, [...Acc, F]>
-  : readonly [...Acc]
+  : readonly [...Acc];
 
 /**
  * Checks if {@link T} is `unknown`
@@ -50,7 +50,7 @@ export type Filter<
  * type Result = IsUnknown<unknown>
  * //   ^? type Result = true
  */
-export type IsUnknown<T> = unknown extends T ? true : false
+export type IsUnknown<T> = unknown extends T ? true : false;
 
 /**
  * Merges two object types into new type
@@ -63,7 +63,7 @@ export type IsUnknown<T> = unknown extends T ? true : false
  * type Result = Merge<{ foo: string }, { foo: number; bar: string }>
  * //   ^? type Result = { foo: number; bar: string }
  */
-export type Merge<Object1, Object2> = Omit<Object1, keyof Object2> & Object2
+export type Merge<Object1, Object2> = Omit<Object1, keyof Object2> & Object2;
 
 /**
  * Makes objects destructurable.
@@ -76,11 +76,11 @@ export type Merge<Object1, Object2> = Omit<Object1, keyof Object2> & Object2
  */
 export type OneOf<
   Union extends object,
-  AllKeys extends KeyofUnion<Union> = KeyofUnion<Union>,
+  AllKeys extends KeyofUnion<Union> = KeyofUnion<Union>
 > = Union extends infer Item
   ? Prettify<Item & { [K in Exclude<AllKeys, keyof Item>]?: never }>
-  : never
-type KeyofUnion<T> = T extends T ? keyof T : never
+  : never;
+type KeyofUnion<T> = T extends T ? keyof T : never;
 
 /**
  * Combines members of an intersection into a readable type.
@@ -91,8 +91,8 @@ type KeyofUnion<T> = T extends T ? keyof T : never
  * //   ^? type Result = { a: string; b: string; c: number; d: bigint }
  */
 export type Prettify<T> = {
-  [K in keyof T]: T[K]
-} & {}
+  [K in keyof T]: T[K];
+} & {};
 
 /**
  * Creates range between two positive numbers using [tail recursion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html#tail-recursion-elimination-on-conditional-types).
@@ -111,7 +111,7 @@ export type Range<
   Stop extends number,
   Result extends number[] = [],
   Padding extends 0[] = [],
-  Current extends number = [...Padding, ...Result]['length'] & number,
+  Current extends number = [...Padding, ...Result]["length"] & number
 > = Current extends Stop
   ? Current extends Start
     ? [Current]
@@ -122,7 +122,7 @@ export type Range<
   ? Range<Start, Stop, [Current], Padding>
   : Result extends []
   ? Range<Start, Stop, [], [...Padding, 0]>
-  : Range<Start, Stop, [...Result, Current], Padding>
+  : Range<Start, Stop, [...Result, Current], Padding>;
 
 /**
  * Trims empty space from type T.
@@ -135,16 +135,16 @@ export type Range<
  * type Result = Trim<'      foo  '>
  * //   ^? type Result = "foo"
  */
-export type Trim<T, Chars extends string = ' '> = TrimLeft<
+export type Trim<T, Chars extends string = " "> = TrimLeft<
   TrimRight<T, Chars>,
   Chars
->
-type TrimLeft<T, Chars extends string = ' '> = T extends `${Chars}${infer R}`
+>;
+type TrimLeft<T, Chars extends string = " "> = T extends `${Chars}${infer R}`
   ? TrimLeft<R>
-  : T
-type TrimRight<T, Chars extends string = ' '> = T extends `${infer R}${Chars}`
+  : T;
+type TrimRight<T, Chars extends string = " "> = T extends `${infer R}${Chars}`
   ? TrimRight<R>
-  : T
+  : T;
 
 /**
  * Create tuple of {@link Type} type with {@link Size} size
@@ -162,27 +162,34 @@ export type Tuple<Type, Size extends number> = Size extends Size
   ? number extends Size
     ? Type[]
     : _TupleOf<Type, Size, []>
-  : never
+  : never;
 type _TupleOf<
   TNumber,
   TSize extends number,
-  R extends readonly unknown[],
-> = R['length'] extends TSize
+  R extends readonly unknown[]
+> = R["length"] extends TSize
   ? R
-  : _TupleOf<TNumber, TSize, readonly [TNumber, ...R]>
+  : _TupleOf<TNumber, TSize, readonly [TNumber, ...R]>;
 
 export type IsEmptyObject<
   T extends object,
-  AllKeys extends keyof T = keyof T,
-> = [AllKeys] extends [never] ? true : false
+  AllKeys extends keyof T = keyof T
+> = [AllKeys] extends [never] ? true : false;
 
 export type Flatten<
   T extends readonly unknown[],
-  Result extends readonly unknown[] = [],
+  Result extends readonly unknown[] = []
 > = T extends readonly [infer Head, ...infer Rest extends readonly unknown[]]
   ? [Head] extends [never]
     ? Flatten<[...Rest], Result>
     : Head extends readonly any[]
     ? Flatten<[...Head, ...Rest], Result>
     : Flatten<[...Rest], [...Result, Head]>
-  : Result
+  : Result;
+
+export type IsArrayString<T extends string> =
+  T extends `${infer Name}[${string}]` ? Name : T;
+
+export type Pop<T extends readonly number[]> = T extends [...infer R, any]
+  ? R
+  : [];

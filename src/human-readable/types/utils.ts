@@ -5,9 +5,18 @@ import type {
   SolidityArray,
   SolidityFixedArrayRange,
   SolidityString,
-} from '../../abi.js'
-import type { ResolvedConfig } from '../../config.js'
-import type { Error, IsUnknown, Merge, Prettify, Trim } from '../../types.js'
+  SolidityTuple,
+} from "../../abi.js";
+import type { ResolvedConfig } from "../../config.js";
+import type {
+  Error,
+  IsArrayString,
+  IsUnknown,
+  Merge,
+  Pop,
+  Prettify,
+  Trim,
+} from "../../types.js";
 import type {
   ErrorSignature,
   EventModifier,
@@ -23,108 +32,108 @@ import type {
   ReceiveSignature,
   Scope,
   ValidateName,
-} from './signatures.js'
-import type { StructLookup } from './structs.js'
+} from "./signatures.js";
+import type { StructLookup } from "./structs.js";
 
 export type ParseSignature<
   TSignature extends string,
-  TStructs extends StructLookup | unknown = unknown,
+  TStructs extends StructLookup | unknown = unknown
 > =
   | (IsErrorSignature<TSignature> extends true
       ? TSignature extends ErrorSignature<infer Name, infer Parameters>
         ? {
-            readonly name: Name
-            readonly type: 'error'
+            readonly name: Name;
+            readonly type: "error";
             readonly inputs: ParseAbiParameters<
               SplitParameters<Parameters>,
               { Structs: TStructs }
-            >
+            >;
           }
         : never
       : never)
   | (IsEventSignature<TSignature> extends true
       ? TSignature extends EventSignature<infer Name, infer Parameters>
         ? {
-            readonly name: Name
-            readonly type: 'event'
+            readonly name: Name;
+            readonly type: "event";
             readonly inputs: ParseAbiParameters<
               SplitParameters<Parameters>,
               { Modifier: EventModifier; Structs: TStructs }
-            >
+            >;
           }
         : never
       : never)
   | (IsFunctionSignature<TSignature> extends true
       ? TSignature extends FunctionSignature<infer Name, infer Tail>
         ? {
-            readonly name: Name
-            readonly type: 'function'
-            readonly stateMutability: _ParseFunctionParametersAndStateMutability<TSignature>['StateMutability']
+            readonly name: Name;
+            readonly type: "function";
+            readonly stateMutability: _ParseFunctionParametersAndStateMutability<TSignature>["StateMutability"];
             readonly inputs: ParseAbiParameters<
               SplitParameters<
-                _ParseFunctionParametersAndStateMutability<TSignature>['Inputs']
+                _ParseFunctionParametersAndStateMutability<TSignature>["Inputs"]
               >,
               { Modifier: FunctionModifier; Structs: TStructs }
-            >
+            >;
             readonly outputs: Tail extends `${string}returns (${infer Returns})`
               ? ParseAbiParameters<
                   SplitParameters<Returns>,
                   { Modifier: FunctionModifier; Structs: TStructs }
                 >
-              : readonly []
+              : readonly [];
           }
         : never
       : never)
   | (IsConstructorSignature<TSignature> extends true
       ? {
-          readonly type: 'constructor'
-          readonly stateMutability: _ParseConstructorParametersAndStateMutability<TSignature>['StateMutability']
+          readonly type: "constructor";
+          readonly stateMutability: _ParseConstructorParametersAndStateMutability<TSignature>["StateMutability"];
           readonly inputs: ParseAbiParameters<
             SplitParameters<
-              _ParseConstructorParametersAndStateMutability<TSignature>['Inputs']
+              _ParseConstructorParametersAndStateMutability<TSignature>["Inputs"]
             >,
             { Structs: TStructs }
-          >
+          >;
         }
       : never)
   | (TSignature extends FallbackSignature<infer StateMutability>
       ? {
-          readonly type: 'fallback'
+          readonly type: "fallback";
           readonly stateMutability: StateMutability extends `${string}payable`
-            ? 'payable'
-            : 'nonpayable'
+            ? "payable"
+            : "nonpayable";
         }
       : never)
   | (TSignature extends ReceiveSignature
       ? {
-          readonly type: 'receive'
-          readonly stateMutability: 'payable'
+          readonly type: "receive";
+          readonly stateMutability: "payable";
         }
-      : never)
+      : never);
 
 export type ParseOptions = {
-  Modifier?: Modifier | undefined
-  Structs?: StructLookup | unknown
-  Strict?: boolean | undefined
-}
+  Modifier?: Modifier | undefined;
+  Structs?: StructLookup | unknown;
+  Strict?: boolean | undefined;
+};
 export type DefaultParseOptions = object & {
-  Strict: ResolvedConfig['Strict']
-}
+  Strict: ResolvedConfig["Strict"];
+};
 
 export type ParseAbiParameters<
   T extends readonly string[],
-  Options extends ParseOptions = DefaultParseOptions,
-> = T extends ['']
+  Options extends ParseOptions = DefaultParseOptions
+> = T extends [""]
   ? readonly []
   : readonly [
       ...{
-        [K in keyof T]: ParseAbiParameter<T[K], Options>
-      },
-    ]
+        [K in keyof T]: ParseAbiParameter<T[K], Options>;
+      }
+    ];
 
 export type ParseAbiParameter<
   T extends string,
-  Options extends ParseOptions = DefaultParseOptions,
+  Options extends ParseOptions = DefaultParseOptions
 > = (
   T extends `(${string})${string}`
     ? _ParseTuple<T, Options>
@@ -136,115 +145,123 @@ export type ParseAbiParameter<
       ? { readonly type: Trim<Type> } & _SplitNameOrModifier<
           Trimmed,
           Options & {
-            type: Trim<Type> extends `${infer ArrayType}[${string}]`
-              ? ArrayType extends keyof Options['Structs']
+            type: IsArrayString<
+              Trim<Type>
+            > extends infer ArrayType extends string
+              ? ArrayType extends keyof Options["Structs"]
                 ? ArrayType
                 : Trim<Type>
-              : Trim<Type>
+              : never;
           }
         >
       : never
     : // Must be `${Type}` format (e.g. `uint256`)
       { readonly type: T }
 ) extends infer ShallowParameter extends InferredAbiParameter & {
-  type: string
-  indexed?: boolean
+  type: string;
+  indexed?: boolean;
 }
   ? // Resolve struct types
     // Starting with plain struct types (e.g. `Foo`)
     (
-      ShallowParameter['type'] extends keyof Options['Structs']
+      ShallowParameter["type"] extends keyof Options["Structs"]
         ? {
-            readonly type: 'tuple'
-            readonly components: Options['Structs'][ShallowParameter['type']]
-          } & (IsUnknown<ShallowParameter['name']> extends false
-            ? { readonly name: ShallowParameter['name'] }
+            readonly type: "tuple";
+            readonly components: Options["Structs"][ShallowParameter["type"]];
+          } & (IsUnknown<ShallowParameter["name"]> extends false
+            ? { readonly name: ShallowParameter["name"] }
             : object) &
-            (ShallowParameter['indexed'] extends true
+            (ShallowParameter["indexed"] extends true
               ? { readonly indexed: true }
               : object)
         : // Resolve tuple structs (e.g. `Foo[]`, `Foo[2]`, `Foo[][2]`, etc.)
-        ShallowParameter['type'] extends `${infer Type extends string &
-            keyof Options['Structs']}[${infer Tail}]`
+        ShallowParameter["type"] extends `${infer Type extends string &
+            keyof Options["Structs"]}[${infer Tail}]`
         ? {
-            readonly type: `tuple[${Tail}]`
-            readonly components: Options['Structs'][Type]
-          } & (IsUnknown<ShallowParameter['name']> extends false
-            ? { readonly name: ShallowParameter['name'] }
+            readonly type: `tuple[${Tail}]`;
+            readonly components: Options["Structs"][Type];
+          } & (IsUnknown<ShallowParameter["name"]> extends false
+            ? { readonly name: ShallowParameter["name"] }
             : object) &
-            (ShallowParameter['indexed'] extends true
+            (ShallowParameter["indexed"] extends true
               ? { readonly indexed: true }
               : object)
         : // Not a struct, just return
           ShallowParameter
     ) extends infer Parameter extends InferredAbiParameter & {
-      type: string
-      indexed?: boolean
+      type: string;
+      indexed?: boolean;
     }
     ? Prettify<
         _ValidateAbiParameter<
           Parameter,
-          Options['Strict'] extends boolean
-            ? Options['Strict']
-            : ResolvedConfig['Strict']
+          Options["Strict"] extends boolean
+            ? Options["Strict"]
+            : ResolvedConfig["Strict"]
         >
       >
     : never
-  : never
+  : never;
 
 export type SplitParameters<
   T extends string,
   Result extends unknown[] = [],
-  Current extends string = '',
-  Depth extends readonly number[] = [],
-> = T extends ''
-  ? Current extends ''
+  Current extends string = "",
+  Depth extends readonly number[] = []
+> = T extends ""
+  ? Current extends ""
     ? [...Result] // empty string was passed in to `SplitParameters`
-    : Depth['length'] extends 0
+    : Depth["length"] extends 0
     ? [...Result, Trim<Current>]
     : Error<`Unbalanced parentheses. "${Current}" has too many opening parentheses.`>
   : T extends `${infer Char}${infer Tail}`
-  ? Char extends ','
-    ? Depth['length'] extends 0
-      ? SplitParameters<Tail, [...Result, Trim<Current>], ''>
+  ? Char extends ","
+    ? Depth["length"] extends 0
+      ? SplitParameters<Tail, [...Result, Trim<Current>], "">
       : SplitParameters<Tail, Result, `${Current}${Char}`, Depth>
-    : Char extends '('
+    : Char extends "("
     ? SplitParameters<Tail, Result, `${Current}${Char}`, [...Depth, 1]>
-    : Char extends ')'
-    ? Depth['length'] extends 0
+    : Char extends ")"
+    ? Depth["length"] extends 0
       ? Error<`Unbalanced parentheses. "${Current}" has too many closing parentheses.`>
       : SplitParameters<Tail, Result, `${Current}${Char}`, Pop<Depth>>
     : SplitParameters<Tail, Result, `${Current}${Char}`, Depth>
-  : []
-type Pop<T extends readonly number[]> = T extends [...infer R, any] ? R : []
+  : [];
 
 export type ValidateType<
   TType extends string,
-  Strict extends boolean = ResolvedConfig['Strict'],
-> = Strict extends true ? (TType extends AbiType ? true : false) : true
+  Strict extends boolean = ResolvedConfig["Strict"]
+> = Strict extends true ? (TType extends AbiType ? true : false) : true;
 
 export type ValidateModifier<
   TModifer extends Modifier,
-  Options extends { type?: string; Structs?: StructLookup | unknown },
-> = Options extends Required<Options>
-  ? ResolvedConfig['Strict'] extends true
-    ? TModifer extends Exclude<Modifier, 'indexed'>
-      ? Options['type'] extends SolidityArray | SolidityString | 'bytes'
+  Options extends { type?: string; Structs?: StructLookup | unknown }
+> = Options extends { type: string }
+  ? ResolvedConfig["Strict"] extends true
+    ? TModifer extends Exclude<Modifier, "indexed">
+      ? Options["type"] extends
+          | SolidityArray
+          | SolidityString
+          | "bytes"
+          | SolidityTuple
         ? true
-        : Options['type'] extends keyof Options['Structs']
+        : Options["type"] extends keyof Options["Structs"]
         ? true
-        : Error<`Invalid modifier. ${TModifer} not allowed in ${Options['type']} type.`>
+        : Error<`Invalid modifier. ${TModifer} not allowed in ${Options["type"]} type.`>
       : true
     : true
-  : unknown
+  : unknown;
 
 export type _ValidateAbiParameter<
   TAbiParameter extends InferredAbiParameter & { type: string },
-  Strict extends boolean = ResolvedConfig['Strict'],
-> = ( // Validate `name`
+  Strict extends boolean = ResolvedConfig["Strict"]
+> = // Validate `name`
+(
   TAbiParameter extends { name: string }
-    ? ValidateName<TAbiParameter['name']> extends infer Name
-      ? Name extends TAbiParameter['name']
+    ? TAbiParameter["name"] extends `Error:${string}`
+      ? Merge<TAbiParameter, { readonly name: [TAbiParameter["name"]] }>
+      : ValidateName<TAbiParameter["name"]> extends infer Name
+      ? Name extends TAbiParameter["name"]
         ? TAbiParameter
         : // Add `Error` as `name`
           Merge<TAbiParameter, { readonly name: Name }>
@@ -252,160 +269,177 @@ export type _ValidateAbiParameter<
     : TAbiParameter
 ) extends infer Parameter extends { type: string }
   ? (
-      ValidateType<Parameter['type'], Strict> extends true
+      ValidateType<Parameter["type"], Strict> extends true
         ? Parameter
         : Merge<
             Parameter,
             {
-              readonly type: Error<`Type "${Parameter['type']}" is not a valid ABI type.`>
+              readonly type: Error<`Type "${Parameter["type"]}" is not a valid ABI type.`>;
             }
           >
     ) extends infer Parameter2 extends { type: unknown }
     ? // Convert `(u)int` to `(u)int256`
-      Parameter2['type'] extends `${infer Prefix extends
-        | 'u'
-        | ''}int${infer Suffix extends `[${string}]` | ''}`
+      Parameter2["type"] extends `${infer Prefix extends
+        | "u"
+        | ""}int${infer Suffix extends `[${string}]` | ""}`
       ? Merge<Parameter2, { readonly type: `${Prefix}int256${Suffix}` }>
       : Parameter2
     : never
-  : never
+  : never;
 
 export type _ParseFunctionParametersAndStateMutability<
-  TSignature extends string,
+  TSignature extends string
 > = TSignature extends `${infer Head}returns (${string})`
   ? _ParseFunctionParametersAndStateMutability<Trim<Head>>
   : TSignature extends `function ${string}(${infer Parameters})`
-  ? { Inputs: Parameters; StateMutability: 'nonpayable' }
+  ? { Inputs: Parameters; StateMutability: "nonpayable" }
   : TSignature extends `function ${string}(${infer Parameters}) ${infer ScopeOrStateMutability extends
       | Scope
       | AbiStateMutability
       | `${Scope} ${AbiStateMutability}`}`
   ? {
-      Inputs: Parameters
+      Inputs: Parameters;
       StateMutability: ScopeOrStateMutability extends `${Scope} ${infer StateMutability extends AbiStateMutability}`
         ? StateMutability
         : ScopeOrStateMutability extends AbiStateMutability
         ? ScopeOrStateMutability
-        : 'nonpayable'
+        : "nonpayable";
     }
-  : never
+  : never;
 
 export type _ParseConstructorParametersAndStateMutability<
-  TSignature extends string,
+  TSignature extends string
 > = TSignature extends `constructor(${infer Parameters}) payable`
-  ? { Inputs: Parameters; StateMutability: 'payable' }
+  ? { Inputs: Parameters; StateMutability: "payable" }
   : TSignature extends `constructor(${infer Parameters})`
-  ? { Inputs: Parameters; StateMutability: 'nonpayable' }
-  : never
+  ? { Inputs: Parameters; StateMutability: "nonpayable" }
+  : never;
 
 export type _ParseTuple<
   T extends `(${string})${string}`,
-  Options extends ParseOptions = DefaultParseOptions,
-> = /** Tuples without name or modifier (e.g. `(string)`, `(string foo)`) */
-T extends `(${infer Parameters})`
-  ? {
-      readonly type: 'tuple'
-      readonly components: ParseAbiParameters<
-        SplitParameters<Parameters>,
-        Omit<Options, 'Modifier'>
-      >
-    }
-  : // Array or fixed-length array tuples (e.g. `(string)[]`, `(string)[5]`)
-  T extends `(${infer Head})[${'' | `${SolidityFixedArrayRange}`}]`
-  ? T extends `(${Head})[${infer Size}]`
+  Options extends ParseOptions = DefaultParseOptions
+> =
+  /** Tuples without name or modifier (e.g. `(string)`, `(string foo)`) */
+  T extends `(${infer Parameters})`
     ? {
-        readonly type: `tuple[${Size}]`
-        readonly components: ParseAbiParameters<
-          SplitParameters<Head>,
-          Omit<Options, 'Modifier'>
-        >
-      }
-    : never
-  : // Array or fixed-length array tuples with name and/or modifier attached (e.g. `(string)[] foo`, `(string)[5] foo`)
-  T extends `(${infer Parameters})[${
-      | ''
-      | `${SolidityFixedArrayRange}`}] ${infer NameOrModifier}`
-  ? T extends `(${Parameters})[${infer Size}] ${NameOrModifier}`
-    ? NameOrModifier extends `${string}) ${string}`
-      ? _UnwrapNameOrModifier<NameOrModifier> extends infer Parts extends {
-          NameOrModifier: string
-          End: string
-        }
-        ? {
-            readonly type: 'tuple'
-            readonly components: ParseAbiParameters<
-              SplitParameters<`${Parameters})[${Size}] ${Parts['End']}`>,
-              Omit<Options, 'Modifier'>
-            >
-          } & _SplitNameOrModifier<Parts['NameOrModifier'], Options>
-        : never
-      : {
-          readonly type: `tuple[${Size}]`
-          readonly components: ParseAbiParameters<
-            SplitParameters<Parameters>,
-            Omit<Options, 'Modifier'>
-          >
-        } & _SplitNameOrModifier<NameOrModifier, Options>
-    : never
-  : // Tuples with name and/or modifier attached (e.g. `(string) foo`, `(string bar) foo`)
-  T extends `(${infer Parameters}) ${infer NameOrModifier}`
-  ? // Check that `NameOrModifier` didn't get matched to `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)
-    NameOrModifier extends `${string}) ${string}`
-    ? _UnwrapNameOrModifier<NameOrModifier> extends infer Parts extends {
-        NameOrModifier: string
-        End: string
-      }
-      ? {
-          readonly type: 'tuple'
-          readonly components: ParseAbiParameters<
-            SplitParameters<`${Parameters}) ${Parts['End']}`>,
-            Omit<Options, 'Modifier'>
-          >
-        } & _SplitNameOrModifier<Parts['NameOrModifier'], Options>
-      : never
-    : {
-        readonly type: 'tuple'
+        readonly type: "tuple";
         readonly components: ParseAbiParameters<
           SplitParameters<Parameters>,
-          Omit<Options, 'Modifier'>
-        >
-      } & _SplitNameOrModifier<NameOrModifier, Options>
-  : never
+          Omit<Options, "Modifier">
+        >;
+      }
+    : // Array or fixed-length array tuples (e.g. `(string)[]`, `(string)[5]`)
+    T extends `(${infer Head})[${"" | `${SolidityFixedArrayRange}`}]`
+    ? T extends `(${Head})[${infer Size}]`
+      ? {
+          readonly type: `tuple[${Size}]`;
+          readonly components: ParseAbiParameters<
+            SplitParameters<Head>,
+            Omit<Options, "Modifier">
+          >;
+        }
+      : never
+    : // Array or fixed-length array tuples with name and/or modifier attached (e.g. `(string)[] foo`, `(string)[5] foo`)
+    T extends `(${infer Parameters})[${
+        | ""
+        | `${SolidityFixedArrayRange}`}] ${infer NameOrModifier}`
+    ? T extends `(${Parameters})[${infer Size}] ${NameOrModifier}`
+      ? NameOrModifier extends `${string}) ${string}`
+        ? _UnwrapNameOrModifier<NameOrModifier> extends infer Parts extends {
+            NameOrModifier: string;
+            End: string;
+          }
+          ? {
+              readonly type: "tuple";
+              readonly components: ParseAbiParameters<
+                SplitParameters<`${Parameters})[${Size}] ${Parts["End"]}`>,
+                Omit<Options, "Modifier">
+              >;
+            } & _SplitNameOrModifier<
+              Parts["NameOrModifier"],
+              Options & { type: "tuple" }
+            >
+          : never
+        : {
+            readonly type: `tuple[${Size}]`;
+            readonly components: ParseAbiParameters<
+              SplitParameters<Parameters>,
+              Omit<Options, "Modifier">
+            >;
+          } & _SplitNameOrModifier<
+            NameOrModifier,
+            Options & { type: `tuple[${Size}]` }
+          >
+      : never
+    : // Tuples with name and/or modifier attached (e.g. `(string) foo`, `(string bar) foo`)
+    T extends `(${infer Parameters}) ${infer NameOrModifier}`
+    ? // Check that `NameOrModifier` didn't get matched to `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)
+      NameOrModifier extends `${string}) ${string}`
+      ? _UnwrapNameOrModifier<NameOrModifier> extends infer Parts extends {
+          NameOrModifier: string;
+          End: string;
+        }
+        ? {
+            readonly type: "tuple";
+            readonly components: ParseAbiParameters<
+              SplitParameters<`${Parameters}) ${Parts["End"]}`>,
+              Omit<Options, "Modifier">
+            >;
+          } & _SplitNameOrModifier<
+            Parts["NameOrModifier"],
+            Options & { type: "tuple" }
+          >
+        : never
+      : {
+          readonly type: "tuple";
+          readonly components: ParseAbiParameters<
+            SplitParameters<Parameters>,
+            Omit<Options, "Modifier">
+          >;
+        } & _SplitNameOrModifier<NameOrModifier, Options & { type: "tuple" }>
+    : never;
 
 // Split name and modifier (e.g. `indexed foo` => `{ name: 'foo', indexed: true }`)
 export type _SplitNameOrModifier<
   T extends string,
-  Options extends ParseOptions & { type?: string } = DefaultParseOptions,
+  Options extends ParseOptions & { type?: string } = DefaultParseOptions
 > = Trim<T> extends infer Trimmed
   ? Options extends { Modifier: Modifier }
-    ? Trimmed extends `${infer Mod extends Options['Modifier']} ${infer Name}`
-      ? Options extends { type: string; Structs: StructLookup | unknown }
-        ? ValidateModifier<Mod, Options> extends infer Validated
-          ? Validated extends string[]
-            ? { readonly name: Validated }
-            : { readonly name: Trim<Name> } & (Mod extends 'indexed'
-                ? { readonly indexed: true }
-                : // This is safe since this will get squashed by the intersection
-                  {})
-          : never
-        : { readonly name: Trim<Name> } & (Mod extends 'indexed'
+    ? Trimmed extends `${infer Mod extends Options["Modifier"]} ${infer Name}`
+      ? Options extends { type: string }
+        ? ValidateModifier<
+            Mod,
+            Options
+          > extends infer Validated extends string[]
+          ? { readonly name: Validated[0] }
+          : { readonly name: Trim<Name> } & (Mod extends "indexed"
+              ? { readonly indexed: true }
+              : // This is safe since this will get squashed by the intersection
+                {})
+        : { readonly name: Trim<Name> } & (Mod extends "indexed"
             ? { readonly indexed: true }
             : {})
-      : Trimmed extends Options['Modifier']
-      ? Trimmed extends 'indexed'
+      : Trimmed extends Options["Modifier"]
+      ? Options extends { type: string }
+        ? ValidateModifier<Trimmed, Options> extends infer Val extends string[]
+          ? { readonly name: Val[0] }
+          : Trimmed extends "indexed"
+          ? { readonly indexed: true }
+          : object
+        : Trimmed extends "indexed"
         ? { readonly indexed: true }
         : object
       : { readonly name: Trimmed }
     : { readonly name: Trimmed }
-  : never
+  : never;
 
 // `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)
 export type _UnwrapNameOrModifier<
   T extends string,
-  Current extends string = '',
+  Current extends string = ""
 > = T extends `${infer Head}) ${infer Tail}`
   ? _UnwrapNameOrModifier<
       Tail,
-      `${Current}${Current extends '' ? '' : ') '}${Head}`
+      `${Current}${Current extends "" ? "" : ") "}${Head}`
     >
-  : { End: Trim<Current>; NameOrModifier: Trim<T> }
+  : { End: Trim<Current>; NameOrModifier: Trim<T> };
