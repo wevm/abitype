@@ -400,30 +400,19 @@ T extends `(${infer Parameters})`
 // Split name and modifier (e.g. `indexed foo` => `{ name: 'foo', indexed: true }`)
 export type _SplitNameOrModifier<
   T extends string,
-  Options extends ParseOptions & { type?: string } = DefaultParseOptions,
+  Options extends ParseOptions & { type: string },
 > = Trim<T> extends infer Trimmed
   ? Options extends { Modifier: Modifier }
     ? Trimmed extends `${infer Mod extends Options['Modifier']} ${infer Name}`
-      ? Options extends { type: string }
-        ? ValidateModifier<
-            Mod,
-            Options
-          > extends infer Validated extends string[]
-          ? { readonly name: Validated[0] }
-          : { readonly name: Trim<Name> } & (Mod extends 'indexed'
-              ? { readonly indexed: true }
-              : // This is safe since this will get squashed by the intersection
-                {})
+      ? ValidateModifier<Mod, Options> extends infer Validated extends string[]
+        ? { readonly name: Validated[0] }
         : { readonly name: Trim<Name> } & (Mod extends 'indexed'
             ? { readonly indexed: true }
-            : {})
+            : // This is safe since this will get squashed by the intersection
+              {})
       : Trimmed extends Options['Modifier']
-      ? Options extends { type: string }
-        ? ValidateModifier<Trimmed, Options> extends infer Val extends string[]
-          ? { readonly name: Val[0] }
-          : Trimmed extends 'indexed'
-          ? { readonly indexed: true }
-          : object
+      ? ValidateModifier<Trimmed, Options> extends infer Val extends string[]
+        ? { readonly name: Val[0] }
         : Trimmed extends 'indexed'
         ? { readonly indexed: true }
         : object

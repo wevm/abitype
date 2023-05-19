@@ -993,20 +993,36 @@ test('_ParseTuple', () => {
 })
 
 test('_SplitNameOrModifier', () => {
-  expectTypeOf<_SplitNameOrModifier<'foo'>>().toEqualTypeOf<{
+  expectTypeOf<
+    _SplitNameOrModifier<'foo', { type: 'address' }>
+  >().toEqualTypeOf<{
     readonly name: 'foo'
   }>()
   expectTypeOf<
-    _SplitNameOrModifier<'indexed foo', { Modifier: 'indexed' }>
+    _SplitNameOrModifier<
+      'indexed foo',
+      { Modifier: 'indexed'; type: 'address' }
+    >
   >().toEqualTypeOf<{
     readonly name: 'foo'
     readonly indexed: true
   }>()
   expectTypeOf<
-    _SplitNameOrModifier<'calldata foo', { Modifier: 'calldata' }>
+    _SplitNameOrModifier<
+      'calldata foo',
+      { Modifier: 'calldata'; type: 'string' }
+    >
   >().toEqualTypeOf<{
     readonly name: 'foo'
   }>()
+  // expectTypeOf<
+  //   _SplitNameOrModifier<
+  //     'calldata foo',
+  //     { Modifier: 'calldata'; type: 'address' }
+  //   >
+  // >().toEqualTypeOf<{
+  //   readonly name: "Error: Invalid modifier. calldata not allowed in address type."
+  // }>()
 })
 
 test('_UnwrapNameOrModifier', () => {
