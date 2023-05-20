@@ -1,6 +1,13 @@
-import type { AbiStateMutability } from '../../abi.js'
+import type {
+  AbiStateMutability,
+  AbiType,
+  SolidityArray,
+  SolidityString,
+  SolidityTuple,
+} from '../../abi.js'
 import type { ResolvedConfig } from '../../config.js'
-import type { Error } from '../../types.js'
+import type { Error, Filter, IsArrayString } from '../../types.js'
+import type { StructLookup } from './structs.js'
 
 export type ErrorSignature<
   TName extends string = string,
@@ -139,6 +146,53 @@ export type ValidateName<
     ? TName
     : Error<`"${TName}" contains invalid character.`>
   : TName
+
+export type ValidateType<
+  TType extends string,
+  Strict extends boolean = ResolvedConfig['Strict'],
+> = Strict extends true ? (TType extends AbiType ? true : false) : true
+
+export type ValidateModifier<
+  TModifer extends Modifier,
+  Options extends { type?: string; Structs?: StructLookup | unknown },
+> = Options extends { type: string }
+  ? ResolvedConfig['Strict'] extends true
+    ? TModifer extends Exclude<Modifier, 'indexed'>
+      ? Options['type'] extends
+          | SolidityArray
+          | SolidityString
+          | 'bytes'
+          | SolidityTuple
+        ? true
+        : Options['type'] extends keyof Options['Structs']
+        ? true
+        : Error<`Invalid modifier. ${TModifer} not allowed in ${Options['type']} type.`>
+      : true
+    : true
+  : unknown
+
+export type ValidateParameterString<
+  ParamString extends string,
+  StructKeys extends string | number | symbol,
+> = ParamString extends `${infer Type} ${string}`
+  ? ValidateType<IsArrayString<Type>> extends true
+    ? true
+    : IsArrayString<Type> extends StructKeys
+    ? true
+    : Error<`Invalid Parameter "${ParamString}". No valid type.`>
+  : ValidateType<IsArrayString<ParamString>> extends true
+  ? true
+  : IsArrayString<ParamString> extends StructKeys
+  ? true
+  : Error<`Invalid Parameter "${ParamString}". No valid type.`>
+
+export type CountStructSignatures<Signatures extends readonly string[]> =
+  Filter<
+    {
+      [K in keyof Signatures]: Signatures[K] extends StructSignature ? 0 : never
+    },
+    never
+  >['length']
 
 export type IsSolidityKeyword<T extends string> = T extends SolidityKeywords
   ? true

@@ -1,11 +1,7 @@
 import type {
   AbiStateMutability,
-  AbiType,
   InferredAbiParameter,
-  SolidityArray,
   SolidityFixedArrayRange,
-  SolidityString,
-  SolidityTuple,
 } from '../../abi.js'
 import type { ResolvedConfig } from '../../config.js'
 import type {
@@ -31,7 +27,9 @@ import type {
   Modifier,
   ReceiveSignature,
   Scope,
+  ValidateModifier,
   ValidateName,
+  ValidateType,
 } from './signatures.js'
 import type { StructLookup } from './structs.js'
 
@@ -227,30 +225,6 @@ export type SplitParameters<
       : SplitParameters<Tail, Result, `${Current}${Char}`, Pop<Depth>>
     : SplitParameters<Tail, Result, `${Current}${Char}`, Depth>
   : []
-
-export type ValidateType<
-  TType extends string,
-  Strict extends boolean = ResolvedConfig['Strict'],
-> = Strict extends true ? (TType extends AbiType ? true : false) : true
-
-export type ValidateModifier<
-  TModifer extends Modifier,
-  Options extends { type?: string; Structs?: StructLookup | unknown },
-> = Options extends { type: string }
-  ? ResolvedConfig['Strict'] extends true
-    ? TModifer extends Exclude<Modifier, 'indexed'>
-      ? Options['type'] extends
-          | SolidityArray
-          | SolidityString
-          | 'bytes'
-          | SolidityTuple
-        ? true
-        : Options['type'] extends keyof Options['Structs']
-        ? true
-        : Error<`Invalid modifier. ${TModifer} not allowed in ${Options['type']} type.`>
-      : true
-    : true
-  : unknown
 
 export type _ValidateAbiParameter<
   TAbiParameter extends InferredAbiParameter & { type: string },

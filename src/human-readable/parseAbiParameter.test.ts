@@ -22,6 +22,7 @@ test('parseAbiParameter', () => {
   `,
   )
   expect(() =>
+    // @ts-expect-error no parameter passed
     parseAbiParameter(['struct Foo { string name; }']),
   ).toThrowErrorMatchingInlineSnapshot(
     `

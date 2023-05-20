@@ -1,6 +1,6 @@
 import type { AbiParameter } from '../abi.js'
 import type { Narrow } from '../narrow.js'
-import type { Error, Filter, IsArrayString, IsEmptyObject } from '../types.js'
+import type { Error, Filter, Flatten, IsEmptyObject } from '../types.js'
 import { InvalidAbiParameterError } from './errors/index.js'
 import {
   isStructSignature,
@@ -14,22 +14,37 @@ import type {
   ParseAbiParameter as ParseAbiParameter_,
   ParseStructs,
 } from './types/index.js'
+import type {
+  CountStructSignatures,
+  StructSignature,
+  ValidateParameterString,
+} from './types/signatures.js'
 
 export type ValidateAbiParameter<TParams extends readonly string[]> =
   ParseStructs<TParams> extends infer ParsedStructs extends object
     ? IsEmptyObject<ParsedStructs> extends true
       ? Error<'No Struct signature found. Please provide valid struct signatures.'>
-      : {
+      : CountStructSignatures<TParams> extends Filter<
+          TParams,
+          StructSignature
+        >['length']
+      ? {
           [K in keyof TParams]: IsStructSignature<TParams[K]> extends true
             ? never
-            : TParams[K] extends `${infer Type} ${string}`
-            ? IsArrayString<Type> extends keyof ParsedStructs
-              ? never
-              : Error<`Invalid Parameter "${TParams[K]}". Only Struct parameters are allowed`>
-            : IsArrayString<TParams[K]> extends keyof ParsedStructs
+            : TParams[K] extends `(${string})${string}`
             ? never
-            : Error<`Invalid Parameter "${TParams[K]}". Only Struct parameters are allowed`>
+            : TParams[K] extends `${string},${string}`
+            ? Error<`Invalid Parameter "${TParams[K]}". Please use parseAbiParameters for comma seperated strings.`>
+            : ValidateParameterString<
+                TParams[K],
+                keyof ParsedStructs
+              > extends infer ValidatedParam
+            ? ValidatedParam extends true
+              ? never
+              : ValidatedParam
+            : unknown
         }
+      : Error<'Missmatch between struct signatures and arguments. Not all parameter strings will be parsed.'>
     : unknown
 
 /**
@@ -114,13 +129,17 @@ export function parseAbiParameter<
           : never)
       | (TParam extends readonly string[]
           ? TParam extends readonly [] // empty array
-            ? Error<'At least one parameter required.'>
+            ? 'Error: At least one parameter required.'
             : string[] extends TParam
             ? unknown
             : ValidateAbiParameter<TParam> extends infer ValidatedParams extends readonly unknown[]
             ? ValidatedParams extends never[]
               ? unknown
-              : ValidatedParams
+              : Flatten<ValidatedParams> extends infer Flattened
+              ? Flattened extends string[]
+                ? Flattened[number]
+                : never
+              : never
             : never
           : never)
     ),
