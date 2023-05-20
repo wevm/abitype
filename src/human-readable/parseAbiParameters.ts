@@ -22,6 +22,18 @@ import type {
   ValidateParameterString,
 } from './types/signatures.js'
 
+/**
+ * Validates human-readable ABI parameter string that contains struct signatures.
+ * If strict mode is set to true this will also perform type checks on the provided strings.
+ * @param TParams - Human-readable ABI parameter with struct signatures
+ * @returns [[never], ...] if all params are valid. Otherwise returns an error message.
+ *
+ * @example
+ * type Result = ValidateAbiParameter<
+ *   // ^? type Result = [[never], [never]]
+ *   ['Baz bar', 'struct Baz { string name; }']
+ * >
+ */
 export type ValidateAbiParameters<TParams extends readonly string[]> =
   ParseStructs<TParams> extends infer ParsedStructs extends object
     ? IsEmptyObject<ParsedStructs> extends true

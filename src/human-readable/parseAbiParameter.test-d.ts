@@ -23,7 +23,7 @@ test('ValidateAbiParameters', () => {
     >
   >().toEqualTypeOf<
     [
-      'Error: Invalid Parameter "address, address". Please use parseAbiParameters for comma seperated strings.',
+      'Error: Invalid Parameter "address, address". Please use "parseAbiParameters" for comma seperated strings.',
     ]
   >()
   // expectTypeOf<

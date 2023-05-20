@@ -171,11 +171,33 @@ type _TupleOf<
   ? R
   : _TupleOf<TNumber, TSize, readonly [TNumber, ...R]>
 
+/**
+ * Check if a given object has no keys.
+ *
+ * @param T - Object to check
+ * @param AllKeys - Keys to check. Default to keyof {@link T}
+ * @returns true if empty false if not
+ *
+ * @example
+ * type Result = IsEmptyObject<{}>
+ * //   ^? type Result = true
+ */
 export type IsEmptyObject<
   T extends object,
   AllKeys extends keyof T = keyof T,
 > = [AllKeys] extends [never] ? true : false
 
+/**
+ * Flattens array of nested arrays into a single array with all of the elements.
+ * This also filters any `never` elements that the arrays might have.
+ *
+ * @param T - Array with nested arrays.
+ * @returns an array with all the elements of the nested arrays.
+ *
+ * @example
+ * type Result = Flatten<[1, [2], [[3]]]>
+ * //   ^? type Result = [1, 2, 3]
+ */
 export type Flatten<
   T extends readonly unknown[],
   Result extends readonly unknown[] = [],
@@ -187,9 +209,29 @@ export type Flatten<
     : Flatten<[...Rest], [...Result, Head]>
   : Result
 
+/**
+ * Checks if a string literal is an array.
+ *
+ * @param T - String to check.
+ * @returns The extracted value if an array or {@link T} if not.
+ *
+ * @example
+ * type Result = IsArrayString<"Foo[]">
+ * //   ^? type Result = "Foo"
+ */
 export type IsArrayString<T extends string> =
   T extends `${infer Name}[${string}]` ? Name : T
 
+/**
+ * Pops the last elements of an array of numbers.
+ *
+ * @param T - Array with numbers.
+ * @returns the array without the last element.
+ *
+ * @example
+ * type Result = Pop<[1, 2, 3]>
+ * //   ^? type Result = [1, 2]
+ */
 export type Pop<T extends readonly number[]> = T extends [...infer R, any]
   ? R
   : []
