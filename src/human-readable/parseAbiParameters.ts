@@ -53,7 +53,7 @@ export type ValidateAbiParameters<TParams extends readonly string[]> =
             : unknown
         }
       : Error<'Missmatch between struct signatures and arguments. Not all parameter strings will be parsed.'>
-    : unknown
+    : [unknown]
 // export type ValidateAbiParameters<T extends readonly string[]> =
 //   ParseStructs<T> extends infer Structs extends object
 //     ? IsEmptyObject<Structs> extends true
@@ -91,21 +91,23 @@ export type ParseAbiParameters<
   | (TParams extends readonly string[]
       ? string[] extends TParams
         ? AbiParameter // Return generic AbiParameter item since type was no inferrable
-        : ParseStructs<TParams> extends infer Structs
-        ? {
-            [K in keyof TParams]: TParams[K] extends string
-              ? IsStructSignature<TParams[K]> extends true
+        : Flatten<ValidateAbiParameters<TParams>> extends readonly []
+        ? ParseStructs<TParams> extends infer Structs
+          ? {
+              [K in keyof TParams]: TParams[K] extends string
+                ? IsStructSignature<TParams[K]> extends true
+                  ? never
+                  : ParseAbiParameters_<
+                      SplitParameters<TParams[K]>,
+                      { Modifier: Modifier; Structs: Structs }
+                    >
+                : never
+            } extends infer Mapped extends readonly unknown[]
+            ? Filter<Mapped, never>[0] extends infer Result
+              ? Result extends undefined
                 ? never
-                : ParseAbiParameters_<
-                    SplitParameters<TParams[K]>,
-                    { Modifier: Modifier; Structs: Structs }
-                  >
+                : Result
               : never
-          } extends infer Mapped extends readonly unknown[]
-          ? Filter<Mapped, never>[0] extends infer Result
-            ? Result extends undefined
-              ? never
-              : Result
             : never
           : never
         : never

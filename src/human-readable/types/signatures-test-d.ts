@@ -1,19 +1,21 @@
 import { assertType, expectTypeOf, test } from 'vitest'
 
-import type {
-  IsConstructorSignature,
-  IsErrorSignature,
-  IsEventSignature,
-  IsFunctionSignature,
-  IsName,
-  IsSignature,
-  IsSolidityKeyword,
-  IsStructSignature,
-  IsValidCharacter,
-  Signature,
-  Signatures,
-  SolidityKeywords,
-  ValidateName,
+import {
+  type IsConstructorSignature,
+  type IsErrorSignature,
+  type IsEventSignature,
+  type IsFunctionSignature,
+  type IsName,
+  type IsSignature,
+  type IsSolidityKeyword,
+  type IsStructSignature,
+  type IsValidCharacter,
+  type Signature,
+  type Signatures,
+  type SolidityKeywords,
+  type ValidateModifier,
+  type ValidateName,
+  type ValidateType,
 } from './signatures.js'
 
 test('IsErrorSignature', () => {
@@ -209,6 +211,38 @@ test('ValidateName', () => {
   expectTypeOf<ValidateName<'foo$', true>>().toEqualTypeOf<
     ['Error: "foo$" contains invalid character.']
   >()
+})
+
+test('ValidateType', () => {
+  assertType<ValidateType<'foo'>>(true)
+  assertType<ValidateType<'address'>>(true)
+  assertType<ValidateType<'foo', true>>(false)
+})
+
+test('ValidateModifier', () => {
+  assertType<ValidateModifier<'calldata', { type: 'address' }>>(true)
+  assertType<ValidateModifier<'storage', { type: 'address' }>>(true)
+  assertType<ValidateModifier<'memory', { type: 'address' }>>(true)
+  assertType<ValidateModifier<'memory', { type: 'Foo' }>>(true)
+  assertType<ValidateModifier<'memory', { type: 'Foo'; Structs: { Foo: {} } }>>(
+    true,
+  )
+  // assertType<ValidateModifier<"calldata", { type: "address" }>>([
+  //   "Error: Invalid modifier. calldata not allowed in address type.",
+  // ]);
+  // assertType<ValidateModifier<"storage", { type: "address" }>>([
+  //   "Error: Invalid modifier. storage not allowed in address type.",
+  // ]);
+  // assertType<ValidateModifier<"memory", { type: "address" }>>([
+  //   "Error: Invalid modifier. memory not allowed in address type.",
+  // ]);
+  // assertType<ValidateModifier<"memory", { type: "Foo" }>>([
+  //   "Error: Invalid modifier. memory not allowed in Foo type.",
+  // ]);
+  assertType<ValidateModifier<'memory', { type: 'Foo'; Structs: { Foo: {} } }>>(
+    true,
+  )
+  assertType<ValidateModifier<'calldata', { type: 'tuple' }>>(true)
 })
 
 test('IsSolidityKeyword', () => {
