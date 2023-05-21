@@ -8,6 +8,7 @@ title: 'Human-Readable ABI'
 Human-Readable ABIs compress [JSON ABIs](https://docs.soliditylang.org/en/latest/abi-spec.html#json) into signatures that are nicer to read and less verbose to write. For example:
 
 ::: code-group
+
 ```ts [human-readable.ts]
 const abi = [
   'constructor()',
@@ -51,6 +52,7 @@ const abi = [
   { inputs: [], name: 'ApprovalCallerNotOwnerNorApproved', type: 'error' },
 ] as const
 ```
+
 :::
 
 ABIType contains parallel [type-level](/api/human#types) and [runtime](/api/human#utilities) utilities for parsing human-readable ABIs, ABI items, and ABI parameters.
@@ -379,6 +381,10 @@ const abiParameterStruct = parseAbiParameter([
 ])
 ```
 
+::: info PARAMETER VALIDATION
+When passing a string array as an argument typescript will verify if the parameter strings are valid to safeguard you from the runtime behavior. When strict is disabled the type-checking will be more lax. If you enable strict it will check if the Solidity types are valid.
+:::
+
 ### `parseAbiParameters`
 
 Parses human-readable ABI parameters into [`AbiParameter`s](/api/types#abiparameter).
@@ -404,6 +410,10 @@ const abiParametersStruct = parseAbiParameters([
   'struct Baz { string name; }',
 ])
 ```
+
+::: info PARAMETER VALIDATION
+When passing a string array as an argument typescript will verify if the parameter strings are valid to safeguard you from the runtime behavior. When strict is disabled the type-checking will be more lax. If you enable strict it will check if the Solidity types are valid.
+:::
 
 ## Errors
 
