@@ -3,6 +3,7 @@ export type {
   AbiConstructor,
   AbiError,
   AbiEvent,
+  AbiEventParameter,
   AbiFallback,
   AbiFunction,
   AbiInternalType,

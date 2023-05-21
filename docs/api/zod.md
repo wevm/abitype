@@ -35,7 +35,7 @@ Import and use schemas:
 import { Abi } from 'abitype/zod'
 
 const result = await fetch(
-  'https://api.etherscan.io/api?module=contract&action=getabi&address=0x…',
+  'https://api.etherscan.io/api?module=contract&action=getabi&address=0x…'
 )
 const abi = Abi.parse(result)
 ```
@@ -47,6 +47,7 @@ import {
   Abi,
   AbiConstructor,
   AbiEvent,
+  AbiEventParameter,
   AbiError,
   AbiFallback,
   AbiFunction,

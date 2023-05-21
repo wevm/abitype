@@ -41,8 +41,8 @@
 Strict TypeScript types for Ethereum ABIs. ABIType provides utilities and type definitions for ABI properties and values, covering the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html), as well as [EIP-712](https://eips.ethereum.org/EIPS/eip-712) Typed Data.
 
 ```ts
-import { ExtractAbiFunctions } from "abitype";
-import { erc20Abi } from "abitype/test";
+import type { AbiParametersToPrimitiveTypes, ExtractAbiFunctions, ExtractAbiFunctionNames } from 'abitype'
+import { erc20Abi } from 'abitype/test'
 
 type FunctionNames = ExtractAbiFunctionNames<typeof erc20Abi, "view">;
 //   ^? type FunctionNames = "symbol" | "name" | "allowance" | "balanceOf" | "decimals" | "totalSupply"

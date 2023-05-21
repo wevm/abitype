@@ -5,6 +5,7 @@ import type {
   Filter,
   IsUnknown,
   Merge,
+  OneOf,
   Range,
   Trim,
   Tuple,
@@ -38,6 +39,11 @@ test('Merge', () => {
     foo: 'xyz',
     bar: 'abc',
   })
+})
+
+test('OneOf', () => {
+  assertType<OneOf<{ foo: boolean } | { bar: boolean }>>({ foo: false })
+  assertType<OneOf<{ foo: boolean } | { bar: boolean }>>({ bar: false })
 })
 
 test('Range', () => {
