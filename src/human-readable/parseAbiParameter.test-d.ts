@@ -16,7 +16,7 @@ test('ValidateAbiParameters', () => {
   >()
   expectTypeOf<
     ValidateAbiParameter<['struct Foo { string name; }', 'address']>
-  >().toEqualTypeOf<[never, never]>()
+  >().toEqualTypeOf<[]>()
   expectTypeOf<
     Flatten<
       ValidateAbiParameter<['struct Foo { string name; }', 'address, address']>

@@ -26,15 +26,15 @@ import type {
  * Validates human-readable ABI parameter string that contains struct signatures.
  * If strict mode is set to true this will also perform type checks on the provided strings.
  * @param TParams - Human-readable ABI parameter with struct signatures
- * @returns [[never], ...] if all params are valid. Otherwise returns an error message.
+ * @returns [] if all params are valid. Otherwise returns an error message.
  *
  * @example
  * type Result = ValidateAbiParameter<
- *   // ^? type Result = [[never], [never]]
+ *   // ^? type Result = []
  *   ['Baz bar', 'struct Baz { string name; }']
  * >
  */
-export type ValidateAbiParameters<TParams extends readonly string[]> =
+export type ValidateAbiParameters<TParams extends readonly string[]> = Flatten<
   ParseStructs<TParams> extends infer ParsedStructs extends object
     ? IsEmptyObject<ParsedStructs> extends true
       ? Error<'No Struct signature found. Please provide valid struct signatures.'>
@@ -66,6 +66,7 @@ export type ValidateAbiParameters<TParams extends readonly string[]> =
         }
       : Error<'Missmatch between struct signatures and arguments. Not all parameter strings will be parsed.'>
     : [unknown]
+>
 /**
  * Parses human-readable ABI parameters into {@link AbiParameter}s
  *
@@ -150,12 +151,10 @@ export function parseAbiParameters<
             : string[] extends TParams
             ? unknown
             : ValidateAbiParameters<TParams> extends infer Parsed extends readonly unknown[]
-            ? Flatten<Parsed> extends infer Flattened
-              ? Flattened extends readonly []
-                ? unknown
-                : Flattened extends readonly string[]
-                ? Flattened[number]
-                : never
+            ? Parsed extends readonly []
+              ? unknown
+              : Parsed extends readonly string[]
+              ? Parsed[number]
               : never
             : never
           : never)

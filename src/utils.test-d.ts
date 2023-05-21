@@ -24,6 +24,7 @@ import type {
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
   ExtractAbiFunctions,
+  ExtractAbiParseErrors,
   IsAbi,
   IsTypedData,
   TypedDataToPrimitiveTypes,
@@ -877,4 +878,21 @@ test('IsTypedData', () => {
     ]
   }>
   assertType<Result2>(false)
+})
+
+test('ExtractAbiParseErrors', () => {
+  assertType<
+    ExtractAbiParseErrors<[{ type: 'address'; name: ['Error: Foo'] }]>
+  >(['Error: Foo'])
+  assertType<
+    ExtractAbiParseErrors<
+      [
+        {
+          type: 'address'
+          name: ['Error: Foo']
+          components: [{ type: 'address'; name: ['Error: Bar'] }]
+        },
+      ]
+    >
+  >(['Error: Bar'])
 })

@@ -20,7 +20,7 @@ import type {
   TypedDataType,
 } from './abi.js'
 import type { ResolvedConfig } from './config.js'
-import type { Error, Merge, Tuple } from './types.js'
+import type { Error, Flatten, Merge, Tuple } from './types.js'
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
@@ -315,7 +315,13 @@ export type ExtractAbiError<
   TErrorName extends ExtractAbiErrorNames<TAbi>,
 > = Extract<ExtractAbiErrors<TAbi>, { name: TErrorName }>
 
-export type ExtractAbiParseErrors<TAbi extends readonly unknown[]> = {
+/**
+ * Extract all errors from a parsed {@link Abi} in form of a union type if any exist.
+ *
+ * @param TAbi - {@link Abi} to check.
+ * @returns [] if the abi has no errors. Otherwise returns an array with the union of the errors.
+ */
+export type ExtractAbiParseErrors<TAbi extends readonly unknown[]> = Flatten<{
   [K in keyof TAbi]: {
     [K2 in keyof TAbi[K]]: TAbi[K][K2] extends readonly string[]
       ? TAbi[K][K2]
@@ -323,7 +329,7 @@ export type ExtractAbiParseErrors<TAbi extends readonly unknown[]> = {
       ? ExtractAbiParseErrors<TAbi[K][K2]>
       : never
   }[keyof TAbi[K]]
-}
+}>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Typed Data
