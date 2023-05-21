@@ -185,7 +185,7 @@ type _TupleOf<
 export type IsEmptyObject<
   T extends object,
   AllKeys extends keyof T = keyof T,
-> = [AllKeys] extends [never] ? true : false
+> = IsNever<AllKeys>
 
 /**
  * Flattens array of nested arrays into a single array with all of the elements.
@@ -235,3 +235,12 @@ export type IsArrayString<T extends string> =
 export type Pop<T extends readonly number[]> = T extends [...infer R, any]
   ? R
   : []
+
+/**
+ * Checks if {@link T} is `never`
+ * @param T - Type to check
+ * @example
+ * type Result = IsNever<never>
+ * //   ^? type Result = true
+ */
+export type IsNever<T> = [T] extends [never] ? true : false
