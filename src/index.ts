@@ -30,14 +30,14 @@ export type {
   TypedDataDomain,
   TypedDataParameter,
   TypedDataType,
-} from "./abi.js";
+} from './abi.js'
 
-export type { Config, DefaultConfig, ResolvedConfig } from "./config.js";
+export type { Config, DefaultConfig, ResolvedConfig } from './config.js'
 
-export { BaseError } from "./errors.js";
+export { BaseError } from './errors.js'
 
-export type { Narrow } from "./narrow.js";
-export { narrow } from "./narrow.js";
+export type { Narrow } from './narrow.js'
+export { narrow } from './narrow.js'
 
 export type {
   AbiParameterToPrimitiveType,
@@ -55,14 +55,14 @@ export type {
   IsAbi,
   IsTypedData,
   TypedDataToPrimitiveTypes,
-} from "./utils.js";
+} from './utils.js'
 
 export type {
   ParseAbi,
   ParseAbiItem,
   ParseAbiParameter,
   ParseAbiParameters,
-} from "./human-readable/index.js";
+} from './human-readable/index.js'
 export {
   parseAbi,
   parseAbiItem,
@@ -83,4 +83,4 @@ export {
   InvalidAbiItemError,
   MissingSemicolonError,
   UnknownTypeError,
-} from "./human-readable/index.js";
+} from './human-readable/index.js'

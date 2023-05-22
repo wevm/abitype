@@ -1,8 +1,8 @@
-import { expect, it } from "vitest";
+import { expect, it } from 'vitest'
 
-import * as Exports from "./index.js";
+import * as Exports from './index.js'
 
-it("should expose correct exports", () => {
+it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
     [
       "BaseError",
@@ -27,5 +27,5 @@ it("should expose correct exports", () => {
       "MissingSemicolonError",
       "UnknownTypeError",
     ]
-  `);
-});
+  `)
+})
