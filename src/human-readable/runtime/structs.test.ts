@@ -175,8 +175,27 @@ test('throws if recursive structs are detected', () => {
   )
 })
 
-test.todo('throws if property is missing semicolon', () => {
+test('throws if property is missing semicolon', () => {
   expect(() =>
     parseStructs(['struct Foo { string bar; address baz }']),
-  ).toThrowErrorMatchingInlineSnapshot()
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Missing closing semicolon.
+
+    Struct properties \\"string bar; address baz\\" <- is missing a semicolon.
+
+    Version: abitype@x.y.z"
+  `,
+  )
+
+  expect(() =>
+    parseStructs(['struct Foo { string bar address baz; }']),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+
+    Details: string bar address baz
+    Version: abitype@x.y.z"
+  `,
+  )
 })

@@ -111,7 +111,7 @@ test('IsFunctionSignature', () => {
 
 test('IsStructSignature', () => {
   // basic
-  assertType<IsStructSignature<'struct Foo {}'>>(true)
+  assertType<IsStructSignature<'struct Foo { address; }'>>(true)
 
   // properties
   assertType<IsStructSignature<'struct Foo { string bar; }'>>(true)
@@ -121,9 +121,10 @@ test('IsStructSignature', () => {
   )
 
   // invalid
-  assertType<IsStructSignature<'struct {}'>>(false)
+  assertType<IsStructSignature<'Struct Foo {}'>>(false)
   assertType<IsStructSignature<'Foo {}'>>(false)
   assertType<IsStructSignature<'struct Foo {string bar'>>(false)
+  assertType<IsStructSignature<'struct Foo { string bar; string baz }'>>(false)
 })
 
 test('IsConstructorSignature', () => {
@@ -151,9 +152,9 @@ test('IsSignature', () => {
   assertType<IsSignature<'receive() external payable'>>(true)
   assertType<IsSignature<'event Foo()'>>(true)
   assertType<IsSignature<'error Foo()'>>(true)
-  assertType<IsSignature<'struct Foo {}'>>(true)
 
   // invalid
+  assertType<IsSignature<'struct Foo {}'>>(false)
   assertType<IsSignature<'foo()'>>(false)
   assertType<IsSignature<'function ()'>>(false)
   assertType<IsSignature<'constructor ()'>>(false)

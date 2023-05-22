@@ -7,6 +7,7 @@ import {
   InvalidSignatureError,
   InvalidStructSignatureError,
 } from '../errors/index.js'
+import { MissingSemicolonError } from '../errors/struct.js'
 import type { StructLookup } from '../types/index.js'
 import { execStructSignature, isStructSignature } from './signatures.js'
 import { isSolidityType, parseAbiParameter } from './utils.js'
@@ -21,6 +22,11 @@ export function parseStructs(signatures: readonly string[]) {
 
     const match = execStructSignature(signature)
     if (!match) throw new InvalidSignatureError({ signature, type: 'struct' })
+
+    if (match.properties.trim() === '')
+      throw new InvalidStructSignatureError({ signature })
+    if (!match.properties.trim().endsWith(';'))
+      throw new MissingSemicolonError({ props: match.properties.trim() })
 
     const properties = match.properties.split(';')
 

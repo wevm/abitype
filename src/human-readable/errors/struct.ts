@@ -9,3 +9,13 @@ export class CircularReferenceError extends BaseError {
     })
   }
 }
+
+export class MissingSemicolonError extends BaseError {
+  override name = 'MissingSemicolonError'
+
+  constructor({ props }: { props: string }) {
+    super('Missing closing semicolon.', {
+      metaMessages: [`Struct properties "${props}" <- is missing a semicolon.`],
+    })
+  }
+}

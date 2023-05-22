@@ -1,5 +1,5 @@
 import type { AbiStateMutability } from '../../abi.js'
-import type { Error } from '../../types.js'
+import type { Error, Trim } from '../../types.js'
 
 export type ErrorSignature<
   TName extends string = string,
@@ -64,10 +64,20 @@ export type StructSignature<
   TProperties extends string = string,
 > = `struct ${TName} {${TProperties}}`
 export type IsStructSignature<T extends string> = T extends StructSignature<
-  infer Name
+  infer Name,
+  infer Properties
 >
-  ? IsName<Name>
+  ? IsName<Name> extends true
+    ? ValidateStructProperties<Trim<Properties>>
+    : false
   : false
+
+export type ValidateStructProperties<T extends string> =
+  T extends `${string};${infer Tail}`
+    ? Tail extends ''
+      ? true
+      : ValidateStructProperties<Tail>
+    : false
 
 export type ConstructorSignature<TTail extends string = string> =
   `constructor(${TTail}`
@@ -212,13 +222,72 @@ export type IsValidCharacter<T extends string> =
 // rome-ignore format: no formatting
 type ValidCharacters =
   // uppercase letters
-  | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
+  | "A"
+  | "B"
+  | "C"
+  | "D"
+  | "E"
+  | "F"
+  | "G"
+  | "H"
+  | "I"
+  | "J"
+  | "K"
+  | "L"
+  | "M"
+  | "N"
+  | "O"
+  | "P"
+  | "Q"
+  | "R"
+  | "S"
+  | "T"
+  | "U"
+  | "V"
+  | "W"
+  | "X"
+  | "Y"
+  | "Z"
   // lowercase letters
-  | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'
+  | "a"
+  | "b"
+  | "c"
+  | "d"
+  | "e"
+  | "f"
+  | "g"
+  | "h"
+  | "i"
+  | "j"
+  | "k"
+  | "l"
+  | "m"
+  | "n"
+  | "o"
+  | "p"
+  | "q"
+  | "r"
+  | "s"
+  | "t"
+  | "u"
+  | "v"
+  | "w"
+  | "x"
+  | "y"
+  | "z"
   // numbers
-  | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  | "0"
+  | "1"
+  | "2"
+  | "3"
+  | "4"
+  | "5"
+  | "6"
+  | "7"
+  | "8"
+  | "9"
   // special characters
-  | '_'
+  | "_";
 
 // Template string inference can absorb `returns`:
 // type Result = `function foo(string) return s (uint256)` extends `function ${string}(${infer Parameters})` ? Parameters : never
