@@ -58,9 +58,9 @@ body:
       label: Validations
       description: Before submitting this issue, please make sure you do the following.
       options:
+        - label: Checked there isn't [already an issue](https://github.com/wagmi-dev/abitype/issues) that exists for the bug you encountered.
+          required: true
         - label: Followed the [Code of Conduct](https://github.com/wagmi-dev/.github/blob/main/CODE_OF_CONDUCT.md).
           required: true
         - label: Read the [Contributing Guide](https://github.com/wagmi-dev/abitype/blob/main/.github/CONTRIBUTING.md).
-          required: true
-        - label: Checked there isn't [already an issue](https://github.com/wagmi-dev/abitype/issues) that exists for the bug you encountered.
           required: true
