@@ -52,6 +52,7 @@ import {
   AbiFallback,
   AbiFunction,
   AbiParameter,
+  Address,
   AbiReceive,
   AbiStateMutability,
   SolidityAddress,
