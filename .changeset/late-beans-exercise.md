@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-Adds Zod Address type transformer.
+Added Zod Address Schema
