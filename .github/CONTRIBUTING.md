@@ -4,9 +4,7 @@ Thanks for your interest in contributing to ABIType! Please take a moment to rev
 
 If you want to contribute, but aren't sure where to start, you can create a [new discussion](https://github.com/wagmi-dev/abitype/discussions).
 
-> **Note**
->
-> **Please ask first before starting work on any significant new features.**
+> **Note** **Please ask first before starting work on any significant new features.**
 >
 > It's never a fun experience to have your pull request declined after investing time and effort into a new feature. To avoid this from happening, we request that contributors create a [feature request](https://github.com/wagmi-dev/abitype/discussions/new?category=ideas) to first discuss any API changes or significant new ideas.
 
@@ -142,15 +140,11 @@ When you submit a pull request, GitHub will automatically lint, build, and test 
 
 When adding new features or fixing bugs, we'll need to bump the package versions. We use [Changesets](https://github.com/changesets/changesets) to do this.
 
-> **Note**
->
-> Only changes to the codebase that affect the public API or existing behavior (e.g. bugs) need changesets.
+> **Note** Only changes to the codebase that affect the public API or existing behavior (e.g. bugs) need changesets.
 
 Each changeset defines which package(s) should be published and whether the change should be a major/minor/patch release, as well as providing release notes that will be added to the changelog upon release.
 
 To create a new changeset, run `pnpm changeset`. This will run the Changesets CLI, prompting you for details about the change. You’ll be able to edit the file after it’s created — don’t worry about getting everything perfect up front.
-
-Since we’re currently in beta, all changes should be marked as a minor/patch release to keep us within the `v0.x` range.
 
 Even though you can technically use any markdown formatting you like, headings should be avoided since each changeset will ultimately be nested within a bullet list. Instead, bold text should be used as section headings.
 
