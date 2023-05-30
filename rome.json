@@ -1,8 +1,11 @@
 {
   "files": {
     "ignore": [
-      "**/node_modules", "CHANGELOG.md", "cache", "coverage", "dist",
-      "tsconfig.json", "tsconfig.*.json", "trace", "pnpm-lock.yaml"
+      "CHANGELOG.md",
+      "pnpm-lock.yaml",
+      "trace",
+      "tsconfig.json",
+      "tsconfig.*.json"
     ]
   },
   "formatter": {
@@ -16,8 +19,16 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "complexity": {
+        "noExtraSemicolon": "off"
+      },
       "correctness": {
         "noUnusedVariables": "error"
+      },
+      "nursery": {
+        "noBannedTypes": "off",
+        "useExhaustiveDependencies": "error",
+        "useGroupedTypeImport": "off"
       },
       "performance": {
         "noDelete": "off"
@@ -42,5 +53,10 @@
   },
   "organizeImports": {
     "enabled": true
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
   }
 }
