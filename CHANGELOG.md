@@ -1,5 +1,11 @@
 # abitype
 
+## 0.8.5
+
+### Patch Changes
+
+- [#144](https://github.com/wagmi-dev/abitype/pull/144) [`02ae52e`](https://github.com/wagmi-dev/abitype/commit/02ae52ea465df4c4682987f7a5ecc84a88c9b9cc) Thanks [@tmm](https://github.com/tmm)! - Fixed package.json Zod entrypoint ESM path.
+
 ## 0.8.4
 
 ### Patch Changes
