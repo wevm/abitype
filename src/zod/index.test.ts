@@ -16,6 +16,7 @@ it('should expose correct exports', () => {
       "AbiParameter",
       "AbiReceive",
       "AbiStateMutability",
+      "Address",
       "SolidityAddress",
       "SolidityArray",
       "SolidityArrayWithoutTuple",

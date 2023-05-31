@@ -10,6 +10,7 @@ export {
   AbiParameter,
   AbiReceive,
   AbiStateMutability,
+  Address,
   SolidityAddress,
   SolidityArray,
   SolidityArrayWithoutTuple,

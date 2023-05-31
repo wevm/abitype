@@ -9,6 +9,7 @@ import {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
+  zeroAddress,
 } from '../test/index.js'
 import {
   Abi,
@@ -22,6 +23,7 @@ import {
   AbiParameter,
   AbiReceive,
   AbiStateMutability,
+  Address,
   SolidityAddress,
   SolidityArray,
   SolidityArrayWithTuple,
@@ -654,4 +656,19 @@ test('AbiItemType', () => {
   expect(AbiItemType.parse('fallback')).toMatchInlineSnapshot('"fallback"')
   expect(AbiItemType.parse('function')).toMatchInlineSnapshot('"function"')
   expect(AbiItemType.parse('receive')).toMatchInlineSnapshot('"receive"')
+})
+
+test('AddressType', () => {
+  expect(Address.parse(zeroAddress)).toMatchInlineSnapshot(
+    '"0x0000000000000000000000000000000000000000"',
+  )
+  expect(() => Address.parse('0x')).toThrowErrorMatchingInlineSnapshot(`
+  "[
+    {
+      \\"code\\": \\"custom\\",
+      \\"message\\": \\"Invalid Address 0x\\",
+      \\"path\\": []
+    }
+  ]"
+  `)
 })

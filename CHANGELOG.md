@@ -1,5 +1,11 @@
 # abitype
 
+## 0.8.6
+
+### Patch Changes
+
+- [#143](https://github.com/wagmi-dev/abitype/pull/143) [`84ce0d9`](https://github.com/wagmi-dev/abitype/commit/84ce0d98b4fe963bea37dfa17596898c30533281) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Added Zod Address Schema
+
 ## 0.8.5
 
 ### Patch Changes
