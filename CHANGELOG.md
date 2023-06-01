@@ -1,5 +1,11 @@
 # abitype
 
+## 0.8.7
+
+### Patch Changes
+
+- [#147](https://github.com/wagmi-dev/abitype/pull/147) [`f9aa86e`](https://github.com/wagmi-dev/abitype/commit/f9aa86ea549bbefc471ec9921b6e8cb6ebfd985f) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Fixed type-level issue with human-readable function signatures with no space returns.
+
 ## 0.8.6
 
 ### Patch Changes
