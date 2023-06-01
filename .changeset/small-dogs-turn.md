@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-Fixed a bug where function signatures with no space returns were not infering correct values.
+Fixed type-level issue with human-readable function signatures with no space returns.
