@@ -1,13 +1,30 @@
 import type { Abi } from 'abitype'
 
-import type { ContractParameters, ContractReturnType } from './types.js'
+import type { ReadParameters } from './read.js'
+import type {
+  ContractParameters,
+  ContractReturnType,
+  DeepPartial,
+  MaybePartialBy,
+} from './types.js'
 
 export declare function reads<
   const abi extends Abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
   functionName extends string,
   const args extends readonly unknown[] | undefined,
   contracts extends Contract<abi, functionName, args>[],
->(config: ReadsParameters<contracts>): ContractsReturnType<contracts>
+>(parameters: ReadsParameters<contracts>): ContractsReturnType<contracts>
+
+export declare function useReads<
+  const abi extends Abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
+  functionName extends string,
+  const args extends readonly unknown[] | undefined,
+  contracts extends Contract<abi, functionName, args>[],
+>(
+  parameters: DeepPartial<ReadsParameters<contracts>, 3>,
+): ContractsReturnType<contracts>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type ReadsParameters<contracts extends Contract[]> = {
   contracts: readonly [...ContractsParameters<contracts>]
@@ -15,6 +32,8 @@ export type ReadsParameters<contracts extends Contract[]> = {
 
 export type ReadsResult<contracts extends Contract[]> =
   ContractsReturnType<contracts>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type Contract<
   abi extends Abi | readonly unknown[] = Abi | readonly unknown[],
@@ -43,14 +62,10 @@ type ContractsParameters<
   : contracts extends [infer head extends Contract]
   ? [
       ...result,
-      ContractParameters<
-        head['abi'],
-        head['functionName'],
-        ReadsStateMutability,
-        head['args']
-      > & {
-        abi: head['abi']
-      },
+      MaybePartialBy<
+        ReadParameters<head['abi'], head['functionName'], head['args']>,
+        readonly [] extends head['args'] ? 'args' : string
+      >,
     ]
   : contracts extends [
       infer head extends Contract,
@@ -60,12 +75,10 @@ type ContractsParameters<
       [...tail],
       [
         ...result,
-        ContractParameters<
-          head['abi'],
-          head['functionName'],
-          ReadsStateMutability,
-          head['args']
-        > & { abi: head['abi'] },
+        MaybePartialBy<
+          ReadParameters<head['abi'], head['functionName'], head['args']>,
+          readonly [] extends head['args'] ? 'args' : string
+        >,
       ],
       [...depth, 1]
     >

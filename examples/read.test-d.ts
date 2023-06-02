@@ -7,10 +7,11 @@ import {
 } from 'abitype/test'
 import { assertType, expectTypeOf, test } from 'vitest'
 
-import { read, readWagmiMintExample } from './read.js'
+import { read, readWagmiMintExample, useRead } from './read.js'
 
 const abi = parseAbi([
   'function foo() returns (bool)',
+  'function foo() returns (uint8)',
   'function foo(uint) view returns (address)',
   'function foo(address) view returns (uint)',
   'function foo(uint256, address) view returns (address, uint8)',
@@ -30,7 +31,14 @@ expectTypeOf(
     abi,
     functionName: 'foo',
   }),
-).toEqualTypeOf<boolean>()
+).toEqualTypeOf<boolean | number>()
+expectTypeOf(
+  useRead({
+    abi,
+    functionName: 'foo',
+    args: [123n, '0x'],
+  }),
+).toEqualTypeOf<readonly [Address, number]>()
 
 test('read', () => {
   test('args', () => {

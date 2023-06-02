@@ -19,6 +19,18 @@ export type ContractParameters<
   functionNames extends string = abi extends Abi
     ? ExtractAbiFunctionNames<abi, abiStateMutability>
     : string,
+> = {
+  functionName:
+    | functionNames // show all values
+    | (functionName extends functionNames ? functionName : never) // infer value (if valid)
+    | (Abi extends abi ? string : never) // fallback if `abi` is declared as `Abi`
+} & GetArgs<abi, functionName, args>
+
+type GetArgs<
+  abi extends Abi | readonly unknown[] = Abi, // `readonly unknown[]` allows for non-const asserted types
+  functionName extends string = string,
+  args extends readonly unknown[] | undefined = readonly [],
+  ///
   abiFunction extends AbiFunction = abi extends Abi
     ? ExtractAbiFunction<abi, functionName>
     : AbiFunction,
@@ -26,12 +38,7 @@ export type ContractParameters<
     abiFunction['inputs'],
     'inputs'
   >,
-> = {
-  functionName:
-    | functionNames // show all values
-    | (functionName extends functionNames ? functionName : never) // infer value (if valid)
-    | (Abi extends abi ? string : never) // fallback if `abi` is declared as `Abi`
-  args:
+  args_ =
     | primitiveTypes // show all values
     | (abi extends Abi
         ? args extends primitiveTypes // infer value (if valid)
@@ -41,12 +48,8 @@ export type ContractParameters<
             : never
           : never
         : never)
-    | (Abi extends abi ? readonly unknown[] : never) // fallback if `abi` is declared as `Abi`
-} extends infer Config extends { args: any }
-  ? readonly [] extends Config['args'] // if `args` can be empty, make property optional
-    ? PartialBy<Config, 'args' extends keyof Config ? 'args' : never>
-    : Config
-  : never
+    | (Abi extends abi ? readonly unknown[] : never), // fallback if `abi` is declared as `Abi`
+> = { args: args_ }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -112,13 +115,18 @@ type UnionToIntersection<U> = (
   ? I
   : never
 
-type PartialBy<TType, TKeys extends keyof TType> = ExactPartial<
+export type PartialBy<TType, TKeys extends keyof TType> = ExactPartial<
   Pick<TType, TKeys>
 > &
   Omit<TType, TKeys>
 type ExactPartial<T> = { [K in keyof T]?: T[K] | undefined }
 
-export type ReadonlyWiden<TType> =
+export type MaybePartialBy<
+  TType,
+  TKeys extends string,
+> = TKeys extends keyof TType ? PartialBy<TType, TKeys> : TType
+
+type ReadonlyWiden<TType> =
   | (TType extends Function ? TType : never)
   | (TType extends ResolvedConfig['BigIntType'] ? bigint : never)
   | (TType extends boolean ? boolean : never)
@@ -141,3 +149,13 @@ export type ReadonlyWiden<TType> =
         ? readonly [...Val]
         : never
       : never)
+
+export type DeepPartial<
+  T,
+  MaxDepth extends number,
+  Depth extends readonly number[] = [],
+> = Depth['length'] extends MaxDepth
+  ? T
+  : T extends object
+  ? { [P in keyof T]?: DeepPartial<T[P], MaxDepth, [...Depth, 1]> | undefined }
+  : T

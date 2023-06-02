@@ -8,7 +8,7 @@ import {
 } from 'abitype/test'
 import { assertType, expectTypeOf, test } from 'vitest'
 
-import { reads } from './reads.js'
+import { reads, useReads } from './reads.js'
 
 const abi = parseAbi([
   'function foo() returns (bool)',
@@ -33,6 +33,21 @@ const res = reads({
   ],
 })
 expectTypeOf(res).toEqualTypeOf<[readonly [Address, number], boolean]>()
+
+const res2 = useReads({
+  contracts: [
+    {
+      abi,
+      functionName: 'foo',
+      args: [123n, '0x'],
+    },
+    {
+      abi,
+      functionName: 'foo',
+    },
+  ],
+})
+expectTypeOf(res2).toEqualTypeOf<[readonly [Address, number], boolean]>()
 
 test('reads', () => {
   test('args', () => {
