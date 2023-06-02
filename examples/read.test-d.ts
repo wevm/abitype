@@ -16,7 +16,7 @@ const abi = parseAbi([
   'function foo(uint256, address) view returns (address, uint8)',
   'function bar() pure returns (address)',
   'function baz(uint) pure returns (string)',
-  'function boo(string) pure',
+  'function boo(bytes32) pure returns (bytes32)',
 ])
 expectTypeOf(
   read({

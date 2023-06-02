@@ -1,21 +1,20 @@
 import type { Abi } from 'abitype'
 
 import type { ContractParameters, ContractReturnType } from './types.js'
-import type { Pretty } from 'abitype/types.js'
 
 export declare function reads<
   const abi extends Abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
   functionName extends string,
   const args extends readonly unknown[] | undefined,
-  contracts extends { abi: abi; functionName: functionName; args?: args }[],
->(config: ReadsParameters<contracts>): ContractsResult<contracts>
+  contracts extends Contract<abi, functionName, args>[],
+>(config: ReadsParameters<contracts>): ContractsReturnType<contracts>
 
 export type ReadsParameters<contracts extends Contract[]> = {
-  contracts: readonly [...ContractsConfig<contracts>]
+  contracts: readonly [...ContractsParameters<contracts>]
 }
 
 export type ReadsResult<contracts extends Contract[]> =
-  ContractsResult<contracts>
+  ContractsReturnType<contracts>
 
 type Contract<
   abi extends Abi | readonly unknown[] = Abi | readonly unknown[],
@@ -26,41 +25,45 @@ type Contract<
 // Avoid TS depth-limit error in case of large array literal
 type MAXIMUM_DEPTH = 20
 
+type ReadsStateMutability = 'pure' | 'view'
+
+type UninferrableContracts = (ContractParameters & {
+  abi: Abi | readonly unknown[]
+})[]
+
 // recursively unwraps function arguments to infer/enforce type param
-type ContractsConfig<
+type ContractsParameters<
   contracts extends Contract[],
   result extends any[] = [],
   depth extends readonly number[] = [],
 > = depth['length'] extends MAXIMUM_DEPTH
-  ? (ContractParameters & { abi: Abi | readonly unknown[] })[]
+  ? UninferrableContracts
   : contracts extends []
   ? []
   : contracts extends [infer head extends Contract]
   ? [
       ...result,
-      Pretty<
-        ContractParameters<
-          head['abi'],
-          head['functionName'],
-          'pure' | 'view',
-          head['args']
-        > & {
-          abi: head['abi']
-        }
-      >,
+      ContractParameters<
+        head['abi'],
+        head['functionName'],
+        ReadsStateMutability,
+        head['args']
+      > & {
+        abi: head['abi']
+      },
     ]
   : contracts extends [
       infer head extends Contract,
       ...infer tail extends Contract[],
     ]
-  ? ContractsConfig<
+  ? ContractsParameters<
       [...tail],
       [
         ...result,
         ContractParameters<
           head['abi'],
           head['functionName'],
-          'pure' | 'view',
+          ReadsStateMutability,
           head['args']
         > & { abi: head['abi'] },
       ],
@@ -68,20 +71,22 @@ type ContractsConfig<
     >
   : unknown[] extends contracts
   ? contracts
-  : // If `TContracts` is *some* array but we couldn't assign `unknown[]` to it, then it must hold some known/homogenous type!
+  : // If `contracts` is *some* array but we couldn't assign `unknown[]` to it, then it must hold some known/homogenous type!
   // use this to infer the param types in the case of Array.map() argument
   contracts extends {
       abi: infer abi extends Abi | readonly unknown[]
       functionName: infer functionName extends string
       args?: infer args extends readonly unknown[] | undefined
     }[]
-  ? (ContractParameters<abi, functionName, 'pure' | 'view', args> & {
-      abi: abi
-    })[]
-  : (ContractParameters & { abi: Abi | readonly unknown[] })[]
+  ? string extends functionName // if `functionName` is exactly `string`, then we can't infer the type param
+    ? UninferrableContracts
+    : (ContractParameters<abi, functionName, ReadsStateMutability, args> & {
+        abi: abi
+      })[]
+  : UninferrableContracts
 
 // recursively maps type param to results
-type ContractsResult<
+type ContractsReturnType<
   contracts extends Contract[],
   result extends any[] = [],
   depth extends readonly number[] = [],
@@ -98,7 +103,7 @@ type ContractsResult<
       infer head extends Contract,
       ...infer tail extends Contract[],
     ]
-  ? ContractsResult<
+  ? ContractsReturnType<
       [...tail],
       [
         ...result,

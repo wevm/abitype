@@ -197,18 +197,16 @@ test('reads', () => {
       const contracts = [
         {
           abi: wagmiMintExampleAbi,
-          functionName: 'tokenURI',
+          functionName: 'tokenUI',
           args: [1n],
         },
-        // {
-        //   abi: wagmiMintExampleAbi,
-        //   functionName: 'balanceOf',
-        //   args: ['0x'],
-        // },
+        {
+          abi: wagmiMintExampleAbi,
+          functionName: 'balanceOf',
+          args: ['0x'],
+        },
       ]
-      const result = reads({
-        contracts,
-      })
+      const result = reads({ contracts })
       assertType<unknown[]>(result)
     })
   })

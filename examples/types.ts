@@ -7,6 +7,7 @@ import {
   type Address,
   type ExtractAbiFunction,
   type ExtractAbiFunctionNames,
+  type ResolvedConfig,
 } from 'abitype'
 
 export type ContractParameters<
@@ -117,13 +118,18 @@ type PartialBy<TType, TKeys extends keyof TType> = ExactPartial<
   Omit<TType, TKeys>
 type ExactPartial<T> = { [K in keyof T]?: T[K] | undefined }
 
-// TODO: Bytes input type
 export type ReadonlyWiden<TType> =
   | (TType extends Function ? TType : never)
-  | (TType extends bigint ? bigint : never)
+  | (TType extends ResolvedConfig['BigIntType'] ? bigint : never)
   | (TType extends boolean ? boolean : never)
-  | (TType extends number ? number : never)
-  | (TType extends string ? (TType extends Address ? Address : string) : never)
+  | (TType extends ResolvedConfig['IntType'] ? number : never)
+  | (TType extends string
+      ? TType extends Address
+        ? Address
+        : TType extends ResolvedConfig['BytesType']['inputs']
+        ? ResolvedConfig['BytesType']
+        : string
+      : never)
   | (TType extends readonly [] ? readonly [] : never)
   | (TType extends Record<string, unknown>
       ? { [K in keyof TType]: ReadonlyWiden<TType[K]> }
