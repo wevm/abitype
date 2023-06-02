@@ -5,7 +5,7 @@ import type {
   SolidityFixedArrayRange,
 } from '../../abi.js'
 import type { ResolvedConfig } from '../../config.js'
-import type { Error, IsUnknown, Merge, Prettify, Trim } from '../../types.js'
+import type { Error, IsUnknown, Merge, Pretty, Trim } from '../../types.js'
 import type {
   ErrorSignature,
   EventModifier,
@@ -168,7 +168,7 @@ export type ParseAbiParameter<
       type: string
       indexed?: boolean
     }
-    ? Prettify<_ValidateAbiParameter<Parameter>>
+    ? Pretty<_ValidateAbiParameter<Parameter>>
     : never
   : never
 

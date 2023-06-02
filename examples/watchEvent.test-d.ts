@@ -1,18 +1,13 @@
 import type { Abi, ResolvedConfig } from 'abitype'
-import {
-  wagmiMintExampleAbi,
-  writingEditionsFactoryAbi,
-  zeroAddress,
-} from 'abitype/test'
+import { wagmiMintExampleAbi, writingEditionsFactoryAbi } from 'abitype/test'
 import { assertType, test } from 'vitest'
 
-import { watchContractEvent } from './watchContractEvent.js'
+import { watchEvent } from './watchEvent.js'
 
-test('watchContractEvent', () => {
+test('watchEvent', () => {
   test('args', () => {
     test('zero', () => {
-      watchContractEvent({
-        address: zeroAddress,
+      watchEvent({
         abi: [
           {
             name: 'Foo',
@@ -28,29 +23,27 @@ test('watchContractEvent', () => {
           },
         ],
         eventName: 'Foo',
-        listener(...args) {
+        onEmit(...args) {
           assertType<[]>(args)
         },
       })
     })
 
     test('one', () => {
-      watchContractEvent({
-        address: zeroAddress,
+      watchEvent({
         abi: writingEditionsFactoryAbi,
         eventName: 'FactoryGuardSet',
-        listener(guard) {
+        onEmit(guard) {
           assertType<boolean | null>(guard)
         },
       })
     })
 
     test('two or more', () => {
-      watchContractEvent({
-        address: zeroAddress,
+      watchEvent({
         abi: wagmiMintExampleAbi,
         eventName: 'Transfer',
-        listener(from, to, tokenId) {
+        onEmit(from, to, tokenId) {
           assertType<ResolvedConfig['AddressType']>(from)
           assertType<ResolvedConfig['AddressType']>(to)
           assertType<ResolvedConfig['BigIntType']>(tokenId)
@@ -75,11 +68,10 @@ test('watchContractEvent', () => {
           anonymous: false,
         },
       ]
-      watchContractEvent({
-        address: zeroAddress,
+      watchEvent({
         abi,
         eventName: 'Foo',
-        listener(name) {
+        onEmit(name) {
           assertType<unknown>(name)
         },
       })
@@ -100,19 +92,17 @@ test('watchContractEvent', () => {
           anonymous: false,
         },
       ]
-      watchContractEvent({
-        address: zeroAddress,
+      watchEvent({
         abi,
         eventName: 'Foo',
-        listener(name) {
+        onEmit(name) {
           assertType<unknown>(name)
         },
       })
     })
 
     test('defined inline', () => {
-      watchContractEvent({
-        address: zeroAddress,
+      watchEvent({
         abi: [
           {
             name: 'Foo',
@@ -128,7 +118,7 @@ test('watchContractEvent', () => {
           },
         ],
         eventName: 'Foo',
-        listener(name) {
+        onEmit(name) {
           assertType<ResolvedConfig['AddressType']>(name)
         },
       })

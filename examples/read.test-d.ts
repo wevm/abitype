@@ -4,17 +4,38 @@ import {
   wagmiMintExampleAbi,
   wagmiMintExampleHumanReadableAbi,
   writingEditionsFactoryAbi,
-  zeroAddress,
 } from 'abitype/test'
-import { assertType, test } from 'vitest'
+import { assertType, expectTypeOf, test } from 'vitest'
 
-import { readContract, readWagmiMintExample } from './readContract.js'
+import { read, readWagmiMintExample } from './read.js'
 
-test('readContract', () => {
+const abi = parseAbi([
+  'function foo() returns (bool)',
+  'function foo(uint) view returns (address)',
+  'function foo(address) view returns (uint)',
+  'function foo(uint256, address) view returns (address, uint8)',
+  'function bar() pure returns (address)',
+  'function baz(uint) pure returns (string)',
+  'function boo(string) pure',
+])
+expectTypeOf(
+  read({
+    abi,
+    functionName: 'foo',
+    args: [123n, '0x'],
+  }),
+).toEqualTypeOf<readonly [Address, number]>()
+expectTypeOf(
+  read({
+    abi,
+    functionName: 'foo',
+  }),
+).toEqualTypeOf<boolean>()
+
+test('read', () => {
   test('args', () => {
     test('zero', () => {
-      const result = readContract({
-        address: zeroAddress,
+      const result = read({
         abi: wagmiMintExampleAbi,
         functionName: 'name',
       })
@@ -22,8 +43,7 @@ test('readContract', () => {
     })
 
     test('one', () => {
-      const result = readContract({
-        address: zeroAddress,
+      const result = read({
         abi: wagmiMintExampleAbi,
         functionName: 'tokenURI',
         args: [123n],
@@ -32,11 +52,10 @@ test('readContract', () => {
     })
 
     test('two or more', () => {
-      const result = readContract({
-        address: zeroAddress,
+      const result = read({
         abi: writingEditionsFactoryAbi,
         functionName: 'predictDeterministicAddress',
-        args: [zeroAddress, '0xfoo'],
+        args: ['0x', '0xfoo'],
       })
       assertType<Address>(result)
     })
@@ -44,8 +63,7 @@ test('readContract', () => {
 
   test('return types', () => {
     test('string', () => {
-      const result = readContract({
-        address: zeroAddress,
+      const result = read({
         abi: wagmiMintExampleAbi,
         functionName: 'name',
       })
@@ -53,8 +71,7 @@ test('readContract', () => {
     })
 
     test('Address', () => {
-      const result = readContract({
-        address: zeroAddress,
+      const result = read({
         abi: wagmiMintExampleAbi,
         functionName: 'ownerOf',
         args: [123n],
@@ -63,11 +80,10 @@ test('readContract', () => {
     })
 
     test('number', () => {
-      const result = readContract({
-        address: zeroAddress,
+      const result = read({
         abi: wagmiMintExampleAbi,
         functionName: 'balanceOf',
-        args: [zeroAddress],
+        args: ['0x'],
       })
       assertType<ResolvedConfig['BigIntType']>(result)
     })
@@ -75,8 +91,7 @@ test('readContract', () => {
 
   test('behavior', () => {
     test('write function not allowed', () => {
-      const result = readContract({
-        address: zeroAddress,
+      const result = read({
         abi: wagmiMintExampleAbi,
         // @ts-expect-error Trying to use non-read function
         functionName: 'approve',
@@ -101,16 +116,14 @@ test('readContract', () => {
           outputs: [{ type: 'address', name: '' }],
         },
       ]
-      const result1 = readContract({
-        address: zeroAddress,
+      const result1 = read({
         abi: abi,
         functionName: 'foo',
       })
-      const result2 = readContract({
-        address: zeroAddress,
+      const result2 = read({
         abi: abi,
         functionName: 'bar',
-        args: [zeroAddress],
+        args: ['0x'],
       })
       type Result1 = typeof result1
       type Result2 = typeof result2
@@ -135,16 +148,14 @@ test('readContract', () => {
           outputs: [{ type: 'address', name: '' }],
         },
       ]
-      const result1 = readContract({
-        address: zeroAddress,
+      const result1 = read({
         abi: abi,
         functionName: 'foo',
       })
-      const result2 = readContract({
-        address: zeroAddress,
+      const result2 = read({
         abi: abi,
         functionName: 'bar',
-        args: [zeroAddress],
+        args: ['0x'],
       })
       type Result1 = typeof result1
       type Result2 = typeof result2
@@ -153,8 +164,7 @@ test('readContract', () => {
     })
 
     test('defined inline', () => {
-      const result1 = readContract({
-        address: zeroAddress,
+      const result1 = read({
         abi: [
           {
             name: 'foo',
@@ -173,8 +183,7 @@ test('readContract', () => {
         ],
         functionName: 'foo',
       })
-      const result2 = readContract({
-        address: zeroAddress,
+      const result2 = read({
         abi: [
           {
             name: 'foo',
@@ -192,7 +201,7 @@ test('readContract', () => {
           },
         ],
         functionName: 'bar',
-        args: [zeroAddress],
+        args: ['0x'],
       })
       type Result1 = typeof result1
       type Result2 = typeof result2
@@ -201,11 +210,10 @@ test('readContract', () => {
     })
 
     test('human readable', () => {
-      const result = readContract({
-        address: zeroAddress,
+      const result = read({
         abi: parseAbi(wagmiMintExampleHumanReadableAbi),
         functionName: 'balanceOf',
-        args: [zeroAddress],
+        args: ['0x'],
       })
       assertType<bigint>(result)
     })
@@ -216,7 +224,6 @@ test('readWagmiMintExample', () => {
   test('args', () => {
     test('zero', () => {
       const result = readWagmiMintExample({
-        address: '0x…',
         functionName: 'name',
       })
       assertType<string>(result)
@@ -224,9 +231,8 @@ test('readWagmiMintExample', () => {
 
     test('one', () => {
       const result = readWagmiMintExample({
-        address: '0x…',
         functionName: 'balanceOf',
-        args: ['0x…'],
+        args: ['0x'],
       })
       assertType<bigint>(result)
     })

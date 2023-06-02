@@ -32,7 +32,8 @@ test('signTypedData', () => {
     signTypedData({
       domain,
       types,
-      value: {
+      primaryType: 'Name',
+      message: {
         first: 'Tom',
         last: 'Meagher',
       },
@@ -41,7 +42,8 @@ test('signTypedData', () => {
     signTypedData({
       domain,
       types,
-      value: {
+      primaryType: 'Person',
+      message: {
         name: {
           first: 'Tom',
           last: 'Meagher',
@@ -55,7 +57,8 @@ test('signTypedData', () => {
     signTypedData({
       domain,
       types,
-      value: {
+      primaryType: 'Mail',
+      message: {
         from: {
           name: {
             first: 'Tom',
@@ -81,7 +84,8 @@ test('signTypedData', () => {
     signTypedData({
       domain,
       types,
-      value: {
+      primaryType: 'Name',
+      message: {
         first: 'Tom',
         // @ts-expect-error wrong type
         last: 123,
@@ -91,8 +95,9 @@ test('signTypedData', () => {
     signTypedData({
       domain,
       types,
+      primaryType: 'Person',
       // @ts-expect-error missing `name` property
-      value: {
+      message: {
         wallet: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
         favoriteColors: ['gray', 'forest green', 'orange'],
         age: 29,
@@ -130,7 +135,8 @@ test('signTypedData', () => {
     signTypedData({
       domain,
       types,
-      value: {
+      primaryType: 'Contributor',
+      message: {
         name: 'John Doe',
         address: '0x0000000000000000000000000000000000000000',
       },
@@ -139,7 +145,8 @@ test('signTypedData', () => {
     signTypedData({
       domain,
       types,
-      value: {
+      primaryType: 'Organization',
+      message: {
         name: 'My Organization',
         projects: [
           {
@@ -194,7 +201,8 @@ test('signTypedData', () => {
           verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
         },
         types,
-        value: {
+        primaryType: 'Name',
+        message: {
           first: 'Tom',
           last: 'Meagher',
         },
@@ -227,7 +235,8 @@ test('signTypedData', () => {
           verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
         },
         types,
-        value: {
+        primaryType: 'Name',
+        message: {
           first: 'Tom',
           last: 'Meagher',
         },
@@ -259,7 +268,8 @@ test('signTypedData', () => {
             { name: 'last', type: 'string' },
           ],
         },
-        value: {
+        primaryType: 'Name',
+        message: {
           first: 'Tom',
           last: 'Meagher',
         },

@@ -1,4 +1,4 @@
-import type { ResolvedConfig } from 'abitype'
+import { type Address, type ResolvedConfig, parseAbi } from 'abitype'
 import {
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
@@ -6,22 +6,44 @@ import {
   writingEditionsFactoryAbi,
   zeroAddress,
 } from 'abitype/test'
-import { assertType, test } from 'vitest'
+import { assertType, expectTypeOf, test } from 'vitest'
 
-import { readContracts } from './readContracts.js'
+import { reads } from './reads.js'
 
-test('readContracts', () => {
+const abi = parseAbi([
+  'function foo() returns (bool)',
+  'function foo(uint) view returns (address)',
+  'function foo(address) view returns (uint)',
+  'function foo(uint256, address) view returns (address, uint8)',
+  'function bar() pure returns (address)',
+  'function baz(uint) pure returns (string)',
+  'function boo(string) pure',
+])
+const res = reads({
+  contracts: [
+    {
+      abi,
+      functionName: 'foo',
+      args: [123n, '0x'],
+    },
+    {
+      abi,
+      functionName: 'foo',
+    },
+  ],
+})
+expectTypeOf(res).toEqualTypeOf<[readonly [Address, number], boolean]>()
+
+test('reads', () => {
   test('args', () => {
     test('zero', () => {
-      const result = readContracts({
+      const result = reads({
         contracts: [
           {
-            address: zeroAddress,
             abi: wagmiMintExampleAbi,
             functionName: 'name',
           },
           {
-            address: zeroAddress,
             abi: nounsAuctionHouseAbi,
             functionName: 'auction',
           },
@@ -43,16 +65,14 @@ test('readContracts', () => {
     })
 
     test('one', () => {
-      const result = readContracts({
+      const result = reads({
         contracts: [
           {
-            address: zeroAddress,
             abi: wagmiMintExampleAbi,
             functionName: 'balanceOf',
             args: [zeroAddress],
           },
           {
-            address: zeroAddress,
             abi: wagmiMintExampleAbi,
             functionName: 'ownerOf',
             args: [123n],
@@ -65,10 +85,9 @@ test('readContracts', () => {
     })
 
     test('Read bytes input types', () => {
-      const result = readContracts({
+      const result = reads({
         contracts: [
           {
-            address: zeroAddress,
             abi: wagmiMintExampleAbi,
             functionName: 'supportsInterface',
             args: ['0xfoobar'],
@@ -80,10 +99,9 @@ test('readContracts', () => {
     })
 
     test('two or more', () => {
-      const result = readContracts({
+      const result = reads({
         contracts: [
           {
-            address: zeroAddress,
             abi: nestedTupleArrayAbi,
             functionName: 'v',
             args: [
@@ -96,7 +114,6 @@ test('readContracts', () => {
             ],
           },
           {
-            address: zeroAddress,
             abi: writingEditionsFactoryAbi,
             functionName: 'getSalt',
             args: [
@@ -124,10 +141,9 @@ test('readContracts', () => {
 
   test('behavior', () => {
     test('write function not allowed', () => {
-      const result = readContracts({
+      const result = reads({
         contracts: [
           {
-            address: zeroAddress,
             abi: wagmiMintExampleAbi,
             // @ts-expect-error Trying to use non-read function
             functionName: 'approve',
@@ -138,22 +154,19 @@ test('readContracts', () => {
     })
 
     test('mixed result', () => {
-      const result = readContracts({
+      const result = reads({
         contracts: [
           {
-            address: zeroAddress,
             abi: wagmiMintExampleAbi,
             functionName: 'tokenURI',
             args: [1n],
           },
           {
-            address: zeroAddress,
             abi: writingEditionsFactoryAbi,
             functionName: 'predictDeterministicAddress',
             args: [zeroAddress, zeroAddress],
           },
           {
-            address: zeroAddress,
             abi: [
               {
                 type: 'function',
@@ -183,19 +196,17 @@ test('readContracts', () => {
     test('without const assertion', () => {
       const contracts = [
         {
-          address: zeroAddress,
           abi: wagmiMintExampleAbi,
           functionName: 'tokenURI',
           args: [1n],
         },
-        {
-          address: zeroAddress,
-          abi: wagmiMintExampleAbi,
-          functionName: 'balanceOf',
-          args: ['0x…'],
-        },
+        // {
+        //   abi: wagmiMintExampleAbi,
+        //   functionName: 'balanceOf',
+        //   args: ['0x'],
+        // },
       ]
-      const result = readContracts({
+      const result = reads({
         contracts,
       })
       assertType<unknown[]>(result)

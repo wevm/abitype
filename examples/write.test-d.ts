@@ -11,13 +11,12 @@ import {
 } from 'abitype/test'
 import { assertType, test } from 'vitest'
 
-import { writeContract } from './writeContract.js'
+import { write } from './write.js'
 
-test('writeContract', () => {
+test('write', () => {
   test('args', () => {
     test('zero', () => {
-      const result = writeContract({
-        address: zeroAddress,
+      const result = write({
         abi: wagmiMintExampleAbi,
         functionName: 'mint',
       })
@@ -25,8 +24,7 @@ test('writeContract', () => {
     })
 
     test('one', () => {
-      const result = writeContract({
-        address: zeroAddress,
+      const result = write({
         abi: nounsAuctionHouseAbi,
         functionName: 'createBid',
         args: [123n],
@@ -35,14 +33,12 @@ test('writeContract', () => {
     })
 
     test('two or more', () => {
-      const result1 = writeContract({
-        address: zeroAddress,
+      const result1 = write({
         abi: wagmiMintExampleAbi,
         functionName: 'approve',
         args: [zeroAddress, 123n],
       })
-      const result2 = writeContract({
-        address: zeroAddress,
+      const result2 = write({
         abi: wagmiMintExampleAbi,
         functionName: 'transferFrom',
         args: [zeroAddress, zeroAddress, 123n],
@@ -52,8 +48,7 @@ test('writeContract', () => {
     })
 
     test('tuple', () => {
-      const result = writeContract({
-        address: zeroAddress,
+      const result = write({
         abi: writingEditionsFactoryAbi,
         functionName: 'create',
         args: [
@@ -73,13 +68,27 @@ test('writeContract', () => {
         ],
       })
       assertType<ResolvedConfig['AddressType']>(result)
+
+      write({
+        abi: parseAbi([
+          'struct WritingEdition { string name; }',
+          'function create(WritingEdition edition) returns (address clone)',
+        ]),
+        functionName: 'create',
+        args: [
+          {
+            name: 'Test',
+            // @ts-expect-error more keys than in the struct
+            symbol: '$TEST',
+          },
+        ],
+      })
     })
   })
 
   test('return types', () => {
     test('void', () => {
-      const result = writeContract({
-        address: zeroAddress,
+      const result = write({
         abi: nounsAuctionHouseAbi,
         functionName: 'pause',
       })
@@ -87,8 +96,7 @@ test('writeContract', () => {
     })
 
     test('bytes32', () => {
-      const result = writeContract({
-        address: zeroAddress,
+      const result = write({
         abi: ensRegistryWithFallbackAbi,
         functionName: 'setSubnodeOwner',
         args: ['0xfoo', '0xbar', zeroAddress],
@@ -121,8 +129,7 @@ test('writeContract', () => {
         symbol: string
         fundingRecipient: ResolvedConfig['AddressType']
       }
-      const result = writeContract({
-        address: zeroAddress,
+      const result = write({
         abi,
         functionName: 'foo',
       })
@@ -130,8 +137,7 @@ test('writeContract', () => {
     })
 
     test('tuple[]', () => {
-      const result = writeContract({
-        address: zeroAddress,
+      const result = write({
         abi: nestedTupleArrayAbi,
         functionName: 'f',
         args: [{ a: 1, b: [2], c: [{ x: 1, y: 1 }] }, { x: 1n, y: 1n }, 1n],
@@ -147,8 +153,7 @@ test('writeContract', () => {
 
   test('behavior', () => {
     test('read function not allowed', () => {
-      const result = writeContract({
-        address: zeroAddress,
+      const result = write({
         abi: wagmiMintExampleAbi,
         // @ts-expect-error Trying to use read function
         functionName: 'symbol',
@@ -157,16 +162,14 @@ test('writeContract', () => {
     })
 
     test('function with overloads', () => {
-      const result1 = writeContract({
-        address: zeroAddress,
+      const result1 = write({
         abi: wagmiMintExampleAbi,
         functionName: 'safeTransferFrom',
         args: [zeroAddress, zeroAddress, 123n],
       })
       assertType<void>(result1)
 
-      const result2 = writeContract({
-        address: zeroAddress,
+      const result2 = write({
         abi: wagmiMintExampleAbi,
         functionName: 'safeTransferFrom',
         args: [zeroAddress, zeroAddress, 123n, '0xfoo'],
@@ -184,8 +187,7 @@ test('writeContract', () => {
           outputs: [{ type: 'string', name: '' }],
         },
       ]
-      const result = writeContract({
-        address: zeroAddress,
+      const result = write({
         abi,
         functionName: 'foo',
         args: ['bar'],
@@ -203,8 +205,7 @@ test('writeContract', () => {
           outputs: [{ type: 'string', name: '' }],
         },
       ]
-      const result = writeContract({
-        address: zeroAddress,
+      const result = write({
         abi,
         functionName: 'foo',
         args: ['bar'],
@@ -213,8 +214,7 @@ test('writeContract', () => {
     })
 
     test('defined inline', () => {
-      const result = writeContract({
-        address: zeroAddress,
+      const result = write({
         abi: [
           {
             name: 'foo',
@@ -231,8 +231,7 @@ test('writeContract', () => {
     })
 
     test('human readable', () => {
-      const result = writeContract({
-        address: zeroAddress,
+      const result = write({
         abi: parseAbi(wagmiMintExampleHumanReadableAbi),
         functionName: 'safeTransferFrom',
         args: [zeroAddress, zeroAddress, 123n],
