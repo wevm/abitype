@@ -27,6 +27,10 @@ it('should expose correct exports', () => {
       "SolidityInt",
       "SolidityString",
       "SolidityTuple",
+      "TypedData",
+      "TypedDataDomain",
+      "TypedDataParameter",
+      "TypedDataType",
     ]
   `)
 })

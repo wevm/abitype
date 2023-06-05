@@ -21,4 +21,8 @@ export {
   SolidityInt,
   SolidityString,
   SolidityTuple,
+  TypedData,
+  TypedDataDomain,
+  TypedDataParameter,
+  TypedDataType,
 } from './zod.js'
