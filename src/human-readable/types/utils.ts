@@ -73,7 +73,9 @@ export type ParseSignature<
               >,
               { Modifier: FunctionModifier; Structs: TStructs }
             >
-            readonly outputs: Tail extends `${string}returns (${infer Returns})`
+            readonly outputs: Tail extends
+              | `${string}returns (${infer Returns})`
+              | `${string}returns(${infer Returns})`
               ? ParseAbiParameters<
                   SplitParameters<Returns>,
                   { Modifier: FunctionModifier; Structs: TStructs }
@@ -262,7 +264,9 @@ export type _ValidateAbiParameter<
 
 export type _ParseFunctionParametersAndStateMutability<
   TSignature extends string,
-> = TSignature extends `${infer Head}returns (${string})`
+> = TSignature extends
+  | `${infer Head}returns (${string})`
+  | `${infer Head}returns(${string})`
   ? _ParseFunctionParametersAndStateMutability<Trim<Head>>
   : TSignature extends `function ${string}(${infer Parameters})`
   ? { Inputs: Parameters; StateMutability: 'nonpayable' }

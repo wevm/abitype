@@ -279,6 +279,15 @@ test('ParseSignature', () => {
     inputs: [],
     outputs: [{ type: 'string', name: 'bar' }],
   })
+  assertType<
+    ParseSignature<'function foo() public payable returns(string bar)'>
+  >({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'payable',
+    inputs: [],
+    outputs: [{ type: 'string', name: 'bar' }],
+  })
 
   // inputs and outputs
   assertType<ParseSignature<'function foo(string) returns (string)'>>({
@@ -293,6 +302,15 @@ test('ParseSignature', () => {
     name: 'foo',
     stateMutability: 'nonpayable',
     inputs: [{ type: 'string', name: 'bar' }],
+    outputs: [{ type: 'string', name: 'bar' }],
+  })
+  assertType<
+    ParseSignature<'function foo(string foo) public payable returns(string bar)'>
+  >({
+    type: 'function',
+    name: 'foo',
+    stateMutability: 'payable',
+    inputs: [{ type: 'string', name: 'foo' }],
     outputs: [{ type: 'string', name: 'bar' }],
   })
   assertType<
