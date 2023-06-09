@@ -1,20 +1,13 @@
 import type { Abi } from 'abitype'
 
-import type {
-  ContractParameters,
-  ContractReturnType,
-  MaybePartialBy,
-} from './types.js'
+import type { ContractParameters, ContractReturnType } from './types.js'
 
 export declare function write<
   const abi extends Abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
   functionName extends string,
   const args extends readonly unknown[] | undefined,
 >(
-  parameters: MaybePartialBy<
-    WriteParameters<abi, functionName, args>,
-    readonly [] extends args ? 'args' : string
-  >,
+  parameters: WriteParameters<abi, functionName, args>,
 ): WriteReturnType<abi, functionName, args>
 
 export type WriteParameters<

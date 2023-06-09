@@ -49,7 +49,14 @@ type GetArgs<
           : never
         : never)
     | (Abi extends abi ? readonly unknown[] : never), // fallback if `abi` is declared as `Abi`
-> = { args: args_ }
+> = MaybePartialBy<
+  { args: args_ },
+  readonly [] extends primitiveTypes
+    ? 'args'
+    : Abi extends abi
+    ? 'args'
+    : string
+>
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -115,16 +122,15 @@ type UnionToIntersection<U> = (
   ? I
   : never
 
-export type PartialBy<TType, TKeys extends keyof TType> = ExactPartial<
+type PartialBy<TType, TKeys extends keyof TType> = ExactPartial<
   Pick<TType, TKeys>
 > &
   Omit<TType, TKeys>
 type ExactPartial<T> = { [K in keyof T]?: T[K] | undefined }
 
-export type MaybePartialBy<
-  TType,
-  TKeys extends string,
-> = TKeys extends keyof TType ? PartialBy<TType, TKeys> : TType
+type MaybePartialBy<TType, TKeys extends string> = TKeys extends keyof TType
+  ? PartialBy<TType, TKeys>
+  : TType
 
 type ReadonlyWiden<TType> =
   | (TType extends Function ? TType : never)

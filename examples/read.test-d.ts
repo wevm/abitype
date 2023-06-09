@@ -9,37 +9,6 @@ import { assertType, expectTypeOf, test } from 'vitest'
 
 import { read, readWagmiMintExample, useRead } from './read.js'
 
-const abi = parseAbi([
-  'function foo() returns (bool)',
-  'function foo() returns (uint8)',
-  'function foo(uint) view returns (address)',
-  'function foo(address) view returns (uint)',
-  'function foo(uint256, address) view returns (address, uint8)',
-  'function bar() pure returns (address)',
-  'function baz(uint) pure returns (string)',
-  'function boo(bytes32) pure returns (bytes32)',
-])
-expectTypeOf(
-  read({
-    abi,
-    functionName: 'foo',
-    args: [123n, '0x'],
-  }),
-).toEqualTypeOf<readonly [Address, number]>()
-expectTypeOf(
-  read({
-    abi,
-    functionName: 'foo',
-  }),
-).toEqualTypeOf<boolean | number>()
-expectTypeOf(
-  useRead({
-    abi,
-    functionName: 'foo',
-    args: [123n, '0x'],
-  }),
-).toEqualTypeOf<readonly [Address, number]>()
-
 test('read', () => {
   test('args', () => {
     test('zero', () => {
@@ -246,3 +215,46 @@ test('readWagmiMintExample', () => {
     })
   })
 })
+
+const abi = parseAbi([
+  'function foo() returns (bool)',
+  'function foo() returns (uint8)',
+  'function foo(uint) view returns (address)',
+  'function foo(address) view returns (uint)',
+  'function foo(uint256, address) view returns (address, uint8)',
+  'function bar() pure returns (address)',
+  'function baz(uint) pure returns (string)',
+  'function boo(bytes32) pure returns (bytes32)',
+])
+expectTypeOf(
+  read({
+    abi,
+    functionName: 'foo',
+    args: [123n, '0x'],
+  }),
+).toEqualTypeOf<readonly [Address, number]>()
+expectTypeOf(
+  read({
+    abi,
+    functionName: 'foo',
+  }),
+).toEqualTypeOf<boolean | number>()
+expectTypeOf(
+  useRead({
+    abi,
+    functionName: 'foo',
+    args: [123n, '0x'],
+  }),
+).toEqualTypeOf<readonly [Address, number]>()
+
+const abi2 = parseAbi([
+  'function foo(address) view returns (uint)',
+  // 'function foo(address) view returns (string)',
+])
+const res = read({
+  abi: abi2,
+  functionName: 'foo',
+  args: ['0x'],
+})
+res
+// ^?

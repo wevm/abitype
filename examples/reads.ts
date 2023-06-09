@@ -5,7 +5,6 @@ import type {
   ContractParameters,
   ContractReturnType,
   DeepPartial,
-  MaybePartialBy,
 } from './types.js'
 
 export declare function reads<
@@ -60,13 +59,7 @@ type ContractsParameters<
   : contracts extends []
   ? []
   : contracts extends [infer head extends Contract]
-  ? [
-      ...result,
-      MaybePartialBy<
-        ReadParameters<head['abi'], head['functionName'], head['args']>,
-        readonly [] extends head['args'] ? 'args' : string
-      >,
-    ]
+  ? [...result, ReadParameters<head['abi'], head['functionName'], head['args']>]
   : contracts extends [
       infer head extends Contract,
       ...infer tail extends Contract[],
@@ -75,10 +68,7 @@ type ContractsParameters<
       [...tail],
       [
         ...result,
-        MaybePartialBy<
-          ReadParameters<head['abi'], head['functionName'], head['args']>,
-          readonly [] extends head['args'] ? 'args' : string
-        >,
+        ReadParameters<head['abi'], head['functionName'], head['args']>,
       ],
       [...depth, 1]
     >

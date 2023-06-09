@@ -5,7 +5,6 @@ import type {
   ContractParameters,
   ContractReturnType,
   DeepPartial,
-  MaybePartialBy,
 } from './types.js'
 
 export declare function read<
@@ -13,19 +12,16 @@ export declare function read<
   functionName extends string,
   const args extends readonly unknown[] | undefined,
 >(
-  parameters: MaybePartialBy<
-    ReadParameters<abi, functionName, args>,
-    readonly [] extends args ? 'args' : string
-  >,
+  parameters: ReadParameters<abi, functionName, args>,
 ): ReadReturnType<abi, functionName, args>
 
 export declare function readWagmiMintExample<
   functionName extends string,
   const args extends readonly unknown[] | undefined,
 >(
-  parameters: MaybePartialBy<
-    Omit<ReadParameters<typeof wagmiMintExampleAbi, functionName, args>, 'abi'>,
-    readonly [] extends args ? 'args' : string
+  parameters: Omit<
+    ReadParameters<typeof wagmiMintExampleAbi, functionName, args>,
+    'abi'
   >,
 ): ReadReturnType<typeof wagmiMintExampleAbi, functionName, args>
 
