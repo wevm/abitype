@@ -1,5 +1,11 @@
 # abitype
 
+## 0.8.8
+
+### Patch Changes
+
+- [#149](https://github.com/wagmi-dev/abitype/pull/149) [`ba21aae`](https://github.com/wagmi-dev/abitype/commit/ba21aae2460efe4ee6dae074c85e73d6c87a81d4) Thanks [@tmm](https://github.com/tmm)! - Removed internal barrel exports.
+
 ## 0.8.7
 
 ### Patch Changes
