@@ -7,8 +7,8 @@ import type {
   AbiParameter as AbiParameterType,
   AbiReceive as AbiReceiveType,
   Address as AddressType,
-} from '../abi.js'
-import { bytesRegex, integerRegex } from '../regex.js'
+} from './abi.js'
+import { bytesRegex, integerRegex } from './regex.js'
 
 export const Address = z.string().transform((val, ctx) => {
   const regex = /^0x[a-fA-F0-9]{40}$/

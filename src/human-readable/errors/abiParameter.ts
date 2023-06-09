@@ -1,6 +1,6 @@
 import type { AbiItemType, AbiParameter } from '../../abi.js'
 import { BaseError } from '../../errors.js'
-import type { Modifier } from '../types/index.js'
+import type { Modifier } from '../types/signatures.js'
 
 export class InvalidAbiParameterError extends BaseError {
   override name = 'InvalidAbiParameterError'

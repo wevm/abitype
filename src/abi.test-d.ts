@@ -24,7 +24,7 @@ import type {
   TypedData,
   TypedDataType,
 } from './abi.js'
-import { wagmiMintExampleAbi } from './test/index.js'
+import { wagmiMintExampleAbi } from './test/abis.js'
 
 test('Address', () => {
   assertType<Address>('0xA0Cf798816D4b9b9866b5330EEa46a18382f251e')

@@ -8,7 +8,7 @@
     "bench": "vitest bench",
     "build": "pnpm run clean && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types",
     "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir ./dist/cjs --removeComments --verbatimModuleSyntax false && echo > ./dist/cjs/package.json '{\"type\":\"commonjs\"}'",
-    "build:esm": "tsc --project tsconfig.build.json --module es2015 --outDir ./dist/esm --removeComments && echo > ./dist/esm/package.json '{\"type\":\"module\"}'",
+    "build:esm": "tsc --project tsconfig.build.json --module es2015 --outDir ./dist/esm --removeComments && echo > ./dist/esm/package.json '{\"type\":\"module\",\"sideEffects\":false}'",
     "build:types": "tsc --project tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
     "changeset": "changeset",
     "changeset:release": "pnpm build && changeset publish",
@@ -36,8 +36,7 @@
     "src/**/*.ts",
     "!src/**/*.test.ts",
     "!src/**/*.test-d.ts",
-    "!src/**/*.bench.ts",
-    "!src/_test/**/*"
+    "!src/**/*.bench.ts"
   ],
   "sideEffects": false,
   "type": "module",
@@ -57,28 +56,22 @@
       "require": "./dist/cjs/config.js"
     },
     "./test": {
-      "types": "./dist/types/test/index.d.ts",
-      "import": "./dist/esm/test/index.js",
-      "require": "./dist/cjs/test/index.js"
+      "types": "./dist/types/test.d.ts",
+      "import": "./dist/esm/test.js",
+      "require": "./dist/cjs/test.js"
     },
     "./zod": {
-      "types": "./dist/types/zod/index.d.ts",
-      "import": "./dist/esm/zod/index.js",
-      "require": "./dist/cjs/zod/index.js"
+      "types": "./dist/types/zod.d.ts",
+      "import": "./dist/esm/zod.js",
+      "require": "./dist/cjs/zod.js"
     },
     "./package.json": "./package.json"
   },
   "typesVersions": {
     "*": {
-      "config": [
-        "./dist/types/config.d.ts"
-      ],
-      "test": [
-        "./dist/types/test/index.d.ts"
-      ],
-      "zod": [
-        "./dist/types/zod/index.d.ts"
-      ]
+      "config": ["./dist/types/config.d.ts"],
+      "test": ["./dist/types/test.d.ts"],
+      "zod": ["./dist/types/zod.d.ts"]
     }
   },
   "peerDependencies": {
@@ -107,23 +100,14 @@
     "vitest": "^0.30.1",
     "zod": "^3.20.6"
   },
-  "contributors": [
-    "jxom.eth <j@wagmi.sh>",
-    "awkweb.eth <t@wagmi.sh>"
-  ],
+  "contributors": ["jxom.eth <j@wagmi.sh>", "awkweb.eth <t@wagmi.sh>"],
   "funding": [
     {
       "type": "github",
       "url": "https://github.com/sponsors/wagmi-dev"
     }
   ],
-  "keywords": [
-    "abi",
-    "eth",
-    "ethereum",
-    "typescript",
-    "web3"
-  ],
+  "keywords": ["abi", "eth", "ethereum", "typescript", "web3"],
   "simple-git-hooks": {
     "pre-commit": "pnpm format && pnpm lint:fix"
   },
@@ -134,9 +118,7 @@
       "shiki-twoslash>shiki": "^0.14.1"
     },
     "peerDependencyRules": {
-      "ignoreMissing": [
-        "@algolia/client-search"
-      ]
+      "ignoreMissing": ["@algolia/client-search"]
     }
   }
 }
