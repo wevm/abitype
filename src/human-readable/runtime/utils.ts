@@ -12,21 +12,20 @@ import {
   integerRegex,
   isTupleRegex,
 } from '../../regex.js'
+import { UnknownSolidityTypeError } from '../errors/abiItem.js'
 import {
   InvalidFunctionModifierError,
   InvalidModifierError,
   InvalidParameterError,
-  InvalidSignatureError,
   SolidityProtectedKeywordError,
+} from '../errors/abiParameter.js'
+import {
+  InvalidSignatureError,
   UnknownSignatureError,
-  UnknownSolidityTypeError,
-} from '../errors/index.js'
-import { InvalidParenthesisError } from '../errors/index.js'
-import type {
-  FunctionModifier,
-  Modifier,
-  StructLookup,
-} from '../types/index.js'
+} from '../errors/signature.js'
+import { InvalidParenthesisError } from '../errors/splitParameters.js'
+import type { FunctionModifier, Modifier } from '../types/signatures.js'
+import type { StructLookup } from '../types/structs.js'
 import { getParameterCacheKey, parameterCache } from './cache.js'
 import {
   eventModifiers,

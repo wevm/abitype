@@ -9,7 +9,7 @@ import {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
-} from '../test/index.js'
+} from './test/abis.js'
 import {
   Abi,
   AbiConstructor,
@@ -33,6 +33,35 @@ import {
   SolidityString,
   SolidityTuple,
 } from './zod.js'
+import * as Exports from './zod.js'
+
+it('should expose correct exports', () => {
+  expect(Object.keys(Exports)).toMatchInlineSnapshot(`
+    [
+      "SolidityAddress",
+      "SolidityBool",
+      "SolidityBytes",
+      "SolidityFunction",
+      "SolidityString",
+      "SolidityTuple",
+      "SolidityInt",
+      "SolidityArrayWithoutTuple",
+      "SolidityArrayWithTuple",
+      "SolidityArray",
+      "AbiParameter",
+      "AbiEventParameter",
+      "AbiStateMutability",
+      "AbiFunction",
+      "AbiConstructor",
+      "AbiFallback",
+      "AbiReceive",
+      "AbiEvent",
+      "AbiError",
+      "AbiItemType",
+      "Abi",
+    ]
+  `)
+})
 
 describe('AbiSchema', () => {
   it('returns valid schema', () => {

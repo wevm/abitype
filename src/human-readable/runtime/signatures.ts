@@ -4,7 +4,7 @@ import type {
   EventModifier,
   FunctionModifier,
   Modifier,
-} from '../types/index.js'
+} from '../types/signatures.js'
 
 // https://regexr.com/78tsr
 const errorSignatureRegex =

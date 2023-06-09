@@ -1,19 +1,13 @@
 import type { AbiParameter } from '../abi.js'
+import { InvalidAbiParameterError } from '../index.js'
 import type { Narrow } from '../narrow.js'
 import type { Error, Filter } from '../types.js'
-import { InvalidAbiParameterError } from './errors/index.js'
-import {
-  isStructSignature,
-  modifiers,
-  parseAbiParameter as parseAbiParameter_,
-  parseStructs,
-} from './runtime/index.js'
-import type {
-  IsStructSignature,
-  Modifier,
-  ParseAbiParameter as ParseAbiParameter_,
-  ParseStructs,
-} from './types/index.js'
+import { isStructSignature, modifiers } from './runtime/signatures.js'
+import { parseStructs } from './runtime/structs.js'
+import { parseAbiParameter as parseAbiParameter_ } from './runtime/utils.js'
+import type { IsStructSignature, Modifier } from './types/signatures.js'
+import type { ParseStructs } from './types/structs.js'
+import type { ParseAbiParameter as ParseAbiParameter_ } from './types/utils.js'
 
 /**
  * Parses human-readable ABI parameter into {@link AbiParameter}
