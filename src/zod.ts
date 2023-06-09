@@ -6,8 +6,22 @@ import type {
   AbiFunction as AbiFunctionType,
   AbiParameter as AbiParameterType,
   AbiReceive as AbiReceiveType,
+  Address as AddressType,
 } from './abi.js'
 import { bytesRegex, integerRegex } from './regex.js'
+
+export const Address = z.string().transform((val, ctx) => {
+  const regex = /^0x[a-fA-F0-9]{40}$/
+
+  if (!regex.test(val)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Invalid Address ${val}`,
+    })
+  }
+
+  return val as AddressType
+})
 
 // From https://docs.soliditylang.org/en/latest/abi-spec.html#types
 export const SolidityAddress = z.literal('address')
