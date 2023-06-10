@@ -7,6 +7,7 @@ it('should expose correct exports', () => {
     [
       "BaseError",
       "narrow",
+      "formatAbiParameter",
       "parseAbi",
       "parseAbiItem",
       "parseAbiParameter",

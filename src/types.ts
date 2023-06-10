@@ -53,6 +53,26 @@ export type Filter<
 export type IsUnknown<T> = unknown extends T ? true : false
 
 /**
+ * Joins array into string
+ *
+ * @param T - Array to join
+ * @param U - Separator
+ * @returns string
+ *
+ * @example
+ * type Result = Join<['a', 'b', 'c'], '-'>
+ * //   ^? type Result = 'a-b-c'
+ */
+export type Join<
+  T extends readonly unknown[],
+  U extends string | number,
+> = T extends readonly [infer F, ...infer R]
+  ? R['length'] extends 0
+    ? `${F & string}`
+    : `${F & string}${U}${Join<R, U>}`
+  : never
+
+/**
  * Merges two object types into new type
  *
  * @param Object1 - Object to merge into

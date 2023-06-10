@@ -4,6 +4,7 @@ import type {
   Error,
   Filter,
   IsUnknown,
+  Join,
   Merge,
   OneOf,
   Range,
@@ -31,6 +32,12 @@ test('Filter', () => {
 test('IsUnknown', () => {
   expectTypeOf<IsUnknown<unknown>>().toEqualTypeOf<true>()
   expectTypeOf<IsUnknown<number | bigint>>().toEqualTypeOf<false>()
+})
+
+test('Join', () => {
+  assertType<Join<['foo'], ','>>('foo')
+  assertType<Join<['foo', 'bar'], ','>>('foo,bar')
+  assertType<Join<['foo', 'bar', 'baz'], ','>>('foo,bar,baz')
 })
 
 test('Merge', () => {

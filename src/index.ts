@@ -60,6 +60,11 @@ export type {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Human-Readable
 
+export {
+  formatAbiParameter,
+  type FormatAbiParameter,
+} from './human-readable/formatAbiParameter.js'
+
 export { parseAbi, type ParseAbi } from './human-readable/parseAbi.js'
 
 export {

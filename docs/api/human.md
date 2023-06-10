@@ -202,7 +202,25 @@ Some additional rules that apply to human-readable ABIs:
 
 ## Types
 
-Types for parsing human-readable ABIs.
+Types for formatting and parsing human-readable ABIs.
+
+### `FormatAbiParameter`
+
+Formats JSON [`Abi`](/api/types#abi) into human-readable ABI.
+
+| Name            | Description                   | Type                                             |
+| --------------- | ------------------------------| ------------------------------------------------ |
+| `TAbiParameter` | ABI parameter                 | [`AbiParameter`](/api/types#abiparameter)        |
+| returns         | Human-Readable ABI parameter. | `string` (inferred)                              |
+
+#### Example
+
+```ts twoslash
+import { FormatAbiParameter } from 'abitype'
+
+type Result = FormatAbiParameter<{ type: 'address'; name: 'from' }>
+//   ^? 
+```
 
 ### `ParseAbi`
 
@@ -302,11 +320,29 @@ type ResultStruct = ParseAbiParameters<[
 
 ## Utilities
 
-Runtime functions for parsing human-readable ABIs.
+Runtime functions for formatting and parsing human-readable ABIs.
 
 ::: warning
 These functions throw [errors](#errors-1) for invalid inputs. Make sure you handle errors appropriately.
 :::
+
+### `formatAbiParameter`
+
+Formats JSON [`Abi`](/api/types#abi) into human-readable ABI.
+
+| Name           | Description                   | Type                                             |
+| -------------- | ------------------------------| ------------------------------------------------ |
+| `abiParameter` | ABI parameter                 | [`AbiParameter`](/api/types#abiparameter)        |
+| returns        | Human-Readable ABI parameter. | `string` (inferred)                              |
+
+#### Example
+
+```ts twoslash
+import { formatAbiParameter } from 'abitype'
+
+const result = formatAbiParameter({ type: 'address', name: 'from' })
+//    ^? 
+```
 
 ### `parseAbi`
 
