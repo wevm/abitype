@@ -328,7 +328,7 @@ These functions throw [errors](#errors-1) for invalid inputs. Make sure you hand
 
 ### `formatAbiParameter`
 
-Formats JSON [`Abi`](/api/types#abi) into human-readable ABI.
+Formats JSON [`AbiParameter`](/api/types#abiparameter) into human-readable ABI parameter.
 
 | Name           | Description                   | Type                                             |
 | -------------- | ------------------------------| ------------------------------------------------ |

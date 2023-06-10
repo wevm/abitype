@@ -2,6 +2,16 @@ import type { AbiEventParameter, AbiParameter } from '../abi.js'
 import { execTyped } from '../regex.js'
 import type { Join } from '../types.js'
 
+/**
+ * Formats {@link AbiParameter} to human-readable ABI parameter.
+ *
+ * @param TAbiParameter - ABI parameter
+ * @returns Human-readable ABI parameter
+ *
+ * @example
+ * type Result = FormatAbiParameter<{ type: 'address'; name: 'from'; }>
+ * //   ^? type Result = 'address from'
+ */
 export type FormatAbiParameter<
   TAbiParameter extends AbiParameter | AbiEventParameter,
 > = TAbiParameter extends {
@@ -28,8 +38,18 @@ export type FormatAbiParameter<
       : ''}`
 
 // https://regexr.com/7f7rv
-export const tupleRegex = /^tuple(?<array>(\[(\d*)\])*)$/
+const tupleRegex = /^tuple(?<array>(\[(\d*)\])*)$/
 
+/**
+ * Formats {@link AbiParameter} to human-readable ABI parameter.
+ *
+ * @param abiParameter - ABI parameter
+ * @returns Human-readable ABI parameter
+ *
+ * @example
+ * const result = formatAbiParameter({ type: 'address', name: 'from'; })
+ * //    ^? const result: 'address from'
+ */
 export function formatAbiParameter<
   const TAbiParameter extends AbiParameter | AbiEventParameter,
 >(abiParameter: TAbiParameter): FormatAbiParameter<TAbiParameter> {
