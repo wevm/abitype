@@ -1,4 +1,4 @@
-import { expect, expectTypeOf, test } from 'vitest'
+import { assertType, expect, expectTypeOf, test } from 'vitest'
 
 import { formatAbiParameter } from './formatAbiParameter.js'
 
@@ -93,32 +93,6 @@ test.each([
   expect(formatAbiParameter(abiParameter)).toEqual(expected)
 })
 
-// test.each([
-//   {
-//     signatures: ['struct Foo { string bar; }', 'Foo'],
-//     abiParameter: { type: 'tuple', components: [{ name: 'bar', type: 'string' }] },
-//   },
-//   {
-//     signatures: ['struct Foo { string bar; }', 'Foo foo'],
-//     abiParameter: {
-//       type: 'tuple',
-//       name: 'foo',
-//       components: [{ name: 'bar', type: 'string' }],
-//     },
-//   },
-//   {
-//     signatures: ['struct Foo { string bar; }', 'Foo indexed foo'],
-//     abiParameter: {
-//       type: 'tuple',
-//       name: 'foo',
-//       indexed: true,
-//       components: [{ name: 'bar', type: 'string' }],
-//     },
-//   },
-// ])('parseAbiParameter($signatures)', ({ signatures, expected }) => {
-//   expect(parseAbiParameter(signatures)).toEqual(expected)
-// })
-
 test('nested tuple', () => {
   const result = formatAbiParameter({
     components: [
@@ -148,31 +122,5 @@ test('nested tuple', () => {
     type: 'tuple',
   })
   expect(result).toMatchInlineSnapshot('"((((string baz) bar)[1] foo) boo)"')
-  // assertType<{
-  //   type: 'tuple'
-  //   components: readonly [
-  //     {
-  //       type: 'tuple'
-  //       components: readonly [
-  //         {
-  //           type: 'tuple[1]'
-  //           components: readonly [
-  //             {
-  //               type: 'tuple'
-  //               components: readonly [
-  //                 {
-  //                   type: 'string'
-  //                   name: 'baz'
-  //                 },
-  //               ]
-  //               name: 'bar'
-  //             },
-  //           ]
-  //           name: 'foo'
-  //         },
-  //       ]
-  //       name: 'boo'
-  //     },
-  //   ]
-  // }>(result)
+  assertType<'((((string baz) bar)[1] foo) boo)'>(result)
 })
