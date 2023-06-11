@@ -3,7 +3,7 @@ import { expect, test } from 'vitest'
 import {
   customSolidityErrorsHumanReadableAbi,
   seaportHumanReadableAbi,
-} from '../test/index.js'
+} from '../test/human-readable.js'
 import { parseAbi } from './parseAbi.js'
 
 test('parseAbi', () => {

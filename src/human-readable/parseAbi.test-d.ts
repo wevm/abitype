@@ -2,7 +2,7 @@ import { expectTypeOf, test } from 'vitest'
 
 import type { Abi } from '../abi.js'
 
-import { seaportHumanReadableAbi } from '../test/index.js'
+import { seaportHumanReadableAbi } from '../test/human-readable.js'
 import type { IsAbi } from '../utils.js'
 import type { ParseAbi } from './parseAbi.js'
 import { parseAbi } from './parseAbi.js'

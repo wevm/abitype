@@ -5,8 +5,7 @@
   "exclude": [
     "src/**/*.test.ts",
     "src/**/*.test-d.ts",
-    "src/**/*.bench.ts",
-    "src/_test"
+    "src/**/*.bench.ts"
   ],
   "compilerOptions": {
     "sourceMap": true,

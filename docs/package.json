@@ -10,10 +10,10 @@
     "@ethersproject/abi": "*",
     "@types/markdown-it-footnote": "^3.0.0",
     "abitype": "workspace:*",
-    "ethers": "*",
+    "ethers": "^6.5.1",
     "markdown-it-footnote": "^3.0.3",
-    "vitepress": "1.0.0-alpha.61",
+    "vitepress": "1.0.0-beta.1",
     "vitepress-plugin-shiki-twoslash": "0.0.6",
-    "vue": "^3.2.47"
+    "vue": "^3.3.4"
   }
 }

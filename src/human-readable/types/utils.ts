@@ -10,7 +10,7 @@ import type {
   IsUnknown,
   Merge,
   Pop,
-  Prettify,
+  Pretty,
   Trim,
 } from '../../types.js'
 import type {
@@ -192,7 +192,7 @@ export type ParseAbiParameter<
       type: string
       indexed?: boolean
     }
-    ? Prettify<
+    ? Pretty<
         _ValidateAbiParameter<
           Parameter,
           Options['Strict'] extends boolean

@@ -1,26 +1,21 @@
 import type { AbiParameter } from '../abi.js'
+import { InvalidAbiParametersError } from '../index.js'
 import type { Narrow } from '../narrow.js'
 import type { Error, Filter, Flatten, IsEmptyObject } from '../types.js'
-import { InvalidAbiParametersError } from './errors/index.js'
-import {
-  isStructSignature,
-  modifiers,
-  parseAbiParameter as parseAbiParameter_,
-  parseStructs,
-  splitParameters,
-} from './runtime/index.js'
-import type {
-  IsStructSignature,
-  Modifier,
-  ParseAbiParameters as ParseAbiParameters_,
-  ParseStructs,
-  SplitParameters,
-} from './types/index.js'
+import { isStructSignature, modifiers } from './runtime/signatures.js'
+import { parseStructs } from './runtime/structs.js'
+import { splitParameters } from './runtime/utils.js'
+import { parseAbiParameter as parseAbiParameter_ } from './runtime/utils.js'
 import type {
   CountStructSignatures,
+  IsStructSignature,
+  Modifier,
   StructSignature,
   ValidateParameterString,
 } from './types/signatures.js'
+import type { ParseStructs } from './types/structs.js'
+import type { SplitParameters } from './types/utils.js'
+import type { ParseAbiParameters as ParseAbiParameters_ } from './types/utils.js'
 
 /**
  * Validates human-readable ABI parameter string that contains struct signatures.

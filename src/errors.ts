@@ -1,7 +1,7 @@
-import type { OneOf, Prettify } from './types.js'
+import type { OneOf, Pretty } from './types.js'
 import { version } from './version.js'
 
-type BaseErrorArgs = Prettify<
+type BaseErrorArgs = Pretty<
   {
     docsPath?: string | undefined
     metaMessages?: string[] | undefined

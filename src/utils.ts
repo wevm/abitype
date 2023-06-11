@@ -20,7 +20,7 @@ import type {
   TypedDataType,
 } from './abi.js'
 import type { ResolvedConfig } from './config.js'
-import type { Error, Flatten, Merge, Tuple } from './types.js'
+import type { Error, Flatten, Merge, Pretty, Tuple } from './types.js'
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
@@ -185,7 +185,7 @@ type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
 export type AbiParametersToPrimitiveTypes<
   TAbiParameters extends readonly AbiParameter[],
   TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
-> = {
+> = Pretty<{
   // TODO: Convert to labeled tuple so parameter names show up in autocomplete
   // e.g. [foo: string, bar: string]
   // https://github.com/microsoft/TypeScript/issues/44939
@@ -193,7 +193,7 @@ export type AbiParametersToPrimitiveTypes<
     TAbiParameters[K],
     TAbiParameterKind
   >
-}
+}>
 
 /**
  * Checks if type is {@link Abi}.

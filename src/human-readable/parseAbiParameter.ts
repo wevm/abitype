@@ -1,24 +1,19 @@
 import type { AbiParameter } from '../abi.js'
+import { InvalidAbiParameterError } from '../index.js'
 import type { Narrow } from '../narrow.js'
 import type { Error, Filter, Flatten, IsEmptyObject } from '../types.js'
-import { InvalidAbiParameterError } from './errors/index.js'
-import {
-  isStructSignature,
-  modifiers,
-  parseAbiParameter as parseAbiParameter_,
-  parseStructs,
-} from './runtime/index.js'
-import type {
-  IsStructSignature,
-  Modifier,
-  ParseAbiParameter as ParseAbiParameter_,
-  ParseStructs,
-} from './types/index.js'
+import { isStructSignature, modifiers } from './runtime/signatures.js'
+import { parseStructs } from './runtime/structs.js'
+import { parseAbiParameter as parseAbiParameter_ } from './runtime/utils.js'
 import type {
   CountStructSignatures,
+  IsStructSignature,
+  Modifier,
   StructSignature,
   ValidateParameterString,
 } from './types/signatures.js'
+import type { ParseStructs } from './types/structs.js'
+import type { ParseAbiParameter as ParseAbiParameter_ } from './types/utils.js'
 
 /**
  * Validates human-readable ABI parameter string that contains struct signatures.
@@ -59,7 +54,6 @@ export type ValidateAbiParameter<TParams extends readonly string[]> = Flatten<
       : Error<'Missmatch between struct signatures and arguments. Not all parameter strings will be parsed.'>
     : [unknown]
 >
-
 /**
  * Parses human-readable ABI parameter into {@link AbiParameter}
  *
