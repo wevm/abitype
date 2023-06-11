@@ -1,6 +1,6 @@
 import { vi } from 'vitest'
 
-vi.mock('../version.ts', () => {
+vi.mock('../src/version.ts', () => {
   return {
     version: 'x.y.z',
   }

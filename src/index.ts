@@ -57,32 +57,51 @@ export type {
   TypedDataToPrimitiveTypes,
 } from './utils.js'
 
-export type {
-  ParseAbi,
-  ParseAbiItem,
-  ParseAbiParameter,
-  ParseAbiParameters,
-} from './human-readable/index.js'
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Human-Readable
+
+export { parseAbi, type ParseAbi } from './human-readable/parseAbi.js'
+
 export {
-  parseAbi,
   parseAbiItem,
+  type ParseAbiItem,
+} from './human-readable/parseAbiItem.js'
+
+export {
   parseAbiParameter,
+  type ParseAbiParameter,
+} from './human-readable/parseAbiParameter.js'
+
+export {
   parseAbiParameters,
-  CircularReferenceError,
-  InvalidParenthesisError,
-  UnknownSignatureError,
-  InvalidSignatureError,
-  InvalidStructSignatureError,
-  InvalidAbiParameterError,
-  InvalidAbiParametersError,
-  InvalidParameterError,
-  SolidityProtectedKeywordError,
-  InvalidModifierError,
-  InvalidFunctionModifierError,
-  InvalidAbiTypeParameterError,
+  type ParseAbiParameters,
+} from './human-readable/parseAbiParameters.js'
+
+export {
   InvalidAbiItemError,
+  UnknownSolidityTypeError,
   UnknownTypeError,
-} from './human-readable/index.js'
+} from './human-readable/errors/abiItem.js'
+
+export {
+  InvalidAbiTypeParameterError,
+  InvalidFunctionModifierError,
+  InvalidModifierError,
+  SolidityProtectedKeywordError,
+  InvalidParameterError,
+  InvalidAbiParametersError,
+  InvalidAbiParameterError,
+} from './human-readable/errors/abiParameter.js'
+
+export {
+  InvalidStructSignatureError,
+  InvalidSignatureError,
+  UnknownSignatureError,
+} from './human-readable/errors/signature.js'
+
+export { InvalidParenthesisError } from './human-readable/errors/splitParameters.js'
+
+export { CircularReferenceError } from './human-readable/errors/struct.js'
 
 export type {
   ParseBytecode,

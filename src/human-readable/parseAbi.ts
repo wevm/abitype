@@ -1,12 +1,12 @@
 import type { Abi } from '../abi.js'
 import type { Narrow } from '../narrow.js'
 import type { Error, Filter } from '../types.js'
-import {
-  isStructSignature,
-  parseSignature,
-  parseStructs,
-} from './runtime/index.js'
-import type { ParseSignature, ParseStructs, Signatures } from './types/index.js'
+import { isStructSignature } from './runtime/signatures.js'
+import { parseStructs } from './runtime/structs.js'
+import { parseSignature } from './runtime/utils.js'
+import type { Signatures } from './types/signatures.js'
+import type { ParseStructs } from './types/structs.js'
+import type { ParseSignature } from './types/utils.js'
 
 /**
  * Parses human-readable ABI into JSON {@link Abi}

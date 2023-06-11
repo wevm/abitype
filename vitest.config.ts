@@ -8,15 +8,15 @@ export default defineConfig({
     },
     coverage: {
       exclude: [
-        '**/_test/**',
         'src/test/**',
         'src/**/*.test.ts',
         'src/**/index.ts',
+        'src/test.ts',
       ],
       reporter: ['text', 'json', 'html'],
     },
     environment: 'node',
     include: ['src/**/*.test.ts'],
-    setupFiles: ['./src/_test/setup.ts'],
+    setupFiles: ['./test/setup.ts'],
   },
 })

@@ -1,5 +1,5 @@
-import type { SplitParameters } from '../../human-readable/types/index.js'
 import type { ValidateName } from '../../human-readable/types/signatures.js'
+import type { SplitParameters } from '../../human-readable/types/utils.js'
 import type { Error } from '../../types.js'
 import type { OPCODES } from './opcodes.js'
 

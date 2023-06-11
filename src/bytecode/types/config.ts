@@ -1,4 +1,4 @@
-import type { Prettify } from '../../types.js'
+import type { Pretty } from '../../types.js'
 
 export interface Selectors {
   [x: string]: unknown
@@ -129,7 +129,7 @@ export type SelectorsByType = {
   Functions: FunctionSelectors
 }
 
-export type BytecodeSelectors = Prettify<
+export type BytecodeSelectors = Pretty<
   {
     [K in keyof ErrorSelectors]: ErrorSelectors[K]
   } & {

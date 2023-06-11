@@ -280,7 +280,7 @@ export const writingEditionsFactoryHumanReadableAbi = [
   'function acceptOwnership()',
   'function baseDescriptionURI() view returns (string)',
   'function cancelOwnershipTransfer()',
-  'struct WritingEdition { string name; string symbol; string description; string imageURI; string contentURI; uint256 price; uint256 limit; address fundingRecipient; address renderer; uint256 nonce; uint16 fee; }',
+  'struct WritingEdition { string name; string symbol; string description; string imageURI; string contentURI; uint8 price; uint256 limit; address fundingRecipient; address renderer; uint256 nonce; uint16 fee; }',
   'function create(WritingEdition edition) returns (address clone)',
   'function createWithSignature(address owner, WritingEdition edition, uint8 v, bytes32 r, bytes32 s, address tokenRecipient, string message) payable returns (address clone)',
   'function getSalt(address owner, WritingEdition edition) view returns (bytes32)',

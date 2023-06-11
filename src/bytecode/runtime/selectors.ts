@@ -1,5 +1,5 @@
 import type { AbiError, AbiEvent, AbiFunction, Address } from '../../abi.js'
-import { parseSignature } from '../../human-readable/runtime/index.js'
+import { parseSignature } from '../../human-readable/runtime/utils.js'
 import type { ParseBytecodeConstructor } from '../types/index.js'
 
 export function parseFunctionSelector<
