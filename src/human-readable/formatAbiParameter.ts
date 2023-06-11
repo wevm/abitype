@@ -57,11 +57,15 @@ export function formatAbiParameter<
 
   let type = abiParameter.type
   if (tupleRegex.test(abiParameter.type) && 'components' in abiParameter) {
+    type = '('
+    const length = abiParameter.components.length as number
+    for (let i = 0; i < length; i++) {
+      const component = abiParameter.components[i]!
+      type += formatAbiParameter(component)
+      if (i < length - 1) type += ', '
+    }
     const result = execTyped<{ array?: string }>(tupleRegex, abiParameter.type)
-    const array = result?.array ?? ''
-    type = `(${abiParameter.components
-      .map(formatAbiParameter)
-      .join(', ')})${array}`
+    type += `)${result?.array ?? ''}`
     return formatAbiParameter({
       ...abiParameter,
       type,

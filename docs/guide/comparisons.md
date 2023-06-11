@@ -144,7 +144,7 @@ const abiItem = Fragment.from(
 :::
 
 - ABIType returns inferred ABI item, while ethers.js just returns `Fragment`
-- Rest same as [`Fragment` versus `parseAbiItem`](#fragment-versus-parseabiitem)
+- Rest same as [`Interface` versus `parseAbi`](#interface-versus-parseabi)
 
 #### Benchmarks
 
@@ -193,7 +193,7 @@ const abiParameter = ParamType.from('string foo')
 :::
 
 - ABIType returns inferred ABI parameter, while ethers.js just returns `ParamType`
-- Rest same as [`Fragment` versus `parseAbiItem`](#fragment-versus-parseabiitem)
+- Rest same as [`Interface` versus `parseAbi`](#interface-versus-parseabi)
 
 #### Benchmarks
 
@@ -210,4 +210,51 @@ Summary
 abitype - src/human-readable/parseAbiParameter.bench.ts > Parse basic ABI Parameter
   8.02x faster than ethers@5
   14.14x faster than ethers@6
+```
+
+### `ParamType.format` versus `formatAbiParameter`
+
+Formats JSON ABI parameter to human-readable ABI parameter.
+
+::: code-group
+
+```ts twoslash [abitype]
+import { formatAbiParameter } from 'abitype'
+
+const result = formatAbiParameter({ type: 'string', name: 'foo' })
+//    ^? 
+```
+
+```ts twoslash [ethers@5]
+import { ParamType } from '@ethersproject/abi'
+
+const result = ParamType.from({ type: 'string', name: 'foo' }).format('minimal')
+//    ^? 
+```
+
+```ts twoslash [ethers@6]
+import { ParamType } from 'ethers'
+
+const result = ParamType.from({ type: 'string', name: 'foo' }).format('minimal')
+//    ^? 
+```
+
+:::
+
+ABIType returns inferred human-readable ABI parameter, while ethers.js just returns `string`
+
+#### Benchmarks
+
+```bash
+❯ pnpm bench src/human-readable/formatAbiParameter.bench.ts
+
+✓ Format basic ABI Parameter (3) 5043ms
+· abitype   10,550,231.55 ops/sec ±0.63% (5275116 samples) fastest
+· ethers@6     398,639.32 ops/sec ±0.40% ( 199320 samples) slowest
+· ethers@5   1,041,080.97 ops/sec ±0.45% ( 520541 samples)
+
+Summary
+abitype - src/human-readable/formatAbiParameter.bench.ts > Format basic ABI Parameter
+  10.41x faster than ethers@5
+  28.57x faster than ethers@6
 ```
