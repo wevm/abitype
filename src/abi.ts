@@ -1,5 +1,5 @@
 import type { ResolvedConfig } from './config.js'
-import type { Prettify, Range } from './types.js'
+import type { Pretty, Range } from './types.js'
 
 export type Address = ResolvedConfig['AddressType']
 
@@ -95,7 +95,7 @@ export type AbiInternalType =
   | `enum ${string}`
   | `struct ${string}`
 
-export type AbiParameter = Prettify<
+export type AbiParameter = Pretty<
   {
     type: ResolvedAbiType
     name?: string | undefined
@@ -110,7 +110,7 @@ export type AbiParameter = Prettify<
   )
 >
 
-export type AbiEventParameter = Prettify<
+export type AbiEventParameter = Pretty<
   AbiParameter & { indexed?: boolean | undefined }
 >
 
@@ -239,7 +239,7 @@ export type TypedDataParameter = {
 /**
  * [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) Typed Data Specification
  */
-export type TypedData = Prettify<
+export type TypedData = Pretty<
   {
     [key: string]: readonly TypedDataParameter[]
   } & {

@@ -1,7 +1,7 @@
 {
   // This configuration is used for local development and type checking.
   "extends": "./tsconfig.base.json",
-  "include": ["examples", "src"],
+  "include": ["examples", "src", "test"],
   "exclude": [],
   "references": [{ "path": "./tsconfig.node.json" }],
 }

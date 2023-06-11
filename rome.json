@@ -3,7 +3,7 @@
     "ignore": [
       "CHANGELOG.md",
       "pnpm-lock.yaml",
-      "trace",
+      "trace/**",
       "tsconfig.json",
       "tsconfig.*.json"
     ]
@@ -40,6 +40,7 @@
       "suspicious": {
         "noArrayIndexKey": "off",
         "noExplicitAny": "off",
+        "noRedeclare": "off",
         "noShadowRestrictedNames": "off"
       }
     }
