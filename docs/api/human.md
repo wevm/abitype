@@ -53,7 +53,7 @@ const abi = [
 ```
 :::
 
-ABIType contains parallel [type-level](/api/human#types) and [runtime](/api/human#utilities) utilities for parsing human-readable ABIs, ABI items, and ABI parameters.
+ABIType contains parallel [type-level](/api/human#types) and [runtime](/api/human#utilities) utilities for parsing and formatting human-readable ABIs, ABI items, and ABI parameters.
 
 ## Signature Types
 
@@ -202,25 +202,7 @@ Some additional rules that apply to human-readable ABIs:
 
 ## Types
 
-Types for formatting and parsing human-readable ABIs.
-
-### `FormatAbiParameter`
-
-Formats JSON [`Abi`](/api/types#abi) into human-readable ABI.
-
-| Name            | Description                   | Type                                             |
-| --------------- | ------------------------------| ------------------------------------------------ |
-| `TAbiParameter` | ABI parameter                 | [`AbiParameter`](/api/types#abiparameter)        |
-| returns         | Human-Readable ABI parameter. | `string` (inferred)                              |
-
-#### Example
-
-```ts twoslash
-import { FormatAbiParameter } from 'abitype'
-
-type Result = FormatAbiParameter<{ type: 'address'; name: 'from' }>
-//   ^? 
-```
+Types for parsing and formatting human-readable ABIs.
 
 ### `ParseAbi`
 
@@ -318,31 +300,111 @@ type ResultStruct = ParseAbiParameters<[
 ]>
 ```
 
-## Utilities
+### `FormatAbi`
 
-Runtime functions for formatting and parsing human-readable ABIs.
+Formats [`Abi`](/api/types#abi) into human-readable ABI.
 
-::: warning
-These functions throw [errors](#errors-1) for invalid inputs. Make sure you handle errors appropriately.
-:::
-
-### `formatAbiParameter`
-
-Formats JSON [`AbiParameter`](/api/types#abiparameter) into human-readable ABI parameter.
-
-| Name           | Description                   | Type                                             |
-| -------------- | ------------------------------| ------------------------------------------------ |
-| `abiParameter` | ABI parameter                 | [`AbiParameter`](/api/types#abiparameter)        |
-| returns        | Human-Readable ABI parameter. | `string` (inferred)                              |
+| Name        | Description         | Type                        |
+| ----------- | ------------------- | --------------------------- |
+| `TAbi`      | ABI                 | [`Abi`](/api/types#abi)     |
+| returns     | Human-Readable ABI. | `string[]` (inferred)       |
 
 #### Example
 
 ```ts twoslash
-import { formatAbiParameter } from 'abitype'
+import { FormatAbi } from 'abitype'
 
-const result = formatAbiParameter({ type: 'address', name: 'from' })
-//    ^? 
+type Result = FormatAbi<[
+//   ^? 
+  {
+    name: 'balanceOf'
+    type: 'function'
+    stateMutability: 'view'
+    inputs: [{ type: 'address'; name: 'owner' }]
+    outputs: [{ type: 'uint256' }]
+  },
+  {
+    name: 'Transfer'
+    type: 'event'
+    inputs: [
+      { type: 'address'; name: 'from'; indexed: true },
+      { type: 'address'; name: 'to'; indexed: true },
+      { type: 'uint256'; name: 'amount' },
+    ]
+  },
+]>
 ```
+
+### `FormatAbiItem`
+
+Formats Abi item (e.g. error, event, function) into human-readable ABI parameter.
+
+| Name            | Description              | Type                                |
+| --------------- | ------------------------ | ----------------------------------- |
+| `TAbiItem`      | ABI item                 | [`Abi[number]`](/api/types#abi)     |
+| returns         | Human-Readable ABI item. | `string` (inferred)                 |
+
+#### Example
+
+```ts twoslash
+import { FormatAbiItem } from 'abitype'
+
+type Result = FormatAbiItem<{
+//   ^? 
+  name: 'balanceOf'
+  type: 'function'
+  stateMutability: 'view'
+  inputs: [{ type: 'address'; name: 'owner' }]
+  outputs: [{ type: 'uint256' }]
+}>
+```
+
+### `FormatAbiParameter`
+
+Formats [`AbiParameter`](/api/types#abiparameter) into human-readable ABI parameter.
+
+| Name            | Description                    | Type                                             |
+| --------------- | ------------------------------ | ------------------------------------------------ |
+| `TAbiParameter` | ABI parameter                  | [`AbiParameter`](/api/types#abiparameter)        |
+| returns         | Human-Readable ABI parameters. | `string[]` (inferred)                            |
+
+#### Example
+
+```ts twoslash
+import { FormatAbiParameter } from 'abitype'
+
+type Result = FormatAbiParameter<{ type: 'address'; name: 'from' }>
+//   ^? 
+```
+
+### `FormatAbiParameters`
+
+Formats [`AbiParameter`s](/api/types#abiparameter) into human-readable ABI parameters.
+
+| Name             | Description                   | Type                                               |
+| ---------------- | ----------------------------- | -------------------------------------------------- |
+| `TAbiParameters` | ABI parameters                | [`AbiParameter[]`](/api/types#abiparameter)        |
+| returns          | Human-Readable ABI parameter. | `string` (inferred)                                |
+
+#### Example
+
+```ts twoslash
+import { FormatAbiParameters } from 'abitype'
+
+type Result = FormatAbiParameters<[
+//   ^? 
+  { type: 'address'; name: 'from' },
+  { type: 'uint256'; name: 'tokenId' },
+]>
+```
+
+## Utilities
+
+Runtime functions for parsing and formatting human-readable ABIs.
+
+::: warning
+These functions throw [errors](#errors-1) for invalid inputs. Make sure you handle errors appropriately.
+:::
 
 ### `parseAbi`
 
@@ -440,6 +502,105 @@ const abiParametersStruct = parseAbiParameters([
   'struct Baz { string name; }',
 ])
 ```
+
+### `formatAbi`
+
+Formats [`Abi`](/api/types#abi) into human-readable ABI.
+
+| Name        | Description         | Type                        |
+| ----------- | ------------------- | --------------------------- |
+| `abi`       | ABI                 | [`Abi`](/api/types#abi)     |
+| returns     | Human-Readable ABI. | `string[]` (inferred)       |
+
+#### Example
+
+```ts twoslash
+import { formatAbi } from 'abitype'
+
+const result = formatAbi([
+//    ^? 
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ type: 'address', name: 'owner' }],
+    outputs: [{ type: 'uint256' }],
+  },
+  {
+    name: 'Transfer',
+    type: 'event',
+    inputs: [
+      { type: 'address', name: 'from', indexed: true },
+      { type: 'address', name: 'to', indexed: true },
+      { type: 'uint256', name: 'amount' },
+    ],
+  },
+])
+```
+
+### `formatAbiItem`
+
+Formats Abi item (e.g. error, event, function) into human-readable ABI parameter.
+
+| Name            | Description              | Type                                |
+| --------------- | ------------------------ | ----------------------------------- |
+| `abiItem`       | ABI item                 | [`Abi[number]`](/api/types#abi)     |
+| returns         | Human-Readable ABI item. | `string` (inferred)                 |
+
+#### Example
+
+```ts twoslash
+import { formatAbiItem } from 'abitype'
+
+const result = formatAbiItem({
+//    ^? 
+  name: 'balanceOf',
+  type: 'function',
+  stateMutability: 'view',
+  inputs: [{ type: 'address', name: 'owner' }],
+  outputs: [{ type: 'uint256' }],
+})
+```
+
+### `formatAbiParameter`
+
+Formats [`AbiParameter`](/api/types#abiparameter) into human-readable ABI parameter.
+
+| Name           | Description                   | Type                                             |
+| -------------- | ----------------------------- | ------------------------------------------------ |
+| `abiParameter` | ABI parameter                 | [`AbiParameter`](/api/types#abiparameter)        |
+| returns        | Human-Readable ABI parameter. | `string` (inferred)                              |
+
+#### Example
+
+```ts twoslash
+import { formatAbiParameter } from 'abitype'
+
+const result = formatAbiParameter({ type: 'address', name: 'from' })
+//    ^? 
+```
+
+### `formatAbiParameters`
+
+Formats [`AbiParameter`s](/api/types#abiparameter) into human-readable ABI parameters.
+
+| Name             | Description                   | Type                                               |
+| ---------------- | ----------------------------- | -------------------------------------------------- |
+| `abiParameters`  | ABI parameters                | [`AbiParameter[]`](/api/types#abiparameter)        |
+| returns          | Human-Readable ABI parameter. | `string` (inferred)                                |
+
+#### Example
+
+```ts twoslash
+import { formatAbiParameters } from 'abitype'
+
+const result = formatAbiParameters([
+//    ^? 
+  { type: 'address', name: 'from' },
+  { type: 'uint256', name: 'tokenId' },
+])
+```
+
 
 ## Errors
 

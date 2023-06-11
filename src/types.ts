@@ -41,6 +41,33 @@ export type Filter<
   : readonly [...Acc]
 
 /**
+ * Checks if {@link T} can be narrowed further than {@link U}
+ *
+ * @param T - Type to check
+ * @param U - Type to against
+ *
+ * @example
+ * type Result = IsNarrowable<'foo', string>
+ * //   ^? true
+ */
+export type IsNarrowable<T, U> = IsNever<
+  (T extends U ? true : false) & (U extends T ? false : true)
+> extends true
+  ? false
+  : true
+
+/**
+ * Checks if {@link T} is `never`
+ *
+ * @param T - Type to check
+ *
+ * @example
+ * type Result = IsNever<never>
+ * //   ^? type Result = true
+ */
+export type IsNever<T> = [T] extends [never] ? true : false
+
+/**
  * Checks if {@link T} is `unknown`
  *
  * @param T - Type to check

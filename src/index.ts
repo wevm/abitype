@@ -61,9 +61,24 @@ export type {
 // Human-Readable
 
 export {
+  formatAbi,
+  type FormatAbi,
+} from './human-readable/formatAbi.js'
+
+export {
+  formatAbiItem,
+  type FormatAbiItem,
+} from './human-readable/formatAbiItem.js'
+
+export {
   formatAbiParameter,
   type FormatAbiParameter,
 } from './human-readable/formatAbiParameter.js'
+
+export {
+  formatAbiParameters,
+  type FormatAbiParameters,
+} from './human-readable/formatAbiParameters.js'
 
 export { parseAbi, type ParseAbi } from './human-readable/parseAbi.js'
 

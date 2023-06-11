@@ -3,42 +3,75 @@ import type {
   AbiConstructor,
   AbiError,
   AbiEvent,
+  AbiEventParameter,
   AbiFallback,
   AbiFunction,
+  AbiParameter,
   AbiReceive,
   AbiStateMutability,
 } from '../abi.js'
 import {
-  type FormatAbiParameters,
+  type FormatAbiParameters as FormatAbiParameters_,
   formatAbiParameters,
 } from './formatAbiParameters.js'
 
 export type FormatAbiItem<TAbiItem extends Abi[number]> =
-  | (TAbiItem extends AbiFunction
-      ? `function ${TAbiItem['name']}(${FormatAbiParameters<
-          TAbiItem['inputs']
-        >})${TAbiItem['stateMutability'] extends Exclude<
-          AbiStateMutability,
-          'nonpayable'
-        >
-          ? ` ${TAbiItem['stateMutability']}`
-          : ''}${TAbiItem['outputs']['length'] extends 0
-          ? ''
-          : ` returns (${FormatAbiParameters<TAbiItem['outputs']>})`}`
-      : never)
-  | (TAbiItem extends AbiEvent
-      ? `event ${TAbiItem['name']}(${FormatAbiParameters<TAbiItem['inputs']>})`
-      : never)
-  | (TAbiItem extends AbiError
-      ? `error ${TAbiItem['name']}(${FormatAbiParameters<TAbiItem['inputs']>})`
-      : never)
-  | (TAbiItem extends AbiConstructor
-      ? `constructor(${FormatAbiParameters<
-          TAbiItem['inputs']
-        >})${TAbiItem['stateMutability'] extends 'payable' ? ' payable' : ''}`
-      : never)
-  | (TAbiItem extends AbiFallback ? 'fallback()' : never)
-  | (TAbiItem extends AbiReceive ? 'receive() external payable' : never)
+  Abi[number] extends TAbiItem
+    ? string
+    :
+        | (TAbiItem extends AbiFunction
+            ? AbiFunction extends TAbiItem
+              ? string
+              : `function ${TAbiItem['name']}(${FormatAbiParameters<
+                  TAbiItem['inputs']
+                >})${TAbiItem['stateMutability'] extends Exclude<
+                  AbiStateMutability,
+                  'nonpayable'
+                >
+                  ? ` ${TAbiItem['stateMutability']}`
+                  : ''}${TAbiItem['outputs']['length'] extends 0
+                  ? ''
+                  : ` returns (${FormatAbiParameters<TAbiItem['outputs']>})`}`
+            : never)
+        | (TAbiItem extends AbiEvent
+            ? AbiEvent extends TAbiItem
+              ? string
+              : `event ${TAbiItem['name']}(${FormatAbiParameters<
+                  TAbiItem['inputs']
+                >})`
+            : never)
+        | (TAbiItem extends AbiError
+            ? AbiError extends TAbiItem
+              ? string
+              : `error ${TAbiItem['name']}(${FormatAbiParameters<
+                  TAbiItem['inputs']
+                >})`
+            : never)
+        | (TAbiItem extends AbiConstructor
+            ? AbiConstructor extends TAbiItem
+              ? string
+              : `constructor(${FormatAbiParameters<
+                  TAbiItem['inputs']
+                >})${TAbiItem['stateMutability'] extends 'payable'
+                  ? ' payable'
+                  : ''}`
+            : never)
+        | (TAbiItem extends AbiFallback
+            ? AbiFallback extends TAbiItem
+              ? string
+              : 'fallback()'
+            : never)
+        | (TAbiItem extends AbiReceive
+            ? AbiReceive extends TAbiItem
+              ? string
+              : 'receive() external payable'
+            : never)
+
+type FormatAbiParameters<
+  TAbiParameters extends readonly (AbiParameter | AbiEventParameter)[],
+> = TAbiParameters['length'] extends 0
+  ? ''
+  : FormatAbiParameters_<TAbiParameters>
 
 export function formatAbiItem<const TAbiItem extends Abi[number]>(
   abiItem: TAbiItem,

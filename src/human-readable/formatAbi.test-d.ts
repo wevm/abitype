@@ -1,20 +1,12 @@
 import { expectTypeOf, test } from 'vitest'
 
 import type { Abi } from '../abi.js'
-
-import { seaportHumanReadableAbi } from '../test/human-readable.js'
-import type { IsAbi } from '../utils.js'
+import { seaportAbi } from '../test/abis.js'
 import type { FormatAbi } from './formatAbi.js'
 import { formatAbi } from './formatAbi.js'
 
 test('FormatAbi', () => {
-  type SeaportAbi = FormatAbi<typeof seaportHumanReadableAbi>
-  expectTypeOf<IsAbi<SeaportAbi>>().toEqualTypeOf<true>()
-
   expectTypeOf<FormatAbi<[]>>().toEqualTypeOf<never>()
-  expectTypeOf<
-    FormatAbi<['struct Foo { string name; }']>
-  >().toEqualTypeOf<never>()
 
   expectTypeOf<
     FormatAbi<
@@ -49,142 +41,104 @@ test('FormatAbi', () => {
       ]
     >
   >().toEqualTypeOf<
-    [
-      'function foo()',
-      'function bar(Foo, bytes32)',
-      'struct Foo { string name; }',
-    ]
+    readonly ['function foo()', 'function bar((string name), bytes32)']
   >()
 
   expectTypeOf<
     FormatAbi<
-      [
-        'function balanceOf(address owner) view returns (uint256)',
-        'event Transfer(address indexed from, address indexed to, uint256 amount)',
+      readonly [
+        {
+          readonly name: 'balanceOf'
+          readonly type: 'function'
+          readonly stateMutability: 'view'
+          readonly inputs: readonly [
+            {
+              readonly name: 'owner'
+              readonly type: 'address'
+            },
+          ]
+          readonly outputs: readonly [
+            {
+              readonly type: 'uint256'
+            },
+          ]
+        },
+        {
+          readonly name: 'Transfer'
+          readonly type: 'event'
+          readonly inputs: readonly [
+            {
+              readonly name: 'from'
+              readonly type: 'address'
+              readonly indexed: true
+            },
+            {
+              readonly name: 'to'
+              readonly type: 'address'
+              readonly indexed: true
+            },
+            {
+              readonly name: 'amount'
+              readonly type: 'uint256'
+            },
+          ]
+        },
       ]
     >
   >().toEqualTypeOf<
     readonly [
-      {
-        readonly name: 'balanceOf'
-        readonly type: 'function'
-        readonly stateMutability: 'view'
-        readonly inputs: readonly [
-          {
-            readonly name: 'owner'
-            readonly type: 'address'
-          },
-        ]
-        readonly outputs: readonly [
-          {
-            readonly type: 'uint256'
-          },
-        ]
-      },
-      {
-        readonly name: 'Transfer'
-        readonly type: 'event'
-        readonly inputs: readonly [
-          {
-            readonly name: 'from'
-            readonly type: 'address'
-            readonly indexed: true
-          },
-          {
-            readonly name: 'to'
-            readonly type: 'address'
-            readonly indexed: true
-          },
-          {
-            readonly name: 'amount'
-            readonly type: 'uint256'
-          },
-        ]
-      },
+      'function balanceOf(address owner) view returns (uint256)',
+      'event Transfer(address indexed from, address indexed to, uint256 amount)',
     ]
   >()
-
-  expectTypeOf<FormatAbi<['function foo ()']>>().toEqualTypeOf<never>()
 })
 
 test('formatAbi', () => {
-  // @ts-expect-error empty array not allowed
   expectTypeOf(formatAbi([])).toEqualTypeOf<never>()
-  expectTypeOf(
-    formatAbi(['struct Foo { string name; }']),
-  ).toEqualTypeOf<never>()
 
   // Array
-  const res2 = formatAbi([
-    'function bar(Foo, bytes32)',
-    'struct Foo { string name; }',
+  const res = formatAbi([
+    {
+      name: 'bar',
+      type: 'function',
+      stateMutability: 'nonpayable',
+      inputs: [
+        {
+          type: 'tuple',
+          components: [
+            {
+              name: 'name',
+              type: 'string',
+            },
+          ],
+        },
+        {
+          type: 'bytes32',
+        },
+      ],
+      outputs: [],
+    },
   ])
-  expectTypeOf<typeof res2>().toEqualTypeOf<
-    readonly [
-      {
-        readonly name: 'bar'
-        readonly type: 'function'
-        readonly stateMutability: 'nonpayable'
-        readonly inputs: readonly [
-          {
-            readonly type: 'tuple'
-            readonly components: readonly [
-              {
-                readonly name: 'name'
-                readonly type: 'string'
-              },
-            ]
-          },
-          {
-            readonly type: 'bytes32'
-          },
-        ]
-        readonly outputs: readonly []
-      },
-    ]
+  expectTypeOf<typeof res>().toEqualTypeOf<
+    readonly ['function bar((string name), bytes32)']
   >()
 
   const abi2 = [
-    'function foo()',
-    'function bar(Foo, bytes32)',
-    'struct Foo { string name; }',
+    {
+      type: 'function',
+      name: 'foo',
+      inputs: [],
+      outputs: [],
+      stateMutability: 'view',
+    },
   ]
-  expectTypeOf(formatAbi(abi2)).toEqualTypeOf<Abi>()
+  expectTypeOf(formatAbi(abi2)).toEqualTypeOf<readonly string[]>()
 
-  // @ts-expect-error invalid signature
-  expectTypeOf(formatAbi(['function foo ()'])).toEqualTypeOf<never>()
+  const param = abi2 as Abi
+  expectTypeOf(formatAbi(param)).toEqualTypeOf<readonly string[]>()
 
-  const param: string[] = abi2
-  expectTypeOf(formatAbi(param)).toEqualTypeOf<Abi>()
-
-  const getOrderType = formatAbi(seaportHumanReadableAbi)[10]
-  expectTypeOf<typeof getOrderType>().toEqualTypeOf<{
-    readonly name: 'getOrderStatus'
-    readonly type: 'function'
-    readonly stateMutability: 'view'
-    readonly inputs: readonly [
-      {
-        readonly type: 'bytes32'
-        readonly name: 'orderHash'
-      },
-    ]
-    readonly outputs: readonly [
-      {
-        readonly type: 'bool'
-        readonly name: 'isValidated'
-      },
-      {
-        readonly type: 'bool'
-        readonly name: 'isCancelled'
-      },
-      {
-        readonly type: 'uint256'
-        readonly name: 'totalFilled'
-      },
-      {
-        readonly type: 'uint256'
-        readonly name: 'totalSize'
-      },
-    ]
-  }>()
+  const getOrderType = formatAbi(seaportAbi)[10]
+  expectTypeOf<
+    typeof getOrderType
+  >().toEqualTypeOf<'function getOrderHash((address offerer, address zone, (uint8 itemType, address token, uint256 identifierOrCriteria, uint256 startAmount, uint256 endAmount)[] offer, (uint8 itemType, address token, uint256 identifierOrCriteria, uint256 startAmount, uint256 endAmount, address recipient)[] consideration, uint8 orderType, uint256 startTime, uint256 endTime, bytes32 zoneHash, uint256 salt, bytes32 conduitKey, uint256 counter) order) view returns (bytes32 orderHash)'>()
 })

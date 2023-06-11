@@ -6,6 +6,8 @@ import type { FormatAbiParameters } from './formatAbiParameters.js'
 import { formatAbiParameters } from './formatAbiParameters.js'
 
 test('FormatAbiParameters', () => {
+  expectTypeOf<FormatAbiParameters<[]>>().toEqualTypeOf<never>()
+
   // string
   expectTypeOf<
     FormatAbiParameters<

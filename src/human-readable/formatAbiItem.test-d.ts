@@ -1,10 +1,26 @@
 import { expectTypeOf, test } from 'vitest'
 
-import type { Abi } from '../abi.js'
+import type {
+  Abi,
+  AbiConstructor,
+  AbiError,
+  AbiEvent,
+  AbiFallback,
+  AbiFunction,
+  AbiReceive,
+} from '../abi.js'
 import type { FormatAbiItem } from './formatAbiItem.js'
 import { formatAbiItem } from './formatAbiItem.js'
 
 test('FormatAbiItem', () => {
+  expectTypeOf<FormatAbiItem<Abi[number]>>().toEqualTypeOf<string>()
+  expectTypeOf<FormatAbiItem<AbiFunction>>().toEqualTypeOf<string>()
+  expectTypeOf<FormatAbiItem<AbiEvent>>().toEqualTypeOf<string>()
+  expectTypeOf<FormatAbiItem<AbiError>>().toEqualTypeOf<string>()
+  expectTypeOf<FormatAbiItem<AbiConstructor>>().toEqualTypeOf<string>()
+  expectTypeOf<FormatAbiItem<AbiFallback>>().toEqualTypeOf<string>()
+  expectTypeOf<FormatAbiItem<AbiReceive>>().toEqualTypeOf<string>()
+
   expectTypeOf<
     FormatAbiItem<{
       readonly name: 'foo'
