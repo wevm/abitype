@@ -35,12 +35,6 @@
   --vp-c-text-dark-3: rgba(235, 235, 235, 0.38);
 }
 
-.vp-code-group .tabs label {
-  background-color: transparent;
-  --vp-code-tab-text-color: var(--vp-c-text-2);
-  --vp-code-tab-active-text-color: var(--vp-c-text-1);
-}
-
 /**
  * Component: Button
  * -------------------------------------------------------------------------- */
@@ -177,4 +171,10 @@ html.dark pre.shiki[class*="light"] {
   --vp-twoslash-c-query-bg: var(--vp-c-mute-dark);
   --vp-twoslash-c-query-fg-2: var(--vp-c-text-2);
   --vp-twoslash-c-query-fg: var(--vp-c-text-1);
+}
+
+/** Fix overflow hidden when tooltip is shown */
+pre.twoslash,
+div [class*="language-"] {
+  overflow: visible !important;
 }

@@ -1,5 +1,6 @@
 import { describe, expect, it, test } from 'vitest'
 
+import { zeroAddress } from './test.js'
 import {
   customSolidityErrorsAbi,
   ensAbi,
@@ -9,8 +10,7 @@ import {
   wagmiMintExampleAbi,
   wethAbi,
   writingEditionsFactoryAbi,
-  zeroAddress,
-} from '../test/index.js'
+} from './test/abis.js'
 import {
   Abi,
   AbiConstructor,
@@ -36,6 +36,40 @@ import {
   SolidityTuple,
   TypedData,
 } from './zod.js'
+import * as Exports from './zod.js'
+
+it('should expose correct exports', () => {
+  expect(Object.keys(Exports)).toMatchInlineSnapshot(`
+    [
+      "Address",
+      "SolidityAddress",
+      "SolidityBool",
+      "SolidityBytes",
+      "SolidityFunction",
+      "SolidityString",
+      "SolidityTuple",
+      "SolidityInt",
+      "SolidityArrayWithoutTuple",
+      "SolidityArrayWithTuple",
+      "SolidityArray",
+      "AbiParameter",
+      "AbiEventParameter",
+      "AbiStateMutability",
+      "AbiFunction",
+      "AbiConstructor",
+      "AbiFallback",
+      "AbiReceive",
+      "AbiEvent",
+      "AbiError",
+      "AbiItemType",
+      "Abi",
+      "TypedDataDomain",
+      "TypedDataType",
+      "TypedDataParameter",
+      "TypedData",
+    ]
+  `)
+})
 
 describe('AbiSchema', () => {
   it('returns valid schema', () => {
