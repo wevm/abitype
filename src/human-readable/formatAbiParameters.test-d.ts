@@ -6,6 +6,7 @@ import type { FormatAbiParameters } from './formatAbiParameters.js'
 import { formatAbiParameters } from './formatAbiParameters.js'
 
 test('FormatAbiParameters', () => {
+  // @ts-expect-error must have at least one parameter
   expectTypeOf<FormatAbiParameters<[]>>().toEqualTypeOf<never>()
 
   // string
@@ -76,6 +77,16 @@ test('formatAbiParameter', () => {
     ]),
   ).toEqualTypeOf<'(string)'>()
 
-  const param: AbiParameter = { type: 'address' }
+  const param = { type: 'address' }
+  const param2: AbiParameter = param
+
   expectTypeOf(formatAbiParameters([param])).toEqualTypeOf<string>()
+
+  expectTypeOf(
+    formatAbiParameters([param, param]),
+  ).toEqualTypeOf<`${string}, ${string}`>()
+
+  expectTypeOf(
+    formatAbiParameters([param2, param2]),
+  ).toEqualTypeOf<`${string}, ${string}`>()
 })

@@ -56,6 +56,8 @@ test('formatAbiParameter', () => {
     }),
   ).toEqualTypeOf<'(string)'>()
 
-  const param: AbiParameter = { type: 'address' }
+  const param = { type: 'address' }
+  const param2: AbiParameter = param
   expectTypeOf(formatAbiParameter(param)).toEqualTypeOf<string>()
+  expectTypeOf(formatAbiParameter(param2)).toEqualTypeOf<string>()
 })

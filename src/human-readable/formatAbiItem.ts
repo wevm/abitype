@@ -77,7 +77,14 @@ type FormatAbiParameters<
   TAbiParameters extends readonly (AbiParameter | AbiEventParameter)[],
 > = TAbiParameters['length'] extends 0
   ? ''
-  : FormatAbiParameters_<TAbiParameters>
+  : FormatAbiParameters_<
+      TAbiParameters extends readonly [
+        AbiParameter | AbiEventParameter,
+        ...(readonly (AbiParameter | AbiEventParameter)[]),
+      ]
+        ? TAbiParameters
+        : never
+    >
 
 /**
  * Formats ABI item (e.g. error, event, function) into human-readable ABI item
@@ -89,23 +96,33 @@ export function formatAbiItem<const TAbiItem extends Abi[number]>(
   abiItem: TAbiItem,
 ): FormatAbiItem<TAbiItem> {
   type Result = FormatAbiItem<TAbiItem>
+  type Params = readonly [
+    AbiParameter | AbiEventParameter,
+    ...(readonly (AbiParameter | AbiEventParameter)[]),
+  ]
 
   if (abiItem.type === 'function')
-    return `function ${abiItem.name}(${formatAbiParameters(abiItem.inputs)})${
+    return `function ${abiItem.name}(${formatAbiParameters(
+      abiItem.inputs as Params,
+    )})${
       abiItem.stateMutability && abiItem.stateMutability !== 'nonpayable'
         ? ` ${abiItem.stateMutability}`
         : ''
     }${
       abiItem.outputs.length
-        ? ` returns (${formatAbiParameters(abiItem.outputs)})`
+        ? ` returns (${formatAbiParameters(abiItem.outputs as Params)})`
         : ''
     }`
   else if (abiItem.type === 'event')
-    return `event ${abiItem.name}(${formatAbiParameters(abiItem.inputs)})`
+    return `event ${abiItem.name}(${formatAbiParameters(
+      abiItem.inputs as Params,
+    )})`
   else if (abiItem.type === 'error')
-    return `error ${abiItem.name}(${formatAbiParameters(abiItem.inputs)})`
+    return `error ${abiItem.name}(${formatAbiParameters(
+      abiItem.inputs as Params,
+    )})`
   else if (abiItem.type === 'constructor')
-    return `constructor(${formatAbiParameters(abiItem.inputs)})${
+    return `constructor(${formatAbiParameters(abiItem.inputs as Params)})${
       abiItem.stateMutability === 'payable' ? ' payable' : ''
     }`
   else if (abiItem.type === 'fallback') return 'fallback()' as Result

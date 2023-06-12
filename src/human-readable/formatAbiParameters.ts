@@ -19,7 +19,10 @@ import {
  * ]>
  */
 export type FormatAbiParameters<
-  TAbiParameters extends readonly (AbiParameter | AbiEventParameter)[],
+  TAbiParameters extends readonly [
+    AbiParameter | AbiEventParameter,
+    ...(readonly (AbiParameter | AbiEventParameter)[]),
+  ],
 > = Join<
   {
     [K in keyof TAbiParameters]: FormatAbiParameter<TAbiParameters[K]>
@@ -41,7 +44,10 @@ export type FormatAbiParameters<
  * ])
  */
 export function formatAbiParameters<
-  const TAbiParameters extends readonly (AbiParameter | AbiEventParameter)[],
+  const TAbiParameters extends readonly [
+    AbiParameter | AbiEventParameter,
+    ...(readonly (AbiParameter | AbiEventParameter)[]),
+  ],
 >(abiParameters: TAbiParameters): FormatAbiParameters<TAbiParameters> {
   let params = ''
   const length = abiParameters.length
