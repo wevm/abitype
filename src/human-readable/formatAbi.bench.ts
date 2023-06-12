@@ -3,13 +3,32 @@ import { Interface } from 'ethers'
 import { bench, describe } from 'vitest'
 
 import { formatAbi } from './formatAbi.js'
-import { parseAbi } from './parseAbi.js'
 
 describe('Format ABI', () => {
-  const abi = parseAbi([
-    'function name((string name, uint256 age) foo, uint256 tokenId)',
-    'event Foo(address indexed bar)',
-  ])
+  const abi = [
+    {
+      type: 'function',
+      name: 'name',
+      stateMutability: 'nonpayable',
+      inputs: [
+        {
+          type: 'tuple',
+          name: 'foo',
+          components: [
+            { type: 'string', name: 'name' },
+            { type: 'uint256', name: 'age' },
+          ],
+        },
+        { type: 'uint256', name: 'tokenId' },
+      ],
+      outputs: [],
+    },
+    {
+      type: 'event',
+      name: 'Foo',
+      inputs: [{ type: 'address', name: 'bar', indexed: true }],
+    },
+  ]
 
   bench('abitype', () => {
     formatAbi(abi)
