@@ -5,6 +5,19 @@ import {
   formatAbiParameter,
 } from './formatAbiParameter.js'
 
+/**
+ * Formats {@link AbiParameter}s to human-readable ABI parameter.
+ *
+ * @param TAbiParameters - ABI parameters
+ * @returns Human-readable ABI parameters
+ *
+ * @example
+ * type Result = FormatAbiParameters<[
+ *   // ^? type Result = 'address from, uint256 tokenId'
+ *   { type: 'address'; name: 'from'; },
+ *   { type: 'uint256'; name: 'tokenId'; },
+ * ]>
+ */
 export type FormatAbiParameters<
   TAbiParameters extends readonly (AbiParameter | AbiEventParameter)[],
 > = Join<
@@ -14,6 +27,19 @@ export type FormatAbiParameters<
   ', '
 >
 
+/**
+ * Formats {@link AbiParameter}s to human-readable ABI parameters.
+ *
+ * @param abiParameters - ABI parameters
+ * @returns Human-readable ABI parameters
+ *
+ * @example
+ * const result = formatAbiParameters([
+ *   //  ^? const result: 'address from, uint256 tokenId'
+ *   { type: 'address', name: 'from' },
+ *   { type: 'uint256', name: 'tokenId' },
+ * ])
+ */
 export function formatAbiParameters<
   const TAbiParameters extends readonly (AbiParameter | AbiEventParameter)[],
 >(abiParameters: TAbiParameters): FormatAbiParameters<TAbiParameters> {

@@ -47,7 +47,7 @@ const tupleRegex = /^tuple(?<array>(\[(\d*)\])*)$/
  * @returns Human-readable ABI parameter
  *
  * @example
- * const result = formatAbiParameter({ type: 'address', name: 'from'; })
+ * const result = formatAbiParameter({ type: 'address', name: 'from' })
  * //    ^? const result: 'address from'
  */
 export function formatAbiParameter<

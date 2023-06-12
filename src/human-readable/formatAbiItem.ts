@@ -15,6 +15,12 @@ import {
   formatAbiParameters,
 } from './formatAbiParameters.js'
 
+/**
+ * Formats ABI item (e.g. error, event, function) into human-readable ABI item
+ *
+ * @param TAbiItem - ABI item
+ * @returns Human-readable ABI item
+ */
 export type FormatAbiItem<TAbiItem extends Abi[number]> =
   Abi[number] extends TAbiItem
     ? string
@@ -73,6 +79,12 @@ type FormatAbiParameters<
   ? ''
   : FormatAbiParameters_<TAbiParameters>
 
+/**
+ * Formats ABI item (e.g. error, event, function) into human-readable ABI item
+ *
+ * @param abiItem - ABI item
+ * @returns Human-readable ABI item
+ */
 export function formatAbiItem<const TAbiItem extends Abi[number]>(
   abiItem: TAbiItem,
 ): FormatAbiItem<TAbiItem> {
