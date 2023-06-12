@@ -1,5 +1,11 @@
 # abitype
 
+## 0.8.9
+
+### Patch Changes
+
+- [#151](https://github.com/wagmi-dev/abitype/pull/151) [`482bc5f`](https://github.com/wagmi-dev/abitype/commit/482bc5f2258fb60fe52f252be599c98ef753b24c) Thanks [@tmm](https://github.com/tmm)! - Added human-readble ABI format utils.
+
 ## 0.8.8
 
 ### Patch Changes
