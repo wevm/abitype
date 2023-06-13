@@ -41,6 +41,33 @@ export type Filter<
   : readonly [...Acc]
 
 /**
+ * Checks if {@link T} can be narrowed further than {@link U}
+ *
+ * @param T - Type to check
+ * @param U - Type to against
+ *
+ * @example
+ * type Result = IsNarrowable<'foo', string>
+ * //   ^? true
+ */
+export type IsNarrowable<T, U> = IsNever<
+  (T extends U ? true : false) & (U extends T ? false : true)
+> extends true
+  ? false
+  : true
+
+/**
+ * Checks if {@link T} is `never`
+ *
+ * @param T - Type to check
+ *
+ * @example
+ * type Result = IsNever<never>
+ * //   ^? type Result = true
+ */
+export type IsNever<T> = [T] extends [never] ? true : false
+
+/**
  * Checks if {@link T} is `unknown`
  *
  * @param T - Type to check
@@ -51,6 +78,26 @@ export type Filter<
  * //   ^? type Result = true
  */
 export type IsUnknown<T> = unknown extends T ? true : false
+
+/**
+ * Joins array into string
+ *
+ * @param T - Array to join
+ * @param U - Separator
+ * @returns string
+ *
+ * @example
+ * type Result = Join<['a', 'b', 'c'], '-'>
+ * //   ^? type Result = 'a-b-c'
+ */
+export type Join<
+  T extends readonly unknown[],
+  U extends string | number,
+> = T extends readonly [infer F, ...infer R]
+  ? R['length'] extends 0
+    ? `${F & string}`
+    : `${F & string}${U}${Join<R, U>}`
+  : never
 
 /**
  * Merges two object types into new type
@@ -235,12 +282,3 @@ export type IsArrayString<T extends string> =
 export type Pop<T extends readonly number[]> = T extends [...infer R, any]
   ? R
   : []
-
-/**
- * Checks if {@link T} is `never`
- * @param T - Type to check
- * @example
- * type Result = IsNever<never>
- * //   ^? type Result = true
- */
-export type IsNever<T> = [T] extends [never] ? true : false

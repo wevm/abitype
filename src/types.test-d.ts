@@ -4,17 +4,19 @@ import type {
   Error,
   Filter,
   Flatten,
+  IsArrayString,
   IsEmptyObject,
+  IsNarrowable,
+  IsNever,
   IsUnknown,
+  Join,
   Merge,
   OneOf,
+  Pop,
   Range,
   Trim,
   Tuple,
 } from './types.js'
-import type { IsArrayString } from './types.js'
-import type { Pop } from './types.js'
-import type { IsNever } from './types.js'
 
 test('Error', () => {
   expectTypeOf<Error<'Custom error message'>>().toEqualTypeOf<
@@ -33,9 +35,33 @@ test('Filter', () => {
   >()
 })
 
+test('IsNarrowable', () => {
+  expectTypeOf<IsNarrowable<'foo', string>>().toEqualTypeOf<true>()
+  expectTypeOf<IsNarrowable<string, string>>().toEqualTypeOf<false>()
+})
+
+test('IsNever', () => {
+  expectTypeOf<IsNever<never>>().toEqualTypeOf<true>()
+
+  expectTypeOf<IsNever<'never'>>().toEqualTypeOf<false>()
+  expectTypeOf<IsNever<undefined>>().toEqualTypeOf<false>()
+  expectTypeOf<IsNever<null>>().toEqualTypeOf<false>()
+  expectTypeOf<IsNever<0>>().toEqualTypeOf<false>()
+  expectTypeOf<IsNever<false>>().toEqualTypeOf<false>()
+  expectTypeOf<IsNever<[]>>().toEqualTypeOf<false>()
+  expectTypeOf<IsNever<{}>>().toEqualTypeOf<false>()
+  expectTypeOf<IsNever<never[]>>().toEqualTypeOf<false>()
+})
+
 test('IsUnknown', () => {
   expectTypeOf<IsUnknown<unknown>>().toEqualTypeOf<true>()
   expectTypeOf<IsUnknown<number | bigint>>().toEqualTypeOf<false>()
+})
+
+test('Join', () => {
+  assertType<Join<['foo'], ','>>('foo')
+  assertType<Join<['foo', 'bar'], ','>>('foo,bar')
+  assertType<Join<['foo', 'bar', 'baz'], ','>>('foo,bar,baz')
 })
 
 test('Merge', () => {
