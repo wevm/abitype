@@ -29,7 +29,7 @@ If you are a library author looking to support type inference and autocomplete b
 
 [ethers.js](https://github.com/ethers-io/ethers.js) is a JavaScript library for interacting with Ethereum. Among other features, it has utilities for working with human-readable ABIs. In addition to runtime functions, ABIType also has type utilities for working with [human-readable ABIs](/api/human).
 
-Below is a comparison of the runtime functions from ethers.js and ABIType for parsing human-readable ABIs.
+Below is a comparison of the runtime functions from ethers.js and ABIType for parsing and formatting human-readable ABIs.
 
 ### `Interface` versus `parseAbi`
 
@@ -61,7 +61,7 @@ abi
 ```
 
 ```ts twoslash [ethers@5]
-import { FormatTypes, Interface } from '@ethersproject/abi'
+import { Interface } from '@ethersproject/abi'
 
 const iface = new Interface([
   'function name(tuple(string name, uint256 age) foo, uint256 tokenId)',
@@ -88,25 +88,6 @@ const abi = iface.fragments
 - ABIType supports [structs](/api/human.html#structs) as signatures and inline tuples (e.g. `(string name, uint256 age)`).
 - ethers.js does not support struct signatures, but does support inline tuples with the optional `tuple` prefix keyword.
 - ABIType supports mixed named and unnamed parameters, while ethers.js only supports either all named or all unnamed parameters.
-
-#### Benchmarks
-
-```bash
-❯ pnpm bench src/human-readable/parseAbi.bench.ts
-
-✓ Parse ABI (4) 2235ms
-  name                      hz     min     max    mean     p75     p99    p995    p999     rme  samples
-· abitype           383,316.98  0.0024  0.2804  0.0026  0.0026  0.0030  0.0032  0.0094  ±0.54%   191659   fastest
-· abitype (struct)  344,133.32  0.0026  0.2467  0.0029  0.0029  0.0034  0.0035  0.0103  ±0.54%   172067  
-· ethers@5           53,438.95  0.0175  1.7082  0.0187  0.0183  0.0242  0.0307  0.1916  ±0.82%    26720  
-· ethers@6           22,431.26  0.0424  0.3683  0.0446  0.0438  0.0577  0.0691  0.2512  ±0.45%    11216   slowest
-
-Summary
-abitype - src/human-readable/parseAbi.bench.ts > Parse ABI
-  1.11x faster than abitype (struct)
-  7.17x faster than ethers@5
-  17.09x faster than ethers@6
-```
 
 ### `Fragment` versus `parseAbiItem`
 
@@ -144,7 +125,7 @@ const abiItem = Fragment.from(
 :::
 
 - ABIType returns inferred ABI item, while ethers.js just returns `Fragment`
-- Rest same as [`Fragment` versus `parseAbiItem`](#fragment-versus-parseabiitem)
+- Rest same as [`Interface` versus `parseAbi`](#interface-versus-parseabi)
 
 #### Benchmarks
 
@@ -193,7 +174,7 @@ const abiParameter = ParamType.from('string foo')
 :::
 
 - ABIType returns inferred ABI parameter, while ethers.js just returns `ParamType`
-- Rest same as [`Fragment` versus `parseAbiItem`](#fragment-versus-parseabiitem)
+- Rest same as [`Interface` versus `parseAbi`](#interface-versus-parseabi)
 
 #### Benchmarks
 
@@ -210,4 +191,248 @@ Summary
 abitype - src/human-readable/parseAbiParameter.bench.ts > Parse basic ABI Parameter
   8.02x faster than ethers@5
   14.14x faster than ethers@6
+```
+
+### `Interface.format` versus `formatAbi`
+
+Format JSON ABI into human-readable ABI.
+
+::: code-group
+
+```ts twoslash [abitype]
+import { formatAbi } from 'abitype'
+
+const abi = formatAbi([
+  {
+    type: 'function',
+    name: 'name',
+    stateMutability: 'nonpayable',
+    inputs: [
+      {
+        type: 'tuple',
+        name: 'foo',
+        components: [
+          { type: 'string', name: 'name' },
+          { type: 'uint256', name: 'age' },
+        ],
+      },
+      { type: 'uint256', name: 'tokenId' },
+    ],
+    outputs: [],
+  },
+  {
+    type: 'event',
+    name: 'Foo',
+    inputs: [{ type: 'address', name: 'bar', indexed: true }],
+  },
+])
+abi
+//^?
+```
+
+```ts twoslash [ethers@5]
+import { Interface } from '@ethersproject/abi'
+
+const iface = new Interface([
+  {
+    type: 'function',
+    name: 'name',
+    stateMutability: 'nonpayable',
+    inputs: [
+      {
+        type: 'tuple',
+        name: 'foo',
+        components: [
+          { type: 'string', name: 'name' },
+          { type: 'uint256', name: 'age' },
+        ],
+      },
+      { type: 'uint256', name: 'tokenId' },
+    ],
+    outputs: [],
+  },
+  {
+    type: 'event',
+    name: 'Foo',
+    inputs: [{ type: 'address', name: 'bar', indexed: true }],
+  },
+])
+const abi = iface.format('minimal')
+//    ^?
+```
+
+```ts twoslash [ethers@6]
+import { Interface } from 'ethers'
+
+const iface = new Interface([
+  {
+    type: 'function',
+    name: 'name',
+    stateMutability: 'nonpayable',
+    inputs: [
+      {
+        type: 'tuple',
+        name: 'foo',
+        components: [
+          { type: 'string', name: 'name' },
+          { type: 'uint256', name: 'age' },
+        ],
+      },
+      { type: 'uint256', name: 'tokenId' },
+    ],
+    outputs: [],
+  },
+  {
+    type: 'event',
+    name: 'Foo',
+    inputs: [{ type: 'address', name: 'bar', indexed: true }],
+  },
+])
+const abi = iface.format(true)
+//    ^?
+```
+
+:::
+
+ABIType returns inferred human-readable ABI, while ethers.js just returns `string[]`.
+
+#### Benchmarks
+
+```bash
+❯ pnpm bench src/human-readable/formatAbi.bench.ts
+
+✓ Format ABI (3) 2068ms
+· abitype   1,687,145.72 ops/sec ±0.39% (843573 samples) fastest
+· ethers@5    117,287.14 ops/sec ±0.36% ( 58644 samples)
+· ethers@6     46,075.42 ops/sec ±0.37% ( 23038 samples) slowest
+
+Summary
+abitype - src/human-readable/formatAbi.bench.ts > Format ABI
+  14.38x faster than ethers@5
+  36.62x faster than ethers@6
+```
+
+### `Fragment.format` versus `formatAbiItem`
+
+Formats a JSON ABI item into a human-readable ABI item.
+
+::: code-group
+
+```ts twoslash [abitype]
+import { formatAbiItem } from 'abitype'
+
+const abiItem = formatAbiItem({
+  type: 'function',
+  name: 'foo',
+  stateMutability: 'nonpayable',
+  inputs: [
+    { type: 'string', name: 'bar' },
+    { type: 'string', name: 'baz' },
+  ],
+  outputs: [],
+})
+abiItem
+//^?
+```
+
+```ts twoslash [ethers@5]
+import { Fragment } from '@ethersproject/abi'
+
+const iface = Fragment.from({
+  type: 'function',
+  name: 'foo',
+  stateMutability: 'nonpayable',
+  inputs: [
+    { type: 'string', name: 'bar' },
+    { type: 'string', name: 'baz' },
+  ],
+  outputs: [],
+})
+const abiItem = iface.format('minimal')
+//    ^?
+```
+
+```ts twoslash [ethers@6]
+import { Fragment } from 'ethers'
+
+const iface = Fragment.from({
+  type: 'function',
+  name: 'foo',
+  stateMutability: 'nonpayable',
+  inputs: [
+    { type: 'string', name: 'bar' },
+    { type: 'string', name: 'baz' },
+  ],
+  outputs: [],
+})
+const abiItem = iface.format('minimal')
+//    ^?
+```
+
+:::
+
+ABIType returns inferred human-readable ABI item, while ethers.js just returns `string`.
+
+#### Benchmarks
+
+```bash
+❯ pnpm bench src/human-readable/formatAbi.bench.ts
+
+✓ Format basic ABI function (3) 2534ms
+· abitype   4,833,836.91 ops/sec ±0.89% (2416919 samples) fastest
+· ethers@6    123,697.64 ops/sec ±0.32% (  61849 samples) slowest
+· ethers@5    343,959.66 ops/sec ±0.33% ( 171980 samples)
+
+Summary
+abitype - src/human-readable/formatAbiItem.bench.ts > Format basic ABI function
+  14.05x faster than ethers@5
+  39.08x faster than ethers@6
+
+```
+
+### `ParamType.format` versus `formatAbiParameter`
+
+Formats JSON ABI parameter to human-readable ABI parameter.
+
+::: code-group
+
+```ts twoslash [abitype]
+import { formatAbiParameter } from 'abitype'
+
+const result = formatAbiParameter({ type: 'string', name: 'foo' })
+//    ^? 
+```
+
+```ts twoslash [ethers@5]
+import { ParamType } from '@ethersproject/abi'
+
+const result = ParamType.from({ type: 'string', name: 'foo' }).format('minimal')
+//    ^? 
+```
+
+```ts twoslash [ethers@6]
+import { ParamType } from 'ethers'
+
+const result = ParamType.from({ type: 'string', name: 'foo' }).format('minimal')
+//    ^? 
+```
+
+:::
+
+ABIType returns inferred human-readable ABI parameter, while ethers.js just returns `string`
+
+#### Benchmarks
+
+```bash
+❯ pnpm bench src/human-readable/formatAbiParameter.bench.ts
+
+✓ Format basic ABI Parameter (3) 5043ms
+· abitype   10,550,231.55 ops/sec ±0.63% (5275116 samples) fastest
+· ethers@6     398,639.32 ops/sec ±0.40% ( 199320 samples) slowest
+· ethers@5   1,041,080.97 ops/sec ±0.45% ( 520541 samples)
+
+Summary
+abitype - src/human-readable/formatAbiParameter.bench.ts > Format basic ABI Parameter
+  10.41x faster than ethers@5
+  28.57x faster than ethers@6
 ```
