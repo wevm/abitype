@@ -1,4 +1,4 @@
-import type { AbiItemType, AbiParameter } from '../../abi.js'
+import type { AbiItemType, InferredAbiEventParameter } from '../../abi.js'
 import { BaseError } from '../../errors.js'
 import type { Modifier } from '../types/signatures.js'
 
@@ -100,7 +100,7 @@ export class InvalidAbiTypeParameterError extends BaseError {
   constructor({
     abiParameter,
   }: {
-    abiParameter: AbiParameter & { indexed?: boolean | undefined }
+    abiParameter: InferredAbiEventParameter
   }) {
     super('Invalid ABI parameter.', {
       details: JSON.stringify(abiParameter, null, 2),

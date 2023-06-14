@@ -214,15 +214,20 @@ test('ValidateName', () => {
 })
 
 test('ValidateType', () => {
+  // This will fail in strict mode
   assertType<ValidateType<'foo'>>(true)
   assertType<ValidateType<'address'>>(true)
   assertType<ValidateType<'foo', true>>(false)
 })
 
 test('ValidateModifier', () => {
+  // This will fail in strict mode
   assertType<ValidateModifier<'calldata', { type: 'address' }>>(true)
+  // This will fail in strict mode
   assertType<ValidateModifier<'storage', { type: 'address' }>>(true)
+  // This will fail in strict mode
   assertType<ValidateModifier<'memory', { type: 'address' }>>(true)
+  // This will fail in strict mode
   assertType<ValidateModifier<'memory', { type: 'Foo' }>>(true)
   assertType<ValidateModifier<'memory', { type: 'Foo'; Structs: { Foo: {} } }>>(
     true,

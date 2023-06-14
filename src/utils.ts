@@ -82,7 +82,9 @@ type BitsTypeLookup = {
  * @returns TypeScript primitive type
  */
 export type AbiParameterToPrimitiveType<
-  TAbiParameter extends AbiParameter | { name: string; type: unknown },
+  TAbiParameter extends
+    | AbiParameter
+    | { name?: string | undefined; type: unknown },
   TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
 > = TAbiParameter['type'] extends Exclude<
   // 1. Check to see if type is basic (not tuple or array) and can be looked up immediately.

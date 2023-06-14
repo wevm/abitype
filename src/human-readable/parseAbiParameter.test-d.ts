@@ -48,6 +48,7 @@ test('ParseAbiParameter', () => {
     readonly name: 'from'
     readonly indexed: true
   }>()
+  // This will fail in strict mode
   expectTypeOf<ParseAbiParameter<'address calldata foo'>>().toEqualTypeOf<{
     readonly type: 'address'
     readonly name: 'foo'
@@ -91,6 +92,7 @@ test('parseAbiParameter', () => {
   ).toEqualTypeOf<{ readonly type: 'address' }>()
 
   expectTypeOf(
+    // This will fail in strict mode
     parseAbiParameter(['struct Foo { string name; }', 'Bar']),
   ).toEqualTypeOf<{ readonly type: 'Bar' }>()
 

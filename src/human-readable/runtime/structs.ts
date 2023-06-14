@@ -1,4 +1,4 @@
-import type { AbiParameter } from '../../abi.js'
+import type { InferredAbiParameter } from '../../abi.js'
 import { execTyped, isTupleRegex } from '../../regex.js'
 import { UnknownTypeError } from '../errors/abiItem.js'
 import { InvalidAbiTypeParameterError } from '../errors/abiParameter.js'
@@ -24,7 +24,7 @@ export function parseStructs(signatures: readonly string[]) {
 
     const properties = match.properties.split(';')
 
-    const components: AbiParameter[] = []
+    const components: InferredAbiParameter[] = []
     const propertiesLength = properties.length
     for (let k = 0; k < propertiesLength; k++) {
       const property = properties[k]!
@@ -56,11 +56,11 @@ const typeWithoutTupleRegex =
   /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?$/
 
 function resolveStructs(
-  abiParameters: readonly (AbiParameter & { indexed?: true })[],
+  abiParameters: readonly (InferredAbiParameter & { indexed?: true })[],
   structs: StructLookup,
   ancestors = new Set<string>(),
 ) {
-  const components: AbiParameter[] = []
+  const components: InferredAbiParameter[] = []
   const length = abiParameters.length
   for (let i = 0; i < length; i++) {
     const abiParameter = abiParameters[i]!

@@ -1,4 +1,4 @@
-import type { AbiEventParameter, AbiParameter } from '../abi.js'
+import type { InferredAbiEventParameter, InferredAbiParameter } from '../abi.js'
 import type { Join } from '../types.js'
 import {
   type FormatAbiParameter,
@@ -20,8 +20,8 @@ import {
  */
 export type FormatAbiParameters<
   TAbiParameters extends readonly [
-    AbiParameter | AbiEventParameter,
-    ...(readonly (AbiParameter | AbiEventParameter)[]),
+    InferredAbiParameter | InferredAbiEventParameter,
+    ...(readonly (InferredAbiParameter | InferredAbiEventParameter)[]),
   ],
 > = Join<
   {
@@ -45,8 +45,8 @@ export type FormatAbiParameters<
  */
 export function formatAbiParameters<
   const TAbiParameters extends readonly [
-    AbiParameter | AbiEventParameter,
-    ...(readonly (AbiParameter | AbiEventParameter)[]),
+    InferredAbiParameter | InferredAbiEventParameter,
+    ...(readonly (InferredAbiParameter | InferredAbiEventParameter)[]),
   ],
 >(abiParameters: TAbiParameters): FormatAbiParameters<TAbiParameters> {
   let params = ''

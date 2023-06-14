@@ -122,6 +122,7 @@ test('parseAbiParameters', () => {
   ).toEqualTypeOf<readonly [{ readonly type: 'address' }]>()
 
   expectTypeOf(
+    // This will fail in strict mode
     parseAbiParameters(['struct Foo { string name; }', 'Bar']),
   ).toEqualTypeOf<readonly [{ readonly type: 'Bar' }]>()
 

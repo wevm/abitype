@@ -1,4 +1,4 @@
-import type { AbiParameter } from '../abi.js'
+import type { AbiParameter, InferredAbiParameter } from '../abi.js'
 import { InvalidAbiParametersError } from '../index.js'
 import type { Narrow } from '../narrow.js'
 import type { Error, Filter, Flatten, IsEmptyObject } from '../types.js'
@@ -155,7 +155,7 @@ export function parseAbiParameters<
           : never)
     ),
 ): ParseAbiParameters<TParams> {
-  const abiParameters: AbiParameter[] = []
+  const abiParameters: InferredAbiParameter[] = []
   if (typeof params === 'string') {
     const parameters = splitParameters(params)
     const length = parameters.length

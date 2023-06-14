@@ -391,6 +391,7 @@ test('AbiParameterToPrimitiveType', () => {
         name: 'data'
         type: 'foo'
       }>
+      // This will fail in strict mode
       assertType<Result>(null)
     })
 
@@ -400,6 +401,7 @@ test('AbiParameterToPrimitiveType', () => {
         type: 'foo[2][2]'
       }>
       assertType<Result>([
+        // This will fail in strict mode
         [null, null],
         [null, null],
       ])

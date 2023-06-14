@@ -4,9 +4,9 @@ import type {
   AbiConstructor as AbiConstructorType,
   AbiFallback as AbiFallbackType,
   AbiFunction as AbiFunctionType,
-  AbiParameter as AbiParameterType,
   AbiReceive as AbiReceiveType,
   Address as AddressType,
+  InferredAbiParameter as AbiParameterType,
 } from './abi.js'
 import { bytesRegex, integerRegex } from './regex.js'
 

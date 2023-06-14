@@ -9,14 +9,14 @@ export type Address = ResolvedConfig['AddressType']
 // Could use `Range`, but listed out for zero overhead
 // rome-ignore format: no formatting
 export type MBytes =
-  | '' | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9
+  | '' | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
   | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19
   | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29
   | 30 | 31 | 32
 // rome-ignore format: no formatting
 export type MBits =
-  | ''  | 8   | 16  | 24  | 32  | 40  | 48  | 56  | 64  | 72
-  | 80  | 88  | 96  | 104 | 112 | 120 | 128 | 136 | 144 | 152
+  | '' | 8 | 16 | 24 | 32 | 40 | 48 | 56 | 64 | 72
+  | 80 | 88 | 96 | 104 | 112 | 120 | 128 | 136 | 144 | 152
   | 160 | 168 | 176 | 184 | 192 | 200 | 208 | 216 | 224 | 232
   | 240 | 248 | 256
 
@@ -92,23 +92,9 @@ export type AbiInternalType =
   | ResolvedAbiType
   | `address ${string}`
   | `contract ${string}`
-  | `enum ${string}`
-  | `struct ${string}`
+  | `enum${string}`
+  | `struct${string}`
 
-export type InferredAbiParameter = Pretty<
-  {
-    type: string
-    name?: string | undefined
-    /** Representation used by Solidity compiler */
-    internalType?: string | undefined
-  } & (
-    | { type: string }
-    | {
-        type: string
-        components: readonly InferredAbiParameter[]
-      }
-  )
->
 export type AbiParameter = Pretty<
   {
     type: ResolvedAbiType
@@ -261,3 +247,103 @@ export type TypedData = Pretty<
     [_ in TypedDataType]?: never | undefined
   }
 >
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Inferred Abi Types
+
+export type InferredAbiParameter = Pretty<
+  {
+    type: string
+    name?: string | undefined
+    /** Representation used by Solidity compiler */
+    internalType?: string | undefined
+  } & (
+    | { type: string }
+    | {
+        type: 'tuple' | `tuple[${string}]`
+        components: readonly InferredAbiParameter[]
+      }
+  )
+>
+
+export type InferredAbiEventParameter = Pretty<
+  InferredAbiParameter & { indexed?: boolean | undefined }
+>
+
+/** Typescript inferred ABI ["function"](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type */
+export type InferredAbiFunction = {
+  type: string
+  /**
+   * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
+   * @see https://github.com/ethereum/solidity/issues/992
+   */
+  constant?: boolean | undefined
+  /**
+   * @deprecated Vyper used to provide gas estimates
+   * @see https://github.com/vyperlang/vyper/issues/2151
+   */
+  gas?: number | undefined
+  inputs: readonly InferredAbiParameter[]
+  name: string
+  outputs: readonly InferredAbiParameter[]
+  /**
+   * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
+   * @see https://github.com/ethereum/solidity/issues/992
+   */
+  payable?: boolean | undefined
+  stateMutability: string
+}
+
+/** Typescript inferred ABI ["constructor"](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type */
+export type InferredAbiConstructor = {
+  type: string
+  inputs: readonly InferredAbiParameter[]
+  /**
+   * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
+   * @see https://github.com/ethereum/solidity/issues/992
+   */
+  payable?: boolean | undefined
+  stateMutability: string
+}
+
+/** Typescript inferred ABI ["fallback"](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type */
+export type InferredAbiFallback = {
+  type: string
+  inputs?: [] | undefined
+  /**
+   * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
+   * @see https://github.com/ethereum/solidity/issues/992
+   */
+  payable?: boolean | undefined
+  stateMutability: string
+}
+
+/** Typescript inferred ABI ["receive"](https://docs.soliditylang.org/en/latest/contracts.html#receive-ether-function) type */
+export type InferredAbiReceive = {
+  type: string
+  stateMutability: string
+}
+
+/** Typescript inferred ABI ["event"](https://docs.soliditylang.org/en/latest/abi-spec.html#events) type */
+export type InferredAbiEvent = {
+  type: string
+  anonymous?: boolean | undefined
+  inputs: readonly InferredAbiEventParameter[]
+  name: string
+}
+
+/** Typescript inferred ABI ["error"](https://docs.soliditylang.org/en/latest/abi-spec.html#errors) type */
+export type InferredAbiError = {
+  type: string
+  inputs: readonly InferredAbiParameter[]
+  name: string
+}
+
+export type InferredAbi = readonly (
+  | InferredAbiReceive
+  | InferredAbiFallback
+  | InferredAbiConstructor
+  | InferredAbiError
+  | InferredAbiEvent
+  | InferredAbiFunction
+)[]

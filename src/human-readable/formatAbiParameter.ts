@@ -1,4 +1,8 @@
-import type { AbiEventParameter, AbiParameter } from '../abi.js'
+import type {
+  AbiParameter,
+  InferredAbiEventParameter,
+  InferredAbiParameter,
+} from '../abi.js'
 import { execTyped } from '../regex.js'
 import type { Join } from '../types.js'
 
@@ -13,7 +17,7 @@ import type { Join } from '../types.js'
  * //   ^? type Result = 'address from'
  */
 export type FormatAbiParameter<
-  TAbiParameter extends AbiParameter | AbiEventParameter,
+  TAbiParameter extends InferredAbiParameter | InferredAbiParameter,
 > = TAbiParameter extends {
   name?: infer Name extends string
   type: `tuple${infer Array}`
@@ -51,7 +55,7 @@ const tupleRegex = /^tuple(?<array>(\[(\d*)\])*)$/
  * //    ^? const result: 'address from'
  */
 export function formatAbiParameter<
-  const TAbiParameter extends AbiParameter | AbiEventParameter,
+  const TAbiParameter extends InferredAbiParameter | InferredAbiEventParameter,
 >(abiParameter: TAbiParameter): FormatAbiParameter<TAbiParameter> {
   type Result = FormatAbiParameter<TAbiParameter>
 

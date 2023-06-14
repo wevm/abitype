@@ -1,4 +1,4 @@
-import type { AbiItemType, AbiParameter } from '../../abi.js'
+import type { AbiItemType, InferredAbiEventParameter } from '../../abi.js'
 
 /**
  * Gets {@link parameterCache} cache key namespaced by {@link type}. This prevents parameters from being accessible to types that don't allow them (e.g. `string indexed foo` not allowed outside of `type: 'event'`).
@@ -19,10 +19,7 @@ export function getParameterCacheKey(
  *
  * **Note: When seeding more parameters, make sure you benchmark performance. The current number is the ideal balance between performance and having an already existing cache.**
  */
-export const parameterCache = new Map<
-  string,
-  AbiParameter & { indexed?: boolean }
->([
+export const parameterCache = new Map<string, InferredAbiEventParameter>([
   // Unnamed
   ['address', { type: 'address' }],
   ['bool', { type: 'bool' }],

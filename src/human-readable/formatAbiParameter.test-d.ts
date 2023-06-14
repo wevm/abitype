@@ -1,6 +1,6 @@
 import { expectTypeOf, test } from 'vitest'
 
-import type { AbiParameter } from '../abi.js'
+import type { InferredAbiParameter } from '../abi.js'
 
 import type { FormatAbiParameter } from './formatAbiParameter.js'
 import { formatAbiParameter } from './formatAbiParameter.js'
@@ -57,7 +57,7 @@ test('formatAbiParameter', () => {
   ).toEqualTypeOf<'(string)'>()
 
   const param = { type: 'address' }
-  const param2: AbiParameter = param
+  const param2: InferredAbiParameter = param
   expectTypeOf(formatAbiParameter(param)).toEqualTypeOf<string>()
   expectTypeOf(formatAbiParameter(param2)).toEqualTypeOf<string>()
 })

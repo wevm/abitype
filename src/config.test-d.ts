@@ -3,9 +3,9 @@ import { assertType, test } from 'vitest'
 import type { ResolvedConfig } from './config.js'
 
 // For testing updates to config properties:
-// declare module "./config.js" {
+// declare module './config.js' {
 //   export interface Config {
-//     Strict: true;
+//     Strict: true
 //   }
 // }
 
