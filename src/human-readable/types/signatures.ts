@@ -106,6 +106,8 @@ export type Signature<
   K extends string | unknown = unknown,
 > = IsSignature<T> extends true
   ? T
+  : string extends T // if exactly `string` (not narrowed), then pass through as valid
+  ? T
   : Error<`Signature "${T}" is invalid${K extends string
       ? ` at position ${K}`
       : ''}.`>
