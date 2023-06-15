@@ -12,7 +12,7 @@ export declare function reads<
   functionName extends string,
   const args extends readonly unknown[] | undefined,
   contracts extends Contract<abi, functionName, args>[],
->(parameters: ReadsParameters<contracts>): ContractsReturnType<contracts>
+>(parameters: ReadsParameters<contracts>): ReadsResult<contracts>
 
 export declare function useReads<
   const abi extends Abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
@@ -20,8 +20,13 @@ export declare function useReads<
   const args extends readonly unknown[] | undefined,
   contracts extends Contract<abi, functionName, args>[],
 >(
-  parameters: DeepPartial<ReadsParameters<contracts>, 3>,
-): ContractsReturnType<contracts>
+  // TODO(@tmm): Broke for `typescript@5.1.3` https://github.com/wagmi-dev/abitype/issues/153
+  // parameters: DeepPartial<ReadsParameters<contracts>, 3>,
+  parameters: DeepPartial<
+    { contracts: readonly [...DeepPartial<ContractsParameters<contracts>, 2>] },
+    1
+  >,
+): ReadsResult<contracts>
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
