@@ -45,8 +45,11 @@ importers:
         specifier: ^2.8.1
         version: 2.8.1
       typescript:
-        specifier: ^5.0.4
+        specifier: 5.0.4
         version: 5.0.4
+      typescript@5.1.3:
+        specifier: npm:typescript@5.1.3
+        version: /typescript@5.1.3
       vitest:
         specifier: ^0.30.1
         version: 0.30.1
@@ -76,7 +79,7 @@ importers:
         version: 1.0.0-beta.1(@types/node@18.16.3)(search-insights@2.6.0)
       vitepress-plugin-shiki-twoslash:
         specifier: 0.0.6
-        version: 0.0.6(typescript@5.1.3)(vitepress@1.0.0-beta.1)
+        version: 0.0.6(typescript@5.0.4)(vitepress@1.0.0-beta.1)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -3159,7 +3162,7 @@ packages:
       functions-have-names: 1.2.3
     dev: true
 
-  /remark-shiki-twoslash@3.1.3(typescript@5.1.3):
+  /remark-shiki-twoslash@3.1.3(typescript@5.0.4):
     resolution: {integrity: sha512-4e8OH3ySOCw5wUbDcPszokOKjKuebOqlP2WlySvC7ITBOq27BiGsFlq+FNWhxppZ+JzhTWah4gQrnMjX3KDbAQ==}
     peerDependencies:
       typescript: '>3'
@@ -3170,9 +3173,9 @@ packages:
       fenceparser: 1.1.1
       regenerator-runtime: 0.13.11
       shiki: 0.14.1
-      shiki-twoslash: 3.1.2(typescript@5.1.3)
+      shiki-twoslash: 3.1.2(typescript@5.0.4)
       tslib: 2.1.0
-      typescript: 5.1.3
+      typescript: 5.0.4
       unist-util-visit: 2.0.3
     transitivePeerDependencies:
       - supports-color
@@ -3312,7 +3315,7 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /shiki-twoslash@3.1.2(typescript@5.1.3):
+  /shiki-twoslash@3.1.2(typescript@5.0.4):
     resolution: {integrity: sha512-JBcRIIizi+exIA/OUhYkV6jtyeZco0ykCkIRd5sgwIt1Pm4pz+maoaRZpm6SkhPwvif4fCA7xOtJOykhpIV64Q==}
     peerDependencies:
       typescript: '>3'
@@ -3321,7 +3324,7 @@ packages:
       '@typescript/vfs': 1.3.4
       fenceparser: 1.1.1
       shiki: 0.14.1
-      typescript: 5.1.3
+      typescript: 5.0.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -3812,12 +3815,12 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitepress-plugin-shiki-twoslash@0.0.6(typescript@5.1.3)(vitepress@1.0.0-beta.1):
+  /vitepress-plugin-shiki-twoslash@0.0.6(typescript@5.0.4)(vitepress@1.0.0-beta.1):
     resolution: {integrity: sha512-CjMF01Vb/zwOKKCqq6QmkJbTJnRxipv8oiPjRWTjzH2jPaQH4gGCF2fZHS7uY53J3gbU3GwtrXI02J6axLYmbg==}
     peerDependencies:
       vitepress: '>=1.0.0-alpha.61'
     dependencies:
-      remark-shiki-twoslash: 3.1.3(typescript@5.1.3)
+      remark-shiki-twoslash: 3.1.3(typescript@5.0.4)
       vitepress: 1.0.0-beta.1(@types/node@18.16.3)(search-insights@2.6.0)
     transitivePeerDependencies:
       - supports-color
