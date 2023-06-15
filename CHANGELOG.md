@@ -1,5 +1,11 @@
 # abitype
 
+## 0.8.10
+
+### Patch Changes
+
+- [`1d62393`](https://github.com/wagmi-dev/abitype/commit/1d62393d97ca927feeec8eacb4588952fd635ec0) Thanks [@tmm](https://github.com/tmm)! - Fixed `parseAbi` issue with `typescript@5.1.3`
+
 ## 0.8.9
 
 ### Patch Changes
