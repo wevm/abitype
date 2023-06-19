@@ -1,5 +1,11 @@
 # abitype
 
+## 0.8.11
+
+### Patch Changes
+
+- [#156](https://github.com/wagmi-dev/abitype/pull/156) [`d577f3d`](https://github.com/wagmi-dev/abitype/commit/d577f3d533b2ef4477a4023ee077ffaf2b6a76d0) Thanks [@tmm](https://github.com/tmm)! - Switched `TypedData` from TypeScript object to Record.
+
 ## 0.8.10
 
 ### Patch Changes
