@@ -19,7 +19,7 @@ export function getParameterCacheKey(
  *
  * **Note: When seeding more parameters, make sure you benchmark performance. The current number is the ideal balance between performance and having an already existing cache.**
  */
-export const parameterCache = new Map<
+export const parameterCache = /*#__PURE__*/ new Map<
   string,
   AbiParameter & { indexed?: boolean }
 >([

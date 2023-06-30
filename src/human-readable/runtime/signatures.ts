@@ -85,14 +85,14 @@ export function isReceiveSignature(signature: string) {
   return receiveSignatureRegex.test(signature)
 }
 
-export const modifiers = new Set<Modifier>([
+export const modifiers = /*#__PURE__*/ new Set<Modifier>([
   'memory',
   'indexed',
   'storage',
   'calldata',
 ])
-export const eventModifiers = new Set<EventModifier>(['indexed'])
-export const functionModifiers = new Set<FunctionModifier>([
+export const eventModifiers = /*#__PURE__*/ new Set<EventModifier>(['indexed'])
+export const functionModifiers = /*#__PURE__*/ new Set<FunctionModifier>([
   'calldata',
   'memory',
   'storage',
