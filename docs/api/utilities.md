@@ -276,11 +276,12 @@ type Result = ExtractAbiEvents<typeof abi>
 
 Extracts `AbiFunction` with name from `Abi`.
 
-| Name            | Description       | Type                |
-| --------------- | ----------------- | ------------------- |
-| `TAbi`          | ABI.              | `Abi`               |
-| `TFunctionName` | Name of function. | `string` (inferred) |
-| returns         | ABI Function.     | `AbiFunction`       |
+| Name                  | Description           | Type                            |
+| --------------------- | --------------------- | ------------------------------- |
+| `TAbi`                | ABI.                  | `Abi`                           |
+| `TFunctionName`       | Name of function.     | `string` (inferred)             |
+| `TAbiStateMutability` | ABI state mutability. | `AbiStateMutability` (optional) |
+| returns               | ABI Function.         | `AbiFunction`                   |
 
 #### Example
 
@@ -319,7 +320,7 @@ Extracts all `AbiFunction` names from `Abi`.
 | Name                  | Description           | Type                            |
 | --------------------- | --------------------- | ------------------------------- |
 | `TAbi`                | ABI.                  | `Abi`                           |
-| `TAbiStateMutibility` | ABI state mutability. | `AbiStateMutability` (optional) |
+| `TAbiStateMutability` | ABI state mutability. | `AbiStateMutability` (optional) |
 | returns               | ABI Event names.      | `string` (inferred)             |
 
 #### Example
