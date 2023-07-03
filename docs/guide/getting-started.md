@@ -24,7 +24,7 @@ yarn add abitype
 :::
 
 ::: info TypeScript Version
-ABIType requires `typescript@>=4.9.4`.
+ABIType requires `typescript@>=5.0.4`.
 :::
 
 ## Usage
