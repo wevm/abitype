@@ -85,6 +85,9 @@
     "zod": "^3 >=3.19.1"
   },
   "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    },
     "zod": {
       "optional": true
     }
