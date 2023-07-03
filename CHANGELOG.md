@@ -1,5 +1,15 @@
 # abitype
 
+## 0.9.0
+
+### Minor Changes
+
+- [#159](https://github.com/wagmi-dev/abitype/pull/159) [`267e335`](https://github.com/wagmi-dev/abitype/commit/267e335fc692ca0131a1d60a188f8b340ff7b9ed) Thanks [@frangio](https://github.com/frangio)! - Marked TypeScript as optional peer dependency
+
+### Patch Changes
+
+- [#162](https://github.com/wagmi-dev/abitype/pull/162) [`454cf87`](https://github.com/wagmi-dev/abitype/commit/454cf87643a99944fe070dbc850cbee344b49f01) Thanks [@tmm](https://github.com/tmm)! - Added state mutability filter to `ExtractAbiFunction`.
+
 ## 0.8.11
 
 ### Patch Changes
