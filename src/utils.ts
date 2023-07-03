@@ -210,40 +210,45 @@ export type IsAbi<TAbi> = TAbi extends Abi ? true : false
  * Extracts all {@link AbiFunction} types from {@link Abi}.
  *
  * @param TAbi - {@link Abi} to extract functions from
- * @param TAbiStateMutibility - {@link AbiStateMutability} to filter by
+ * @param TAbiStateMutability - {@link AbiStateMutability} to filter by
  * @returns All {@link AbiFunction} types from {@link Abi}
  */
 export type ExtractAbiFunctions<
   TAbi extends Abi,
-  TAbiStateMutibility extends AbiStateMutability = AbiStateMutability,
+  TAbiStateMutability extends AbiStateMutability = AbiStateMutability,
 > = Extract<
   TAbi[number],
-  { type: 'function'; stateMutability: TAbiStateMutibility }
+  { type: 'function'; stateMutability: TAbiStateMutability }
 >
 
 /**
  * Extracts all {@link AbiFunction} names from {@link Abi}.
  *
  * @param TAbi - {@link Abi} to extract function names from
- * @param TAbiStateMutibility - {@link AbiStateMutability} to filter by
+ * @param TAbiStateMutability - {@link AbiStateMutability} to filter by
  * @returns Union of function names
  */
 export type ExtractAbiFunctionNames<
   TAbi extends Abi,
-  TAbiStateMutibility extends AbiStateMutability = AbiStateMutability,
-> = ExtractAbiFunctions<TAbi, TAbiStateMutibility>['name']
+  TAbiStateMutability extends AbiStateMutability = AbiStateMutability,
+> = ExtractAbiFunctions<TAbi, TAbiStateMutability>['name']
 
 /**
  * Extracts {@link AbiFunction} with name from {@link Abi}.
  *
  * @param TAbi - {@link Abi} to extract {@link AbiFunction} from
  * @param TFunctionName - String name of function to extract from {@link Abi}
+ * @param TAbiStateMutability - {@link AbiStateMutability} to filter by
  * @returns Matching {@link AbiFunction}
  */
 export type ExtractAbiFunction<
   TAbi extends Abi,
   TFunctionName extends ExtractAbiFunctionNames<TAbi>,
-> = Extract<ExtractAbiFunctions<TAbi>, { name: TFunctionName }>
+  TAbiStateMutability extends AbiStateMutability = AbiStateMutability,
+> = Extract<
+  ExtractAbiFunctions<TAbi, TAbiStateMutability>,
+  { name: TFunctionName }
+>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Abi Events
