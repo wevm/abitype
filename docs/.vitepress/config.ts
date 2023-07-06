@@ -7,6 +7,7 @@ import { version } from '../../package.json'
 
 export default withTwoslash(
   defineConfig({
+    cleanUrls: true,
     description:
       'Utilities and type definitions for ABI properties and values, covering the Contract ABI Specification, as well as EIP-712 Typed Data.',
     head: [

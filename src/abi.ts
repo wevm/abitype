@@ -240,10 +240,8 @@ export type TypedDataParameter = {
  * [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) Typed Data Specification
  */
 export type TypedData = Pretty<
-  {
-    [key: string]: readonly TypedDataParameter[]
-  } & {
+  Record<string, readonly TypedDataParameter[]> & {
     // Disallow `TypedDataType` as key names (e.g. `address`)
-    [_ in TypedDataType]?: never | undefined
+    [_ in TypedDataType]?: never
   }
 >

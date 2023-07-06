@@ -1,5 +1,27 @@
 # abitype
 
+## 0.9.0
+
+### Minor Changes
+
+- [#159](https://github.com/wagmi-dev/abitype/pull/159) [`267e335`](https://github.com/wagmi-dev/abitype/commit/267e335fc692ca0131a1d60a188f8b340ff7b9ed) Thanks [@frangio](https://github.com/frangio)! - Marked TypeScript as optional peer dependency
+
+### Patch Changes
+
+- [#162](https://github.com/wagmi-dev/abitype/pull/162) [`454cf87`](https://github.com/wagmi-dev/abitype/commit/454cf87643a99944fe070dbc850cbee344b49f01) Thanks [@tmm](https://github.com/tmm)! - Added state mutability filter to `ExtractAbiFunction`.
+
+## 0.8.11
+
+### Patch Changes
+
+- [#156](https://github.com/wagmi-dev/abitype/pull/156) [`d577f3d`](https://github.com/wagmi-dev/abitype/commit/d577f3d533b2ef4477a4023ee077ffaf2b6a76d0) Thanks [@tmm](https://github.com/tmm)! - Switched `TypedData` from TypeScript object to Record.
+
+## 0.8.10
+
+### Patch Changes
+
+- [`1d62393`](https://github.com/wagmi-dev/abitype/commit/1d62393d97ca927feeec8eacb4588952fd635ec0) Thanks [@tmm](https://github.com/tmm)! - Fixed `parseAbi` issue with `typescript@5.1.3`
+
 ## 0.8.9
 
 ### Patch Changes
