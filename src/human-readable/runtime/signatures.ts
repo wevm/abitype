@@ -6,9 +6,9 @@ import type {
   Modifier,
 } from '../types/signatures.js'
 
-// https://regexr.com/78tsr
+// https://regexr.com/7gmok
 const errorSignatureRegex =
-  /^error (?<name>[a-zA-Z0-9_]+)\((?<parameters>.*?)\)$/
+  /^error (?<name>[a-zA-Z$_][a-zA-Z0-9$_]*)\((?<parameters>.*?)\)$/
 export function isErrorSignature(signature: string) {
   return errorSignatureRegex.test(signature)
 }
@@ -19,9 +19,9 @@ export function execErrorSignature(signature: string) {
   )
 }
 
-// https://regexr.com/78tv3
+// https://regexr.com/7gmoq
 const eventSignatureRegex =
-  /^event (?<name>[a-zA-Z0-9_]+)\((?<parameters>.*?)\)$/
+  /^event (?<name>[a-zA-Z$_][a-zA-Z0-9$_]*)\((?<parameters>.*?)\)$/
 export function isEventSignature(signature: string) {
   return eventSignatureRegex.test(signature)
 }
@@ -32,9 +32,9 @@ export function execEventSignature(signature: string) {
   )
 }
 
-// https://regexr.com/78u1b
+// https://regexr.com/7gmot
 const functionSignatureRegex =
-  /^function (?<name>[a-zA-Z0-9_]+)\((?<parameters>.*?)\)(?: (?<scope>external|public{1}))?(?: (?<stateMutability>pure|view|nonpayable|payable{1}))?(?: returns\s?\((?<returns>.*?)\))?$/
+  /^function (?<name>[a-zA-Z$_][a-zA-Z0-9$_]*)\((?<parameters>.*?)\)(?: (?<scope>external|public{1}))?(?: (?<stateMutability>pure|view|nonpayable|payable{1}))?(?: returns\s?\((?<returns>.*?)\))?$/
 export function isFunctionSignature(signature: string) {
   return functionSignatureRegex.test(signature)
 }
@@ -47,9 +47,9 @@ export function execFunctionSignature(signature: string) {
   }>(functionSignatureRegex, signature)
 }
 
-// https://regexr.com/78tsu
+// https://regexr.com/7gmp3
 const structSignatureRegex =
-  /^struct (?<name>[a-zA-Z0-9_]+) \{(?<properties>.*?)\}$/
+  /^struct (?<name>[a-zA-Z$_][a-zA-Z0-9$_]*) \{(?<properties>.*?)\}$/
 export function isStructSignature(signature: string) {
   return structSignatureRegex.test(signature)
 }
