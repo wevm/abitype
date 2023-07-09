@@ -206,8 +206,8 @@ test('ValidateName', () => {
   expectTypeOf<ValidateName<'alias'>>().toEqualTypeOf<
     ['Error: "alias" is a protected Solidity keyword.']
   >()
-  expectTypeOf<ValidateName<'foo$', true>>().toEqualTypeOf<
-    ['Error: "foo$" contains invalid character.']
+  expectTypeOf<ValidateName<'foo?', true>>().toEqualTypeOf<
+    ['Error: "foo?" contains invalid character.']
   >()
 })
 
@@ -226,6 +226,7 @@ test('IsValidCharacter', () => {
   expectTypeOf<IsValidCharacter<'foobarbaz'>>().toEqualTypeOf<true>()
   expectTypeOf<IsValidCharacter<'123123'>>().toEqualTypeOf<true>()
   expectTypeOf<IsValidCharacter<'___'>>().toEqualTypeOf<true>()
+  expectTypeOf<IsValidCharacter<'$$$'>>().toEqualTypeOf<true>()
   expectTypeOf<IsValidCharacter<'foo_123'>>().toEqualTypeOf<true>()
   expectTypeOf<IsValidCharacter<'foo_123?'>>().toEqualTypeOf<false>()
   expectTypeOf<IsValidCharacter<'foo!123'>>().toEqualTypeOf<false>()
