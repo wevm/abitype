@@ -220,7 +220,7 @@ type ValidCharacters =
   // numbers
   | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
   // special characters
-  | '_'
+  | '_' | '$'
 
 // Template string inference can absorb `returns`:
 // type Result = `function foo(string) return s (uint256)` extends `function ${string}(${infer Parameters})` ? Parameters : never
