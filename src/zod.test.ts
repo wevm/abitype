@@ -139,7 +139,7 @@ describe('AbiSchema', () => {
             constant: true,
             inputs: [{ name: 'node', type: 'bytes32' }],
             name: 'resolver',
-            outputs: [{ name: '', type: 'address' }],
+            outputs: [{ name: 'owner', type: 'address' }],
             payable: false,
             type: 'function',
           },
@@ -157,7 +157,7 @@ describe('AbiSchema', () => {
             "name": "resolver",
             "outputs": [
               {
-                "name": "",
+                "name": "owner",
                 "type": "address",
               },
             ],
@@ -351,7 +351,7 @@ describe('AbiFunction', () => {
           constant: true,
           inputs: [{ name: 'node', type: 'bytes32' }],
           name: 'resolver',
-          outputs: [{ name: '', type: 'address' }],
+          outputs: [{ name: 'owner', type: 'address' }],
           payable: false,
           type: 'function',
         }),
@@ -367,7 +367,7 @@ describe('AbiFunction', () => {
           "name": "resolver",
           "outputs": [
             {
-              "name": "",
+              "name": "owner",
               "type": "address",
             },
           ],
