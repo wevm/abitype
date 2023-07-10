@@ -290,7 +290,7 @@ export const Abi = z.array(
 
 export const TypedDataDomain = z.object({
   chainId: z.number().optional(),
-  name: z.string().regex(/[a-zA-Z0-9_]+/).optional(),
+  name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/).optional(),
   salt: z.string().optional(),
   verifyingContract: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
   version: z.string().optional(),
@@ -306,12 +306,15 @@ export const TypedDataType = z.union([
 ])
 
 export const TypedDataParameter = z.object({
-  name: z.string().regex(/[a-zA-Z0-9_]+/),
+  name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
   type: z.string(),
 })
 
 export const TypedData = z
-  .record(z.string().regex(/[a-zA-Z0-9_]+/), z.array(TypedDataParameter))
+  .record(
+    z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
+    z.array(TypedDataParameter),
+  )
   .transform((val, ctx) => {
     return validateTypedDataKeys(val, ctx)
   })
@@ -340,7 +343,7 @@ function validateTypedDataKeys(
 }
 
 const typeWithoutTupleRegex =
-  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?$/
+  /^(?<type>[a-zA-Z$_][a-zA-Z0-9$_]*?)(?<array>(?:\[\d*?\])+?)?$/
 
 function validateTypedDataParameters(
   key: string,
