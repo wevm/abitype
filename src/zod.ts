@@ -315,9 +315,7 @@ export const TypedData = z
     z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
     z.array(TypedDataParameter),
   )
-  .transform((val, ctx) => {
-    return validateTypedDataKeys(val, ctx)
-  })
+  .transform((val, ctx) => validateTypedDataKeys(val, ctx))
 
 // Helper Functions.
 function validateTypedDataKeys(
