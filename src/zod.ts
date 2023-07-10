@@ -50,7 +50,7 @@ export const SolidityArray = z.union([
 export const AbiParameter: z.ZodType<AbiParameterType> = z.lazy(() =>
   z.intersection(
     z.object({
-      name: z.string().optional(),
+      name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/).optional(),
       /** Representation used by Solidity compiler */
       internalType: z.string().optional(),
     }),
@@ -110,7 +110,7 @@ export const AbiFunction = z.preprocess(
      */
     gas: z.number().optional(),
     inputs: z.array(AbiParameter),
-    name: z.string(),
+    name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
     outputs: z.array(AbiParameter),
     /**
      * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
@@ -182,7 +182,7 @@ export const AbiEvent = z.object({
   type: z.literal('event'),
   anonymous: z.boolean().optional(),
   inputs: z.array(AbiEventParameter),
-  name: z.string(),
+  name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
 })
 
 export const AbiError = z.object({
@@ -264,7 +264,7 @@ export const Abi = z.array(
           z.object({
             type: z.literal('function'),
             inputs: z.array(AbiParameter),
-            name: z.string(),
+            name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
             outputs: z.array(AbiParameter),
           }),
           z.object({
