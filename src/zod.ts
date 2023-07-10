@@ -316,6 +316,7 @@ export const TypedData = z
     return validateTypedDataKeys(val, ctx)
   })
 
+// Helper Functions.
 function validateTypedDataKeys(
   typedData: Record<string, { type: string; name: string }[]>,
   zodContext: z.RefinementCtx,
