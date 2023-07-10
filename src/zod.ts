@@ -292,7 +292,7 @@ export const TypedDataDomain = z.object({
   chainId: z.number().optional(),
   name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/).optional(),
   salt: z.string().optional(),
-  verifyingContract: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
+  verifyingContract: Address.optional(),
   version: z.string().optional(),
 })
 
