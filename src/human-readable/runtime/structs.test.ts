@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { parseStructs } from './structs.js'
+import { parseStructs, resolveTypedData } from './structs.js'
 
 test('no structs', () => {
   expect(parseStructs([])).toMatchInlineSnapshot('{}')
@@ -179,4 +179,22 @@ test.todo('throws if property is missing semicolon', () => {
   expect(() =>
     parseStructs(['struct Foo { string bar; address baz }']),
   ).toThrowErrorMatchingInlineSnapshot()
+})
+
+test('Fails to resolve in invalid type', () => {
+  expect(() =>
+    resolveTypedData([{ type: 'address?', name: 'bar' }], {
+      Foo: [{ type: 'address?', name: 'bar' }],
+    }),
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Invalid ABI parameter.
+
+    ABI parameter type is invalid.
+
+    Details: {
+      \\"type\\": \\"address?\\",
+      \\"name\\": \\"bar\\"
+    }
+    Version: abitype@x.y.z"
+  `)
 })

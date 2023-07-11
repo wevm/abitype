@@ -1,4 +1,4 @@
-import type { AbiParameter } from '../../abi.js'
+import type { AbiParameter, TypedDataParameter } from '../../abi.js'
 import { execTyped, isTupleRegex } from '../../regex.js'
 import { UnknownTypeError } from '../errors/abiItem.js'
 import { InvalidAbiTypeParameterError } from '../errors/abiParameter.js'
@@ -6,8 +6,15 @@ import {
   InvalidSignatureError,
   InvalidStructSignatureError,
 } from '../errors/signature.js'
-import { CircularReferenceError } from '../errors/struct.js'
-import type { StructLookup } from '../types/structs.js'
+import {
+  CircularReferenceError,
+  MissingNamedParameter,
+} from '../errors/struct.js'
+import type {
+  ResolvedTypedData,
+  ShallowStruct,
+  StructLookup,
+} from '../types/structs.js'
 import { execStructSignature, isStructSignature } from './signatures.js'
 import { isSolidityType, parseAbiParameter } from './utils.js'
 
@@ -53,7 +60,7 @@ export function parseStructs(signatures: readonly string[]) {
 }
 
 const typeWithoutTupleRegex =
-  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[\d*?\])+?)?$/
+  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[(?<size>\d*?)\])+?)?$/
 
 function resolveStructs(
   abiParameters: readonly (AbiParameter & { indexed?: true })[],
@@ -94,4 +101,119 @@ function resolveStructs(
   }
 
   return components
+}
+
+// EIP 712
+
+export function parseTypedData(signatures: readonly string[]) {
+  // Create "shallow" version of each struct (and filter out non-structs or invalid structs)
+
+  if (!signatures.length)
+    throw new InvalidStructSignatureError({ signature: '' })
+
+  const shallowStructs: ShallowStruct = {}
+  const signaturesLength = signatures.length
+  for (let i = 0; i < signaturesLength; i++) {
+    const signature = signatures[i]!
+
+    const match = execStructSignature(signature)
+    if (!match) throw new InvalidSignatureError({ signature, type: 'struct' })
+
+    const properties = match.properties.split(';')
+
+    const components: TypedDataParameter[] = []
+    const propertiesLength = properties.length
+    for (let k = 0; k < propertiesLength; k++) {
+      const property = properties[k]!
+      const trimmed = property.trim()
+      if (!trimmed) continue
+      const abiParameter = parseAbiParameter(trimmed, {
+        type: 'struct',
+      }) as TypedDataParameter
+
+      if (typeof abiParameter.name === 'undefined')
+        throw new MissingNamedParameter({ type: abiParameter.type })
+
+      components.push(abiParameter)
+    }
+
+    if (!components.length) throw new InvalidStructSignatureError({ signature })
+    shallowStructs[match.name] = components
+  }
+
+  return shallowStructs
+}
+
+export function resolveTypedData(
+  typedDataParameter: TypedDataParameter[],
+  structs: ShallowStruct,
+  ancestors = new Set<string>(),
+) {
+  const resolvedTypedData: ResolvedTypedData = {}
+  let components: ResolvedTypedData[] = []
+
+  const len = typedDataParameter.length
+
+  for (let i = 0; i < len; i++) {
+    const { type, name } = typedDataParameter[i]!
+
+    const match = execTyped<{ array?: string; size?: number; type: string }>(
+      typeWithoutTupleRegex,
+      type,
+    )
+
+    if (!match)
+      throw new InvalidAbiTypeParameterError({
+        abiParameter: typedDataParameter[i]!,
+      })
+
+    if (match.type in structs) {
+      if (ancestors.has(match.type)) throw new CircularReferenceError({ type })
+
+      if (match.array) {
+        if (match.size) {
+          for (let k = 0; k < match.size; k++) {
+            components.push(
+              resolveTypedData(
+                structs[match.type] ?? [],
+                structs,
+                new Set([...ancestors, match.type]),
+              ),
+            )
+          }
+        } else {
+          components = [
+            resolveTypedData(
+              structs[match.type] ?? [],
+              structs,
+              new Set([...ancestors, match.type]),
+            ),
+          ]
+        }
+
+        resolvedTypedData[name] = components
+      } else {
+        resolvedTypedData[name] = resolveTypedData(
+          structs[match.type] ?? [],
+          structs,
+          new Set([...ancestors, match.type]),
+        )
+      }
+    } else {
+      if (!isSolidityType(match.type))
+        throw new UnknownTypeError({ type: match.type })
+
+      if (match.size) {
+        for (let k = 0; k < match.size; k++) {
+          components.push(match.type)
+        }
+
+        resolvedTypedData[name] = components
+      } else {
+        resolvedTypedData[name] = type
+      }
+    }
+  }
+
+  return resolvedTypedData
 }
