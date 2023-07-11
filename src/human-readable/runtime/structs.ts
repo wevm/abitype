@@ -203,15 +203,7 @@ export function resolveTypedData(
       if (!isSolidityType(match.type))
         throw new UnknownTypeError({ type: match.type })
 
-      if (match.size) {
-        for (let k = 0; k < match.size; k++) {
-          components.push(match.type)
-        }
-
-        resolvedTypedData[name] = components
-      } else {
-        resolvedTypedData[name] = type
-      }
+      resolvedTypedData[name] = type
     }
   }
 

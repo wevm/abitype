@@ -42,21 +42,9 @@ test('ParseTypedData', () => {
       true
     >
   >().toEqualTypeOf<{
-    Person: {
-      name: {
-        foo: {
-          bar: string
-        }
-      }
-    }
-    Name: {
-      foo: {
-        bar: string
-      }
-    }
-    Foo: {
-      bar: string
-    }
+    Person: { name: { foo: { bar: 'string' } } }
+    Name: { foo: { bar: 'string' } }
+    Foo: { bar: 'string' }
   }>()
 })
 
@@ -83,21 +71,9 @@ test('parseTypedData', () => {
   )
 
   expectTypeOf<typeof resolvedtypedData>().toEqualTypeOf<{
-    Person: {
-      name: {
-        foo: {
-          bar: string
-        }
-      }
-    }
-    Name: {
-      foo: {
-        bar: string
-      }
-    }
-    Foo: {
-      bar: string
-    }
+    Person: { name: { foo: { bar: 'string' } } }
+    Name: { foo: { bar: 'string' } }
+    Foo: { bar: 'string' }
   }>()
 
   // @ts-expect-error empty array not allowed

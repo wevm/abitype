@@ -109,13 +109,7 @@ test('parses and resolves nested structs', () => {
     {
       "FulfillmentComponent": {
         "itemIndex": "uint256",
-        "orderIndex": [
-          "uint256",
-          "uint256",
-          "uint256",
-          "uint256",
-          "uint256",
-        ],
+        "orderIndex": "uint256[5]",
       },
     }
   `)

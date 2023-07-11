@@ -38,7 +38,7 @@ export type AbiTypeToPrimitiveType<
 
 // Using a map to look up types is faster, than nested conditional types
 // s/o https://twitter.com/SeaRyanC/status/1538971176357113858
-type PrimitiveTypeLookup<
+export type PrimitiveTypeLookup<
   TAbiType extends AbiType,
   TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
 > = {
