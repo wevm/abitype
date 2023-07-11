@@ -1,4 +1,8 @@
-import type { AbiParameter, TypedDataParameter } from '../../abi.js'
+import type {
+  AbiParameter,
+  TypedDataParameter,
+  TypedDataType,
+} from '../../abi.js'
 import { execTyped, isTupleRegex } from '../../regex.js'
 import { UnknownTypeError } from '../errors/abiItem.js'
 import { InvalidAbiTypeParameterError } from '../errors/abiParameter.js'
@@ -203,7 +207,7 @@ export function resolveTypedData(
       if (!isSolidityType(match.type))
         throw new UnknownTypeError({ type: match.type })
 
-      resolvedTypedData[name] = type
+      resolvedTypedData[name] = type as TypedDataType
     }
   }
 
