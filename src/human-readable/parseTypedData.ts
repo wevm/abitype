@@ -13,7 +13,8 @@ import type {
 /**
  * Parses human-readable EIP-712 into JSON {@link TypedData}
  *
- * @param TSignatures - Human-readable EIP-712 signatures
+ * @param signatures - Human-readable EIP-712 signatures
+ * @param resolveTypedData - Trigger to resolved the typed data parameters.
  * @returns Parsed {@link TypedData}
  *
  * @example
@@ -24,6 +25,14 @@ import type {
  *     'struct Foo {Name name;}',
  *   ]
  * >
+ * @example
+ * type Result = ParseTypedData<
+ *   // ^? type Result = { Name: { foo: `0x${string}` }, Foo:...
+ *   [
+ *     'struct Name {address foo;}',
+ *     'struct Foo {Name name;}',
+ *   ], true
+ * >
  */
 export type ParseTypedData<
   signatures extends readonly string[],
@@ -32,18 +41,19 @@ export type ParseTypedData<
   ? TypedData // If `T` was not able to be inferred (e.g. just `string[]`), return `StructLookup`
   : signatures extends readonly string[]
   ? signatures extends StructSignatures<signatures>
-    ? ParseTypedData_<signatures, resolveTypedData> extends infer Structs
-      ? IsNever<keyof Structs> extends true
-        ? never
-        : Pretty<Structs>
-      : never
-    : never
+  ? ParseTypedData_<signatures, resolveTypedData> extends infer Structs
+  ? IsNever<keyof Structs> extends true
+  ? never
+  : Pretty<Structs>
+  : never
+  : never
   : never
 
 /**
  * Parses human-readable EIP-712 into JSON {@link TypedData}
  *
- * @param TSignatures - Human-readable EIP-712 signatures
+ * @param signatures - Human-readable EIP-712 signatures
+ * @param resolveTypedData - Trigger to resolved the typed data parameters.
  * @returns Parsed {@link TypedData}
  *
  * @example
@@ -54,6 +64,15 @@ export type ParseTypedData<
  *     'struct Foo {Name name;}',
  *   ]
  * )
+ * @example
+ * const Result = parseTypedData(
+ *   // ^? type Result = { Name: { foo: "address" }, Foo:...
+ *   [
+ *     'struct Name {address foo;}',
+ *     'struct Foo {Name name;}',
+ *   ], true
+ * )
+
  */
 export function parseTypedData<
   const signatures extends readonly string[],
