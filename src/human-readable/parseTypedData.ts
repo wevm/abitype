@@ -41,12 +41,12 @@ export type ParseTypedData<
   ? TypedData // If `T` was not able to be inferred (e.g. just `string[]`), return `StructLookup`
   : signatures extends readonly string[]
   ? signatures extends StructSignatures<signatures>
-  ? ParseTypedData_<signatures, resolveTypedData> extends infer Structs
-  ? IsNever<keyof Structs> extends true
-  ? never
-  : Pretty<Structs>
-  : never
-  : never
+    ? ParseTypedData_<signatures, resolveTypedData> extends infer Structs
+      ? IsNever<keyof Structs> extends true
+        ? never
+        : Pretty<Structs>
+      : never
+    : never
   : never
 
 /**
