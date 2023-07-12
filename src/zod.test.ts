@@ -34,6 +34,7 @@ import {
   SolidityInt,
   SolidityString,
   SolidityTuple,
+  TypedData,
 } from './zod.js'
 import * as Exports from './zod.js'
 
@@ -62,6 +63,10 @@ it('should expose correct exports', () => {
       "AbiError",
       "AbiItemType",
       "Abi",
+      "TypedDataDomain",
+      "TypedDataType",
+      "TypedDataParameter",
+      "TypedData",
     ]
   `)
 })
@@ -134,7 +139,7 @@ describe('AbiSchema', () => {
             constant: true,
             inputs: [{ name: 'node', type: 'bytes32' }],
             name: 'resolver',
-            outputs: [{ name: '', type: 'address' }],
+            outputs: [{ name: 'owner', type: 'address' }],
             payable: false,
             type: 'function',
           },
@@ -152,7 +157,7 @@ describe('AbiSchema', () => {
             "name": "resolver",
             "outputs": [
               {
-                "name": "",
+                "name": "owner",
                 "type": "address",
               },
             ],
@@ -346,7 +351,7 @@ describe('AbiFunction', () => {
           constant: true,
           inputs: [{ name: 'node', type: 'bytes32' }],
           name: 'resolver',
-          outputs: [{ name: '', type: 'address' }],
+          outputs: [{ name: 'owner', type: 'address' }],
           payable: false,
           type: 'function',
         }),
@@ -362,7 +367,7 @@ describe('AbiFunction', () => {
           "name": "resolver",
           "outputs": [
             {
-              "name": "",
+              "name": "owner",
               "type": "address",
             },
           ],
@@ -701,4 +706,139 @@ test('AddressType', () => {
     }
   ]"
   `)
+})
+
+test('EIP-712 TypedData', () => {
+  const types = {
+    Name: [
+      { name: 'first', type: 'Name' },
+      { name: 'last', type: 'string' },
+    ],
+  }
+
+  const circularReference = {
+    Foo: [{ name: 'bar', type: 'Bar' }],
+    Bar: [{ name: 'foo', type: 'Foo' }],
+  }
+
+  const unknowType = {
+    Name: [
+      { name: 'first', type: 'Foo' },
+      { name: 'last', type: 'string' },
+    ],
+  }
+
+  expect(() => TypedData.parse(types)).toThrowErrorMatchingInlineSnapshot(`
+  "[
+    {
+      \\"code\\": \\"custom\\",
+      \\"message\\": \\"Invalid type. Name is a self reference.\\",
+      \\"path\\": []
+    }
+  ]"
+  `)
+
+  expect(() => TypedData.parse(types)).toThrowErrorMatchingInlineSnapshot(`
+  "[
+    {
+      \\"code\\": \\"custom\\",
+      \\"message\\": \\"Invalid type. Name is a self reference.\\",
+      \\"path\\": []
+    }
+  ]"
+  `)
+
+  expect(() => TypedData.parse(unknowType)).toThrowErrorMatchingInlineSnapshot(`
+  "[
+    {
+      \\"code\\": \\"custom\\",
+      \\"message\\": \\"Invalid type. Foo is not a valid EIP-712 type.\\",
+      \\"path\\": []
+    }
+  ]"
+  `)
+
+  expect(() =>
+    TypedData.parse(circularReference),
+  ).toThrowErrorMatchingInlineSnapshot(`
+  "[
+    {
+      \\"code\\": \\"custom\\",
+      \\"message\\": \\"Invalid type. Bar is a circular reference.\\",
+      \\"path\\": []
+    },
+    {
+      \\"code\\": \\"custom\\",
+      \\"message\\": \\"Invalid type. Foo is a circular reference.\\",
+      \\"path\\": []
+    }
+  ]"
+  `)
+
+  expect(() =>
+    TypedData.parse({ address: [{ name: 'owner', type: 'address' }] }),
+  ).toThrowErrorMatchingInlineSnapshot(`
+  "[
+    {
+      \\"code\\": \\"custom\\",
+      \\"message\\": \\"Invalid key. address is a solidity type.\\",
+      \\"path\\": []
+    }
+  ]"
+  `)
+
+  expect(() =>
+    TypedData.parse({ Foo: [{ name: 'owner', type: '' }] }),
+  ).toThrowErrorMatchingInlineSnapshot(`
+  "[
+    {
+      \\"code\\": \\"custom\\",
+      \\"message\\": \\"Invalid type. Foo does not have a type.\\",
+      \\"path\\": []
+    }
+  ]"
+  `)
+
+  const single = {
+    Contributor: [
+      { name: 'name', type: 'string' },
+      { name: 'address', type: 'address' },
+    ],
+  }
+
+  const nested = {
+    Contributor: [
+      { name: 'name', type: 'string' },
+      { name: 'address', type: 'address' },
+    ],
+    Website: [
+      { name: 'domain', type: 'string' },
+      { name: 'webmaster', type: 'Contributor' },
+    ],
+  }
+
+  const deeplyNested = {
+    Contributor: [
+      { name: 'name', type: 'string' },
+      { name: 'address', type: 'address' },
+    ],
+    Website: [
+      { name: 'domain', type: 'string' },
+      { name: 'webmaster', type: 'Contributor' },
+    ],
+    Project: [
+      { name: 'name', type: 'string' },
+      { name: 'contributors', type: 'Contributor[2]' },
+      { name: 'website', type: 'Website' },
+    ],
+    Organization: [
+      { name: 'name', type: 'string' },
+      { name: 'projects', type: 'Project[]' },
+      { name: 'website', type: 'Website' },
+    ],
+  }
+
+  expect(TypedData.parse(single)).toMatchObject(single)
+  expect(TypedData.parse(nested)).toMatchObject(nested)
+  expect(TypedData.parse(deeplyNested)).toMatchObject(deeplyNested)
 })

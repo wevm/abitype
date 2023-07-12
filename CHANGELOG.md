@@ -1,5 +1,11 @@
 # abitype
 
+## 0.9.2
+
+### Patch Changes
+
+- [#165](https://github.com/wagmi-dev/abitype/pull/165) [`27b763b`](https://github.com/wagmi-dev/abitype/commit/27b763ba0235675b3d1175de738857c1ba3dbd5f) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Added zod EIP-712 typed data parser.
+
 ## 0.9.1
 
 ### Patch Changes
