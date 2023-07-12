@@ -45,6 +45,40 @@ test('parses basic structs', () => {
   `)
 })
 
+test('parses valid names', () => {
+  expect(
+    parseStructs([
+      'struct $ { string; }',
+      'struct $_a9 { string; }',
+      'struct _ { string; }',
+      'struct abc$_9 { string; }',
+    ]),
+  ).toMatchInlineSnapshot(`
+    {
+      "$": [
+        {
+          "type": "string",
+        },
+      ],
+      "$_a9": [
+        {
+          "type": "string",
+        },
+      ],
+      "_": [
+        {
+          "type": "string",
+        },
+      ],
+      "abc$_9": [
+        {
+          "type": "string",
+        },
+      ],
+    }
+  `)
+})
+
 test('parses and resolves nested structs', () => {
   expect(
     parseStructs([

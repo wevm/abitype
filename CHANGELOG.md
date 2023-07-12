@@ -1,5 +1,11 @@
 # abitype
 
+## 0.9.1
+
+### Patch Changes
+
+- [#164](https://github.com/wagmi-dev/abitype/pull/164) [`ff7a76c`](https://github.com/wagmi-dev/abitype/commit/ff7a76c5a2ce61cb3feee2f5244f4e52d4f6efe1) Thanks [@ardislu](https://github.com/ardislu)! - Fixed human-readable identifiers to allow single leading dollar-sign or underscore, and disallow single leading number.
+
 ## 0.9.0
 
 ### Minor Changes

@@ -137,9 +137,7 @@ type KeyofUnion<T> = T extends T ? keyof T : never
  * type Result = Pretty<{ a: string } | { b: string } | { c: number, d: bigint }>
  * //   ^? type Result = { a: string; b: string; c: number; d: bigint }
  */
-export type Pretty<T> = {
-  [K in keyof T]: T[K]
-} & {}
+export type Pretty<T> = { [K in keyof T]: T[K] } & unknown
 
 /**
  * Creates range between two positive numbers using [tail recursion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html#tail-recursion-elimination-on-conditional-types).

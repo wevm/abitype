@@ -88,7 +88,7 @@ export interface ResolvedConfig {
 
   /**
    * TypeScript type to use for `bytes` values
-   * @default { inputs: `0x${string}` | Uint8Array; outputs: `0x${string}` }
+   * @default { inputs: `0x${string}`; outputs: `0x${string}`; }
    */
   BytesType: Config['BytesType'] extends { inputs: unknown; outputs: unknown }
     ? Config['BytesType']

@@ -17,9 +17,14 @@ import {
 
 test('isErrorSignature', () => {
   expect(isErrorSignature('error Name(string)')).toMatchInlineSnapshot('true')
+  expect(isErrorSignature('error $(string)')).toMatchInlineSnapshot('true')
+  expect(isErrorSignature('error $_a9(string)')).toMatchInlineSnapshot('true')
+  expect(isErrorSignature('error _(string)')).toMatchInlineSnapshot('true')
+  expect(isErrorSignature('error abc$_9(string)')).toMatchInlineSnapshot('true')
   expect(isErrorSignature('function name(string)')).toMatchInlineSnapshot(
     'false',
   )
+  expect(isErrorSignature('error 9abc(string)')).toMatchInlineSnapshot('false')
 })
 
 test('execErrorSignature', () => {
@@ -36,9 +41,14 @@ test('execErrorSignature', () => {
 
 test('isEventSignature', () => {
   expect(isEventSignature('event Name(string)')).toMatchInlineSnapshot('true')
+  expect(isEventSignature('event $(string)')).toMatchInlineSnapshot('true')
+  expect(isEventSignature('event $_a9(string)')).toMatchInlineSnapshot('true')
+  expect(isEventSignature('event _(string)')).toMatchInlineSnapshot('true')
+  expect(isEventSignature('event abc$_9(string)')).toMatchInlineSnapshot('true')
   expect(isEventSignature('function name(string)')).toMatchInlineSnapshot(
     'false',
   )
+  expect(isEventSignature('event 9abc(string)')).toMatchInlineSnapshot('false')
 })
 
 test('execEventSignature', () => {
@@ -71,7 +81,22 @@ test('isFunctionSignature', () => {
   expect(
     isFunctionSignature('function name(string) returns(uint256)'),
   ).toMatchInlineSnapshot('true')
+  expect(isFunctionSignature('function $(string)')).toMatchInlineSnapshot(
+    'true',
+  )
+  expect(isFunctionSignature('function $_a9(string)')).toMatchInlineSnapshot(
+    'true',
+  )
+  expect(isFunctionSignature('function _(string)')).toMatchInlineSnapshot(
+    'true',
+  )
+  expect(isFunctionSignature('function abc$_9(string)')).toMatchInlineSnapshot(
+    'true',
+  )
   expect(isFunctionSignature('struct Name { string; }')).toMatchInlineSnapshot(
+    'false',
+  )
+  expect(isFunctionSignature('function 9abc(string)')).toMatchInlineSnapshot(
     'false',
   )
 })
@@ -117,7 +142,22 @@ test('isStructSignature', () => {
   expect(isStructSignature('struct Name { string; }')).toMatchInlineSnapshot(
     'true',
   )
+  expect(isStructSignature('struct $ { string; }')).toMatchInlineSnapshot(
+    'true',
+  )
+  expect(isStructSignature('struct $_a9 { string; }')).toMatchInlineSnapshot(
+    'true',
+  )
+  expect(isStructSignature('struct _ { string; }')).toMatchInlineSnapshot(
+    'true',
+  )
+  expect(isStructSignature('struct abc$_9 { string; }')).toMatchInlineSnapshot(
+    'true',
+  )
   expect(isStructSignature('function name(string)')).toMatchInlineSnapshot(
+    'false',
+  )
+  expect(isStructSignature('struct 9abc { string; }')).toMatchInlineSnapshot(
     'false',
   )
 })

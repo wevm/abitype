@@ -61,7 +61,7 @@ export function parseStructs(signatures: readonly string[]) {
 }
 
 const typeWithoutTupleRegex =
-  /^(?<type>[a-zA-Z0-9_]+?)(?<array>(?:\[(?<size>\d*?)\])+?)?$/
+  /^(?<type>[a-zA-Z$_][a-zA-Z0-9$_]*)(?<array>(?:\[(?<size>\d*?)\])+?)?$/
 
 function resolveStructs(
   abiParameters: readonly (AbiParameter & { indexed?: true })[],

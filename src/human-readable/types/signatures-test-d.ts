@@ -193,6 +193,9 @@ test('IsName', () => {
   expectTypeOf<IsName<'alias'>>().toEqualTypeOf<false>()
   expectTypeOf<IsName<'copyof'>>().toEqualTypeOf<false>()
   expectTypeOf<IsName<'virtual'>>().toEqualTypeOf<false>()
+  // no number strings
+  expectTypeOf<IsName<'123'>>().toEqualTypeOf<false>()
+  expectTypeOf<IsName<'12foo'>>().toEqualTypeOf<false>()
   // no invalid characters
   // expectTypeOf<IsName<'foo?'>>().toEqualTypeOf<false>()
   // expectTypeOf<IsName<'foo,'>>().toEqualTypeOf<false>()
@@ -200,14 +203,21 @@ test('IsName', () => {
 
 test('ValidateName', () => {
   expectTypeOf<ValidateName<'foo'>>().toEqualTypeOf<'foo'>()
+  expectTypeOf<ValidateName<'foo$', true>>().toEqualTypeOf<'foo$'>()
   expectTypeOf<ValidateName<'foo bar'>>().toEqualTypeOf<
-    ['Error: Name "foo bar" cannot contain whitespace.']
+    ['Error: Identifier "foo bar" cannot contain whitespace.']
   >()
   expectTypeOf<ValidateName<'alias'>>().toEqualTypeOf<
     ['Error: "alias" is a protected Solidity keyword.']
   >()
-  expectTypeOf<ValidateName<'foo$', true>>().toEqualTypeOf<
-    ['Error: "foo$" contains invalid character.']
+  expectTypeOf<ValidateName<'123'>>().toEqualTypeOf<
+    ['Error: Identifier "123" cannot be a number string.']
+  >()
+  expectTypeOf<ValidateName<'12foo'>>().toEqualTypeOf<
+    ['Error: Identifier "12foo" cannot start with a number.']
+  >()
+  expectTypeOf<ValidateName<'foo?', true>>().toEqualTypeOf<
+    ['Error: "foo?" contains invalid character.']
   >()
 })
 
@@ -226,6 +236,7 @@ test('IsValidCharacter', () => {
   expectTypeOf<IsValidCharacter<'foobarbaz'>>().toEqualTypeOf<true>()
   expectTypeOf<IsValidCharacter<'123123'>>().toEqualTypeOf<true>()
   expectTypeOf<IsValidCharacter<'___'>>().toEqualTypeOf<true>()
+  expectTypeOf<IsValidCharacter<'$$$'>>().toEqualTypeOf<true>()
   expectTypeOf<IsValidCharacter<'foo_123'>>().toEqualTypeOf<true>()
   expectTypeOf<IsValidCharacter<'foo_123?'>>().toEqualTypeOf<false>()
   expectTypeOf<IsValidCharacter<'foo!123'>>().toEqualTypeOf<false>()

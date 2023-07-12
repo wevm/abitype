@@ -229,7 +229,7 @@ test('ParseSignature', () => {
     inputs: [
       {
         type: 'string',
-        name: ['Error: Name "indexed bar" cannot contain whitespace.'],
+        name: ['Error: Identifier "indexed bar" cannot contain whitespace.'],
       },
     ],
     outputs: [],
