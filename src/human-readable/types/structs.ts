@@ -1,13 +1,7 @@
-import type {
-  AbiParameter,
-  SolidityFixedArraySizeLookup,
-  TypedData,
-  TypedDataParameter,
-  TypedDataType,
-} from '../../abi.js'
-import type { Error, Pretty, Trim, Tuple } from '../../types.js'
-import type { PrimitiveTypeLookup } from '../../utils.js'
-import type { IsStructSignature, StructSignature } from './signatures.js'
+import type { AbiParameter, TypedData, TypedDataParameter } from '../../abi.js'
+import type { Error, Trim } from '../../types.js'
+import type { ResolveTypedData } from '../../utils.js'
+import type { StructSignature } from './signatures.js'
 import type { ParseAbiParameter } from './utils.js'
 
 export type StructLookup = Record<string, readonly AbiParameter[]>
@@ -98,25 +92,6 @@ export type ParseStructProperties<
 
 export type ShallowStruct = { [x: string]: TypedDataParameter[] }
 
-export type ResolvedTypedData = {
-  [x: string]: TypedDataType | ResolvedTypedData | ResolvedTypedData[]
-}
-
-export type ValidateStructSignature<
-  T extends string,
-  K extends string | unknown = unknown,
-> = IsStructSignature<T> extends true
-  ? T
-  : string extends T // if exactly `string` (not narrowed), then pass through as valid
-  ? T
-  : Error<`Signature "${T}" is invalid${K extends string
-      ? ` at position ${K}`
-      : ''}.`>
-
-export type StructSignatures<T extends readonly string[]> = {
-  [K in keyof T]: ValidateStructSignature<T[K], K>
-}
-
 export type ParseTypedData<
   signatures extends readonly string[],
   resolveTypedData extends boolean = false,
@@ -133,57 +108,3 @@ export type ParseTypedData<
     ? ResolveTypedData<Structs>
     : Structs
   : never
-
-export type ResolveTypedData<
-  typedData extends TypedData,
-  keyReferences extends { [_: string]: unknown } | unknown = unknown,
-> = {
-  [K in keyof typedData]: {
-    [K2 in typedData[K][number] as K2['name']]: K2['type'] extends K
-      ? Error<`Cannot convert self-referencing struct '${K2['type']}' to primitive type.`>
-      : K2['type'] extends keyof typedData
-      ? K2['type'] extends keyof keyReferences
-        ? Error<`Circular reference detected. '${K2['type']}' is a circular reference.`>
-        : ResolveTypedData<
-            Exclude<typedData, K>,
-            keyReferences & { [_ in K2['type']]: true }
-          >[K2['type']]
-      : K2['type'] extends `${infer Type extends keyof typedData &
-          string}[${infer Tail}]`
-      ? Tail extends keyof SolidityFixedArraySizeLookup
-        ? Tuple<
-            ResolveTypedData<
-              Exclude<typedData, K>,
-              keyReferences & { [_ in K2['type']]: true }
-            >[Type],
-            SolidityFixedArraySizeLookup[Tail]
-          >
-        : ResolveTypedData<
-            Exclude<typedData, K>,
-            keyReferences & { [_ in K2['type']]: true }
-          >[Type][]
-      : K2['type'] extends TypedDataType
-      ? K2['type']
-      : Error<`Cannot convert unknown type '${K2['type']}' to primitive type.`>
-  }
-}
-
-export type ResolvedTypedDataToPrimativeType<
-  resolvedTypedData extends ResolvedTypedData,
-> = Pretty<{
-  [K in keyof resolvedTypedData]: resolvedTypedData[K] extends Exclude<
-    ResolvedTypedData,
-    TypedDataType
-  >
-    ? ResolvedTypedDataToPrimativeType<resolvedTypedData[K]>
-    : resolvedTypedData[K] extends infer Type extends TypedDataType
-    ? Type extends `${infer Head extends TypedDataType}[${infer Size}]`
-      ? Size extends keyof SolidityFixedArraySizeLookup
-        ? Tuple<
-            PrimitiveTypeLookup<Head>[Head],
-            SolidityFixedArraySizeLookup[Size]
-          >
-        : PrimitiveTypeLookup<Head>[Head][]
-      : PrimitiveTypeLookup<Type>[Type]
-    : never
-}>

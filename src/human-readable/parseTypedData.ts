@@ -1,14 +1,11 @@
-import type { TypedData } from '../abi.js'
+import type { ResolvedTypedData, TypedData } from '../abi.js'
 import type { Error, IsNever, Pretty } from '../types.js'
 import {
   parseTypedData as parseTypedData_,
   resolveTypedData as resolveTypedData_,
 } from './runtime/structs.js'
-import type {
-  ParseTypedData as ParseTypedData_,
-  ResolvedTypedData,
-  StructSignatures,
-} from './types/structs.js'
+import type { StructSignatures } from './types/signatures.js'
+import type { ParseTypedData as ParseTypedData_ } from './types/structs.js'
 
 /**
  * Parses human-readable EIP-712 into JSON {@link TypedData}

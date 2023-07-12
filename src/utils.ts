@@ -5,6 +5,7 @@ import type {
   AbiStateMutability,
   AbiType,
   MBits,
+  ResolvedTypedData,
   SolidityAddress,
   SolidityArray,
   SolidityBool,
@@ -38,7 +39,7 @@ export type AbiTypeToPrimitiveType<
 
 // Using a map to look up types is faster, than nested conditional types
 // s/o https://twitter.com/SeaRyanC/status/1538971176357113858
-export type PrimitiveTypeLookup<
+type PrimitiveTypeLookup<
   TAbiType extends AbiType,
   TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
 > = {
@@ -435,3 +436,69 @@ type _TypedDataParametersToAbiParameters<
         TTypedDataParameter
     : never
 }
+
+/**
+ * Converts {@link typedData} to corresponding resolved type.
+ *
+ * @param typedData - {@link TypedData} to convert
+ * @returns Union of {@link TypedData} Solidity primitive types
+ */
+export type ResolveTypedData<
+  typedData extends TypedData,
+  keyReferences extends { [_: string]: unknown } | unknown = unknown,
+> = {
+  [K in keyof typedData]: {
+    [K2 in typedData[K][number] as K2['name']]: K2['type'] extends K
+      ? Error<`Cannot convert self-referencing struct '${K2['type']}' to primitive type.`>
+      : K2['type'] extends keyof typedData
+      ? K2['type'] extends keyof keyReferences
+        ? Error<`Circular reference detected. '${K2['type']}' is a circular reference.`>
+        : ResolveTypedData<
+            Exclude<typedData, K>,
+            keyReferences & { [_ in K2['type']]: true }
+          >[K2['type']]
+      : K2['type'] extends `${infer Type extends keyof typedData &
+          string}[${infer Tail}]`
+      ? Tail extends keyof SolidityFixedArraySizeLookup
+        ? Tuple<
+            ResolveTypedData<
+              Exclude<typedData, K>,
+              keyReferences & { [_ in K2['type']]: true }
+            >[Type],
+            SolidityFixedArraySizeLookup[Tail]
+          >
+        : ResolveTypedData<
+            Exclude<typedData, K>,
+            keyReferences & { [_ in K2['type']]: true }
+          >[Type][]
+      : K2['type'] extends TypedDataType
+      ? K2['type']
+      : Error<`Cannot convert unknown type '${K2['type']}' to primitive type.`>
+  }
+}
+
+/**
+ * Converts {@link ResolvedTypedData} to corresponding TypeScript primitive types.
+ *
+ * @param resolvedTypedData - {@link ResolvedTypedData} to convert
+ * @returns Union of TypeScript primitive types
+ */
+export type ResolvedTypedDataToPrimativeType<
+  resolvedTypedData extends ResolvedTypedData,
+> = Pretty<{
+  [K in keyof resolvedTypedData]: resolvedTypedData[K] extends Exclude<
+    ResolvedTypedData,
+    TypedDataType
+  >
+    ? ResolvedTypedDataToPrimativeType<resolvedTypedData[K]>
+    : resolvedTypedData[K] extends infer Type extends TypedDataType
+    ? Type extends `${infer Head extends TypedDataType}[${infer Size}]`
+      ? Size extends keyof SolidityFixedArraySizeLookup
+        ? Tuple<
+            PrimitiveTypeLookup<Head>[Head],
+            SolidityFixedArraySizeLookup[Size]
+          >
+        : PrimitiveTypeLookup<Head>[Head][]
+      : PrimitiveTypeLookup<Type>[Type]
+    : never
+}>

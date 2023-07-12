@@ -116,6 +116,21 @@ export type Signatures<T extends readonly string[]> = {
   [K in keyof T]: Signature<T[K], K>
 }
 
+export type ValidateStructSignature<
+  T extends string,
+  K extends string | unknown = unknown,
+> = IsStructSignature<T> extends true
+  ? T
+  : string extends T // if exactly `string` (not narrowed), then pass through as valid
+  ? T
+  : Error<`Signature "${T}" is invalid${K extends string
+      ? ` at position ${K}`
+      : ''}.`>
+
+export type StructSignatures<T extends readonly string[]> = {
+  [K in keyof T]: ValidateStructSignature<T[K], K>
+}
+
 export type Modifier = 'calldata' | 'indexed' | 'memory' | 'storage'
 export type FunctionModifier = Extract<
   Modifier,

@@ -1,5 +1,6 @@
 import type {
   AbiParameter,
+  ResolvedTypedData,
   TypedDataParameter,
   TypedDataType,
 } from '../../abi.js'
@@ -14,11 +15,7 @@ import {
   CircularReferenceError,
   MissingNamedParameter,
 } from '../errors/struct.js'
-import type {
-  ResolvedTypedData,
-  ShallowStruct,
-  StructLookup,
-} from '../types/structs.js'
+import type { ShallowStruct, StructLookup } from '../types/structs.js'
 import { execStructSignature, isStructSignature } from './signatures.js'
 import { isSolidityType, parseAbiParameter } from './utils.js'
 

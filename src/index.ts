@@ -14,6 +14,7 @@ export type {
   AbiStateMutability,
   AbiType,
   Address,
+  ResolvedTypedData,
   SolidityAddress,
   SolidityArray,
   SolidityArrayWithoutTuple,
@@ -55,6 +56,8 @@ export type {
   IsAbi,
   IsTypedData,
   TypedDataToPrimitiveTypes,
+  ResolveTypedData,
+  ResolvedTypedDataToPrimativeType,
 } from './utils.js'
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
