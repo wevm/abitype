@@ -132,9 +132,13 @@ export type ValidateName<
   TName extends string,
   CheckCharacters extends boolean = false,
 > = TName extends `${string}${' '}${string}`
-  ? Error<`Name "${TName}" cannot contain whitespace.`>
+  ? Error<`Identifier "${TName}" cannot contain whitespace.`>
   : IsSolidityKeyword<TName> extends true
   ? Error<`"${TName}" is a protected Solidity keyword.`>
+  : TName extends `${number}`
+  ? Error<`Identifier "${TName}" cannot be a number string.`>
+  : TName extends `${number}${string}`
+  ? Error<`Identifier "${TName}" cannot start with a number.`>
   : CheckCharacters extends true
   ? IsValidCharacter<TName> extends true
     ? TName
@@ -220,7 +224,7 @@ type ValidCharacters =
   // numbers
   | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
   // special characters
-  | '_'
+  | '_' | '$'
 
 // Template string inference can absorb `returns`:
 // type Result = `function foo(string) return s (uint256)` extends `function ${string}(${infer Parameters})` ? Parameters : never

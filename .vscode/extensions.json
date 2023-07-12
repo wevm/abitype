@@ -1,3 +1,7 @@
 {
-  "recommendations": ["rome.rome", "orta.vscode-twoslash-queries"]
+  "recommendations": [
+    "rome.rome",
+    "orta.vscode-twoslash-queries",
+    "TypeHoles.ts-versions-switcher"
+  ]
 }
