@@ -65,5 +65,9 @@ import {
   SolidityInt,
   SolidityString,
   SolidityTuple,
+  TypedData,
+  TypedDataDomain,
+  TypedDataParameter,
+  TypedDataType,
 } from 'abitype/zod'
 ```
