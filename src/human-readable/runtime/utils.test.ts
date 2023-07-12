@@ -143,6 +143,17 @@ test('invalid signature', () => {
   )
 
   expect(() =>
+    parseSignature('function 9abc()'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Unknown signature.
+
+    Details: function 9abc()
+    Version: abitype@x.y.z"
+  `,
+  )
+
+  expect(() =>
     parseSignature('method foo_(string)'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
@@ -258,6 +269,28 @@ test('modifier not allowed', () => {
   )
 })
 
+test('valid name', () => {
+  expect(parseAbiParameter('uint256 $')).toEqual({
+    type: 'uint256',
+    name: '$',
+  })
+
+  expect(parseAbiParameter('uint256 $_a9')).toEqual({
+    type: 'uint256',
+    name: '$_a9',
+  })
+
+  expect(parseAbiParameter('uint256 _')).toEqual({
+    type: 'uint256',
+    name: '_',
+  })
+
+  expect(parseAbiParameter('uint256 abc$_9')).toEqual({
+    type: 'uint256',
+    name: 'abc$_9',
+  })
+})
+
 test('invalid name', () => {
   expect(() =>
     parseAbiParameter('uint256 address'),
@@ -268,6 +301,17 @@ test('invalid name', () => {
     \\"address\\" is a protected Solidity keyword. More info: https://docs.soliditylang.org/en/latest/cheatsheet.html
 
     Details: uint256 address
+    Version: abitype@x.y.z"
+  `,
+  )
+
+  expect(() =>
+    parseAbiParameter('uint256 9abc'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    "Invalid ABI parameter.
+
+    Details: uint256 9abc
     Version: abitype@x.y.z"
   `,
   )
