@@ -13,6 +13,8 @@ import type {
 import { isSolidityType } from './human-readable/runtime/utils.js'
 import { bytesRegex, execTyped, integerRegex } from './regex.js'
 
+const Identifier = z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/)
+
 export const Address = z.string().transform((val, ctx) => {
   const regex = /^0x[a-fA-F0-9]{40}$/
 
@@ -50,7 +52,7 @@ export const SolidityArray = z.union([
 export const AbiParameter: z.ZodType<AbiParameterType> = z.lazy(() =>
   z.intersection(
     z.object({
-      name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/).optional(),
+      name: Identifier.optional(),
       /** Representation used by Solidity compiler */
       internalType: z.string().optional(),
     }),
@@ -110,7 +112,7 @@ export const AbiFunction = z.preprocess(
      */
     gas: z.number().optional(),
     inputs: z.array(AbiParameter),
-    name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
+    name: Identifier,
     outputs: z.array(AbiParameter),
     /**
      * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
@@ -182,7 +184,7 @@ export const AbiEvent = z.object({
   type: z.literal('event'),
   anonymous: z.boolean().optional(),
   inputs: z.array(AbiEventParameter),
-  name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
+  name: Identifier,
 })
 
 export const AbiError = z.object({
@@ -290,7 +292,7 @@ export const Abi = z.array(
 
 export const TypedDataDomain = z.object({
   chainId: z.number().optional(),
-  name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/).optional(),
+  name: Identifier.optional(),
   salt: z.string().optional(),
   verifyingContract: Address.optional(),
   version: z.string().optional(),
@@ -306,15 +308,12 @@ export const TypedDataType = z.union([
 ])
 
 export const TypedDataParameter = z.object({
-  name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
+  name: Identifier,
   type: z.string(),
 })
 
 export const TypedData = z
-  .record(
-    z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
-    z.array(TypedDataParameter),
-  )
+  .record(Identifier, z.array(TypedDataParameter))
   .transform((val, ctx) => validateTypedDataKeys(val, ctx))
 
 // Helper Functions.
