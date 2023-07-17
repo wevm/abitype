@@ -1,6 +1,6 @@
 import type { AbiEventParameter, AbiParameter } from '../abi.js'
 import { execTyped } from '../regex.js'
-import type { Error, Join } from '../types.js'
+import type { Join } from '../types.js'
 
 /**
  * Formats {@link AbiParameter} to human-readable ABI parameter.
@@ -13,36 +13,36 @@ import type { Error, Join } from '../types.js'
  * //   ^? type Result = 'address from'
  */
 export type FormatAbiParameter<
-  TAbiParameter extends AbiParameter | AbiEventParameter,
-  Depth extends 0[] = [],
+    TAbiParameter extends AbiParameter | AbiEventParameter,
+    Depth extends 0[] = [],
 > = Depth['length'] extends 19 // TODO: Investigate better solution for `exactOptionalPropertyTypes`
-  ? Error<'Recursion limit hit. Components property has to many nested members.'>
-  : TAbiParameter extends {
-      name?: infer Name extends string
-      type: `tuple${infer Array}`
-      components: infer Components extends readonly AbiParameter[]
-      indexed?: infer Indexed extends boolean
+    ? 'Recursion limit hit. Components property has to many nested members.'
+    : TAbiParameter extends {
+        name?: infer Name extends string
+        type: `tuple${infer Array}`
+        components: infer Components extends readonly AbiParameter[]
+        indexed?: infer Indexed extends boolean
     }
-  ? FormatAbiParameter<
-      {
-        type: `(${Join<
-          {
-            [K in keyof Components]: FormatAbiParameter<
-              Components[K],
-              [...Depth, 0]
-            >
-          },
-          ', '
-        >})${Array}`
-        indexed?: Indexed
-      } & (string extends Name ? unknown : { name: Name }),
-      [...Depth, 0]
+    ? FormatAbiParameter<
+        {
+            type: `(${Join<
+                {
+                    [K in keyof Components]: FormatAbiParameter<
+                        Components[K],
+                        [...Depth, 0]
+                    >
+                },
+                ', '
+            >})${Array}`
+            indexed?: Indexed
+        } & (string extends Name ? unknown : { name: Name }),
+        [...Depth, 0]
     >
-  : `${TAbiParameter['type']}${TAbiParameter extends { indexed: true }
-      ? ' indexed'
-      : ''}${TAbiParameter['name'] extends infer Name extends string
-      ? ` ${Name}`
-      : ''}`
+    : `${TAbiParameter['type']}${TAbiParameter extends { indexed: true }
+    ? ' indexed'
+    : ''}${TAbiParameter['name'] extends infer Name extends string
+    ? ` ${Name}`
+    : ''}`
 
 // https://regexr.com/7f7rv
 const tupleRegex = /^tuple(?<array>(\[(\d*)\])*)$/
@@ -58,30 +58,30 @@ const tupleRegex = /^tuple(?<array>(\[(\d*)\])*)$/
  * //    ^? const result: 'address from'
  */
 export function formatAbiParameter<
-  const TAbiParameter extends AbiParameter | AbiEventParameter,
+    const TAbiParameter extends AbiParameter | AbiEventParameter,
 >(abiParameter: TAbiParameter): FormatAbiParameter<TAbiParameter> {
-  type Result = FormatAbiParameter<TAbiParameter>
+    type Result = FormatAbiParameter<TAbiParameter>
 
-  let type = abiParameter.type
-  if (tupleRegex.test(abiParameter.type) && 'components' in abiParameter) {
-    type = '('
-    const length = abiParameter.components.length as number
-    for (let i = 0; i < length; i++) {
-      const component = abiParameter.components[i]!
-      type += formatAbiParameter(component)
-      if (i < length - 1) type += ', '
+    let type = abiParameter.type
+    if (tupleRegex.test(abiParameter.type) && 'components' in abiParameter) {
+        type = '('
+        const length = abiParameter.components.length as number
+        for (let i = 0; i < length; i++) {
+            const component = abiParameter.components[i]!
+            type += formatAbiParameter(component)
+            if (i < length - 1) type += ', '
+        }
+        const result = execTyped<{ array?: string }>(tupleRegex, abiParameter.type)
+        type += `)${result?.array ?? ''}`
+        return formatAbiParameter({
+            ...abiParameter,
+            type,
+        }) as Result
     }
-    const result = execTyped<{ array?: string }>(tupleRegex, abiParameter.type)
-    type += `)${result?.array ?? ''}`
-    return formatAbiParameter({
-      ...abiParameter,
-      type,
-    }) as Result
-  }
-  // Add `indexed` to type if in `abiParameter`
-  if ('indexed' in abiParameter && abiParameter.indexed)
-    type = `${type} indexed`
-  // Return human-readable ABI parameter
-  if (abiParameter.name) return `${type} ${abiParameter.name}` as Result
-  return type as Result
+    // Add `indexed` to type if in `abiParameter`
+    if ('indexed' in abiParameter && abiParameter.indexed)
+        type = `${type} indexed`
+    // Return human-readable ABI parameter
+    if (abiParameter.name) return `${type} ${abiParameter.name}` as Result
+    return type as Result
 }
