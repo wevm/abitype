@@ -1,6 +1,6 @@
 import type { AbiEventParameter, AbiParameter } from '../abi.js'
 import { execTyped } from '../regex.js'
-import type { Join } from '../types.js'
+import type { Error, Join } from '../types.js'
 
 /**
  * Formats {@link AbiParameter} to human-readable ABI parameter.
@@ -14,22 +14,29 @@ import type { Join } from '../types.js'
  */
 export type FormatAbiParameter<
   TAbiParameter extends AbiParameter | AbiEventParameter,
-> = TAbiParameter extends {
-  name?: infer Name extends string
-  type: `tuple${infer Array}`
-  components: infer Components extends readonly AbiParameter[]
-  indexed?: infer Indexed extends boolean
-}
+  Depth extends 0[] = [],
+> = Depth['length'] extends 20 // TODO: Investigate better solution for `exactOptionalPropertyTypes`
+  ? Error<'Recursion limit hit. Components property has to many nested members.'>
+  : TAbiParameter extends {
+      name?: infer Name extends string
+      type: `tuple${infer Array}`
+      components: infer Components extends readonly AbiParameter[]
+      indexed?: infer Indexed extends boolean
+    }
   ? FormatAbiParameter<
       {
         type: `(${Join<
           {
-            [K in keyof Components]: FormatAbiParameter<Components[K]>
+            [K in keyof Components]: FormatAbiParameter<
+              Components[K],
+              [...Depth, 0]
+            >
           },
           ', '
         >})${Array}`
         indexed?: Indexed
-      } & (string extends Name ? unknown : { name: Name })
+      } & (string extends Name ? unknown : { name: Name }),
+      [...Depth, 0]
     >
   : `${TAbiParameter['type']}${TAbiParameter extends { indexed: true }
       ? ' indexed'
