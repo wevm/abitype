@@ -15,7 +15,7 @@ import type { Error, Join } from '../types.js'
 export type FormatAbiParameter<
   TAbiParameter extends AbiParameter | AbiEventParameter,
   Depth extends 0[] = [],
-> = Depth['length'] extends 20 // TODO: Investigate better solution for `exactOptionalPropertyTypes`
+> = Depth['length'] extends 19 // TODO: Investigate better solution for `exactOptionalPropertyTypes`
   ? Error<'Recursion limit hit. Components property has to many nested members.'>
   : TAbiParameter extends {
       name?: infer Name extends string
