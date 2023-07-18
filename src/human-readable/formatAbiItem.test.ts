@@ -53,7 +53,7 @@ test.each([
   {
     abiItem: {
       type: 'fallback',
-      stateMutability: 'payable',
+      stateMutability: 'nonpayable',
     } as const,
     expected: 'fallback()',
   },
