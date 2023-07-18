@@ -57,6 +57,9 @@ jobs:
       - name: Check types
         run: pnpm typecheck
 
+      - name: Check types `"enableOptionalPropertyTypes": false`
+        run: pnpm typecheck:propertyTypes
+          
       - name: Test types
         run: pnpm test:typecheck
 
