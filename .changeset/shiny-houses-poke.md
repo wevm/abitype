@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-Fixes type instantiation is excessively deep and possibly infinite bug on `formatAbiParameter` with `exactOptionalPropertyTypes` set to false.
+Fixed bug where type instantiation is excessively deep and possibly infinite when using `formatAbiParameter` with `exactOptionalPropertyTypes` set to `false`.
