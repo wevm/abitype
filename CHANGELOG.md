@@ -1,5 +1,11 @@
 # abitype
 
+## 0.9.3
+
+### Patch Changes
+
+- [#170](https://github.com/wagmi-dev/abitype/pull/170) [`dbe16a2`](https://github.com/wagmi-dev/abitype/commit/dbe16a272c769ede7cd3539795e833b69b785387) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Fixed bug where type instantiation is excessively deep and possibly infinite when using `formatAbiParameter` with `exactOptionalPropertyTypes` set to `false`.
+
 ## 0.9.2
 
 ### Patch Changes
