@@ -1,6 +1,6 @@
 import type { AbiEventParameter, AbiParameter } from '../abi.js'
 import { execTyped } from '../regex.js'
-import type { Join } from '../types.js'
+import type { IsNarrowable, Join } from '../types.js'
 
 /**
  * Formats {@link AbiParameter} to human-readable ABI parameter.
@@ -27,11 +27,9 @@ export type FormatAbiParameter<
             [K in keyof Components]: FormatAbiParameter<
               {
                 type: Components[K]['type']
-              } & (Components[K]['name'] extends undefined
-                ? unknown
-                : string extends Components[K]['name']
-                ? unknown
-                : { name: Components[K]['name'] }) &
+              } & (IsNarrowable<Components[K]['name'], string> extends true
+                ? { name: Components[K]['name'] }
+                : unknown) &
                 (Components[K] extends { components: readonly AbiParameter[] }
                   ? { components: Components[K]['components'] }
                   : unknown)
@@ -39,16 +37,10 @@ export type FormatAbiParameter<
           },
           ', '
         >})${Array}`
-      } & (Name extends undefined
-        ? unknown
-        : string extends Name
-        ? unknown
-        : { name: Name }) &
-        (Indexed extends undefined
-          ? unknown
-          : true extends Indexed
-          ? unknown
-          : { indexed: Indexed })
+      } & (IsNarrowable<Name, string> extends true ? { name: Name } : unknown) &
+        (IsNarrowable<Indexed, boolean> extends true
+          ? { indexed: Indexed }
+          : unknown)
     >
   : `${TAbiParameter['type']}${TAbiParameter extends { indexed: true }
       ? ' indexed'
