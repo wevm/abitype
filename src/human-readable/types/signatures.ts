@@ -1,4 +1,4 @@
-import type { AbiStateMutability } from '../../abi.js'
+import type { AbiStateMutability, AbiType } from '../../abi.js'
 import type { Error } from '../../types.js'
 
 export type ErrorSignature<
@@ -207,6 +207,7 @@ export type SolidityKeywords =
   | 'var'
   | 'view'
   | 'virtual'
+  | AbiType
 
 export type IsValidCharacter<T extends string> =
   T extends `${ValidCharacters}${infer Tail}`
