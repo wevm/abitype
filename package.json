@@ -1,7 +1,7 @@
 {
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "license": "MIT",
   "repository": "wagmi-dev/abitype",
   "scripts": {
@@ -28,7 +28,8 @@
     "test:typecheck": "vitest typecheck",
     "test:update": "vitest --update",
     "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project playground/tsconfig.json",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "typecheck:propertyTypes": "tsc --noEmit --exactOptionalPropertyTypes false"
   },
   "files": [
     "dist",

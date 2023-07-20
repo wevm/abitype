@@ -53,12 +53,14 @@ test.each([
   {
     abiItem: {
       type: 'fallback',
+      stateMutability: 'nonpayable',
     } as const,
     expected: 'fallback()',
   },
   {
     abiItem: {
       type: 'receive',
+      stateMutability: 'payable',
     } as const,
     expected: 'receive() external payable',
   },
