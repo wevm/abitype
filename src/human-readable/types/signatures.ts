@@ -214,7 +214,7 @@ export type SolidityKeywords =
   | 'view'
   | 'virtual'
   | `address${`[${string}]` | ''}`
-  | `boolean${`[${string}]` | ''}`
+  | `bool${`[${string}]` | ''}`
   | `string${`[${string}]` | ''}`
   | `tuple${`[${string}]` | ''}`
   | `bytes${number | ''}${`[${string}]` | ''}`
