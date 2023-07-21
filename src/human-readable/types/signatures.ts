@@ -131,7 +131,7 @@ export type IsName<TName extends string> = TName extends ''
 
 export type AssertName<TName extends string> =
   ValidateName<TName> extends infer InvalidName extends string[]
-    ? InvalidName[number]
+    ? `[${InvalidName[number]}]`
     : TName
 
 export type ValidateName<
