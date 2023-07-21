@@ -26,14 +26,14 @@ test('FormatAbiParameter', () => {
       type: 'address'
       name: 'address'
     }>
-  >().toEqualTypeOf<'address Error: "address" is a protected Solidity keyword.'>()
+  >().toEqualTypeOf<'address [Error: "address" is a protected Solidity keyword.]'>()
 
   expectTypeOf<
     FormatAbiParameter<{
       type: 'address'
       name: '123'
     }>
-  >().toEqualTypeOf<'address Error: Identifier "123" cannot be a number string.'>()
+  >().toEqualTypeOf<'address [Error: Identifier "123" cannot be a number string.]'>()
 
   // Array
   expectTypeOf<

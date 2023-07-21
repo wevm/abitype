@@ -39,7 +39,7 @@ test('FormatAbiItem', () => {
       readonly inputs: readonly []
       readonly outputs: readonly []
     }>
-  >().toEqualTypeOf<'function Error: "address" is a protected Solidity keyword.()'>()
+  >().toEqualTypeOf<'function [Error: "address" is a protected Solidity keyword.]()'>()
 
   expectTypeOf<
     FormatAbiItem<{

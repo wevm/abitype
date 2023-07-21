@@ -1,4 +1,4 @@
-import type { AbiStateMutability, AbiType } from '../../abi.js'
+import type { AbiStateMutability } from '../../abi.js'
 import type { Error } from '../../types.js'
 
 export type ErrorSignature<
@@ -213,7 +213,12 @@ export type SolidityKeywords =
   | 'var'
   | 'view'
   | 'virtual'
-  | AbiType
+  | `address${`[${string}]` | ''}`
+  | `boolean${`[${string}]` | ''}`
+  | `string${`[${string}]` | ''}`
+  | `tuple${`[${string}]` | ''}`
+  | `bytes${number | ''}${`[${string}]` | ''}`
+  | `${'u' | ''}int${number | ''}${`[${string}]` | ''}`
 
 export type IsValidCharacter<T extends string> =
   T extends `${ValidCharacters}${infer Tail}`
@@ -224,14 +229,14 @@ export type IsValidCharacter<T extends string> =
 
 // rome-ignore format: no formatting
 type ValidCharacters =
-    // uppercase letters
-    | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
-    // lowercase letters
-    | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'
-    // numbers
-    | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
-    // special characters
-    | '_' | '$'
+  // uppercase letters
+  | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
+  // lowercase letters
+  | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'
+  // numbers
+  | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  // special characters
+  | '_' | '$'
 
 // Template string inference can absorb `returns`:
 // type Result = `function foo(string) return s (uint256)` extends `function ${string}(${infer Parameters})` ? Parameters : never
