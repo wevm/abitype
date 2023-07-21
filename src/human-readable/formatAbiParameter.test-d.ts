@@ -27,6 +27,20 @@ test('FormatAbiParameter', () => {
     }>
   >().toEqualTypeOf<'address'>()
 
+  expectTypeOf<
+    FormatAbiParameter<{
+      type: 'address'
+      name: 'address'
+    }>
+  >().toEqualTypeOf<'address [Error: "address" is a protected Solidity keyword.]'>()
+
+  expectTypeOf<
+    FormatAbiParameter<{
+      type: 'address'
+      name: '123'
+    }>
+  >().toEqualTypeOf<'address [Error: Identifier "123" cannot be a number string.]'>()
+
   // Array
   expectTypeOf<
     FormatAbiParameter<{
@@ -52,6 +66,49 @@ test('FormatAbiParameter', () => {
       readonly name: 'foo'
     }>
   >().toEqualTypeOf<'(string bar) foo'>()
+
+  expectTypeOf<
+    FormatAbiParameter<{
+      readonly components: [
+        {
+          readonly components: [
+            {
+              readonly type: 'string'
+              readonly name: 'foo'
+            },
+          ]
+          readonly type: 'tuple'
+        },
+      ]
+      readonly type: 'tuple'
+    }>
+  >().toEqualTypeOf<'((string foo))'>()
+
+  expectTypeOf<
+    FormatAbiParameter<{
+      readonly components: [
+        {
+          readonly components: [
+            {
+              readonly components: [
+                {
+                  readonly components: [
+                    {
+                      readonly type: 'string'
+                    },
+                  ]
+                  readonly type: 'tuple'
+                },
+              ]
+              readonly type: 'tuple'
+            },
+          ]
+          readonly type: 'tuple'
+        },
+      ]
+      readonly type: 'tuple'
+    }>
+  >().toEqualTypeOf<'((((string))))'>()
 })
 
 test('formatAbiParameter', () => {

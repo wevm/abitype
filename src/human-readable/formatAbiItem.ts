@@ -14,6 +14,7 @@ import {
   type FormatAbiParameters as FormatAbiParameters_,
   formatAbiParameters,
 } from './formatAbiParameters.js'
+import type { AssertName } from './types/signatures.js'
 
 /**
  * Formats ABI item (e.g. error, event, function) into human-readable ABI item
@@ -28,7 +29,7 @@ export type FormatAbiItem<TAbiItem extends Abi[number]> =
         | (TAbiItem extends AbiFunction
             ? AbiFunction extends TAbiItem
               ? string
-              : `function ${TAbiItem['name']}(${FormatAbiParameters<
+              : `function ${AssertName<TAbiItem['name']>}(${FormatAbiParameters<
                   TAbiItem['inputs']
                 >})${TAbiItem['stateMutability'] extends Exclude<
                   AbiStateMutability,
@@ -42,14 +43,14 @@ export type FormatAbiItem<TAbiItem extends Abi[number]> =
         | (TAbiItem extends AbiEvent
             ? AbiEvent extends TAbiItem
               ? string
-              : `event ${TAbiItem['name']}(${FormatAbiParameters<
+              : `event ${AssertName<TAbiItem['name']>}(${FormatAbiParameters<
                   TAbiItem['inputs']
                 >})`
             : never)
         | (TAbiItem extends AbiError
             ? AbiError extends TAbiItem
               ? string
-              : `error ${TAbiItem['name']}(${FormatAbiParameters<
+              : `error ${AssertName<TAbiItem['name']>}(${FormatAbiParameters<
                   TAbiItem['inputs']
                 >})`
             : never)

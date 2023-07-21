@@ -33,6 +33,16 @@ test('FormatAbiItem', () => {
 
   expectTypeOf<
     FormatAbiItem<{
+      readonly name: 'address'
+      readonly type: 'function'
+      readonly stateMutability: 'nonpayable'
+      readonly inputs: readonly []
+      readonly outputs: readonly []
+    }>
+  >().toEqualTypeOf<'function [Error: "address" is a protected Solidity keyword.]()'>()
+
+  expectTypeOf<
+    FormatAbiItem<{
       readonly name: 'Transfer'
       readonly type: 'event'
       readonly inputs: readonly [
