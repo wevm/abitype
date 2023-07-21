@@ -46,7 +46,9 @@ export type FormatAbiParameter<
   : `${TAbiParameter['type']}${TAbiParameter extends { indexed: true }
       ? ' indexed'
       : ''}${TAbiParameter['name'] extends infer Name extends string
-      ? ` ${AssertName<Name>}`
+      ? Name extends ''
+        ? ''
+        : ` ${AssertName<Name>}`
       : ''}`
 
 // https://regexr.com/7f7rv

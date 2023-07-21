@@ -20,6 +20,12 @@ test('FormatAbiParameter', () => {
       readonly indexed: true
     }>
   >().toEqualTypeOf<'address indexed from'>()
+  expectTypeOf<
+    FormatAbiParameter<{
+      readonly type: 'address'
+      readonly name: ''
+    }>
+  >().toEqualTypeOf<'address'>()
 
   expectTypeOf<
     FormatAbiParameter<{

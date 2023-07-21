@@ -1,5 +1,11 @@
 # abitype
 
+## 0.9.4
+
+### Patch Changes
+
+- [#176](https://github.com/wagmi-dev/abitype/pull/176) [`bf526d8`](https://github.com/wagmi-dev/abitype/commit/bf526d8775787cba0c472b71ff11c7c7cd143d47) Thanks [@tmm](https://github.com/tmm)! - Fixed issue with format utils where empty name (e.g. `name: ''`) would add extra space after `type`.
+
 ## 0.9.3
 
 ### Patch Changes
