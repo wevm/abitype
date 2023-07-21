@@ -1,7 +1,7 @@
 import type { AbiEventParameter, AbiParameter } from '../abi.js'
 import { execTyped } from '../regex.js'
 import type { IsNarrowable, Join } from '../types.js'
-import type { ValidateName } from './types/signatures.js'
+import type { AssertName } from './types/signatures.js'
 
 /**
  * Formats {@link AbiParameter} to human-readable ABI parameter.
@@ -46,9 +46,7 @@ export type FormatAbiParameter<
   : `${TAbiParameter['type']}${TAbiParameter extends { indexed: true }
       ? ' indexed'
       : ''}${TAbiParameter['name'] extends infer Name extends string
-      ? ` ${ValidateName<Name> extends infer InvalidName extends string[]
-          ? InvalidName[number]
-          : Name}`
+      ? ` ${AssertName<Name>}`
       : ''}`
 
 // https://regexr.com/7f7rv
