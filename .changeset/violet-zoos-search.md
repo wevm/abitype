@@ -8,10 +8,10 @@ Before:
 
 ```ts
 type test = FormatAbiParameter<{
+//   ^? test = "(tuple)"
   type: "tuple";
   components: [{ type: "tuple"; components: [{ type: "string" }] }];
 }>;
-//    ^? '(tuple)'
 ```
 
 After:
