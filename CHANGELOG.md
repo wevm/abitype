@@ -1,5 +1,31 @@
 # abitype
 
+## 0.9.5
+
+### Patch Changes
+
+- [#175](https://github.com/wagmi-dev/abitype/pull/175) [`af5af6b`](https://github.com/wagmi-dev/abitype/commit/af5af6bfb814ee2cec5b22d41ace82242be195f1) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Fixed a bug on `formatAbiParameter` where it would infer incorrectly if the nested elements of the `components` property had no `name` property and the `type` property was of type `tuple` type.
+
+  Before:
+
+  ```ts
+  type test = FormatAbiParameter<{
+    //   ^? test = "(tuple)"
+    type: "tuple";
+    components: [{ type: "tuple"; components: [{ type: "string" }] }];
+  }>;
+  ```
+
+  After:
+
+  ```ts
+  type test = FormatAbiParameter<{
+    //   ^? type test = "((string))"
+    type: "tuple";
+    components: [{ type: "tuple"; components: [{ type: "string" }] }];
+  }>;
+  ```
+
 ## 0.9.4
 
 ### Patch Changes
