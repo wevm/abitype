@@ -3,7 +3,7 @@ import { assertType, test } from 'vitest'
 import type { ResolvedConfig } from './config.js'
 
 // For testing updates to config properties:
-// declare module './config' {
+// declare module './config.js' {
 //   export interface Config {
 //     FixedArrayMaxLength: 6
 //   }

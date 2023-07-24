@@ -50,9 +50,11 @@ export type Filter<
  * type Result = IsNarrowable<'foo', string>
  * //   ^? true
  */
-export type IsNarrowable<T, U> = IsNever<
-  (T extends U ? true : false) & (U extends T ? false : true)
-> extends true
+export type IsNarrowable<T, U> = IsUnknown<T> extends true
+  ? false
+  : IsNever<
+      (T extends U ? true : false) & (U extends T ? false : true)
+    > extends true
   ? false
   : true
 

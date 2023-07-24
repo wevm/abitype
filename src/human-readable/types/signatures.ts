@@ -143,6 +143,12 @@ export type IsName<TName extends string> = TName extends ''
   : ValidateName<TName> extends TName
   ? true
   : false
+
+export type AssertName<TName extends string> =
+  ValidateName<TName> extends infer InvalidName extends string[]
+    ? `[${InvalidName[number]}]`
+    : TName
+
 export type ValidateName<
   TName extends string,
   CheckCharacters extends boolean = false,
@@ -222,6 +228,12 @@ export type SolidityKeywords =
   | 'var'
   | 'view'
   | 'virtual'
+  | `address${`[${string}]` | ''}`
+  | `bool${`[${string}]` | ''}`
+  | `string${`[${string}]` | ''}`
+  | `tuple${`[${string}]` | ''}`
+  | `bytes${number | ''}${`[${string}]` | ''}`
+  | `${'u' | ''}int${number | ''}${`[${string}]` | ''}`
 
 export type IsValidCharacter<T extends string> =
   T extends `${ValidCharacters}${infer Tail}`
