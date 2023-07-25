@@ -834,47 +834,79 @@ test('TypedDataToPrimitiveTypes', () => {
       })
     })
 
-    test('unknown struct', () => {
-      const types = {
-        Name: [
-          { name: 'first', type: 'Foo' },
-          { name: 'last', type: 'string' },
+    const types = {
+      Foo: [{ name: 'bar', type: 'Bar[]' }],
+      Bar: [{ name: 'foo', type: 'Foo' }],
+    } as const
+
+    type Result = TypedDataToPrimitiveTypes<typeof types>
+    assertType<Result>({
+      Foo: {
+        bar: [
+          {
+            foo: {
+              bar: [
+                "Error: Circular reference detected. 'Bar' is a circular reference.",
+              ],
+            },
+          },
         ],
-      } as const
-      type Result = TypedDataToPrimitiveTypes<typeof types>
-      assertType<Result>({
-        Name: {
-          first: [
-            "Error: Cannot convert unknown type 'Foo' to primitive type.",
+      },
+      Bar: {
+        foo: {
+          bar: [
+            {
+              foo: [
+                "Error: Circular reference detected. 'Foo' is a circular reference.",
+              ],
+            },
           ],
-          last: 'Meagher',
         },
-      })
+      },
     })
   })
-})
 
-test('IsTypedData', () => {
-  type Result = IsTypedData<{
-    Person: [
-      { name: 'name'; type: 'string' },
-      { name: 'wallet'; type: 'address' },
-    ]
-    Mail: [
-      { name: 'from'; type: 'Person' },
-      { name: 'to'; type: 'Person' },
-      { name: 'contents'; type: 'string' },
-    ]
-  }>
-  assertType<Result>(true)
+  test('unknown struct', () => {
+    const types = {
+      Name: [
+        { name: 'first', type: 'Foo' },
+        { name: 'last', type: 'string' },
+      ],
+    } as const
+    type Result = TypedDataToPrimitiveTypes<typeof types>
+    assertType<Result>({
+      Name: {
+        first: ["Error: Cannot convert unknown type 'Foo' to primitive type."],
+        last: 'Meagher',
+      },
+    })
+  })
 
-  type Result2 = IsTypedData<{
-    Person: [{ name: 'name'; type: 'string' }, { name: 'wallet'; type: 'Foo' }] // `Foo` does not exist in schema
-    Mail: [
-      { name: 'from'; type: 'Person' },
-      { name: 'to'; type: 'Person' },
-      { name: 'contents'; type: 'string' },
-    ]
-  }>
-  assertType<Result2>(false)
+  test('IsTypedData', () => {
+    type Result = IsTypedData<{
+      Person: [
+        { name: 'name'; type: 'string' },
+        { name: 'wallet'; type: 'address' },
+      ]
+      Mail: [
+        { name: 'from'; type: 'Person' },
+        { name: 'to'; type: 'Person' },
+        { name: 'contents'; type: 'string' },
+      ]
+    }>
+    assertType<Result>(true)
+
+    type Result2 = IsTypedData<{
+      Person: [
+        { name: 'name'; type: 'string' },
+        { name: 'wallet'; type: 'Foo' },
+      ] // `Foo` does not exist in schema
+      Mail: [
+        { name: 'from'; type: 'Person' },
+        { name: 'to'; type: 'Person' },
+        { name: 'contents'; type: 'string' },
+      ]
+    }>
+    assertType<Result2>(false)
+  })
 })

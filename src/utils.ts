@@ -160,6 +160,8 @@ export type AbiParameterToPrimitiveType<
   ? TAbiParameter['type'] extends infer TAbiType extends string
     ? Error<`Unknown type '${TAbiType}'.`>
     : never
+  : TAbiParameter['type'] extends `Error:${string}`
+  ? [TAbiParameter['type']]
   : unknown
 
 // TODO: Speed up by returning immediately as soon as named parameter is found.
@@ -384,7 +386,8 @@ export type TypedDataToPrimitiveTypes<
               type: `tuple[${Tail}]`
               components: _TypedDataParametersToAbiParameters<
                 TTypedData[TType],
-                TTypedData
+                TTypedData,
+                TKeyReferences & { [_ in TType]: true }
               >
             }
           >,
@@ -399,6 +402,7 @@ export type TypedDataToPrimitiveTypes<
 type _TypedDataParametersToAbiParameters<
   TTypedDataParameters extends readonly TypedDataParameter[],
   TTypedData extends TypedData,
+  TKeyReferences extends { [_: string]: unknown } | unknown = unknown,
 > = {
   // Map over typed data parameters and convert into ABI parameters
   [K in
@@ -407,14 +411,17 @@ type _TypedDataParametersToAbiParameters<
     type: unknown
   }
     ? // 1. Check if type is struct
-      TTypedDataParameter['type'] extends keyof TTypedData
+      TTypedDataParameter['type'] extends keyof TTypedData & string
       ? Merge<
           TTypedDataParameter,
           {
-            type: 'tuple'
+            type: TTypedDataParameter['type'] extends keyof TKeyReferences
+              ? `Error: Circular reference detected. '${TTypedDataParameter['type']}' is a circular reference.`
+              : 'tuple'
             components: _TypedDataParametersToAbiParameters<
               TTypedData[TTypedDataParameter['type']],
-              TTypedData
+              TTypedData,
+              TKeyReferences & { [_ in TTypedDataParameter['type']]: true }
             >
           }
         >
@@ -424,10 +431,13 @@ type _TypedDataParametersToAbiParameters<
       ? Merge<
           TTypedDataParameter,
           {
-            type: `tuple[${Tail}]`
+            type: TType extends keyof TKeyReferences
+              ? `Error: Circular reference detected. '${TType}' is a circular reference.`
+              : `tuple[${Tail}]`
             components: _TypedDataParametersToAbiParameters<
               TTypedData[TType],
-              TTypedData
+              TTypedData,
+              TKeyReferences & { [_ in TType]: true }
             >
           }
         >
