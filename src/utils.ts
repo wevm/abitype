@@ -160,6 +160,10 @@ export type AbiParameterToPrimitiveType<
   ? TAbiParameter['type'] extends infer TAbiType extends string
     ? Error<`Unknown type '${TAbiType}'.`>
     : never
+  : // 5. If we've gotten this far, let's check for errors in tuple components.
+  // (Happens for recursive tuple typed data types.)
+  TAbiParameter extends { components: Error<string> }
+  ? TAbiParameter['components']
   : unknown
 
 // TODO: Speed up by returning immediately as soon as named parameter is found.
@@ -372,22 +376,21 @@ export type TypedDataToPrimitiveTypes<
         : TypedDataToPrimitiveTypes<
             Exclude<TTypedData, K>,
             TAbiParameterKind,
-            TKeyReferences & { [_ in K2['type']]: true }
+            TKeyReferences & { [_ in K2['type'] | K]: true }
           >[K2['type']]
       : // 3. Check if type is array of structs
       K2['type'] extends `${infer TType extends keyof TTypedData &
           string}[${infer Tail}]`
       ? AbiParameterToPrimitiveType<
-          Merge<
-            K2,
-            {
-              type: `tuple[${Tail}]`
-              components: _TypedDataParametersToAbiParameters<
-                TTypedData[TType],
-                TTypedData
-              >
-            }
-          >,
+          {
+            name: K2['name']
+            type: `tuple[${Tail}]`
+            components: _TypedDataParametersToAbiParameters<
+              TTypedData[TType],
+              TTypedData,
+              TKeyReferences & { [_ in TType | K]: true }
+            >
+          },
           TAbiParameterKind
         >
       : K2['type'] extends TypedDataType // 4. Known type to convert
@@ -399,6 +402,7 @@ export type TypedDataToPrimitiveTypes<
 type _TypedDataParametersToAbiParameters<
   TTypedDataParameters extends readonly TypedDataParameter[],
   TTypedData extends TypedData,
+  TKeyReferences extends { [_: string]: unknown } | unknown = unknown,
 > = {
   // Map over typed data parameters and convert into ABI parameters
   [K in
@@ -407,30 +411,32 @@ type _TypedDataParametersToAbiParameters<
     type: unknown
   }
     ? // 1. Check if type is struct
-      TTypedDataParameter['type'] extends keyof TTypedData
-      ? Merge<
-          TTypedDataParameter,
-          {
-            type: 'tuple'
-            components: _TypedDataParametersToAbiParameters<
-              TTypedData[TTypedDataParameter['type']],
-              TTypedData
-            >
-          }
-        >
+      TTypedDataParameter['type'] extends keyof TTypedData & string
+      ? {
+          name: TTypedDataParameter['name']
+          type: 'tuple'
+          components: TTypedDataParameter['type'] extends keyof TKeyReferences
+            ? Error<`Circular reference detected. '${TTypedDataParameter['type']}' is a circular reference.`>
+            : _TypedDataParametersToAbiParameters<
+                TTypedData[TTypedDataParameter['type']],
+                TTypedData,
+                TKeyReferences & { [_ in TTypedDataParameter['type']]: true }
+              >
+        }
       : // 2. Check if type is array of structs
       TTypedDataParameter['type'] extends `${infer TType extends keyof TTypedData &
           string}[${infer Tail}]`
-      ? Merge<
-          TTypedDataParameter,
-          {
-            type: `tuple[${Tail}]`
-            components: _TypedDataParametersToAbiParameters<
-              TTypedData[TType],
-              TTypedData
-            >
-          }
-        >
+      ? {
+          name: TTypedDataParameter['name']
+          type: `tuple[${Tail}]`
+          components: TType extends keyof TKeyReferences
+            ? Error<`Circular reference detected. '${TTypedDataParameter['type']}' is a circular reference.`>
+            : _TypedDataParametersToAbiParameters<
+                TTypedData[TType],
+                TTypedData,
+                TKeyReferences & { [_ in TType]: true }
+              >
+        }
       : // 3. Type is already ABI parameter
         TTypedDataParameter
     : never
