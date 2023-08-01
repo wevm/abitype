@@ -1,5 +1,11 @@
 # abitype
 
+## 0.9.6
+
+### Patch Changes
+
+- [#179](https://github.com/wagmi-dev/abitype/pull/179) [`f0f2503`](https://github.com/wagmi-dev/abitype/commit/f0f2503d605cad7cdafe937e35d6b1e00fffef1a) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Fixed a bug on `TypedDataToPrimitiveTypes` where it would create an infinite cyclic type if the `type` was an array type of `keyof TypedData`.
+
 ## 0.9.5
 
 ### Patch Changes
