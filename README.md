@@ -49,7 +49,7 @@ type FunctionNames = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
 
 type TransferInputTypes = AbiParametersToPrimitiveTypes<
   // ^? type TransferInputTypes = readonly [`0x${string}`, bigint]
-  ExtractAbiFunction<typeof erc20Abi, 'transfer'>['inputs']
+  ExtractAbiFunctions<typeof erc20Abi, 'transfer'>['inputs']
 >
 ```
 
