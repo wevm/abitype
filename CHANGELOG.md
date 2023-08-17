@@ -1,5 +1,11 @@
 # abitype
 
+## 0.9.7
+
+### Patch Changes
+
+- [#185](https://github.com/wagmi-dev/abitype/pull/185) [`f5b27a8`](https://github.com/wagmi-dev/abitype/commit/f5b27a881d9d56aaa632ff55f58a6ed9933965d1) Thanks [@StanleyDing](https://github.com/StanleyDing)! - Fixed a bug where an empty string on the `name` property in AbiParameter wasn't allowed.
+
 ## 0.9.6
 
 ### Patch Changes
