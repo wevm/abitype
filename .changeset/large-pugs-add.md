@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-Fix a bug that empty string name in AbiParameter isn't allowed.
+Fixed a bug where an empty string on the `name` property in AbiParameter wasn't allowed.
