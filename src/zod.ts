@@ -52,7 +52,7 @@ export const SolidityArray = z.union([
 export const AbiParameter: z.ZodType<AbiParameterType> = z.lazy(() =>
   z.intersection(
     z.object({
-      name: Identifier.optional(),
+      name: z.union([Identifier.optional(), z.literal('')]),
       /** Representation used by Solidity compiler */
       internalType: z.string().optional(),
     }),
