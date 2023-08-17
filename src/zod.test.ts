@@ -611,10 +611,12 @@ describe('AbiParameter', () => {
   it('returns valid schema', () => {
     expect(
       AbiParameter.parse({
+        name: '',
         type: 'address',
       }),
     ).toMatchInlineSnapshot(`
       {
+        "name": "",
         "type": "address",
       }
     `)
