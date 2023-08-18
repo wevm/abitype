@@ -1,5 +1,11 @@
 # abitype
 
+## 0.9.8
+
+### Patch Changes
+
+- [#187](https://github.com/wagmi-dev/abitype/pull/187) [`4a0131f`](https://github.com/wagmi-dev/abitype/commit/4a0131fa505f3d269064ca15f566c2a4adf3a532) Thanks [@tmm](https://github.com/tmm)! - Added `unknown` support to `Narrow`
+
 ## 0.9.7
 
 ### Patch Changes
