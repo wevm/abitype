@@ -9,12 +9,11 @@
  */
 // s/o https://twitter.com/hd_nvim/status/1578567206190780417
 export type Narrow<TType> =
+  | (unknown extends TType ? unknown : never)
   | (TType extends Function ? TType : never)
-  | (TType extends string | number | boolean | bigint ? TType : never)
+  | (TType extends bigint | boolean | number | string ? TType : never)
   | (TType extends [] ? [] : never)
-  | {
-      [K in keyof TType]: Narrow<TType[K]>
-    }
+  | { [K in keyof TType]: Narrow<TType[K]> }
 
 /**
  * Infers embedded primitive type of any type
