@@ -1,7 +1,7 @@
 {
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs",
-  "version": "0.9.8",
+  "version": "0.9.9",
   "license": "MIT",
   "repository": "wagmi-dev/abitype",
   "scripts": {
@@ -70,9 +70,15 @@
   },
   "typesVersions": {
     "*": {
-      "config": ["./dist/types/config.d.ts"],
-      "test": ["./dist/types/test.d.ts"],
-      "zod": ["./dist/types/zod.d.ts"]
+      "config": [
+        "./dist/types/config.d.ts"
+      ],
+      "test": [
+        "./dist/types/test.d.ts"
+      ],
+      "zod": [
+        "./dist/types/zod.d.ts"
+      ]
     }
   },
   "peerDependencies": {
@@ -105,14 +111,23 @@
     "vitest": "^0.30.1",
     "zod": "^3.20.6"
   },
-  "contributors": ["jxom.eth <j@wagmi.sh>", "awkweb.eth <t@wagmi.sh>"],
+  "contributors": [
+    "jxom.eth <j@wagmi.sh>",
+    "awkweb.eth <t@wagmi.sh>"
+  ],
   "funding": [
     {
       "type": "github",
       "url": "https://github.com/sponsors/wagmi-dev"
     }
   ],
-  "keywords": ["abi", "eth", "ethereum", "typescript", "web3"],
+  "keywords": [
+    "abi",
+    "eth",
+    "ethereum",
+    "typescript",
+    "web3"
+  ],
   "simple-git-hooks": {
     "pre-commit": "pnpm format && pnpm lint:fix"
   },
@@ -123,7 +138,9 @@
       "shiki-twoslash>shiki": "^0.14.1"
     },
     "peerDependencyRules": {
-      "ignoreMissing": ["@algolia/client-search"]
+      "ignoreMissing": [
+        "@algolia/client-search"
+      ]
     }
   }
 }
