@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-Fixed an issue where zod parsed abi's where not assignable to `Abi` type.
+Fixed an issue where Zod's parsed ABIs where not assignable to the `Abi` type.
