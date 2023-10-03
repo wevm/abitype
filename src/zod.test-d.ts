@@ -1,13 +1,17 @@
-import type { Abi as AbiType } from './abi.js'
-import { Abi } from './zod.js'
+import type { Abi } from './abi.js'
+import { Abi as AbiSchema } from './zod.js'
 import { describe, expectTypeOf, test } from 'vitest'
 
 describe('Zod Types', () => {
   test('assignable to Abi', () => {
-    const parsed: AbiType = Abi.parse([])
+    const parsed: Abi = AbiSchema.parse([])
+    type Result = typeof parsed extends Abi ? true : false
+    expectTypeOf<Result>().toEqualTypeOf<true>()
+  })
 
-    type ZodParse = typeof parsed extends AbiType ? true : false
-
-    expectTypeOf<ZodParse>().toEqualTypeOf<true>()
+  test('extends Abi', () => {
+    const parsed = AbiSchema.parse([])
+    type Result = typeof parsed extends Abi ? true : false
+    expectTypeOf<Result>().toEqualTypeOf<true>()
   })
 })
