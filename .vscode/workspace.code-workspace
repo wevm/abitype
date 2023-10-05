@@ -1,16 +1,12 @@
 {
   "folders": [
     {
-      "name": "abitype",
-      "path": "../"
-    },
-    {
       "name": "docs",
       "path": "../docs"
     },
     {
-      "name": "examples",
-      "path": "../examples"
+      "name": "packages",
+      "path": "../packages"
     },
     {
       "name": "playground",

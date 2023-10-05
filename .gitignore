@@ -18,3 +18,7 @@ bench
 .env.test.local
 .env.production.local
 .envrc
+
+# proxy packages
+packages/abitype/abis
+packages/abitype/zod
