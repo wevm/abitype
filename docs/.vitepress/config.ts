@@ -40,7 +40,7 @@ export default withTwoslash(
         'script',
         {
           src: 'https://cdn.usefathom.com/script.js',
-          ['data-site']: 'WKTTIYCY',
+          'data-site': 'WKTTIYCY',
           defer: '',
         },
       ],

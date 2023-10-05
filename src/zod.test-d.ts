@@ -1,6 +1,6 @@
+import { describe, expectTypeOf, test } from 'vitest'
 import type { Abi } from './abi.js'
 import { Abi as AbiSchema } from './zod.js'
-import { describe, expectTypeOf, test } from 'vitest'
 
 describe('Zod Types', () => {
   test('assignable to Abi', () => {

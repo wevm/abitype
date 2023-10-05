@@ -227,7 +227,7 @@ export type IsValidCharacter<T extends string> =
       : IsValidCharacter<Tail>
     : false
 
-// rome-ignore format: no formatting
+// biome-ignore format: no formatting
 type ValidCharacters =
   // uppercase letters
   | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'

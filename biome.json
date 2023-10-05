@@ -1,12 +1,6 @@
 {
   "files": {
-    "ignore": [
-      "CHANGELOG.md",
-      "pnpm-lock.yaml",
-      "trace/**",
-      "tsconfig.json",
-      "tsconfig.*.json"
-    ]
+    "ignore": ["CHANGELOG.md", "pnpm-lock.yaml", "trace/**", "tsconfig.*.json"]
   },
   "formatter": {
     "enabled": true,
@@ -23,7 +17,6 @@
         "noUnusedVariables": "error"
       },
       "nursery": {
-        "noBannedTypes": "off",
         "useExhaustiveDependencies": "error",
         "useGroupedTypeImport": "off"
       },
