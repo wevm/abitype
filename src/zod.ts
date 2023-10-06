@@ -182,7 +182,7 @@ export const AbiReceive = z.object({
 export const AbiEvent = z.object({
   type: z.literal('event'),
   anonymous: z.boolean().optional(),
-  inputs: z.array(AbiEventParameter),
+  inputs: z.array(AbiEventParameter).readonly(),
   name: Identifier,
 })
 
