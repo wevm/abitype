@@ -10,6 +10,10 @@ This section will help you start using ABIType in your TypeScript project. You c
 ## Install
 
 ::: code-group
+```bash [bun]
+bun add abitype
+```
+
 ```bash [pnpm]
 pnpm add abitype
 ```

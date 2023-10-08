@@ -130,7 +130,7 @@ const abiItem = Fragment.from(
 #### Benchmarks
 
 ```bash
-❯ pnpm bench src/human-readable/parseAbiItem.bench.ts
+❯ bun run bench src/human-readable/parseAbiItem.bench.ts
 
 ✓ Parse ABI item (3) 1716ms
   name              hz     min     max    mean     p75     p99    p995    p999     rme  samples
@@ -179,7 +179,7 @@ const abiParameter = ParamType.from('string foo')
 #### Benchmarks
 
 ```bash
-❯ pnpm bench src/human-readable/parseAbiParameter.bench.ts
+❯ bun run bench src/human-readable/parseAbiParameter.bench.ts
 
 ✓ Parse basic ABI Parameter (3) 2358ms
   name                hz     min     max    mean     p75     p99    p995    p999     rme  samples
@@ -299,7 +299,7 @@ ABIType returns inferred human-readable ABI, while ethers.js just returns `strin
 #### Benchmarks
 
 ```bash
-❯ pnpm bench src/human-readable/formatAbi.bench.ts
+❯ bun run bench src/human-readable/formatAbi.bench.ts
 
 ✓ Format ABI (3) 2068ms
 · abitype   1,687,145.72 ops/sec ±0.39% (843573 samples) fastest
@@ -376,7 +376,7 @@ ABIType returns inferred human-readable ABI item, while ethers.js just returns `
 #### Benchmarks
 
 ```bash
-❯ pnpm bench src/human-readable/formatAbi.bench.ts
+❯ bun run bench src/human-readable/formatAbi.bench.ts
 
 ✓ Format basic ABI function (3) 2534ms
 · abitype   4,833,836.91 ops/sec ±0.89% (2416919 samples) fastest
@@ -424,7 +424,7 @@ ABIType returns inferred human-readable ABI parameter, while ethers.js just retu
 #### Benchmarks
 
 ```bash
-❯ pnpm bench src/human-readable/formatAbiParameter.bench.ts
+❯ bun run bench src/human-readable/formatAbiParameter.bench.ts
 
 ✓ Format basic ABI Parameter (3) 5043ms
 · abitype   10,550,231.55 ops/sec ±0.63% (5275116 samples) fastest
