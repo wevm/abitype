@@ -1,5 +1,11 @@
 # abitype
 
+## 0.9.9
+
+### Patch Changes
+
+- [#192](https://github.com/wagmi-dev/abitype/pull/192) [`998fc3c`](https://github.com/wagmi-dev/abitype/commit/998fc3c805c75275be509db70eb76b1af8a50411) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Fixed an issue where Zod's parsed ABIs where not assignable to the `Abi` type.
+
 ## 0.9.8
 
 ### Patch Changes

@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import type {
   AbiConstructor as AbiConstructorType,
+  AbiEventParameter as AbiEventParameterType,
   AbiFallback as AbiFallbackType,
   AbiFunction as AbiFunctionType,
   AbiParameter as AbiParameterType,
@@ -76,10 +77,8 @@ export const AbiParameter: z.ZodType<AbiParameterType> = z.lazy(() =>
   ),
 )
 
-export const AbiEventParameter = z.intersection(
-  AbiParameter,
-  z.object({ indexed: z.boolean().optional() }),
-)
+export const AbiEventParameter: z.ZodType<AbiEventParameterType> =
+  z.intersection(AbiParameter, z.object({ indexed: z.boolean().optional() }))
 
 export const AbiStateMutability = z.union([
   z.literal('pure'),
@@ -260,7 +259,6 @@ export const Abi = z.array(
            * https://github.com/ethereum/solidity/issues/992
            */
           payable: z.boolean().optional(),
-          stateMutability: AbiStateMutability,
         }),
         z.discriminatedUnion('type', [
           z.object({
@@ -268,14 +266,23 @@ export const Abi = z.array(
             inputs: z.array(AbiParameter),
             name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
             outputs: z.array(AbiParameter),
+            stateMutability: AbiStateMutability,
           }),
           z.object({
             type: z.literal('constructor'),
             inputs: z.array(AbiParameter),
+            stateMutability: z.union([
+              z.literal('payable'),
+              z.literal('nonpayable'),
+            ]),
           }),
           z.object({
             type: z.literal('fallback'),
             inputs: z.tuple([]).optional(),
+            stateMutability: z.union([
+              z.literal('payable'),
+              z.literal('nonpayable'),
+            ]),
           }),
           z.object({
             type: z.literal('receive'),
