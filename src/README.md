@@ -66,6 +66,9 @@ ABIType might be a good option for your project if:
 - You don’t want to set up a build process to generate types (e.g. TypeChain).
 
 ## Install
+```bash
+bun add abitype
+```
 
 ```bash
 pnpm add abitype

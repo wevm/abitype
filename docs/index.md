@@ -73,6 +73,10 @@ ABIType might be a good option for your project if:
 Read the [Getting Started](/guide/getting-started) guide to learn more how to use ABIType.
 
 ::: code-group
+```bash [bun]
+bun add abitype
+```
+
 ```bash [pnpm]
 pnpm add abitype
 ```
