@@ -14,7 +14,6 @@
     "clean": "rimraf src/_esm src/_cjs src/_types *.tsbuildinfo",
     "docs:dev": "cd docs && bun run dev",
     "docs:build": "cd docs && bun run build",
-    "docs:preview": "cd docs && bun run serve",
     "format": "rome format . --write",
     "lint": "rome check .",
     "lint:fix": "bun run lint --apply",
