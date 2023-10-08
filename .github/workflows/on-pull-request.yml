@@ -45,4 +45,4 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-          package-manager: bun
+          package_manager: bun
