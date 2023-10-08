@@ -1,9 +1,10 @@
 import footNote from 'markdown-it-footnote'
-import { ScriptTarget } from 'typescript'
+import { createRequire } from 'module'
 import { defineConfig } from 'vitepress'
 import { withTwoslash } from 'vitepress-plugin-shiki-twoslash'
 
-import { version } from '../../package.json'
+const require = createRequire(import.meta.url)
+const pkg = require('../../src/package.json')
 
 export default withTwoslash(
   defineConfig({
@@ -79,7 +80,7 @@ export default withTwoslash(
         { text: 'Guide', link: '/' },
         { text: 'API', link: '/api/types' },
         {
-          text: `v${version}`,
+          text: `v${pkg.version}`,
           items: [
             {
               text: 'Release Notes ',
@@ -162,7 +163,7 @@ export default withTwoslash(
     twoslash: {
       addTryButton: true,
       defaultCompilerOptions: {
-        target: ScriptTarget.ESNext,
+        target: 99,
       },
     },
     vue: {

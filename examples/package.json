@@ -2,7 +2,7 @@
   "name": "examples",
   "private": true,
   "type": "module",
-  "devDependencies": {
+  "dependencies": {
     "abitype": "workspace:*"
   }
 }

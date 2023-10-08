@@ -26,7 +26,7 @@ jobs:
         uses: ./.github/actions/install-dependencies
 
       - name: Run benchmarks
-        run: pnpm bench
+        run: bun run bench
 
   size:
     name: Size

@@ -1,10 +1,12 @@
 *.local
 .DS_Store
 .next
-.pnpm-debug.log*
 cache
 coverage
 dist
+_cjs
+_types
+_esm
 node_modules
 tsconfig*.tsbuildinfo
 trace

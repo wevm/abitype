@@ -1,0 +1,60 @@
+{
+  "name": "abitype",
+  "description": "Strict TypeScript types for Ethereum ABIs",
+  "version": "0.9.9",
+  "license": "MIT",
+  "repository": "wagmi-dev/abitype",
+  "files": [
+    "*",
+    "!**/*.tsbuildinfo",
+    "!**/*.test.ts",
+    "!**/*.test.ts.snap",
+    "!**/*.test-d.ts",
+    "!**/*.bench.ts",
+    "!tsconfig.build.json"
+  ],
+  "sideEffects": false,
+  "type": "module",
+  "main": "./_cjs/index.js",
+  "module": "./_esm/index.js",
+  "types": "./_types/index.d.ts",
+  "typings": "./_types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./_types/index.d.ts",
+      "import": "./_esm/index.js",
+      "require": "./_cjs/index.js"
+    },
+    "./config": {
+      "types": "./_types/config.d.ts",
+      "import": "./_esm/config.js",
+      "require": "./_cjs/config.js"
+    },
+    "./test": {
+      "types": "./_types/test.d.ts",
+      "import": "./_esm/test.js",
+      "require": "./_cjs/test.js"
+    },
+    "./zod": {
+      "types": "./_types/zod.d.ts",
+      "import": "./_esm/zod.js",
+      "require": "./_cjs/zod.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "config": ["./_types/config.d.ts"],
+      "test": ["./_types/test.d.ts"],
+      "zod": ["./_types/zod.d.ts"]
+    }
+  },
+  "contributors": ["jxom.eth <j@wagmi.sh>", "awkweb.eth <t@wagmi.sh>"],
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/wagmi-dev"
+    }
+  ],
+  "keywords": ["abi", "eth", "ethereum", "typescript", "web3"]
+}

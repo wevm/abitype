@@ -1,9 +1,8 @@
-import { readJsonSync, writeFileSync } from 'fs-extra'
-import path from 'path'
+import { join } from 'node:path'
 
 // Writes the current package.json version to `./src/version.ts`.
-const versionFilePath = path.join(__dirname, '../src/version.ts')
-const packageJsonPath = path.join(__dirname, '../package.json')
-const packageVersion = readJsonSync(packageJsonPath).version
+const versionFilePath = join(import.meta.dir, '../src/version.ts')
+const packageJsonPath = join(import.meta.dir, '../src/package.json')
+const packageVersion = (await Bun.file(packageJsonPath).json()).version
 
-writeFileSync(versionFilePath, `export const version = '${packageVersion}'\n`)
+Bun.write(versionFilePath, `export const version = '${packageVersion}'\n`)

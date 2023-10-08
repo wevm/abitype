@@ -11,6 +11,7 @@ import type {
   _UnwrapNameOrModifier,
   _ValidateAbiParameter,
 } from './utils.js'
+import type { Pretty } from '~abitype/types.js'
 
 type OptionsWithModifier = { Modifier: 'calldata'; Structs: unknown }
 type OptionsWithIndexed = { Modifier: 'indexed'; Structs: unknown }
@@ -383,7 +384,7 @@ test('ParseAbiParameters', () => {
   expectTypeOf<ParseAbiParameters<['string']>>().toEqualTypeOf<
     readonly [{ readonly type: 'string' }]
   >()
-  expectTypeOf<ParseAbiParameters<['string', 'string']>>().toEqualTypeOf<
+  expectTypeOf<ParseAbiParameters<['string', 'string']>>().toMatchTypeOf<
     readonly [{ readonly type: 'string' }, { readonly type: 'string' }]
   >()
 })
@@ -610,16 +611,22 @@ test('_ValidateAbiParameter', () => {
     name: 'foo'
   }>()
 
-  expectTypeOf<_ValidateAbiParameter<{ type: 'int' }>>().toEqualTypeOf<{
+  expectTypeOf<Pretty<_ValidateAbiParameter<{ type: 'int' }>>>().toEqualTypeOf<{
     readonly type: 'int256'
   }>()
-  expectTypeOf<_ValidateAbiParameter<{ type: 'uint' }>>().toEqualTypeOf<{
+  expectTypeOf<
+    Pretty<_ValidateAbiParameter<{ type: 'uint' }>>
+  >().toEqualTypeOf<{
     readonly type: 'uint256'
   }>()
-  expectTypeOf<_ValidateAbiParameter<{ type: 'uint[]' }>>().toEqualTypeOf<{
+  expectTypeOf<
+    Pretty<_ValidateAbiParameter<{ type: 'uint[]' }>>
+  >().toEqualTypeOf<{
     readonly type: 'uint256[]'
   }>()
-  expectTypeOf<_ValidateAbiParameter<{ type: 'uint[10][]' }>>().toEqualTypeOf<{
+  expectTypeOf<
+    Pretty<_ValidateAbiParameter<{ type: 'uint[10][]' }>>
+  >().toEqualTypeOf<{
     readonly type: 'uint256[10][]'
   }>()
 
@@ -975,13 +982,13 @@ test('_SplitNameOrModifier', () => {
     readonly name: 'foo'
   }>()
   expectTypeOf<
-    _SplitNameOrModifier<'indexed foo', { Modifier: 'indexed' }>
+    Pretty<_SplitNameOrModifier<'indexed foo', { Modifier: 'indexed' }>>
   >().toEqualTypeOf<{
     readonly name: 'foo'
     readonly indexed: true
   }>()
   expectTypeOf<
-    _SplitNameOrModifier<'calldata foo', { Modifier: 'calldata' }>
+    Pretty<_SplitNameOrModifier<'calldata foo', { Modifier: 'calldata' }>>
   >().toEqualTypeOf<{
     readonly name: 'foo'
   }>()

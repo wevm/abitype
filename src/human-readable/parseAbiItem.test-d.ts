@@ -99,7 +99,7 @@ test('parseAbiItem', () => {
     readonly inputs: readonly [
       {
         readonly type: 'tuple'
-        readonly components: [
+        readonly components: readonly [
           {
             readonly type: 'string'
           },

@@ -16,7 +16,7 @@ jobs:
         uses: ./.github/actions/install-dependencies
 
       - name: Lint code
-        run: pnpm lint
+        run: bun run lint
 
   build:
     name: Build
@@ -31,7 +31,7 @@ jobs:
         uses: ./.github/actions/install-dependencies
 
       - name: Build
-        run: pnpm build
+        run: bun run build
 
   types:
     name: Types
@@ -49,19 +49,19 @@ jobs:
         uses: ./.github/actions/install-dependencies
 
       - name: Use `typescript@${{ matrix.version }}`
-        run: pnpm add -D -w typescript@${{ matrix.version }}
+        run: bun i -d typescript@${{ matrix.version }}
 
       - name: Build
-        run: pnpm build
+        run: bun run build
         
       - name: Check types
-        run: pnpm typecheck
+        run: bun run typecheck
 
       - name: Check types (--exactOptionalPropertyTypes false)
-        run: pnpm typecheck:propertyTypes
+        run: bun run typecheck:propertyTypes
           
       - name: Test types
-        run: pnpm test:typecheck
+        run: bun run test:typecheck
 
   test:
     name: Test
@@ -79,10 +79,10 @@ jobs:
         uses: ./.github/actions/install-dependencies
 
       - name: Use `typescript@${{ matrix.version }}`
-        run: pnpm add -D -w typescript@${{ matrix.version }}
+        run: bun i -d typescript@${{ matrix.version }}
 
       - name: Run tests
-        run: pnpm test:cov
+        run: bun run test:cov
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

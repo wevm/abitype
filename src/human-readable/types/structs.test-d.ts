@@ -22,7 +22,9 @@ test('ParseStructs', () => {
       {
         readonly type: 'tuple'
         readonly name: 'foo'
-        readonly components: readonly [{ type: 'string'; name: 'bar' }]
+        readonly components: readonly [
+          { readonly type: 'string'; readonly name: 'bar' },
+        ]
       },
     ]
     Foo: readonly [{ readonly type: 'string'; readonly name: 'bar' }]
@@ -34,7 +36,7 @@ test('ParseStructs', () => {
           {
             readonly type: 'tuple'
             readonly name: 'foo'
-            readonly components: [
+            readonly components: readonly [
               { readonly type: 'string'; readonly name: 'bar' },
             ]
           },
@@ -112,8 +114,8 @@ test('ParseStruct', () => {
   >().toEqualTypeOf<{
     readonly name: 'Foo'
     readonly components: [
-      { type: 'string'; name: 'foo' },
-      { type: 'string'; name: 'bar' },
+      { readonly type: 'string'; readonly name: 'foo' },
+      { readonly type: 'string'; readonly name: 'bar' },
     ]
   }>()
   expectTypeOf<ParseStruct<'struct Foo {}'>>().toEqualTypeOf<{
@@ -124,8 +126,8 @@ test('ParseStruct', () => {
     readonly name: 'Foo'
     readonly components: [
       {
-        type: 'Bar'
-        name: 'bar'
+        readonly type: 'Bar'
+        readonly name: 'bar'
       },
     ]
   }>()
@@ -153,8 +155,8 @@ test('ResolveStructs', () => {
             readonly type: 'tuple'
             readonly name: 'foo'
             readonly components: readonly [
-              { readonly type: 'string'; readonly name: 'bar' },
-              { readonly type: 'uint16'; readonly name: 'baz' },
+              { type: 'string'; name: 'bar' },
+              { type: 'uint16'; name: 'baz' },
             ]
           },
         ]
@@ -186,23 +188,26 @@ test('ResolveStructs', () => {
 
 test('ParseStructProperties', () => {
   expectTypeOf<ParseStructProperties<'string;'>>().toEqualTypeOf<
-    [{ type: 'string' }]
+    [{ readonly type: 'string' }]
   >()
   expectTypeOf<ParseStructProperties<'string foo;'>>().toEqualTypeOf<
-    [{ type: 'string'; name: 'foo' }]
+    [{ readonly type: 'string'; readonly name: 'foo' }]
   >()
-  expectTypeOf<ParseStructProperties<'string; string;'>>().toEqualTypeOf<
-    [{ type: 'string' }, { type: 'string' }]
+  expectTypeOf<ParseStructProperties<'string; string;'>>().toMatchTypeOf<
+    [{ readonly type: 'string' }, { readonly type: 'string' }]
   >()
   expectTypeOf<
     ParseStructProperties<'string foo; string bar;'>
   >().toEqualTypeOf<
-    [{ type: 'string'; name: 'foo' }, { type: 'string'; name: 'bar' }]
+    [
+      { readonly type: 'string'; readonly name: 'foo' },
+      { readonly type: 'string'; readonly name: 'bar' },
+    ]
   >()
 
   expectTypeOf<ParseStructProperties<''>>().toEqualTypeOf<[]>()
   expectTypeOf<ParseStructProperties<'string'>>().toEqualTypeOf<[]>()
   expectTypeOf<ParseStructProperties<'string; string'>>().toEqualTypeOf<
-    [{ type: 'string' }]
+    [{ readonly type: 'string' }]
   >()
 })

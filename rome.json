@@ -2,10 +2,15 @@
   "files": {
     "ignore": [
       "CHANGELOG.md",
-      "pnpm-lock.yaml",
+      "_cjs",
+      "_esm",
+      "_types",
       "trace/**",
       "tsconfig.json",
-      "tsconfig.*.json"
+      "tsconfig.*.json",
+      "**/node_modules",
+      "coverage",
+      "cache"
     ]
   },
   "formatter": {
