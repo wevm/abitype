@@ -14,6 +14,7 @@ export type {
   AbiStateMutability,
   AbiType,
   Address,
+  ResolvedTypedData,
   SolidityAddress,
   SolidityArray,
   SolidityArrayWithoutTuple,
@@ -55,6 +56,8 @@ export type {
   IsAbi,
   IsTypedData,
   TypedDataToPrimitiveTypes,
+  ResolveTypedData,
+  ResolvedTypedDataToPrimativeType,
 } from './utils.js'
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,6 +101,11 @@ export {
 } from './human-readable/parseAbiParameters.js'
 
 export {
+  parseTypedData,
+  type ParseTypedData,
+} from './human-readable/parseTypedData.js'
+
+export {
   UnknownTypeError,
   InvalidAbiItemError,
   UnknownSolidityTypeError,
@@ -121,4 +129,7 @@ export {
 
 export { InvalidParenthesisError } from './human-readable/errors/splitParameters.js'
 
-export { CircularReferenceError } from './human-readable/errors/struct.js'
+export {
+  CircularReferenceError,
+  MissingNamedParameter,
+} from './human-readable/errors/struct.js'

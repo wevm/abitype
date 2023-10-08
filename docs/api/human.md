@@ -601,6 +601,31 @@ const result = formatAbiParameters([
 ])
 ```
 
+### `parseTypedData`
+
+Parse human-readable typed data into EIP-712 typed data.
+
+| Name             | Description                   | Type                                               |
+| ---------------- | ----------------------------- | -------------------------------------------------- |
+| `signatures`     | Struct signatures             | `readonly string[]`                                |
+| `resolve`        | Resolve the typed data        | `boolean`                                          |
+| returns          | Human-Readable TypedData.     | `TypedData` (inferred)                             |
+
+#### Example
+
+```ts twoslash
+import { parseTypedData } from 'abitype'
+
+const result = parseTypedData(
+//    ^? 
+  ['struct Name { address foo; }', 'struct Foo { Name bar; }']
+)
+
+const resolvedResult = parseTypedData(
+//    ^? 
+  ['struct Name { address foo; }', 'struct Foo { Name bar; }'], true)
+
+```
 
 ## Errors
 
@@ -620,5 +645,6 @@ import {
   InvalidAbiTypeParameterError,
   InvalidAbiItemError,
   UnknownTypeError,
+  MissingNamedParameter,
 } from 'abitype'
 ```

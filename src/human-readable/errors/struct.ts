@@ -9,3 +9,13 @@ export class CircularReferenceError extends BaseError {
     })
   }
 }
+
+export class MissingNamedParameter extends BaseError {
+  override name = 'MissingNamedParameter'
+
+  constructor({ type }: { type: string }) {
+    super('Missing named parameter for EIP-712 typed data.', {
+      metaMessages: [`named parameter for type ${type} must be present.`],
+    })
+  }
+}

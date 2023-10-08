@@ -1,5 +1,6 @@
-import type { AbiParameter } from '../../abi.js'
+import type { AbiParameter, TypedData, TypedDataParameter } from '../../abi.js'
 import type { Error, Trim } from '../../types.js'
+import type { ResolveTypedData } from '../../utils.js'
 import type { StructSignature } from './signatures.js'
 import type { ParseAbiParameter } from './utils.js'
 
@@ -85,3 +86,25 @@ export type ParseStructProperties<
       [...Result, ParseAbiParameter<Head, { Structs: TStructs }>]
     >
   : Result
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Typed Data
+
+export type ShallowStruct = { [x: string]: TypedDataParameter[] }
+
+export type ParseTypedData<
+  signatures extends readonly string[],
+  resolveTypedData extends boolean = false,
+> = {
+  // Create "shallow" version of each struct (and filter out non-structs or invalid structs)
+  [Signature in
+    signatures[number] as ParseStruct<Signature> extends infer Struct extends {
+      name: string
+    }
+      ? Struct['name']
+      : never]: ParseStruct<Signature>['components']
+} extends infer Structs extends TypedData
+  ? resolveTypedData extends true
+    ? ResolveTypedData<Structs>
+    : Structs
+  : never
