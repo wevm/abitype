@@ -71,7 +71,7 @@ export const AbiParameter: z.ZodType<AbiParameterType> = z.lazy(() =>
       }),
       z.object({
         type: z.union([SolidityTuple, SolidityArrayWithTuple]),
-        components: z.array(AbiParameter),
+        components: z.array(AbiParameter).readonly(),
       }),
     ]),
   ),
@@ -110,9 +110,9 @@ export const AbiFunction = z.preprocess(
      * https://github.com/vyperlang/vyper/issues/2151
      */
     gas: z.number().optional(),
-    inputs: z.array(AbiParameter),
+    inputs: z.array(AbiParameter).readonly(),
     name: Identifier,
-    outputs: z.array(AbiParameter),
+    outputs: z.array(AbiParameter).readonly(),
     /**
      * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
      * https://github.com/ethereum/solidity/issues/992
@@ -138,7 +138,7 @@ export const AbiConstructor = z.preprocess(
      * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
      * https://github.com/ethereum/solidity/issues/992
      */
-    inputs: z.array(AbiParameter),
+    inputs: z.array(AbiParameter).readonly(),
     /**
      * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
      * https://github.com/ethereum/solidity/issues/992
@@ -188,7 +188,7 @@ export const AbiEvent = z.object({
 
 export const AbiError = z.object({
   type: z.literal('error'),
-  inputs: z.array(AbiParameter),
+  inputs: z.array(AbiParameter).readonly(),
   name: z.string(),
 })
 
@@ -263,14 +263,14 @@ export const Abi = z.array(
         z.discriminatedUnion('type', [
           z.object({
             type: z.literal('function'),
-            inputs: z.array(AbiParameter),
+            inputs: z.array(AbiParameter).readonly(),
             name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
-            outputs: z.array(AbiParameter),
+            outputs: z.array(AbiParameter).readonly(),
             stateMutability: AbiStateMutability,
           }),
           z.object({
             type: z.literal('constructor'),
-            inputs: z.array(AbiParameter),
+            inputs: z.array(AbiParameter).readonly(),
             stateMutability: z.union([
               z.literal('payable'),
               z.literal('nonpayable'),
