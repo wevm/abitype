@@ -82,6 +82,8 @@ pnpm install
 
 After the install completes, pnpm links packages across the project for development and [git hooks](https://github.com/toplenboren/simple-git-hooks) are set up.
 
+> **Note:** In case you have to install new packages or upgrade packages make sure to use **pnpm@8.3.1** and **typescript@5.0.4**
+
 <div align="right">
   <a href="#basic-guide">&uarr; back to top</a></b>
 </div>
@@ -94,6 +96,8 @@ Tests are run with [Vitest](https://vitest.dev/guide/testing-types.html):
 pnpm test
 pnpm test:typecheck
 ```
+
+> **Note** Ensure to build the package (`pnpm build`) before running the `test:typecheck` suite.
 
 <div align="right">
   <a href="#basic-guide">&uarr; back to top</a></b>
