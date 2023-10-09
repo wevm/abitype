@@ -54,7 +54,7 @@ gh repo clone wagmi-dev/abitype
 
 ## Installing Node.js and pnpm
 
-ABIType uses [pnpm](https://pnpm.io) as its package manager. You need to install **Node.js v16 or higher**, **pnpm exactly v8.3.1** and **TyepScript exactly v5.0.4**.
+ABIType uses [pnpm](https://pnpm.io) as its package manager. You need to install **Node.js v16 or higher**, **pnpm exactly v8.3.1** and **TypeScript exactly v5.0.4**.
 
 You can run the following commands in your terminal to check your local Node.js and npm versions:
 
