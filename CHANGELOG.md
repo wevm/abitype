@@ -1,5 +1,16 @@
 # abitype
 
+## 0.9.10
+
+### Patch Changes
+
+- [#194](https://github.com/wagmi-dev/abitype/pull/194) [`380c9d9`](https://github.com/wagmi-dev/abitype/commit/380c9d9786f673185369f652f3bde8564b30ff81) Thanks [@mathieu-bour](https://github.com/mathieu-bour)! - Changed the following types to readonly in zod package:
+
+  - `AbiContructor.inputs`
+  - `AbiError.inputs`
+  - `AbiEvent.inputs`
+  - `AbiFunction.inputs` / `AbiFunction.outputs`
+
 ## 0.9.9
 
 ### Patch Changes
