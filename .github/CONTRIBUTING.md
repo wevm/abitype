@@ -95,6 +95,8 @@ pnpm test
 pnpm test:typecheck
 ```
 
+Note: ensure to build the package (`pnpm build`) before running the `test:typecheck` suite.
+
 <div align="right">
   <a href="#basic-guide">&uarr; back to top</a></b>
 </div>
