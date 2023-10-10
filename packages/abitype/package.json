@@ -1,7 +1,7 @@
 {
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs",
-  "version": "0.9.9",
+  "version": "0.9.10",
   "license": "MIT",
   "repository": "wagmi-dev/abitype",
   "scripts": {
@@ -68,7 +68,7 @@
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
     "ethers": "^6.5.1",
-    "zod": "^3.20.6"
+    "zod": "^3.22.4"
   },
   "contributors": ["awkweb.eth <t@wagmi.sh>", "jxom.eth <j@wagmi.sh>"],
   "funding": "https://github.com/sponsors/wagmi-dev",
