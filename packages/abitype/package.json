@@ -32,17 +32,17 @@
     ".": {
       "types": "./dist/types/exports/index.d.ts",
       "import": "./dist/esm/exports/index.js",
-      "require": "./dist/cjs/exports/index.js"
+      "default": "./dist/cjs/exports/index.js"
     },
     "./abis": {
       "types": "./dist/types/exports/abis.d.ts",
       "import": "./dist/esm/exports/abis.js",
-      "require": "./dist/cjs/exports/abis.js"
+      "default": "./dist/cjs/exports/abis.js"
     },
     "./zod": {
       "types": "./dist/types/exports/zod.d.ts",
       "import": "./dist/esm/exports/zod.js",
-      "require": "./dist/cjs/exports/zod.js"
+      "default": "./dist/cjs/exports/zod.js"
     },
     "./package.json": "./package.json"
   },
