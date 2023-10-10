@@ -1,4 +1,4 @@
-name: Pull request
+name: Pull Request
 on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
@@ -43,4 +43,5 @@ jobs:
       - name: Report build size
         uses: preactjs/compressed-size-action@v2
         with:
+          pattern: 'packages/**/dist/**'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
