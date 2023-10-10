@@ -3,7 +3,7 @@ import { ScriptTarget } from 'typescript'
 import { defineConfig } from 'vitepress'
 import { withTwoslash } from 'vitepress-plugin-shiki-twoslash'
 
-import { version } from '../../package.json'
+import { version } from '../../packages/abitype/package.json'
 
 export default withTwoslash(
   defineConfig({
