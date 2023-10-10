@@ -11,7 +11,7 @@ import {
   customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
   erc20Abi,
-} from './test/abis.js'
+} from './abis/json.js'
 import {
   Abi as AbiSchema,
   AbiConstructor as AbiConstructorSchema,
