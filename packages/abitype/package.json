@@ -10,8 +10,7 @@
     "build:esm+types": "tsc --project tsconfig.build.json --module es2020 --outDir ./dist/esm --declaration --declarationMap --declarationDir ./dist/types",
     "clean": "rm -rf dist tsconfig.tsbuildinfo abis zod",
     "test:build": "publint --strict",
-    "typecheck": "tsc --noEmit",
-    "typecheck:propertyTypes": "tsc --noEmit --exactOptionalPropertyTypes false"
+    "typecheck": "tsc --noEmit"
   },
   "files": [
     "dist",

@@ -25,6 +25,7 @@
     "test:update": "vitest --update",
     "trace": "tsc --noEmit --generateTrace ./playgrounds/performance/out --incremental false --project playgrounds/performance/tsconfig.json && echo \"Open playgrounds/performance/out/trace.json in https://ui.perfetto.dev\"",
     "typecheck": "pnpm run --r --parallel typecheck && tsc --noEmit",
+    "typecheck:propertyTypes": "pnpm run --r --parallel typecheck --exactOptionalPropertyTypes false && tsc --noEmit --exactOptionalPropertyTypes false",
     "version:update": "bun .scripts/updateVersion.ts"
   },
   "devDependencies": {
