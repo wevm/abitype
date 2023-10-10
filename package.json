@@ -59,15 +59,24 @@
     "pre-commit": "pnpm format && pnpm lint:fix"
   },
   "knip": {
-    "ignore": ["**/*.test-d.ts", "vitest.workspace.ts"],
+    "ignore": ["vitest.workspace.ts"],
+    "ignoreBinaries": ["dev"],
     "ignoreDependencies": ["only-allow"],
-    "ignoreWorkspaces": ["docs", "packages/register-tests/**", "playground"],
+    "ignoreWorkspaces": [
+      "docs",
+      "packages/register-tests/**",
+      "playgrounds/**"
+    ],
     "workspaces": {
       ".": {
         "entry": ".scripts/*.ts"
       },
       "packages/abitype": {
-        "entry": "src/exports/{config,index,test,zod}.ts!"
+        "entry": [
+          "src/exports/{abis,index,zod}.ts!",
+          "**/*.bench.ts",
+          "**/*.test-d.ts"
+        ]
       }
     }
   }

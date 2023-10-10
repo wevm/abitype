@@ -69,7 +69,7 @@ export type IsStructSignature<T extends string> = T extends StructSignature<
   ? IsName<Name>
   : false
 
-export type ConstructorSignature<TTail extends string = string> =
+type ConstructorSignature<TTail extends string = string> =
   `constructor(${TTail}`
 export type IsConstructorSignature<T> = T extends ConstructorSignature
   ? T extends ValidConstructorSignatures
