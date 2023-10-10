@@ -7,9 +7,8 @@ coverage
 dist
 node_modules
 tsconfig*.tsbuildinfo
-trace
 bench
-!examples/trace
+playgrounds/performance/out
 
 # local env files
 .env

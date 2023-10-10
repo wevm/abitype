@@ -1,3 +1,10 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/api/test",
+      "destination": "/api/abis",
+      "permanent": true
+    }
+  ]
 }

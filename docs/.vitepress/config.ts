@@ -1,9 +1,10 @@
 import footNote from 'markdown-it-footnote'
-import { ScriptTarget } from 'typescript'
+import ts from 'typescript'
 import { defineConfig } from 'vitepress'
 import { withTwoslash } from 'vitepress-plugin-shiki-twoslash'
 
 import { version } from '../../packages/abitype/package.json'
+import { getSidebar } from './sidebar'
 
 export default withTwoslash(
   defineConfig({
@@ -93,65 +94,7 @@ export default withTwoslash(
         },
       ],
       outline: [2, 3],
-      sidebar: {
-        '/': [
-          {
-            text: 'Guide',
-            items: [
-              {
-                text: 'What is ABIType?',
-                link: '/',
-              },
-              {
-                text: 'Getting Started',
-                link: '/guide/getting-started',
-              },
-              {
-                text: 'Walkthrough',
-                link: '/guide/walkthrough',
-              },
-              {
-                text: 'Comparisons',
-                link: '/guide/comparisons',
-              },
-            ],
-          },
-          {
-            text: 'API',
-            items: [
-              {
-                text: 'Types',
-                link: '/api/types',
-              },
-              {
-                text: 'Utilities',
-                link: '/api/utilities',
-              },
-              {
-                text: 'Human-Readable',
-                link: '/api/human',
-              },
-              {
-                text: 'Test',
-                link: '/api/test',
-              },
-              {
-                text: 'Zod',
-                link: '/api/zod',
-              },
-            ],
-          },
-          {
-            text: 'Config',
-            items: [
-              {
-                text: 'Reference',
-                link: '/config',
-              },
-            ],
-          },
-        ],
-      },
+      sidebar: getSidebar(),
       siteTitle: false,
       socialLinks: [
         { icon: 'twitter', link: 'https://twitter.com/wagmi_sh' },
@@ -162,7 +105,13 @@ export default withTwoslash(
     twoslash: {
       addTryButton: true,
       defaultCompilerOptions: {
-        target: ScriptTarget.ESNext,
+        paths: {
+          // Source - reference source files so we don't need to build packages to get types (speeds things up)
+          abitype: ['../../packages/abitype/src/exports'],
+          'abitype/*': ['../../packages/abitype/src/exports/*'],
+        },
+        strict: true,
+        target: ts.ScriptTarget.ESNext,
       },
     },
     vue: {

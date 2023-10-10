@@ -42,7 +42,7 @@ Strict TypeScript types for Ethereum ABIs. ABIType provides utilities and type d
 
 ```ts
 import type { AbiParametersToPrimitiveTypes, ExtractAbiFunction, ExtractAbiFunctionNames } from 'abitype'
-import { erc20Abi } from 'abitype/test'
+import { erc20Abi } from 'abitype/abis'
 
 type FunctionNames = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
 //   ^? type FunctionNames = "symbol" | "name" | "allowance" | "balanceOf" | "decimals" | "totalSupply"

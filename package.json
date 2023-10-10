@@ -8,7 +8,7 @@
     "changeset:version": "changeset version && pnpm version:update",
     "clean": "pnpm run --r --parallel clean",
     "deps": "pnpx taze -r",
-    "docs:dev": "pnpm -r --filter docs dev",
+    "docs:dev": "rimraf node_modules/.cache/twoslash && pnpm -r --filter docs dev",
     "format": "biome format . --write",
     "lint": "biome check .",
     "lint:fix": "pnpm lint --apply",
@@ -23,7 +23,7 @@
     "test:cov": "vitest run --coverage",
     "test:typecheck": "vitest typecheck",
     "test:update": "vitest --update",
-    "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project playground/tsconfig.json",
+    "trace": "tsc --noEmit --generateTrace ./playgrounds/performance/out --incremental false --project playgrounds/performance/tsconfig.json && echo \"Open playgrounds/performance/out/trace.json in https://ui.perfetto.dev\"",
     "typecheck": "pnpm run --r --parallel typecheck && tsc --noEmit",
     "version:update": "bun .scripts/updateVersion.ts"
   },

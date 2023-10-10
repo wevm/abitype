@@ -5,13 +5,7 @@ title: 'Test'
 
 # Test
 
-ABIType exports some test utilities and constants to make playing around and testing your code easier via the `'abitype/test'` entrypoint.
-
-## Constants
-
-```ts twoslash
-import { zeroAddress } from 'abitype/test'
-```
+ABIType exports some test utilities and constants to make playing around and testing your code easier via the `'abitype/abis'` entrypoint.
 
 ### ABIs
 
@@ -28,7 +22,7 @@ import {
   wethAbi,
   writingEditionsFactoryAbi,
   eip165Abi,
-} from 'abitype/test'
+} from 'abitype/abis'
 ```
 
 ### Human-Readable ABIs
@@ -45,5 +39,5 @@ import {
   wagmiMintExampleHumanReadableAbi,
   wethHumanReadableAbi,
   writingEditionsFactoryHumanReadableAbi,
-} from 'abitype/test'
+} from 'abitype/abis'
 ```

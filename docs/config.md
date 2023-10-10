@@ -13,22 +13,22 @@ ABIType's types are customizable using [declaration merging](https://www.typescr
 
 ```ts twoslash
 declare module 'abitype' {
-  export interface Config {
+  export interface Register {
     BigIntType: bigint & { foo: 'bar' }
   }
 }
 
-import { ResolvedConfig } from 'abitype'
-type Result = ResolvedConfig['BigIntType']
+import { ResolvedRegister } from 'abitype'
+type Result = ResolvedRegister['BigIntType']
 //   ^?
 ```
 
 ::: info Extending Config from third-party packages
-If you are using ABIType via another package (e.g. [`wagmi`](https://wagmi.sh)), you can customize the ABIType's types by targeting the package's `abitype` module:
+If you are using ABIType via another package (e.g. [`viem`](https://viem.sh)), you can customize the ABIType's types by targeting the package's `abitype` module:
 
 ```ts
-declare module 'wagmi/node_modules/abitype' {
-  export interface Config {
+declare module 'viem/node_modules/abitype' {
+  export interface Register {
     BigIntType: MyCustomBigIntType
   }
 }
@@ -52,7 +52,7 @@ TypeScript type to use for `address` values.
 
 ```ts twoslash
 declare module 'abitype' {
-  export interface Config {
+  export interface Register {
     AddressType: `0x${string}`
   }
 }
@@ -67,7 +67,7 @@ Maximum depth for nested array types (e.g. `string[][]`). When `false`, there is
 
 ```ts twoslash
 declare module 'abitype' {
-  export interface Config {
+  export interface Register {
     ArrayMaxDepth: false
   }
 }
@@ -82,7 +82,7 @@ TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48`.
 
 ```ts twoslash
 declare module 'abitype' {
-  export interface Config {
+  export interface Register {
     BigIntType: bigint
   }
 }
@@ -97,7 +97,7 @@ TypeScript type to use for `bytes<M>` values.
 
 ```ts twoslash
 declare module 'abitype' {
-  export interface Config {
+  export interface Register {
     BytesType: {
       inputs: `0x${string}` | Uint8Array
       outputs: `0x${string}`
@@ -115,7 +115,7 @@ Lower bound for fixed-length arrays.
 
 ```ts twoslash
 declare module 'abitype' {
-  export interface Config {
+  export interface Register {
     FixedArrayMinLength: 1
   }
 }
@@ -130,7 +130,7 @@ Upper bound for fixed-length arrays.
 
 ```ts twoslash
 declare module 'abitype' {
-  export interface Config {
+  export interface Register {
     FixedArrayMinLength: 99
   }
 }
@@ -145,7 +145,7 @@ TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48`.
 
 ```ts twoslash
 declare module 'abitype' {
-  export interface Config {
+  export interface Register {
     IntType: number
   }
 }
@@ -160,7 +160,7 @@ When set, validates `AbiParameter`'s `type` against `AbiType`.
 
 ```ts twoslash
 declare module 'abitype' {
-  export interface Config {
+  export interface Register {
     StrictAbiType: false
   }
 }

@@ -48,7 +48,7 @@ Strict TypeScript types for Ethereum ABIs. ABIType provides utilities and type d
 
 ```ts twoslash
 import { AbiParametersToPrimitiveTypes, ExtractAbiFunction } from 'abitype'
-import { erc20Abi } from 'abitype/test'
+import { erc20Abi } from 'abitype/abis'
 
 type TransferInputTypes = AbiParametersToPrimitiveTypes<
   // ^?
@@ -76,11 +76,12 @@ Read the [Getting Started](/guide/getting-started) guide to learn more how to us
 ```bash [pnpm]
 pnpm add abitype
 ```
-
+```bash [bun]
+bun add abitype
+```
 ```bash [npm]
 npm i abitype
 ```
-
 ```bash [yarn]
 yarn add abitype
 ```

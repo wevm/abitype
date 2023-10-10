@@ -1,9 +1,10 @@
 {
   "name": "docs",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vitepress dev",
-    "build": "vitepress build",
+    "build": "rm -r ../node_modules/.cache/twoslash & vitepress build",
     "serve": "vitepress serve"
   },
   "devDependencies": {
@@ -12,8 +13,9 @@
     "abitype": "workspace:*",
     "ethers": "^6.5.1",
     "markdown-it-footnote": "^3.0.3",
-    "vitepress": "1.0.0-beta.1",
-    "vitepress-plugin-shiki-twoslash": "0.0.6",
+    "vite": "^4.4.9",
+    "vitepress": "1.0.0-rc.20",
+    "vitepress-plugin-shiki-twoslash": "^0.0.6",
     "vue": "^3.3.4"
   }
 }

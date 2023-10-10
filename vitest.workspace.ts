@@ -3,7 +3,7 @@ import { defineWorkspace } from 'vitest/config'
 
 const resolve = {
   alias: {
-    abitype: path.resolve(__dirname, '.packages/abitype/src'),
+    abitype: path.resolve(__dirname, './packages/abitype/src'),
   },
 }
 

@@ -1,0 +1,8 @@
+{
+  "name": "performance",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "abitype": "workspace:*"
+  }
+}
