@@ -97,6 +97,12 @@ importers:
         specifier: ^3.20.6
         version: 3.21.4
 
+  packages/register-tests/default:
+    dependencies:
+      abitype:
+        specifier: workspace:*
+        version: link:../../abitype
+
 packages:
 
   /@adraffy/ens-normalize@1.9.2:

@@ -4,7 +4,7 @@ import type {
   AbiType,
   SolidityFixedArrayRange,
 } from '../../abi.js'
-import type { ResolvedConfig } from '../../config.js'
+import type { ResolvedRegister } from '../../register.js'
 import type { Error, IsUnknown, Merge, Pretty, Trim } from '../../types.js'
 import type {
   ErrorSignature,
@@ -214,7 +214,7 @@ export type _ValidateAbiParameter<TAbiParameter extends AbiParameter> =
   ) extends infer Parameter
     ? // Validate `type` against `AbiType`
       (
-        ResolvedConfig['StrictAbiType'] extends true
+        ResolvedRegister['StrictAbiType'] extends true
           ? Parameter extends { type: AbiType }
             ? Parameter
             : Merge<

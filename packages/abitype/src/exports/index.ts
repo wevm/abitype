@@ -32,12 +32,16 @@ export type {
   TypedDataType,
 } from '../abi.js'
 
-export type { Config, DefaultConfig, ResolvedConfig } from '../config.js'
-
 export { BaseError } from '../errors.js'
 
 export type { Narrow } from '../narrow.js'
 export { narrow } from '../narrow.js'
+
+export type {
+  Register,
+  DefaultRegister,
+  ResolvedRegister,
+} from '../register.js'
 
 export type {
   AbiParameterToPrimitiveType,

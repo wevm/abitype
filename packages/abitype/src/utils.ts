@@ -19,7 +19,7 @@ import type {
   TypedDataParameter,
   TypedDataType,
 } from './abi.js'
-import type { ResolvedConfig } from './config.js'
+import type { ResolvedRegister } from './register.js'
 import type { Error, Merge, Pretty, Tuple } from './types.js'
 
 /**
@@ -42,13 +42,13 @@ type PrimitiveTypeLookup<
   TAbiType extends AbiType,
   TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
 > = {
-  [_ in SolidityAddress]: ResolvedConfig['AddressType']
+  [_ in SolidityAddress]: ResolvedRegister['AddressType']
 } & {
   [_ in SolidityBool]: boolean
 } & {
-  [_ in SolidityBytes]: ResolvedConfig['BytesType'][TAbiParameterKind]
+  [_ in SolidityBytes]: ResolvedRegister['BytesType'][TAbiParameterKind]
 } & {
-  [_ in SolidityFunction]: `${ResolvedConfig['AddressType']}${string}`
+  [_ in SolidityFunction]: `${ResolvedRegister['AddressType']}${string}`
 } & {
   [_ in SolidityInt]: TAbiType extends `${'u' | ''}int${infer TBits}`
     ? TBits extends keyof BitsTypeLookup
@@ -67,11 +67,11 @@ type GreaterThan48Bits = Exclude<MBits, 8 | 16 | 24 | 32 | 40 | 48 | ''>
 type LessThanOrEqualTo48Bits = Exclude<MBits, GreaterThan48Bits | ''>
 type NoBits = Exclude<MBits, GreaterThan48Bits | LessThanOrEqualTo48Bits>
 type BitsTypeLookup = {
-  [_ in `${LessThanOrEqualTo48Bits}`]: ResolvedConfig['IntType']
+  [_ in `${LessThanOrEqualTo48Bits}`]: ResolvedRegister['IntType']
 } & {
-  [_ in `${GreaterThan48Bits}`]: ResolvedConfig['BigIntType']
+  [_ in `${GreaterThan48Bits}`]: ResolvedRegister['BigIntType']
 } & {
-  [_ in NoBits]: ResolvedConfig['BigIntType']
+  [_ in NoBits]: ResolvedRegister['BigIntType']
 }
 
 /**
@@ -156,7 +156,7 @@ export type AbiParameterToPrimitiveType<
   : // 4. If type is not basic, tuple, or array, we don't know what the type is.
   // This can happen when a fixed-length array is out of range (`Size` doesn't exist in `SolidityFixedArraySizeLookup`),
   // the array has depth greater than `Config['ArrayMaxDepth']`, etc.
-  ResolvedConfig['StrictAbiType'] extends true
+  ResolvedRegister['StrictAbiType'] extends true
   ? TAbiParameter['type'] extends infer TAbiType extends string
     ? Error<`Unknown type '${TAbiType}'.`>
     : never
