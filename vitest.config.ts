@@ -7,7 +7,6 @@ export default defineConfig({
       reporters: ['verbose'],
     },
     coverage: {
-      exclude: ['**/dist/**', '**/*.test.ts', '**/*.test-d.ts'],
       reporter: process.env.CI ? ['lcov'] : ['text', 'json', 'html'],
     },
   },
