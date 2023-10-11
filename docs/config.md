@@ -9,7 +9,7 @@ How to configure ABIType in userland or as a library author.
 
 ## Overview
 
-ABIType's types are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). Just install `abitype` (make sure versions match) and extend the `Config` interface either directly in your code or in a `d.ts` file (e.g. `abi.d.ts`):
+ABIType's types are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). Just install `abitype` (make sure versions match) and extend the `Register` interface either directly in your code or in a `d.ts` file (e.g. `abi.d.ts`):
 
 ```ts twoslash
 declare module 'abitype' {
