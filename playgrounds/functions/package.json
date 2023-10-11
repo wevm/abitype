@@ -7,6 +7,5 @@
   },
   "dependencies": {
     "abitype": "workspace:*"
-  },
-  "version": null
+  }
 }
