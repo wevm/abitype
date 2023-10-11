@@ -71,5 +71,14 @@
   },
   "contributors": ["awkweb.eth <t@wagmi.sh>", "jxom.eth <j@wagmi.sh>"],
   "funding": "https://github.com/sponsors/wagmi-dev",
-  "keywords": ["abi", "eth", "ethereum", "typescript", "web3"]
+  "keywords": [
+    "abi",
+    "eth",
+    "ethereum",
+    "typescript",
+    "types",
+    "web3",
+    "viem",
+    "wagmi"
+  ]
 }
