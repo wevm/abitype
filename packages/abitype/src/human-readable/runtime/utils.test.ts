@@ -543,6 +543,10 @@ test.each([
       'uint tokenId',
     ],
   },
+  {
+    params: ' ',
+    expected: [],
+  },
 ])('splitParameters($params)', ({ params, expected }) => {
   expect(splitParameters(params)).toEqual(expected)
 })

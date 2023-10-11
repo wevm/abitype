@@ -245,15 +245,7 @@ export function splitParameters(
   current = '',
   depth = 0,
 ): readonly string[] {
-  if (params === '') {
-    if (current === '') return result
-    if (depth !== 0) throw new InvalidParenthesisError({ current, depth })
-
-    result.push(current.trim())
-    return result
-  }
-
-  const length = params.length
+  const length = params.trim().length
   // biome-ignore lint/correctness/noUnreachable: recursive
   for (let i = 0; i < length; i++) {
     const char = params[i]
@@ -272,7 +264,11 @@ export function splitParameters(
     }
   }
 
-  return []
+  if (current === '') return result
+  if (depth !== 0) throw new InvalidParenthesisError({ current, depth })
+
+  result.push(current.trim())
+  return result
 }
 
 export function isSolidityType(
