@@ -7,6 +7,7 @@
     { "repo": "wagmi-dev/abitype" }
   ],
   "commit": false,
+  "ignore": ["default-register", "functions", "performance"],
   "updateInternalDependencies": "patch",
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true
