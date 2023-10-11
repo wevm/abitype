@@ -59,7 +59,6 @@
     "pre-commit": "pnpm format && pnpm lint:fix"
   },
   "knip": {
-    "ignore": ["vitest.workspace.ts"],
     "ignoreBinaries": ["dev"],
     "ignoreDependencies": ["only-allow"],
     "ignoreWorkspaces": [
@@ -75,8 +74,10 @@
         "entry": [
           "src/exports/{abis,index,zod}.ts!",
           "**/*.bench.ts",
+          "**/*.test.ts",
           "**/*.test-d.ts"
-        ]
+        ],
+        "ignoreDependencies": ["zod"]
       }
     }
   }
