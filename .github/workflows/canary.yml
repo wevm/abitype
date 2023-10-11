@@ -33,6 +33,8 @@ jobs:
         run: pnpm build
 
       - name: Publish to npm
-        run: npm publish --tag $(git branch --show-current | tr -cs '[:alnum:]-' '-' | tr '[:upper:]' '[:lower:]' | sed 's/-$//')
+        run: |
+          cd packages/abitype
+          npm publish --tag $(git branch --show-current | tr -cs '[:alnum:]-' '-' | tr '[:upper:]' '[:lower:]' | sed 's/-$//')
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
