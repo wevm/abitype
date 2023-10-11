@@ -1,0 +1,6 @@
+{
+  // This configuration is used for local development and type checking.
+  "extends": "./tsconfig.build.json",
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": []
+}

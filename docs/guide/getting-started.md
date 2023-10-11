@@ -13,11 +13,12 @@ This section will help you start using ABIType in your TypeScript project. You c
 ```bash [pnpm]
 pnpm add abitype
 ```
-
+```bash [bun]
+bun add abitype
+```
 ```bash [npm]
 npm i abitype
 ```
-
 ```bash [yarn]
 yarn add abitype
 ```
@@ -41,13 +42,14 @@ import { narrow } from 'abitype'
 const erc20Abi = narrow([...])
 ```
 
-Once your ABIs are set up correctly, you can use the exported [types](/api/types) and [utilities](/api/utilities) to work with them. You can also import already set-up ABIs from the `abitype/test` entrypoint to get started quickly.
+Once your ABIs are set up correctly, you can use the exported [types](/api/types) and [utilities](/api/utilities) to work with them. You can also import already set-up ABIs from the `abitype/abis` entrypoint to get started quickly.
 
 ```ts twoslash
 import { ExtractAbiFunctionNames } from 'abitype'
-import { erc20Abi } from 'abitype/test'
+import { erc20Abi } from 'abitype/abis'
 
 type Result = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
+//   ^?
 ```
 
 ## What's next?

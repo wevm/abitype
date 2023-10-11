@@ -1,6 +1,5 @@
-prefer-workspace-packages: true
 packages:
-  - '.'
   - 'docs'
-  - 'examples'
-  - 'playground'
+  - 'packages/*'
+  - 'packages/register-tests/*'
+  - 'playgrounds/*'

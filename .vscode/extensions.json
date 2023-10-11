@@ -1,7 +1,8 @@
 {
   "recommendations": [
-    "rome.rome",
+    "biomejs.biome",
     "orta.vscode-twoslash-queries",
-    "TypeHoles.ts-versions-switcher"
+    "TypeHoles.ts-versions-switcher",
+    "Vue.volar"
   ]
 }

@@ -7,16 +7,7 @@ export default defineConfig({
       reporters: ['verbose'],
     },
     coverage: {
-      exclude: [
-        'src/test/**',
-        'src/**/*.test.ts',
-        'src/**/index.ts',
-        'src/test.ts',
-      ],
-      reporter: ['text', 'json', 'html'],
+      reporter: process.env.CI ? ['lcov'] : ['text', 'json', 'html'],
     },
-    environment: 'node',
-    include: ['src/**/*.test.ts'],
-    setupFiles: ['./test/setup.ts'],
   },
 })

@@ -12,19 +12,18 @@ ABIType exports the [core types](/api/types) as [Zod](https://github.com/colinha
 Install the Zod peer dependency:
 
 ::: code-group
-
 ```bash [pnpm]
 pnpm add zod
 ```
-
+```bash [bun]
+bun add zod
+```
 ```bash [npm]
 npm i zod
 ```
-
 ```bash [yarn]
 yarn add zod
 ```
-
 :::
 
 ## Usage

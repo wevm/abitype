@@ -1,6 +1,7 @@
 name: Verify
 on:
   workflow_call:
+  workflow_dispatch:
 
 jobs:
   lint:
@@ -16,7 +17,18 @@ jobs:
         uses: ./.github/actions/install-dependencies
 
       - name: Lint code
-        run: pnpm lint
+        run: pnpm format && pnpm lint:fix
+
+      - name: Update package versions
+        run: pnpm version:update
+      
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit_message: 'chore: format'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
 
   build:
     name: Build
@@ -33,13 +45,19 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Publint
+        run: pnpm test:build
+
+      - name: Check for unused files, dependencies, and exports
+        run: pnpm knip --production --ignore-internal
+
   types:
     name: Types
     runs-on: ubuntu-latest
     timeout-minutes: 5
     strategy:
       matrix:
-        version: ['5.0.4', '5.1.3', 'latest']
+        version: ['5.0.4', '5.1.3', '5.2.2', 'latest']
 
     steps:
       - name: Clone repository
@@ -51,25 +69,24 @@ jobs:
       - name: Use `typescript@${{ matrix.version }}`
         run: pnpm add -D -w typescript@${{ matrix.version }}
 
-      - name: Build
-        run: pnpm build
+      - name: Link packages
+        run: pnpm preconstruct
         
       - name: Check types
         run: pnpm typecheck
 
       - name: Check types (--exactOptionalPropertyTypes false)
         run: pnpm typecheck:propertyTypes
-          
-      - name: Test types
-        run: pnpm test:typecheck
+
+      # Redundant with `pnpm typecheck`
+      # If Vitest adds special features in the future, e.g. type coverage, can add this back!
+      # - name: Test types
+      #   run: pnpm test:typecheck
 
   test:
     name: Test
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    strategy:
-      matrix:
-        version: ['5.0.4', '5.1.3', 'latest']
 
     steps:
       - name: Clone repository
@@ -78,13 +95,8 @@ jobs:
       - name: Install dependencies
         uses: ./.github/actions/install-dependencies
 
-      - name: Use `typescript@${{ matrix.version }}`
-        run: pnpm add -D -w typescript@${{ matrix.version }}
-
       - name: Run tests
         run: pnpm test:cov
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}

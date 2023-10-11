@@ -174,7 +174,7 @@ Edit the `playground/trace.ts` file to include whatever code you want to test an
 pnpm trace
 ```
 
-This outputs a `trace/trace.json` file. You can open that file in a trace analysis app, like [Perfetto](https://ui.perfetto.dev) or `chrome://tracing`.
+This outputs a `playgrounds/performance/out/trace.json` file. You can open that file in a trace analysis app, like [Perfetto](https://ui.perfetto.dev) or `chrome://tracing`.
 
 <div align="right">
   <a href="#advanced-guide">&uarr; back to top</a></b>

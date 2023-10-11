@@ -7,9 +7,8 @@ coverage
 dist
 node_modules
 tsconfig*.tsbuildinfo
-trace
 bench
-!examples/trace
+playgrounds/performance/out
 
 # local env files
 .env
@@ -18,3 +17,7 @@ bench
 .env.test.local
 .env.production.local
 .envrc
+
+# proxy packages
+packages/abitype/abis
+packages/abitype/zod
