@@ -9,6 +9,10 @@
   </a>
 </p>
 
+<p align="center">
+  Strict TypeScript types for Ethereum ABIs
+<p>
+
 <div align="center">
   <a href="https://www.npmjs.com/package/abitype">
     <picture>
@@ -32,6 +36,12 @@
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/endpoint?colorA=21262d&colorB=21262d&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wagmi-dev%2Fabitype%26since=daily">
       <img src="https://img.shields.io/endpoint?colorA=f6f8fa&colorB=f6f8fa&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wagmi-dev%2Fabitype%26since=daily" alt="Best of JS">
+    </picture>
+  </a>
+  <a href="https://app.codecov.io/gh/wagmi-dev/abitype">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/codecov/c/github/wagmi-dev/abitype?colorA=21262d&colorB=21262d">
+      <img src="https://img.shields.io/codecov/c/github/wagmi-dev/abitype?colorA=f6f8fa&colorB=f6f8fa" alt="Code coverage">
     </picture>
   </a>
 </div>
@@ -65,32 +75,24 @@ ABIType might be a good option for your project if:
 - You need to validate ABIs at [runtime](https://abitype.dev/api/zod.html) (e.g. after fetching from external resource).
 - You don’t want to set up a build process to generate types (e.g. TypeChain).
 
-## Install
-
-```bash
-pnpm add abitype
-```
-
-```bash
-npm i abitype
-```
-
-```bash
-yarn add abitype
-```
-
 ## Documentation
 
-For full documentation, visit [abitype.dev](https://abitype.dev).
+For documentation and guides, visit [abitype.dev](https://abitype.dev).
 
 ## Community
 
-If you have questions or need help, reach out to the community at the [ABIType GitHub Discussions](https://github.com/wagmi-dev/abitype/discussions).
+For help, discussion about best practices, or any other conversation that would benefit from being searchable:
 
-## Sponsor
+[Discuss ABIType on GitHub](https://github.com/wagmi-dev/abitype/discussions)
 
-If you find ABIType useful, please consider supporting development on [GitHub Sponsors](https://github.com/sponsors/wagmi-dev?metadata_campaign=abitype_readme) or sending crypto to `wagmi-dev.eth`. Thank you 🙏
+For casual chit-chat with others using the library:
+
+[Join the Wagmi Discord](https://discord.gg/SghfWBKexF)
+
+## Sponsors
+
+If you find ABIType useful or use it for work, please consider supporting development on [GitHub Sponsors](https://github.com/sponsors/wagmi-dev?metadata_campaign=abitype_readme) or sending crypto to `wagmi-dev.eth`. Thank you 🙏
 
 ## Contributing
 
-If you're interested in contributing to ABIType, please read our [contributing docs](https://github.com/wagmi-dev/abitype/blob/main/.github/CONTRIBUTING.md) **before submitting a pull request**.
+Contributions to ABIType are greatly appreciated! If you're interested in contributing to ABIType, please read the [Contributing Guide](https://github.com/wagmi-dev/abitype/blob/main/.github/CONTRIBUTING.md) **before submitting a pull request**.

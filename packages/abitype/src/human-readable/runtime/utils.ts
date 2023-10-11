@@ -291,6 +291,7 @@ export function isSolidityType(
 const protectedKeywordsRegex =
   /^(?:after|alias|anonymous|apply|auto|byte|calldata|case|catch|constant|copyof|default|defined|error|event|external|false|final|function|immutable|implements|in|indexed|inline|internal|let|mapping|match|memory|mutable|null|of|override|partial|private|promise|public|pure|reference|relocatable|return|returns|sizeof|static|storage|struct|super|supports|switch|this|true|try|typedef|typeof|var|view|virtual)$/
 
+/** @internal */
 export function isSolidityKeyword(name: string) {
   return (
     name === 'address' ||
@@ -304,6 +305,7 @@ export function isSolidityKeyword(name: string) {
   )
 }
 
+/** @internal */
 export function isValidDataLocation(
   type: string,
   isArray: boolean,
