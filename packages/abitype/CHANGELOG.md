@@ -1,5 +1,11 @@
 # abitype
 
+## 0.10.1
+
+### Patch Changes
+
+- [#200](https://github.com/wagmi-dev/abitype/pull/200) [`56f8201`](https://github.com/wagmi-dev/abitype/commit/56f820117c9038ee500c93a7dc887cdbf7c24ce2) Thanks [@mathieu-bour](https://github.com/mathieu-bour)! - Marked `Abi` Zod schema as `readonly`.
+
 ## 0.10.0
 
 ### Minor Changes

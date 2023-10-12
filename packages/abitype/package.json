@@ -1,7 +1,7 @@
 {
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "license": "MIT",
   "repository": "wagmi-dev/abitype",
   "scripts": {
