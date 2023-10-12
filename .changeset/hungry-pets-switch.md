@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-parse `Abi` with `zod` as `readonly` array
+Marked `Abi` Zod schema as `readonly`.
