@@ -5,18 +5,23 @@ import type {
   AbiConstructor,
   AbiError,
   AbiEvent,
+  AbiFallback,
+  AbiFunction,
   AbiParameter,
 } from './abi.js'
 import {
   customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
   erc20Abi,
+  wethAbi,
 } from './abis/json.js'
 import {
   Abi as AbiSchema,
   AbiConstructor as AbiConstructorSchema,
   AbiError as AbiErrorSchema,
   AbiEvent as AbiEventSchema,
+  AbiFallback as AbiFallbackSchema,
+  AbiFunction as AbiFunctionSchema,
   AbiParameter as AbiParameterSchema,
 } from './zod.js'
 
@@ -83,6 +88,54 @@ describe('Zod Types', () => {
     test('extends AbiEvent', () => {
       const parsed = AbiEventSchema.parse(approvalEvent)
       type Result = typeof parsed extends AbiEvent ? true : false
+      expectTypeOf<Result>().toEqualTypeOf<true>()
+    })
+  })
+
+  describe('AbiFunction', () => {
+    const approveFunction = erc20Abi[3]
+
+    test('assignable to AbiFunction', () => {
+      const parsed: AbiFunction = AbiFunctionSchema.parse(approveFunction)
+      type Result = typeof parsed extends AbiFunction ? true : false
+      expectTypeOf<Result>().toEqualTypeOf<true>()
+    })
+
+    test('extends AbiFunction', () => {
+      const parsed = AbiFunctionSchema.parse(approveFunction)
+      type Result = typeof parsed extends AbiFunction ? true : false
+      expectTypeOf<Result>().toEqualTypeOf<true>()
+    })
+  })
+
+  describe('AbiFallback', () => {
+    const approveFunction = wethAbi[11]
+
+    test('assignable to AbiFallback', () => {
+      const parsed: AbiFallback = AbiFallbackSchema.parse(approveFunction)
+      type Result = typeof parsed extends AbiFallback ? true : false
+      expectTypeOf<Result>().toEqualTypeOf<true>()
+    })
+
+    test('extends AbiFallback', () => {
+      const parsed = AbiFallbackSchema.parse(approveFunction)
+      type Result = typeof parsed extends AbiFallback ? true : false
+      expectTypeOf<Result>().toEqualTypeOf<true>()
+    })
+  })
+
+  describe('AbiFunction', () => {
+    const approveFunction = erc20Abi[3]
+
+    test('assignable to AbiFunction', () => {
+      const parsed: AbiFunction = AbiFunctionSchema.parse(approveFunction)
+      type Result = typeof parsed extends AbiFunction ? true : false
+      expectTypeOf<Result>().toEqualTypeOf<true>()
+    })
+
+    test('extends AbiFunction', () => {
+      const parsed = AbiFunctionSchema.parse(approveFunction)
+      type Result = typeof parsed extends AbiFunction ? true : false
       expectTypeOf<Result>().toEqualTypeOf<true>()
     })
   })

@@ -163,7 +163,7 @@ export type AbiConstructor = {
 /** ABI ["fallback"](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type */
 export type AbiFallback = {
   type: 'fallback'
-  inputs?: readonly [] | undefined
+  inputs?: readonly never[] | undefined
   /**
    * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
    * @see https://github.com/ethereum/solidity/issues/992
