@@ -1,5 +1,11 @@
 # abitype
 
+## 0.10.2
+
+### Patch Changes
+
+- [#205](https://github.com/wagmi-dev/abitype/pull/205) [`6b99d60`](https://github.com/wagmi-dev/abitype/commit/6b99d60dc19cf0ec673f176a3ae6a227ad14358a) Thanks [@frangio](https://github.com/frangio)! - Fixes an error with TypeScript 5.2.2 in CommonJS projects..
+
 ## 0.10.1
 
 ### Patch Changes
