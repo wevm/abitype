@@ -10,7 +10,8 @@
     "build:esm+types": "tsc --project tsconfig.build.json --module es2020 --outDir ./dist/esm --declaration --declarationMap --declarationDir ./dist/types && echo > ./dist/esm/package.json '{\"type\":\"module\",\"sideEffects\":false}'",
     "clean": "rm -rf dist tsconfig.tsbuildinfo abis zod",
     "test:build": "publint --strict",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "typeperf": "tsc --noEmit --extendedDiagnostics --composite false --incremental false"
   },
   "files": [
     "dist",
@@ -48,12 +49,8 @@
   },
   "typesVersions": {
     "*": {
-      "abis": [
-        "./dist/types/exports/abis.d.ts"
-      ],
-      "zod": [
-        "./dist/types/exports/zod.d.ts"
-      ]
+      "abis": ["./dist/types/exports/abis.d.ts"],
+      "zod": ["./dist/types/exports/zod.d.ts"]
     }
   },
   "peerDependencies": {
@@ -73,10 +70,7 @@
     "ethers": "^6.5.1",
     "zod": "^3.22.4"
   },
-  "contributors": [
-    "awkweb.eth <t@wagmi.sh>",
-    "jxom.eth <j@wagmi.sh>"
-  ],
+  "contributors": ["awkweb.eth <t@wagmi.sh>", "jxom.eth <j@wagmi.sh>"],
   "funding": "https://github.com/sponsors/wagmi-dev",
   "keywords": [
     "abi",
