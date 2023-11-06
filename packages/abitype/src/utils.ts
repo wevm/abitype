@@ -81,39 +81,59 @@ export type BitsTypeLookup = {
 export type AbiParameterToPrimitiveType<
   TAbiParameter extends AbiParameter | { name: string; type: unknown },
   TAbiParameterKind extends AbiParameterKind = AbiParameterKind,
-> = TAbiParameter['type'] extends Exclude<
   // 1. Check to see if type is basic (not tuple or array) and can be looked up immediately.
-  AbiType,
-  SolidityTuple | SolidityArray
->
+> = TAbiParameter['type'] extends AbiBasicType
   ? AbiTypeToPrimitiveType<TAbiParameter['type'], TAbiParameterKind>
   : // 2. Check if type is tuple and covert each component
   TAbiParameter extends {
       type: SolidityTuple
       components: infer TComponents extends readonly AbiParameter[]
     }
-  ? TComponents extends readonly []
-    ? []
-    : _HasUnnamedAbiParameter<TComponents> extends true
-    ? // Has unnamed tuple parameters so return as array
-      readonly [
-        ...{
-          [K in keyof TComponents]: AbiParameterToPrimitiveType<
-            TComponents[K],
-            TAbiParameterKind
-          >
-        },
-      ]
-    : // All tuple parameters are named so return as object
-      {
-        [Component in
-          TComponents[number] as Component extends {
-            name: string
-          }
-            ? Component['name']
-            : never]: AbiParameterToPrimitiveType<Component, TAbiParameterKind>
-      }
+  ? AbiComponentsToPrimitiveType<TComponents, TAbiParameterKind>
   : // 3. Check if type is array.
+  MaybeExtractArrayParameterType<TAbiParameter['type']> extends [
+      infer Head extends string,
+      infer Size,
+    ]
+  ? AbiArrayToPrimitiveType<TAbiParameter, TAbiParameterKind, Head, Size>
+  : // 4. If type is not basic, tuple, or array, we don't know what the type is.
+  // This can happen when a fixed-length array is out of range (`Size` doesn't exist in `SolidityFixedArraySizeLookup`),
+  // the array has depth greater than `Config['ArrayMaxDepth']`, etc.
+  ResolvedRegister['StrictAbiType'] extends true
+  ? Error<`Unknown type '${TAbiParameter['type'] & string}'.`>
+  : // 5. If we've gotten this far, let's check for errors in tuple components.
+  // (Happens for recursive tuple typed data types.)
+  TAbiParameter extends { components: Error<string> }
+  ? TAbiParameter['components']
+  : unknown
+
+type AbiBasicType = Exclude<AbiType, SolidityTuple | SolidityArray>
+
+type AbiComponentsToPrimitiveType<
+  Components extends readonly AbiParameter[],
+  TAbiParameterKind extends AbiParameterKind,
+> = Components extends readonly []
+  ? []
+  : undefined | '' extends Components[number]['name']
+  ? // Has unnamed tuple parameters so return as array
+    readonly [
+      ...{
+        [K in keyof Components]: AbiParameterToPrimitiveType<
+          Components[K],
+          TAbiParameterKind
+        >
+      },
+    ]
+  : // All tuple parameters are named so return as object
+    {
+      [Component in
+        Components[number] as Component['name'] & {}]: AbiParameterToPrimitiveType<
+        Component,
+        TAbiParameterKind
+      >
+    }
+
+type MaybeExtractArrayParameterType<T> =
   /**
    * First, infer `Head` against a known size type (either fixed-length array value or `""`).
    *
@@ -122,59 +142,39 @@ export type AbiParameterToPrimitiveType<
    * | `string[]`      | `string`     |
    * | `string[][][3]` | `string[][]` |
    */
-  TAbiParameter['type'] extends `${infer Head}[${
-      | ''
-      | `${SolidityFixedArrayRange}`}]`
-  ? /**
-     * Then, infer in the opposite direction, using the known `Head` to infer the exact `Size` value.
-     *
-     * | Input        | Size |
-     * | ------------ | ---- |
-     * | `${Head}[]`  | `""` |
-     * | `${Head}[3]` | `3`  |
-     */
-    TAbiParameter['type'] extends `${Head}[${infer Size}]`
-    ? // Check if size is within range for fixed-length arrays, if so create a tuple.
-      // Otherwise, create an array. Tuples and arrays are created with `[${Size}]` popped off the end
-      // and passed back into the function to continue reduing down to the basic types found in Step 1.
-      Size extends keyof SolidityFixedArraySizeLookup
-      ? Tuple<
-          AbiParameterToPrimitiveType<
-            Merge<TAbiParameter, { type: Head }>,
-            TAbiParameterKind
-          >,
-          SolidityFixedArraySizeLookup[Size]
-        >
-      : readonly AbiParameterToPrimitiveType<
-          Merge<TAbiParameter, { type: Head }>,
-          TAbiParameterKind
-        >[]
-    : never
-  : // 4. If type is not basic, tuple, or array, we don't know what the type is.
-  // This can happen when a fixed-length array is out of range (`Size` doesn't exist in `SolidityFixedArraySizeLookup`),
-  // the array has depth greater than `Config['ArrayMaxDepth']`, etc.
-  ResolvedRegister['StrictAbiType'] extends true
-  ? TAbiParameter['type'] extends infer TAbiType extends string
-    ? Error<`Unknown type '${TAbiType}'.`>
-    : never
-  : // 5. If we've gotten this far, let's check for errors in tuple components.
-  // (Happens for recursive tuple typed data types.)
-  TAbiParameter extends { components: Error<string> }
-  ? TAbiParameter['components']
-  : unknown
+  T extends `${infer Head}[${'' | `${SolidityFixedArrayRange}`}]`
+    ? //   * Then, infer in the opposite direction, using the known `Head` to infer the exact `Size` value.
+      //   *
+      //   * | Input        | Size |
+      //   * | ------------ | ---- |
+      //   * | `${Head}[]`  | `""` |
+      //   * | `${Head}[3]` | `3`  |
+      //   */
+      T extends `${Head}[${infer Size}]`
+      ? [Head, Size]
+      : undefined
+    : undefined
 
-// TODO: Speed up by returning immediately as soon as named parameter is found.
-type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
-  TAbiParameters extends readonly [
-    infer Head extends AbiParameter,
-    ...infer Tail extends readonly AbiParameter[],
-  ]
-    ? Head extends { name: string }
-      ? Head['name'] extends ''
-        ? true
-        : _HasUnnamedAbiParameter<Tail>
-      : true
-    : false
+type AbiArrayToPrimitiveType<
+  TAbiParameter extends AbiParameter | { name: string; type: unknown },
+  TAbiParameterKind extends AbiParameterKind,
+  Head extends string,
+  Size,
+> = Size extends keyof SolidityFixedArraySizeLookup
+  ? // Check if size is within range for fixed-length arrays, if so create a tuple.
+    Tuple<
+      AbiParameterToPrimitiveType<
+        Merge<TAbiParameter, { type: Head }>,
+        TAbiParameterKind
+      >,
+      SolidityFixedArraySizeLookup[Size]
+    >
+  : // Otherwise, create an array. Tuples and arrays are created with `[${Size}]` popped off the end
+    // and passed back into the function to continue reduing down to the basic types found in Step 1.
+    readonly AbiParameterToPrimitiveType<
+      Merge<TAbiParameter, { type: Head }>,
+      TAbiParameterKind
+    >[]
 
 /**
  * Converts array of {@link AbiParameter} to corresponding TypeScript primitive types.
