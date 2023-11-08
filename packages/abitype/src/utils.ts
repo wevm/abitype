@@ -394,7 +394,8 @@ export type TypedDataToPrimitiveTypes<
       ? AbiParameterToPrimitiveType<K2, TAbiParameterKind>
       : Error<`Cannot convert unknown type '${K2['type']}' to primitive type.`>
   }
-}
+  // Ensure the result is "Prettied"
+} & unknown
 
 type _TypedDataParametersToAbiParameters<
   TTypedDataParameters extends readonly TypedDataParameter[],
