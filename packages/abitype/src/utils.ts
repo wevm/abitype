@@ -170,7 +170,7 @@ type AbiArrayToPrimitiveType<
       SolidityFixedArraySizeLookup[Size]
     >
   : // Otherwise, create an array. Tuples and arrays are created with `[${Size}]` popped off the end
-    // and passed back into the function to continue reduing down to the basic types found in Step 1.
+    // and passed back into the function to continue reducing down to the basic types found in Step 1.
     readonly AbiParameterToPrimitiveType<
       Merge<TAbiParameter, { type: Head }>,
       TAbiParameterKind
