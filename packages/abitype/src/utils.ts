@@ -114,21 +114,24 @@ type AbiComponentsToPrimitiveType<
   TAbiParameterKind extends AbiParameterKind,
 > = Components extends readonly []
   ? []
-  : undefined | '' extends Components[number]['name']
-  ? // Has unnamed tuple parameters so return as array
-    readonly [
-      ...{
-        [K in keyof Components]: AbiParameterToPrimitiveType<
-          Components[K],
-          TAbiParameterKind
-        >
-      },
-    ]
-  : // All tuple parameters are named so return as object
+  : // Compare the original set of names to a "validated"
+  // set where each name is coerced to a string and undefined|"" are excluded
+  Components[number]['name'] extends Exclude<
+      Components[number]['name'] & string,
+      undefined | ''
+    >
+  ? // If all the original names are present, all tuple parameters are named so return as object
     {
       [Component in
         Components[number] as Component['name'] & {}]: AbiParameterToPrimitiveType<
         Component,
+        TAbiParameterKind
+      >
+    }
+  : // Otherwise, has unnamed tuple parameters so return as array
+    {
+      [I in keyof Components]: AbiParameterToPrimitiveType<
+        Components[I],
         TAbiParameterKind
       >
     }
