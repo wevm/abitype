@@ -9,6 +9,8 @@ node_modules
 tsconfig*.tsbuildinfo
 bench
 playgrounds/performance/out
+# temporary type-testing cache
+.attest
 
 # local env files
 .env
