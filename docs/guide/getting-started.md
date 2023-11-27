@@ -60,3 +60,4 @@ After setting up your project with ABIType, you are ready to dive in further! He
 - Follow along with a [walkthrough](/guide/walkthrough) on building a type-safe `readContract` function.
 - Check out comparisons between features in [ABIType and TypeChain](/guide/comparisons#typechain) as well as [ABIType and ethers.js](/guide/comparisons#ethers-js).
 - Make reading and writing ABIs more human with [human-readable ABI support](/api/human).
+- Checkout our own [playground](https://github.com/wevm/abitype/tree/main/playgrounds/functions/src) full of examples on how to apply it on your projects. Including creating a wrapper for ethers contracts.
