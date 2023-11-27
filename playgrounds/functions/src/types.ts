@@ -26,7 +26,7 @@ export type ContractParameters<
     | (Abi extends abi ? string : never) // fallback if `abi` is declared as `Abi`
 } & GetArgs<abi, functionName, args>
 
-type GetArgs<
+export type GetArgs<
   abi extends Abi | readonly unknown[] = Abi, // `readonly unknown[]` allows for non-const asserted types
   functionName extends string = string,
   args extends readonly unknown[] | undefined = readonly [],
@@ -104,6 +104,14 @@ export type ContractReturnType<
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export type UnionToIntersection<U> = (
+  U extends unknown
+    ? (arg: U) => 0
+    : never
+) extends (arg: infer I) => 0
+  ? I
+  : never
+
 type IsUnion<T, C = T> = T extends C ? ([C] extends [T] ? false : true) : never
 
 type UnionToTuple<U, Last = LastInUnion<U>> = [U] extends [never]
@@ -113,13 +121,6 @@ type LastInUnion<U> = UnionToIntersection<
   U extends unknown ? (x: U) => 0 : never
 > extends (x: infer L) => 0
   ? L
-  : never
-type UnionToIntersection<U> = (
-  U extends unknown
-    ? (arg: U) => 0
-    : never
-) extends (arg: infer I) => 0
-  ? I
   : never
 
 type PartialBy<TType, TKeys extends keyof TType> = ExactPartial<
@@ -165,3 +166,5 @@ export type DeepPartial<
   : T extends object
   ? { [P in keyof T]?: DeepPartial<T[P], MaxDepth, [...Depth, 1]> | undefined }
   : T
+
+export type IsUnknown<T> = unknown extends T ? true : false

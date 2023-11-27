@@ -111,6 +111,10 @@ importers:
       abitype:
         specifier: workspace:*
         version: link:../../packages/abitype
+    devDependencies:
+      ethers:
+        specifier: ^6.5.1
+        version: 6.5.1
 
   playgrounds/performance:
     devDependencies:
