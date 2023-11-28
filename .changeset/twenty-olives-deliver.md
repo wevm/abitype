@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-Fix typos
+Fixed typos
