@@ -89,7 +89,7 @@ yarn add abitype
 
 ## Sponsor
 
-If you find ABIType useful, please consider supporting development on [GitHub Sponsors](https://github.com/sponsors/wagmi-dev?metadata_campaign=abitype_docs) or sending crypto to `wagmi-dev.eth`. Thank you 🙏
+If you find ABIType useful, please consider supporting development on [GitHub Sponsors](https://github.com/sponsors/wevm?metadata_campaign=abitype_docs) or sending crypto to `wagmi-dev.eth`. Thank you 🙏
 
 ## Community
 

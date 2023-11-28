@@ -91,7 +91,7 @@ For casual chit-chat with others using the library:
 
 ## Sponsors
 
-If you find ABIType useful or use it for work, please consider supporting development on [GitHub Sponsors](https://github.com/sponsors/wagmi-dev?metadata_campaign=abitype_readme) or sending crypto to `wagmi-dev.eth`. Thank you 🙏
+If you find ABIType useful or use it for work, please consider supporting development on [GitHub Sponsors](https://github.com/sponsors/wevm?metadata_campaign=abitype_readme) or sending crypto to `wagmi-dev.eth`. Thank you 🙏
 
 ## Contributing
 
