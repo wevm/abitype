@@ -1,5 +1,11 @@
 # abitype
 
+## 0.10.3
+
+### Patch Changes
+
+- [#212](https://github.com/wevm/abitype/pull/212) [`1a1a114`](https://github.com/wevm/abitype/commit/1a1a1149366912f6a6650f0754856928c89105c4) Thanks [@shuoer86](https://github.com/shuoer86)! - Fixed typos
+
 ## 0.10.2
 
 ### Patch Changes
