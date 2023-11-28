@@ -1,5 +1,0 @@
----
-"abitype": patch
----
-
-Fixed typos
