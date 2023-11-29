@@ -2,11 +2,11 @@
 
 Thanks for your interest in contributing to ABIType! Please take a moment to review this document **before submitting a pull request.**
 
-If you want to contribute, but aren't sure where to start, you can create a [new discussion](https://github.com/wagmi-dev/abitype/discussions).
+If you want to contribute, but aren't sure where to start, you can create a [new discussion](https://github.com/wevm/abitype/discussions).
 
 > **Note** **Please ask first before starting work on any significant new features.**
 >
-> It's never a fun experience to have your pull request declined after investing time and effort into a new feature. To avoid this from happening, we request that contributors create a [feature request](https://github.com/wagmi-dev/abitype/discussions/new?category=ideas) to first discuss any API changes or significant new ideas.
+> It's never a fun experience to have your pull request declined after investing time and effort into a new feature. To avoid this from happening, we request that contributors create a [feature request](https://github.com/wevm/abitype/discussions/new?category=ideas) to first discuss any API changes or significant new ideas.
 
 <br>
 
@@ -39,13 +39,13 @@ This guide covers more advanced topics. Pick the topics based on your needs.
 To start contributing to the project, clone it to your local machine using git:
 
 ```bash
-git clone https://github.com/wagmi-dev/abitype.git
+git clone https://github.com/wevm/abitype.git
 ```
 
 Or the [GitHub CLI](https://cli.github.com):
 
 ```bash
-gh repo clone wagmi-dev/abitype
+gh repo clone wevm/abitype
 ```
 
 <div align="right">
@@ -160,7 +160,7 @@ The first time a PR with a changeset is merged after a release, a new PR will au
 
 ### Creating a snapshot release
 
-If a PR has changesets, you can create a [snapshot release](https://github.com/changesets/changesets/blob/main/docs/snapshot-releases.md) by [manually dispatching](https://github.com/wagmi-dev/abitype/actions/workflows/snapshot.yml) the Snapshot workflow. This publishes a tagged version to npm with the PR branch name and timestamp.
+If a PR has changesets, you can create a [snapshot release](https://github.com/changesets/changesets/blob/main/docs/snapshot-releases.md) by [manually dispatching](https://github.com/wevm/abitype/actions/workflows/snapshot.yml) the Snapshot workflow. This publishes a tagged version to npm with the PR branch name and timestamp.
 
 <div align="right">
   <a href="#advanced-guide">&uarr; back to top</a></b>
