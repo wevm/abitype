@@ -97,7 +97,7 @@ export default withTwoslash(
       sidebar: getSidebar(),
       siteTitle: false,
       socialLinks: [
-        { icon: 'twitter', link: 'https://twitter.com/wagmi_sh' },
+        { icon: 'twitter', link: 'https://twitter.com/wevm_dev' },
         { icon: 'github', link: 'https://github.com/wevm/abitype' },
       ],
     },
