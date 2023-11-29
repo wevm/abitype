@@ -64,7 +64,7 @@ export default withTwoslash(
         indexName: 'abitype',
       },
       editLink: {
-        pattern: 'https://github.com/wagmi-dev/abitype/edit/main/docs/:path',
+        pattern: 'https://github.com/wevm/abitype/edit/main/docs/:path',
         text: 'Suggest changes to this page',
       },
       footer: {
@@ -84,11 +84,11 @@ export default withTwoslash(
           items: [
             {
               text: 'Release Notes ',
-              link: 'https://github.com/wagmi-dev/abitype/releases',
+              link: 'https://github.com/wevm/abitype/releases',
             },
             {
               text: 'Contributing ',
-              link: 'https://github.com/wagmi-dev/abitype/blob/main/.github/CONTRIBUTING.md',
+              link: 'https://github.com/wevm/abitype/blob/main/.github/CONTRIBUTING.md',
             },
           ],
         },
@@ -98,7 +98,7 @@ export default withTwoslash(
       siteTitle: false,
       socialLinks: [
         { icon: 'twitter', link: 'https://twitter.com/wagmi_sh' },
-        { icon: 'github', link: 'https://github.com/wagmi-dev/abitype' },
+        { icon: 'github', link: 'https://github.com/wevm/abitype' },
       ],
     },
     title: 'ABIType: Strict TypeScript types for Ethereum ABIs',

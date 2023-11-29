@@ -3,8 +3,8 @@
 <p align="center">
   <a href="https://abitype.dev">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-dark.svg">
-      <img alt="ABIType logo" src="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-light.svg" width="auto" height="45">
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wevm/abitype/main/.github/logo-dark.svg">
+      <img alt="ABIType logo" src="https://raw.githubusercontent.com/wevm/abitype/main/.github/logo-light.svg" width="auto" height="45">
     </picture>
   </a>
 </p>
@@ -26,7 +26,7 @@
       <img src="https://img.shields.io/npm/dm/abitype?colorA=f6f8fa&colorB=f6f8fa&style=flat" alt="Downloads per month">
     </picture>
   </a>
-  <a href="https://github.com/wagmi-dev/abitype/blob/main/LICENSE">
+  <a href="https://github.com/wevm/abitype/blob/main/LICENSE">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/npm/l/abitype?colorA=21262d&colorB=21262d&style=flat">
       <img src="https://img.shields.io/npm/l/abitype?colorA=f6f8fa&colorB=f6f8fa&style=flat" alt="MIT License">
@@ -34,14 +34,14 @@
   </a>
   <a href="https://bestofjs.org/projects/abitype">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/endpoint?colorA=21262d&colorB=21262d&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wagmi-dev%2Fabitype%26since=daily">
-      <img src="https://img.shields.io/endpoint?colorA=f6f8fa&colorB=f6f8fa&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wagmi-dev%2Fabitype%26since=daily" alt="Best of JS">
+      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/endpoint?colorA=21262d&colorB=21262d&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wevm%2Fabitype%26since=daily">
+      <img src="https://img.shields.io/endpoint?colorA=f6f8fa&colorB=f6f8fa&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wevm%2Fabitype%26since=daily" alt="Best of JS">
     </picture>
   </a>
-  <a href="https://app.codecov.io/gh/wagmi-dev/abitype">
+  <a href="https://app.codecov.io/gh/wevm/abitype">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/codecov/c/github/wagmi-dev/abitype?colorA=21262d&colorB=21262d">
-      <img src="https://img.shields.io/codecov/c/github/wagmi-dev/abitype?colorA=f6f8fa&colorB=f6f8fa" alt="Code coverage">
+      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/codecov/c/github/wevm/abitype?colorA=21262d&colorB=21262d">
+      <img src="https://img.shields.io/codecov/c/github/wevm/abitype?colorA=f6f8fa&colorB=f6f8fa" alt="Code coverage">
     </picture>
   </a>
 </div>
@@ -83,7 +83,7 @@ For documentation and guides, visit [abitype.dev](https://abitype.dev).
 
 For help, discussion about best practices, or any other conversation that would benefit from being searchable:
 
-[Discuss ABIType on GitHub](https://github.com/wagmi-dev/abitype/discussions)
+[Discuss ABIType on GitHub](https://github.com/wevm/abitype/discussions)
 
 For casual chit-chat with others using the library:
 
@@ -91,8 +91,8 @@ For casual chit-chat with others using the library:
 
 ## Sponsors
 
-If you find ABIType useful or use it for work, please consider supporting development on [GitHub Sponsors](https://github.com/sponsors/wevm?metadata_campaign=abitype_readme) or sending crypto to `wagmi-dev.eth`. Thank you 🙏
+If you find ABIType useful or use it for work, please consider supporting development on [GitHub Sponsors](https://github.com/sponsors/wevm?metadata_campaign=abitype_readme) or sending crypto to `wevm.eth`. Thank you 🙏
 
 ## Contributing
 
-Contributions to ABIType are greatly appreciated! If you're interested in contributing to ABIType, please read the [Contributing Guide](https://github.com/wagmi-dev/abitype/blob/main/.github/CONTRIBUTING.md) **before submitting a pull request**.
+Contributions to ABIType are greatly appreciated! If you're interested in contributing to ABIType, please read the [Contributing Guide](https://github.com/wevm/abitype/blob/main/.github/CONTRIBUTING.md) **before submitting a pull request**.
