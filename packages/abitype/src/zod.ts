@@ -26,7 +26,20 @@ export const Address = z.string().transform((val, ctx) => {
     })
   }
 
-  return val as AddressType
+  return val as `0x${string}`
+})
+
+export const Hex = z.string().transform((val, ctx) => {
+  const regex = /^0x[0-9a-fA-F]*$/
+
+  if (!regex.test(val)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Invalid Hex ${val}`,
+    })
+  }
+
+  return val as `0x${string}`
 })
 
 // From https://docs.soliditylang.org/en/latest/abi-spec.html#types
