@@ -26,7 +26,7 @@ export const Address = z.string().transform((val, ctx) => {
     })
   }
 
-  return val as `0x${string}`
+  return val as AddressType
 })
 
 export const Hex = z.string().transform((val, ctx) => {
