@@ -1,15 +1,10 @@
----
-description: "Quickly add ABIType to your TypeScript project."
-title: 'Getting Started'
----
-
-# Getting Started
+# Getting Started [Quickly add ABIType to your TypeScript project]
 
 This section will help you start using ABIType in your TypeScript project. You can also try ABIType online in a [TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQB4ygQwMYwIIBGwAYgK4B2uwE5ANCulroSRVTQHKYgCmAzvRYAFTFl4weUPgBUIQqKGAxgANx7SAnmH5wAvnABmUCCDgByTERhaeZgFChIsRHEnYATAAYWew8dMWVjYA9BJ8MPZ21tpwZJTKnNw6ALwMGDj4RHHs5Fy8fAA80TwQBq5QHt5E9GYqwDwA7mYAfHbBwXCdAHoA-HDFsWwJuUl8cKkARHwaIAQQADYTcAA+cBPkSUurE5jz8xANmJQ8W2sEu0fYPADyBqcTACY82KC7fPcwEDC7AMqkYGB5hoJnYojY4NIsOQ+AZJABJchgUgwTTaMapYSiJISKSyeSKZRqVH8Ap2TrtOC9frgyFHGHwxHI4nouBQHiYB40IFwADaAANPKgACQIcIKcgAc10fPoRAlwHIMAAumS0kxMqx4tRyEUbKVypUWDV0tDYVAWjyzAqkTA+GYVa0gA).
 
 ## Install
 
-::: code-group
+:::code-group
 ```bash [pnpm]
 pnpm add abitype
 ```
@@ -24,7 +19,7 @@ yarn add abitype
 ```
 :::
 
-::: info TypeScript Version
+:::info[TypeScript Version]
 ABIType requires `typescript@>=5.0.4`.
 :::
 

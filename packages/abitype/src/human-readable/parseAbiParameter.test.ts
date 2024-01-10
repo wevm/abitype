@@ -16,7 +16,7 @@ test('parseAbiParameter', () => {
     `
     "Failed to parse ABI parameter.
 
-    Docs: https://abitype.dev/api/human.html#parseabiparameter-1
+    Docs: https://abitype.dev/api/human#parseabiparameter-1
     Details: parseAbiParameter([])
     Version: abitype@x.y.z"
   `,
@@ -27,7 +27,7 @@ test('parseAbiParameter', () => {
     `
     "Failed to parse ABI parameter.
 
-    Docs: https://abitype.dev/api/human.html#parseabiparameter-1
+    Docs: https://abitype.dev/api/human#parseabiparameter-1
     Details: parseAbiParameter([
       \\"struct Foo { string name; }\\"
     ])

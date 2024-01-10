@@ -1,6 +1,5 @@
 ---
 description: 'Types covering the Contract ABI and EIP-712 Typed Data Specifications.'
-title: 'Types'
 ---
 
 # Types

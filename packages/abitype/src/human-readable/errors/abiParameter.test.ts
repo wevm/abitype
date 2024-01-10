@@ -16,7 +16,7 @@ test('InvalidAbiParamterError', () => {
   ).toMatchInlineSnapshot(`
     [InvalidAbiParameterError: Failed to parse ABI parameter.
 
-    Docs: https://abitype.dev/api/human.html#parseabiparameter-1
+    Docs: https://abitype.dev/api/human#parseabiparameter-1
     Details: parseAbiParameter("address owner")
     Version: abitype@x.y.z]
   `)
@@ -28,7 +28,7 @@ test('InvalidAbiParamtersError', () => {
   ).toMatchInlineSnapshot(`
     [InvalidAbiParametersError: Failed to parse ABI parameters.
 
-    Docs: https://abitype.dev/api/human.html#parseabiparameters-1
+    Docs: https://abitype.dev/api/human#parseabiparameters-1
     Details: parseAbiParameters("address owner")
     Version: abitype@x.y.z]
   `)

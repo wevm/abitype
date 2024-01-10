@@ -1,8 +1,3 @@
----
-description: "Let's use ABIType to create a type-safe function that calls \"read\" contract methods. We'll infer function names, argument types, and return types from a user-provided ABI, and make sure it works for function overloads."
-title: 'Walkthrough'
----
-
 # Walkthrough
 
 Let's use ABIType to create a type-safe function that calls "read" contract methods. We'll infer function names, argument types, and return types from a user-provided ABI, and make sure it works for function overloads.
@@ -25,8 +20,9 @@ declare function readContract(config: {
 
 The function accepts a `config` object which includes the ABI, function name, and arguments. The return type is `unknown` since we don't know what the function will return quite yet.[^2] Next, let's call the function using the following values:
 
-::: code-group
-```ts twoslash [readContract.ts]
+:::code-group
+
+```ts [readContract.ts] twoslash
 // @filename: abi.ts
 export const abi = [
   {
@@ -122,6 +118,7 @@ export const abi = [
   },
 ] as const
 ```
+
 :::
 
 ## 2. Adding inference to `functionName`
@@ -195,7 +192,7 @@ First, we create two generics `TAbi` and `TFunctionName`, and constrain their ty
 If you are following along in a TypeScript Playground or editor, you can try various values for `functionName`. `functionName` will autocomplete and only accept `'balanceOf' | 'tokenURI'`. You can also try renaming the function names in `abi` and types will update as well.
 
 ```ts twoslash
-// @errors: 2322 1002
+// @noErrors
 // @filename: abi.ts
 export const abi = [
   {
@@ -247,12 +244,12 @@ declare function readContract<
   functionName: TFunctionName | ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>
   args: readonly unknown[]
 }): unknown
-// ---cut---
 
+// ---cut---
 const res = readContract({
   abi,
-  functionName: '
-  //             ^|
+  functionName: ' 
+//               ^|
 })
 ```
 
@@ -402,6 +399,8 @@ declare function readContract<
 
 const res = readContract({
   //  ^?
+
+  
   abi,
   functionName: 'balanceOf',
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
