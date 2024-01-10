@@ -1,9 +1,4 @@
----
-description: "Comparisons between ABIType's features and features from similar libraries."
-title: 'Comparisons'
----
-
-# Comparisons
+# Comparisons [Comparisons between ABIType's features and features from similar libraries]
 
 No other library does what ABIType does (inferring TypeScript types from ABIs and EIP-712 Typed Data), but there are some similarities with other libraries. This page compares ABIType to other libraries that are similar in some way.
 
@@ -21,7 +16,7 @@ Below is a comparison of the libraries's type-level features:
 | ABI Source      | Path(s) to CLI command                   | Directly reference in code |
 | Type Generation | Iterates through ABIs and builds strings | Static from type-level     |
 
-::: info OPINION
+:::info[OPINION]
 If you are a library author looking to support type inference and autocomplete based on ABIs and EIP-721 Typed Data, you are better off writing your code using ABIType so users don't need to set up anything to get type-safety (e.g. install TypeChain, set up build step).
 :::
 
@@ -35,9 +30,9 @@ Below is a comparison of the runtime functions from ethers.js and ABIType for pa
 
 Parses a human-readable ABI into a JSON ABI.
 
-::: code-group
+:::code-group
 
-```ts twoslash [abitype]
+```ts [abitype] twoslash
 import { parseAbi } from 'abitype'
 
 const abi = parseAbi([
@@ -46,9 +41,30 @@ const abi = parseAbi([
 ])
 abi
 //^?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```
 
-```ts twoslash [abitype (struct)]
+```ts [abitype (struct)] twoslash
 import { parseAbi } from 'abitype'
 
 const abi = parseAbi([
@@ -58,9 +74,30 @@ const abi = parseAbi([
 ])
 abi
 //^?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```
 
-```ts twoslash [ethers@5]
+```ts [ethers@5] twoslash 
 import { Interface } from '@ethersproject/abi'
 
 const iface = new Interface([
@@ -69,9 +106,10 @@ const iface = new Interface([
 ])
 const abi = iface.fragments
 //    ^?
+
 ```
 
-```ts twoslash [ethers@6]
+```ts [ethers@6] twoslash 
 import { Interface } from 'ethers'
 
 const iface = new Interface([
@@ -80,12 +118,13 @@ const iface = new Interface([
 ])
 const abi = iface.fragments
 //    ^?
+
 ```
 
 :::
 
 - ABIType returns inferred ABI, while ethers.js just returns `readonly Fragment[]`
-- ABIType supports [structs](/api/human.html#structs) as signatures and inline tuples (e.g. `(string name, uint256 age)`).
+- ABIType supports [structs](/api/human#structs) as signatures and inline tuples (e.g. `(string name, uint256 age)`).
 - ethers.js does not support struct signatures, but does support inline tuples with the optional `tuple` prefix keyword.
 - ABIType supports mixed named and unnamed parameters, while ethers.js only supports either all named or all unnamed parameters.
 
@@ -93,31 +132,54 @@ const abi = iface.fragments
 
 Parses a human-readable ABI item into a JSON ABI item.
 
-::: code-group
+:::code-group
 
-```ts twoslash [abitype]
+```ts [abitype] twoslash
 import { parseAbiItem } from 'abitype'
 
 const abiItem = parseAbiItem(
   //  ^?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   'function name((string name, uint256 age) foo, uint256 tokenId)',
 )
 ```
 
-```ts twoslash [ethers@5]
+```ts [ethers@5] twoslash 
 import { Fragment } from '@ethersproject/abi'
 
 const abiItem = Fragment.from(
   //  ^?
+
+
   'function name(tuple(string name, uint256 age) foo, uint256 tokenId)',
 )
 ```
 
-```ts twoslash [ethers@6]
+```ts [ethers@6] twoslash 
 import { Fragment } from 'ethers'
 
 const abiItem = Fragment.from(
   //  ^?
+
+  
   'function name(tuple(string name, uint256 age) foo, uint256 tokenId)',
 )
 ```
@@ -148,23 +210,26 @@ abitype - src/human-readable/parseAbiItem.bench.ts > comparison
 
 Parses a human-readable ABI parameter into a JSON ABI parameter.
 
-::: code-group
+:::code-group
 
-```ts twoslash [abitype]
+```ts [abitype] twoslash
 import { parseAbiParameter } from 'abitype'
 
 const abiParameter = parseAbiParameter('string foo')
 //    ^? 
+
+
+
 ```
 
-```ts twoslash [ethers@5]
+```ts [ethers@5] twoslash
 import { ParamType } from '@ethersproject/abi'
 
 const abiParameter = ParamType.from('string foo')
 //    ^? 
 ```
 
-```ts twoslash [ethers@6]
+```ts [ethers@6] twoslash
 import { ParamType } from 'ethers'
 
 const abiParameter = ParamType.from('string foo')
@@ -197,9 +262,9 @@ abitype - src/human-readable/parseAbiParameter.bench.ts > Parse basic ABI Parame
 
 Format JSON ABI into human-readable ABI.
 
-::: code-group
+:::code-group
 
-```ts twoslash [abitype]
+```ts [abitype] twoslash
 import { formatAbi } from 'abitype'
 
 const abi = formatAbi([
@@ -228,9 +293,10 @@ const abi = formatAbi([
 ])
 abi
 //^?
+
 ```
 
-```ts twoslash [ethers@5]
+```ts [ethers@5] twoslash
 import { Interface } from '@ethersproject/abi'
 
 const iface = new Interface([
@@ -261,7 +327,7 @@ const abi = iface.format('minimal')
 //    ^?
 ```
 
-```ts twoslash [ethers@6]
+```ts [ethers@6] twoslash
 import { Interface } from 'ethers'
 
 const iface = new Interface([
@@ -316,9 +382,9 @@ abitype - src/human-readable/formatAbi.bench.ts > Format ABI
 
 Formats a JSON ABI item into a human-readable ABI item.
 
-::: code-group
+:::code-group
 
-```ts twoslash [abitype]
+```ts [abitype] twoslash
 import { formatAbiItem } from 'abitype'
 
 const abiItem = formatAbiItem({
@@ -335,7 +401,7 @@ abiItem
 //^?
 ```
 
-```ts twoslash [ethers@5]
+```ts [ethers@5] twoslash
 import { Fragment } from '@ethersproject/abi'
 
 const iface = Fragment.from({
@@ -352,7 +418,7 @@ const abiItem = iface.format('minimal')
 //    ^?
 ```
 
-```ts twoslash [ethers@6]
+```ts [ethers@6] twoslash
 import { Fragment } from 'ethers'
 
 const iface = Fragment.from({
@@ -394,23 +460,23 @@ abitype - src/human-readable/formatAbiItem.bench.ts > Format basic ABI function
 
 Formats JSON ABI parameter to human-readable ABI parameter.
 
-::: code-group
+:::code-group
 
-```ts twoslash [abitype]
+```ts [abitype] twoslash
 import { formatAbiParameter } from 'abitype'
 
 const result = formatAbiParameter({ type: 'string', name: 'foo' })
 //    ^? 
 ```
 
-```ts twoslash [ethers@5]
+```ts [ethers@5] twoslash
 import { ParamType } from '@ethersproject/abi'
 
 const result = ParamType.from({ type: 'string', name: 'foo' }).format('minimal')
 //    ^? 
 ```
 
-```ts twoslash [ethers@6]
+```ts [ethers@6] twoslash
 import { ParamType } from 'ethers'
 
 const result = ParamType.from({ type: 'string', name: 'foo' }).format('minimal')

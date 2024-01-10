@@ -1,21 +1,19 @@
 {
   "name": "docs",
   "private": true,
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev",
-    "build": "rm -r ../node_modules/.cache/twoslash & vitepress build",
-    "serve": "vitepress serve"
+    "dev": "vocs dev",
+    "build": "vocs build",
+    "preview": "vocs preview"
   },
   "devDependencies": {
-    "@ethersproject/abi": "*",
-    "@types/markdown-it-footnote": "^3.0.0",
+    "@ethersproject/abi": "^5.7.0",
     "abitype": "workspace:*",
-    "ethers": "^6.5.1",
-    "markdown-it-footnote": "^3.0.3",
-    "vite": "^4.4.9",
-    "vitepress": "1.0.0-rc.20",
-    "vitepress-plugin-shiki-twoslash": "^0.0.6",
-    "vue": "^3.3.4"
+    "ethers": "^6.9.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vocs": "1.0.0-alpha.1"
   }
 }

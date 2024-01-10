@@ -1,6 +1,5 @@
 ---
 description: 'How to configure ABIType in userland or as a library author.'
-title: 'Configuration'
 ---
 
 # Configuration
@@ -21,9 +20,12 @@ declare module 'abitype' {
 import { ResolvedRegister } from 'abitype'
 type Result = ResolvedRegister['BigIntType']
 //   ^?
+
+
+
 ```
 
-::: info Extending Config from third-party packages
+:::info[Extending Config from third-party packages]
 If you are using ABIType via another package (e.g. [`viem`](https://viem.sh)), you can customize the ABIType's types by targeting the package's `abitype` module:
 
 ```ts
@@ -39,7 +41,7 @@ declare module 'viem/node_modules/abitype' {
 
 ABIType tries to strike a balance between type exhaustiveness and speed with sensible defaults. In some cases, you might want to tune your configuration (e.g. use a custom `bigint` type). To do this, the following configuration options are available:
 
-::: warning
+:::warning
 When configuring `ArrayMaxDepth`, `FixedArrayMinLength`, and `FixedArrayMaxLength`, there are trade-offs. For example, choosing a non-false value for `ArrayMaxDepth` and increasing the range between `FixedArrayMinLength` and `FixedArrayMaxLength` will make your types more exhaustive, but will also slow down the compiler for type checking, autocomplete, etc.
 :::
 
@@ -166,6 +168,6 @@ declare module 'abitype' {
 }
 ```
 
-::: warning
+:::warning
 You probably only want to set this to `true` if parsed types are returning as `unknown` and you want to figure out why. This will slow down type checking significantly.
 :::

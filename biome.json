@@ -1,6 +1,12 @@
 {
   "files": {
-    "ignore": ["CHANGELOG.md", "pnpm-lock.yaml", "trace/**", "tsconfig.*.json"]
+    "ignore": [
+      "CHANGELOG.md",
+      "pnpm-lock.yaml",
+      "trace/**",
+      "tsconfig.*.json",
+      ".vocs"
+    ]
   },
   "formatter": {
     "enabled": true,
