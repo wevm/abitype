@@ -183,6 +183,8 @@ const res = readContract({
   abi,
   functionName: 'balanceOf',
   // ^?
+
+
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
 })
 ```
@@ -324,6 +326,7 @@ const res = readContract({
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
   // ^?
 })
+
 ```
 
 Since `args`'s type can be completely defined inline, we import [`ExtractAbiFunction`](/api/utilities#extractabifunction) and [`AbiParametersToPrimitiveTypes`](/api/utilities#abiparameterstoprimitivetypes) and wire them up. First, we use `ExtractAbiFunction` to get the function from the ABI that matches `TFunctionName`. Then, we use `AbiParametersToPrimitiveTypes` to convert the function's inputs to their TypeScript primitive types.

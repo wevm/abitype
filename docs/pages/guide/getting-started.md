@@ -45,6 +45,8 @@ import { erc20Abi } from 'abitype/abis'
 
 type Result = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
 //   ^?
+
+
 ```
 
 ## What's next?

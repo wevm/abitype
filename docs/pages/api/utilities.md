@@ -29,7 +29,6 @@ type Result = AbiParameterToPrimitiveType<{
   name: 'owner'
   type: 'address'
 }>
-
 ```
 
 ## `AbiParametersToPrimitiveTypes`
@@ -78,6 +77,7 @@ import { AbiTypeToPrimitiveType } from 'abitype'
 
 type Result = AbiTypeToPrimitiveType<'address'>
 //   ^?
+
 ```
 
 ## `ExtractAbiError`
@@ -106,6 +106,7 @@ type Result = ExtractAbiError<typeof abi, 'FooError'>
 
 
 
+
 ```
 
 ## `ExtractAbiErrorNames`
@@ -129,6 +130,7 @@ const abi = [
 
 type Result = ExtractAbiErrorNames<typeof abi>
 //   ^?
+
 ```
 
 ## `ExtractAbiErrors`
@@ -152,6 +154,8 @@ const abi = [
 
 type Result = ExtractAbiErrors<typeof abi>
 //   ^?
+
+
 
 
 
@@ -257,6 +261,7 @@ const abi = [
 
 type Result = ExtractAbiEventNames<typeof abi>
 //   ^?
+
 ```
 
 ## `ExtractAbiEvents`
@@ -298,9 +303,6 @@ const abi = [
 
 type Result = ExtractAbiEvents<typeof abi>
 //   ^?
-
-
-
 
 
 
@@ -407,6 +409,7 @@ const abi = [
 
 type Result = ExtractAbiFunctionNames<typeof abi>
 //   ^?
+
 ```
 
 ## `ExtractAbiFunctions`
@@ -446,7 +449,6 @@ const abi = [
 
 type Result = ExtractAbiFunctions<typeof abi>
 //   ^?
-
 
 
 
@@ -506,6 +508,7 @@ const abi = [
 
 type Result = IsAbi<typeof abi>
 //   ^?
+
 ```
 
 ## `IsTypedData`
@@ -536,6 +539,7 @@ const types = {
 
 type Result = IsTypedData<typeof types>
 //   ^?
+
 ```
 
 ## `TypedDataToPrimitiveTypes`
@@ -566,8 +570,6 @@ const types = {
 
 type Result = TypedDataToPrimitiveTypes<typeof types>
 //   ^?
-
-
 
 
 

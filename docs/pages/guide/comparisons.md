@@ -54,14 +54,6 @@ abi
 
 
 
-
-
-
-
-
-
-
-
 ```
 
 ```ts [abitype (struct)] twoslash
@@ -74,14 +66,6 @@ const abi = parseAbi([
 ])
 abi
 //^?
-
-
-
-
-
-
-
-
 
 
 
@@ -139,12 +123,6 @@ import { parseAbiItem } from 'abitype'
 
 const abiItem = parseAbiItem(
   //  ^?
-
-
-
-
-
-
 
 
 
@@ -217,6 +195,7 @@ import { parseAbiParameter } from 'abitype'
 
 const abiParameter = parseAbiParameter('string foo')
 //    ^? 
+
 
 
 
@@ -294,6 +273,8 @@ const abi = formatAbi([
 abi
 //^?
 
+
+
 ```
 
 ```ts [ethers@5] twoslash
@@ -325,6 +306,8 @@ const iface = new Interface([
 ])
 const abi = iface.format('minimal')
 //    ^?
+
+
 ```
 
 ```ts [ethers@6] twoslash
@@ -356,6 +339,8 @@ const iface = new Interface([
 ])
 const abi = iface.format(true)
 //    ^?
+
+
 ```
 
 :::
@@ -399,6 +384,8 @@ const abiItem = formatAbiItem({
 })
 abiItem
 //^?
+
+
 ```
 
 ```ts [ethers@5] twoslash
@@ -416,6 +403,8 @@ const iface = Fragment.from({
 })
 const abiItem = iface.format('minimal')
 //    ^?
+
+
 ```
 
 ```ts [ethers@6] twoslash
@@ -433,6 +422,8 @@ const iface = Fragment.from({
 })
 const abiItem = iface.format('minimal')
 //    ^?
+
+
 ```
 
 :::
@@ -467,6 +458,8 @@ import { formatAbiParameter } from 'abitype'
 
 const result = formatAbiParameter({ type: 'string', name: 'foo' })
 //    ^? 
+
+
 ```
 
 ```ts [ethers@5] twoslash
@@ -474,6 +467,8 @@ import { ParamType } from '@ethersproject/abi'
 
 const result = ParamType.from({ type: 'string', name: 'foo' }).format('minimal')
 //    ^? 
+
+
 ```
 
 ```ts [ethers@6] twoslash
@@ -481,6 +476,8 @@ import { ParamType } from 'ethers'
 
 const result = ParamType.from({ type: 'string', name: 'foo' }).format('minimal')
 //    ^? 
+
+
 ```
 
 :::

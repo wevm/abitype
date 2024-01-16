@@ -223,7 +223,7 @@ export default defineConfig({
     },
   ],
   twoslash: {
-    defaultCompilerOptions: {
+    compilerOptions: {
       strict: true,
       target: ts.ScriptTarget.ESNext,
     },
