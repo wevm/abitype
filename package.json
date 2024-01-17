@@ -24,7 +24,9 @@
     "test:typecheck": "vitest typecheck -c ./packages/abitype/test/vitest.config.ts",
     "test:update": "vitest --update",
     "trace": "tsc --noEmit --generateTrace ./playgrounds/performance/out --incremental false --project playgrounds/performance/tsconfig.json && echo \"Open playgrounds/performance/out/trace.json in https://ui.perfetto.dev\"",
+    "typebench": "pnpm run --r --parallel typebench",
     "typecheck": "pnpm run --r --parallel typecheck && tsc --noEmit",
+    "typeperf": "pnpm run --r --parallel typeperf",
     "typecheck:propertyTypes": "pnpm run --r --parallel typecheck --exactOptionalPropertyTypes false && tsc --noEmit --exactOptionalPropertyTypes false",
     "version:update": "bun .scripts/updateVersion.ts"
   },
@@ -41,6 +43,7 @@
     "publint": "^0.2.2",
     "rimraf": "^5.0.1",
     "simple-git-hooks": "^2.8.1",
+    "tsx": "^4.7.0",
     "typescript": "5.0.4",
     "typescript@5.1.3": "npm:typescript@5.1.3",
     "typescript@5.2.2": "npm:typescript@5.2.2",
@@ -75,6 +78,7 @@
         "entry": [
           "src/exports/{abis,index,zod}.ts!",
           "**/*.bench.ts",
+          "**/*.bench-d.ts",
           "**/*.test.ts",
           "**/*.test-d.ts"
         ],

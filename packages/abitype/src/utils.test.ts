@@ -1,6 +1,6 @@
 import { attest } from '@arktype/attest'
 import { test } from 'vitest'
-import type { TypedDataToPrimitiveTypes } from './utils.js'
+import { type TypedDataToPrimitiveTypes } from './utils.js'
 
 test('self-referencing', () => {
   type Result = TypedDataToPrimitiveTypes<{
