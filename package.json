@@ -4,6 +4,7 @@
   "scripts": {
     "bench": "vitest bench -c ./packages/abitype/test/vitest.config.ts",
     "build": "pnpm run --r --filter \"./packages/**\" build",
+    "changeset": "changeset",
     "changeset:publish": "pnpm version:update && pnpm build && bun .scripts/generateProxyPackages.ts && changeset publish",
     "changeset:version": "changeset version && pnpm version:update",
     "clean": "pnpm run --r --parallel clean",

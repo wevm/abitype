@@ -6,7 +6,7 @@ export class InvalidAbiItemError extends BaseError {
   constructor({ signature }: { signature: string | object }) {
     super('Failed to parse ABI item.', {
       details: `parseAbiItem(${JSON.stringify(signature, null, 2)})`,
-      docsPath: '/api/human.html#parseabiitem-1',
+      docsPath: '/api/human#parseabiitem-1',
     })
   }
 }

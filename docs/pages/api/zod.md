@@ -1,6 +1,5 @@
 ---
 description: "ABIType types as Zod schemas via the `'abitype/zod'` entrypoint."
-title: 'Zod'
 ---
 
 # Zod
@@ -11,7 +10,7 @@ ABIType exports the [core types](/api/types) as [Zod](https://github.com/colinha
 
 Install the Zod peer dependency:
 
-::: code-group
+:::code-group
 ```bash [pnpm]
 pnpm add zod
 ```

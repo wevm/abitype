@@ -1,9 +1,9 @@
 {
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "license": "MIT",
-  "repository": "wagmi-dev/abitype",
+  "repository": "wevm/abitype",
   "scripts": {
     "build": "pnpm run clean && pnpm run build:cjs && pnpm run build:esm+types",
     "build:cjs": "tsc --project tsconfig.build.json --module commonjs --moduleResolution node10 --outDir ./dist/cjs --removeComments --verbatimModuleSyntax false && echo > ./dist/cjs/package.json '{\"type\":\"commonjs\"}'",
@@ -70,8 +70,11 @@
     "ethers": "^6.5.1",
     "zod": "^3.22.4"
   },
-  "contributors": ["awkweb.eth <t@wagmi.sh>", "jxom.eth <j@wagmi.sh>"],
-  "funding": "https://github.com/sponsors/wagmi-dev",
+  "contributors": [
+    "awkweb.eth <t@wagmi.sh>",
+    "jxom.eth <j@wagmi.sh>"
+  ],
+  "funding": "https://github.com/sponsors/wevm",
   "keywords": [
     "abi",
     "eth",
@@ -80,6 +83,7 @@
     "types",
     "web3",
     "viem",
-    "wagmi"
+    "wagmi",
+    "wevm"
   ]
 }

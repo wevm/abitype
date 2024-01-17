@@ -12,24 +12,24 @@ import {
 
 test('InvalidAbiParamterError', () => {
   expect(
-    new InvalidAbiParameterError({ param: 'addres owner' }),
+    new InvalidAbiParameterError({ param: 'address owner' }),
   ).toMatchInlineSnapshot(`
     [InvalidAbiParameterError: Failed to parse ABI parameter.
 
-    Docs: https://abitype.dev/api/human.html#parseabiparameter-1
-    Details: parseAbiParameter("addres owner")
+    Docs: https://abitype.dev/api/human#parseabiparameter-1
+    Details: parseAbiParameter("address owner")
     Version: abitype@x.y.z]
   `)
 })
 
 test('InvalidAbiParamtersError', () => {
   expect(
-    new InvalidAbiParametersError({ params: 'addres owner' }),
+    new InvalidAbiParametersError({ params: 'address owner' }),
   ).toMatchInlineSnapshot(`
     [InvalidAbiParametersError: Failed to parse ABI parameters.
 
-    Docs: https://abitype.dev/api/human.html#parseabiparameters-1
-    Details: parseAbiParameters("addres owner")
+    Docs: https://abitype.dev/api/human#parseabiparameters-1
+    Details: parseAbiParameters("address owner")
     Version: abitype@x.y.z]
   `)
 })
@@ -37,12 +37,12 @@ test('InvalidAbiParamtersError', () => {
 test('InvalidParameterError', () => {
   expect(
     new InvalidParameterError({
-      param: 'addres',
+      param: 'address',
     }),
   ).toMatchInlineSnapshot(`
     [InvalidParameterError: Invalid ABI parameter.
 
-    Details: addres
+    Details: address
     Version: abitype@x.y.z]
   `)
 })
@@ -115,7 +115,7 @@ test('InvalidFunctionModifierError', () => {
 test('InvalidAbiTypeParameterError', () => {
   expect(
     new InvalidAbiTypeParameterError({
-      abiParameter: { type: 'addres' },
+      abiParameter: { type: 'address' },
     }),
   ).toMatchInlineSnapshot(`
     [InvalidAbiTypeParameterError: Invalid ABI parameter.
@@ -123,7 +123,7 @@ test('InvalidAbiTypeParameterError', () => {
     ABI parameter type is invalid.
 
     Details: {
-      "type": "addres"
+      "type": "address"
     }
     Version: abitype@x.y.z]
   `)
