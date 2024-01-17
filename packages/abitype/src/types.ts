@@ -142,6 +142,18 @@ type KeyofUnion<T> = T extends T ? keyof T : never
 export type Pretty<T> = { [K in keyof T]: T[K] } & unknown
 
 /**
+ * Check that a type is a subtype of another.
+ *
+ * Useful for ensuring more complex types conform to a base pattern, e.g. by
+ * defining a set of keys.
+ *
+ * @param Base - The type that T must extend.
+ * @param T - The type to check.
+ * @returns T
+ */
+export type Satisfy<Base, T extends Base> = T
+
+/**
  * Creates range between two positive numbers using [tail recursion](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html#tail-recursion-elimination-on-conditional-types).
  *
  * @param Start - Number to start range

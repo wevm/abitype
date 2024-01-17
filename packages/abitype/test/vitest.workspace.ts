@@ -13,6 +13,7 @@ export default defineWorkspace([
       name: 'abitype',
       environment: 'node',
       setupFiles: ['./packages/abitype/test/setup.ts'],
+      globalSetup: ['./packages/abitype/test/globalSetup.ts'],
       include: ['./packages/abitype/**/*.test.ts'],
     },
   },
