@@ -78,6 +78,9 @@ jobs:
       - name: Check types (--exactOptionalPropertyTypes false)
         run: pnpm typecheck:propertyTypes
 
+      - name: Bench types
+        run: pnpm typebench
+
       # Redundant with `pnpm typecheck`
       # If Vitest adds special features in the future, e.g. type coverage, can add this back!
       # - name: Test types

@@ -65,7 +65,7 @@ type GreaterThan48Bits = Exclude<MBits, 8 | 16 | 24 | 32 | 40 | 48 | NoBits>
 type LessThanOrEqualTo48Bits = Exclude<MBits, GreaterThan48Bits | NoBits>
 type NoBits = ''
 
-export type BitsTypeLookup = {
+type BitsTypeLookup = {
   [K in MBits]: ResolvedRegister[K extends LessThanOrEqualTo48Bits
     ? 'IntType'
     : 'BigIntType']
