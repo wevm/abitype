@@ -4,7 +4,7 @@
   "baseBranch": "main",
   "changelog": ["@changesets/changelog-github", { "repo": "wevm/abitype" }],
   "commit": false,
-  "ignore": ["default-register", "functions", "performance"],
+  "ignore": ["default-register", "docs", "functions", "performance"],
   "updateInternalDependencies": "patch",
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true
