@@ -1,5 +1,11 @@
 # abitype
 
+## 1.0.0
+
+### Major Changes
+
+- [`6bc52e6`](https://github.com/wevm/abitype/commit/6bc52e6a470ba0a21c9a54873e9db1b7ae5fd7b3) Thanks [@tmm](https://github.com/tmm)! - Marked as stable v1.
+
 ## 0.10.3
 
 ### Patch Changes
