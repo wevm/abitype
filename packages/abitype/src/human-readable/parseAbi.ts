@@ -1,16 +1,16 @@
-import type { Abi } from '../abi.js'
-import type { Error, Filter } from '../types.js'
+import { type Abi } from '../abi.js'
+import { type Error, type Filter } from '../types.js'
 import { isStructSignature } from './runtime/signatures.js'
 import { parseStructs } from './runtime/structs.js'
 import { parseSignature } from './runtime/utils.js'
-import type { Signatures } from './types/signatures.js'
-import type { ParseStructs } from './types/structs.js'
-import type { ParseSignature } from './types/utils.js'
+import { type Signatures } from './types/signatures.js'
+import { type ParseStructs } from './types/structs.js'
+import { type ParseSignature } from './types/utils.js'
 
 /**
  * Parses human-readable ABI into JSON {@link Abi}
  *
- * @param TSignatures - Human-readable ABI
+ * @param signatures - Human-readable ABI
  * @returns Parsed {@link Abi}
  *
  * @example
@@ -22,21 +22,21 @@ import type { ParseSignature } from './types/utils.js'
  *   ]
  * >
  */
-export type ParseAbi<TSignatures extends readonly string[]> =
-  string[] extends TSignatures
+export type ParseAbi<signatures extends readonly string[]> =
+  string[] extends signatures
     ? Abi // If `T` was not able to be inferred (e.g. just `string[]`), return `Abi`
-    : TSignatures extends readonly string[]
-    ? TSignatures extends Signatures<TSignatures> // Validate signatures
-      ? ParseStructs<TSignatures> extends infer Structs
+    : signatures extends readonly string[]
+    ? signatures extends Signatures<signatures> // Validate signatures
+      ? ParseStructs<signatures> extends infer structs
         ? {
-            [K in keyof TSignatures]: TSignatures[K] extends string
-              ? ParseSignature<TSignatures[K], Structs>
+            [K in keyof signatures]: signatures[K] extends string
+              ? ParseSignature<signatures[K], structs>
               : never
-          } extends infer Mapped extends readonly unknown[]
-          ? Filter<Mapped, never> extends infer Result
-            ? Result extends readonly []
+          } extends infer mapped extends readonly unknown[]
+          ? Filter<mapped, never> extends infer result
+            ? result extends readonly []
               ? never
-              : Result
+              : result
             : never
           : never
         : never
@@ -56,13 +56,13 @@ export type ParseAbi<TSignatures extends readonly string[]> =
  *   'event Transfer(address indexed from, address indexed to, uint256 amount)',
  * ])
  */
-export function parseAbi<const TSignatures extends readonly string[]>(
-  signatures: TSignatures['length'] extends 0
+export function parseAbi<const signatures extends readonly string[]>(
+  signatures: signatures['length'] extends 0
     ? Error<'At least one signature required'>
-    : Signatures<TSignatures> extends TSignatures
-    ? TSignatures
-    : Signatures<TSignatures>,
-): ParseAbi<TSignatures> {
+    : Signatures<signatures> extends signatures
+    ? signatures
+    : Signatures<signatures>,
+): ParseAbi<signatures> {
   const structs = parseStructs(signatures as readonly string[])
   const abi = []
   const length = signatures.length as number
@@ -71,5 +71,5 @@ export function parseAbi<const TSignatures extends readonly string[]>(
     if (isStructSignature(signature)) continue
     abi.push(parseSignature(signature, structs))
   }
-  return abi as unknown as ParseAbi<TSignatures>
+  return abi as unknown as ParseAbi<signatures>
 }

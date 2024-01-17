@@ -1,11 +1,11 @@
 import { expectTypeOf, test } from 'vitest'
 
-import type {
-  ParseStruct,
-  ParseStructProperties,
-  ParseStructs,
-  ResolveStructs,
-  StructLookup,
+import {
+  type ParseStruct,
+  type ParseStructProperties,
+  type ParseStructs,
+  type ResolveStructs,
+  type StructLookup,
 } from './structs.js'
 
 test('ParseStructs', () => {

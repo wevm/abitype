@@ -1,4 +1,4 @@
-import type { AbiItemType, AbiParameter } from '../../abi.js'
+import { type AbiItemType, type AbiParameter } from '../../abi.js'
 
 /**
  * Gets {@link parameterCache} cache key namespaced by {@link type}. This prevents parameters from being accessible to types that don't allow them (e.g. `string indexed foo` not allowed outside of `type: 'event'`).

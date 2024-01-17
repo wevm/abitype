@@ -1,6 +1,6 @@
-import type { Abi } from 'abitype'
+import { type Abi } from 'abitype'
 
-import type { ContractParameters, ContractReturnType } from './types.js'
+import { type ContractParameters, type ContractReturnType } from './types.js'
 
 export declare function write<
   const abi extends Abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types

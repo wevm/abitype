@@ -1,15 +1,15 @@
 import { expectTypeOf, test } from 'vitest'
 
-import type {
-  Abi,
-  AbiConstructor,
-  AbiError,
-  AbiEvent,
-  AbiFallback,
-  AbiFunction,
-  AbiReceive,
+import {
+  type Abi,
+  type AbiConstructor,
+  type AbiError,
+  type AbiEvent,
+  type AbiFallback,
+  type AbiFunction,
+  type AbiReceive,
 } from '../abi.js'
-import type { FormatAbiItem } from './formatAbiItem.js'
+import { type FormatAbiItem } from './formatAbiItem.js'
 import { formatAbiItem } from './formatAbiItem.js'
 
 test('FormatAbiItem', () => {

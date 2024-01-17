@@ -1,10 +1,10 @@
-import type { Abi } from 'abitype'
+import { type Abi } from 'abitype'
 
-import type { ReadParameters } from './read.js'
-import type {
-  ContractParameters,
-  ContractReturnType,
-  DeepPartial,
+import { type ReadParameters } from './read.js'
+import {
+  type ContractParameters,
+  type ContractReturnType,
+  type DeepPartial,
 } from './types.js'
 
 export declare function reads<
@@ -20,7 +20,7 @@ export declare function useReads<
   const args extends readonly unknown[] | undefined,
   contracts extends Contract<abi, functionName, args>[],
 >(
-  // TODO(@tmm): Broke for `typescript@5.1.3` https://github.com/wagmi-dev/abitype/issues/153
+  // TODO(@tmm): Broke for `typescript@5.1.3` https://github.com/wevm/abitype/issues/153
   // parameters: DeepPartial<ReadsParameters<contracts>, 3>,
   parameters: DeepPartial<
     { contracts: readonly [...DeepPartial<ContractsParameters<contracts>, 2>] },

@@ -1,6 +1,6 @@
 import { assertType, expectTypeOf, test } from 'vitest'
 
-import type { Narrow } from './narrow.js'
+import { type Narrow } from './narrow.js'
 import { narrow } from './narrow.js'
 
 test('Narrow', () => {

@@ -1,10 +1,10 @@
-import type {
-  AbiItemType,
-  AbiType,
-  SolidityArray,
-  SolidityBytes,
-  SolidityString,
-  SolidityTuple,
+import {
+  type AbiItemType,
+  type AbiType,
+  type SolidityArray,
+  type SolidityBytes,
+  type SolidityString,
+  type SolidityTuple,
 } from '../../abi.js'
 import {
   bytesRegex,
@@ -24,8 +24,8 @@ import {
   UnknownSignatureError,
 } from '../errors/signature.js'
 import { InvalidParenthesisError } from '../errors/splitParameters.js'
-import type { FunctionModifier, Modifier } from '../types/signatures.js'
-import type { StructLookup } from '../types/structs.js'
+import { type FunctionModifier, type Modifier } from '../types/signatures.js'
+import { type StructLookup } from '../types/structs.js'
 import { getParameterCacheKey, parameterCache } from './cache.js'
 import {
   eventModifiers,

@@ -1,9 +1,9 @@
-import type { AbiStateMutability } from '../../abi.js'
+import { type AbiStateMutability } from '../../abi.js'
 import { execTyped } from '../../regex.js'
-import type {
-  EventModifier,
-  FunctionModifier,
-  Modifier,
+import {
+  type EventModifier,
+  type FunctionModifier,
+  type Modifier,
 } from '../types/signatures.js'
 
 // https://regexr.com/7gmok

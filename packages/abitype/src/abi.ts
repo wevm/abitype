@@ -1,10 +1,11 @@
-import type { ResolvedRegister } from './register.js'
-import type { Pretty, Range } from './types.js'
+import { type ResolvedRegister } from './register.js'
+import { type Pretty, type Range } from './types.js'
 
 export type Address = ResolvedRegister['AddressType']
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Solidity Types
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Could use `Range`, but listed out for zero overhead
 // biome-ignore format: no formatting
@@ -41,7 +42,7 @@ export type SolidityFixedArrayRange = Range<
   ResolvedRegister['FixedArrayMaxLength']
 >[number]
 export type SolidityFixedArraySizeLookup = {
-  [Prop in SolidityFixedArrayRange as `${Prop}`]: Prop
+  [prop in SolidityFixedArrayRange as `${prop}`]: prop
 }
 
 /**
@@ -49,15 +50,18 @@ export type SolidityFixedArraySizeLookup = {
  * or use a more broad type when maximum depth is switched "off"
  */
 type _BuildArrayTypes<
-  T extends string,
-  Depth extends readonly number[] = [],
+  type extends string,
+  depth extends readonly number[] = [],
 > = ResolvedRegister['ArrayMaxDepth'] extends false
-  ? `${T}[${string}]`
-  : Depth['length'] extends ResolvedRegister['ArrayMaxDepth']
-  ? T
-  : T extends `${any}[${SolidityFixedArrayRange | ''}]`
-  ? _BuildArrayTypes<T | `${T}[${SolidityFixedArrayRange | ''}]`, [...Depth, 1]>
-  : _BuildArrayTypes<`${T}[${SolidityFixedArrayRange | ''}]`, [...Depth, 1]>
+  ? `${type}[${string}]`
+  : depth['length'] extends ResolvedRegister['ArrayMaxDepth']
+  ? type
+  : type extends `${any}[${SolidityFixedArrayRange | ''}]`
+  ? _BuildArrayTypes<
+      type | `${type}[${SolidityFixedArrayRange | ''}]`,
+      [...depth, 1]
+    >
+  : _BuildArrayTypes<`${type}[${SolidityFixedArrayRange | ''}]`, [...depth, 1]>
 
 // Modeling fixed-length (`<type>[M]`) and dynamic (`<type>[]`) arrays
 // Tuple and non-tuple versions are separated out for narrowing anywhere structs show up
@@ -74,6 +78,7 @@ export type SolidityArray = SolidityArrayWithoutTuple | SolidityArrayWithTuple
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Abi Types
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type AbiType =
   | SolidityArray
@@ -216,6 +221,7 @@ export type Abi = readonly (
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Typed Data Types
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type TypedDataDomain = {
   chainId?: number | undefined

@@ -1,6 +1,6 @@
-import type { AbiItemType, AbiParameter } from '../../abi.js'
+import { type AbiItemType, type AbiParameter } from '../../abi.js'
 import { BaseError } from '../../errors.js'
-import type { Modifier } from '../types/signatures.js'
+import { type Modifier } from '../types/signatures.js'
 
 export class InvalidAbiParameterError extends BaseError {
   override name = 'InvalidAbiParameterError'
@@ -8,7 +8,7 @@ export class InvalidAbiParameterError extends BaseError {
   constructor({ param }: { param: string | object }) {
     super('Failed to parse ABI parameter.', {
       details: `parseAbiParameter(${JSON.stringify(param, null, 2)})`,
-      docsPath: '/api/human.html#parseabiparameter-1',
+      docsPath: '/api/human#parseabiparameter-1',
     })
   }
 }
@@ -19,7 +19,7 @@ export class InvalidAbiParametersError extends BaseError {
   constructor({ params }: { params: string | object }) {
     super('Failed to parse ABI parameters.', {
       details: `parseAbiParameters(${JSON.stringify(params, null, 2)})`,
-      docsPath: '/api/human.html#parseabiparameters-1',
+      docsPath: '/api/human#parseabiparameters-1',
     })
   }
 }

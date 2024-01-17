@@ -1,4 +1,4 @@
-import type { Abi, ResolvedRegister } from 'abitype'
+import { type Abi, type ResolvedRegister } from 'abitype'
 import { parseAbi } from 'abitype'
 import {
   ensRegistryWithFallbackAbi,

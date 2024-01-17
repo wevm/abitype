@@ -1,4 +1,4 @@
-import type { AbiItemType } from '../../abi.js'
+import { type AbiItemType } from '../../abi.js'
 import { BaseError } from '../../errors.js'
 
 export class InvalidSignatureError extends BaseError {

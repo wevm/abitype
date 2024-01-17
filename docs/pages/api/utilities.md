@@ -1,6 +1,5 @@
 ---
 description: 'Utility types for working with ABIs and EIP-712 Typed Data.'
-title: 'Utilities'
 ---
 
 
@@ -25,10 +24,11 @@ import { AbiParameterToPrimitiveType } from 'abitype'
 
 type Result = AbiParameterToPrimitiveType<{
   // ^?
+
+  
   name: 'owner'
   type: 'address'
 }>
-
 ```
 
 ## `AbiParametersToPrimitiveTypes`
@@ -48,6 +48,7 @@ import { AbiParametersToPrimitiveTypes } from 'abitype'
 
 type Result = AbiParametersToPrimitiveTypes<
   // ^?
+
   [
     { name: 'to'; type: 'address'; },
     { name: 'tokenId'; type: 'uint256'; },
@@ -65,7 +66,7 @@ Converts `AbiType` to corresponding TypeScript primitive type.
 | `TAbiParameterKind` | Kind to narrow by parameter type.                 | `AbiParameterKind` (optional) |
 | returns             | TypeScript primitive type.                        | `TType` (inferred)            |
 
-::: info NOTE
+:::info[NOTE]
 Does not include full array or tuple conversion. Use [`AbiParameterToPrimitiveType`](#abiparametertoprimitivetype) to fully convert array and tuple types.
 :::
 
@@ -76,6 +77,7 @@ import { AbiTypeToPrimitiveType } from 'abitype'
 
 type Result = AbiTypeToPrimitiveType<'address'>
 //   ^?
+
 ```
 
 ## `ExtractAbiError`
@@ -94,12 +96,17 @@ Extracts `AbiError` with name from `Abi`.
 import { ExtractAbiError } from 'abitype'
 
 const abi = [
-  { name: 'ApprovalCallerNotOwnerNorApproved', type: 'error', inputs: [] },
-  { name: 'ApprovalQueryForNonexistentToken', type: 'error', inputs: [] },
+  { name: 'BarError', type: 'error', inputs: [] },
+  { name: 'FooError', type: 'error', inputs: [] },
 ] as const
 
-type Result = ExtractAbiError<typeof abi, 'ApprovalQueryForNonexistentToken'>
-//   ^?
+type Result = ExtractAbiError<typeof abi, 'FooError'>
+  //   ^?
+
+
+
+
+
 ```
 
 ## `ExtractAbiErrorNames`
@@ -117,12 +124,13 @@ Extracts all `AbiError` names from `Abi`.
 import { ExtractAbiErrorNames } from 'abitype'
 
 const abi = [
-  { name: 'ApprovalCallerNotOwnerNorApproved', type: 'error', inputs: [] },
-  { name: 'ApprovalQueryForNonexistentToken', type: 'error', inputs: [] },
+  { name: 'FooError', type: 'error', inputs: [] },
+  { name: 'BarError', type: 'error', inputs: [] },
 ] as const
 
 type Result = ExtractAbiErrorNames<typeof abi>
 //   ^?
+
 ```
 
 ## `ExtractAbiErrors`
@@ -140,12 +148,21 @@ Extracts all `AbiError` types from `Abi`.
 import { ExtractAbiErrors } from 'abitype'
 
 const abi = [
-  { name: 'ApprovalCallerNotOwnerNorApproved', type: 'error', inputs: [] },
-  { name: 'ApprovalQueryForNonexistentToken', type: 'error', inputs: [] },
+  { name: 'FooError', type: 'error', inputs: [] },
+  { name: 'BarError', type: 'error', inputs: [] },
 ] as const
 
 type Result = ExtractAbiErrors<typeof abi>
 //   ^?
+
+
+
+
+
+
+
+
+
 ```
 
 ## `ExtractAbiEvent`
@@ -188,6 +205,21 @@ const abi = [
 
 type Result = ExtractAbiEvent<typeof abi, 'Transfer'>
 //   ^?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```
 
 ## `ExtractAbiEventNames`
@@ -229,6 +261,7 @@ const abi = [
 
 type Result = ExtractAbiEventNames<typeof abi>
 //   ^?
+
 ```
 
 ## `ExtractAbiEvents`
@@ -270,6 +303,19 @@ const abi = [
 
 type Result = ExtractAbiEvents<typeof abi>
 //   ^?
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```
 
 ## `ExtractAbiFunction`
@@ -311,6 +357,18 @@ const abi = [
 
 type Result = ExtractAbiFunction<typeof abi, 'balanceOf'>
 //   ^?
+
+
+
+
+
+
+
+
+
+
+
+
 ```
 
 ## `ExtractAbiFunctionNames`
@@ -351,6 +409,7 @@ const abi = [
 
 type Result = ExtractAbiFunctionNames<typeof abi>
 //   ^?
+
 ```
 
 ## `ExtractAbiFunctions`
@@ -390,6 +449,20 @@ const abi = [
 
 type Result = ExtractAbiFunctions<typeof abi>
 //   ^?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```
 
 By default, extracts all functions, but you can also filter by `AbiStateMutability`:
@@ -435,6 +508,7 @@ const abi = [
 
 type Result = IsAbi<typeof abi>
 //   ^?
+
 ```
 
 ## `IsTypedData`
@@ -465,6 +539,7 @@ const types = {
 
 type Result = IsTypedData<typeof types>
 //   ^?
+
 ```
 
 ## `TypedDataToPrimitiveTypes`
@@ -495,4 +570,18 @@ const types = {
 
 type Result = TypedDataToPrimitiveTypes<typeof types>
 //   ^?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```

@@ -1,9 +1,9 @@
-import type {
-  Abi,
-  AbiEvent,
-  AbiParametersToPrimitiveTypes,
-  ExtractAbiEvent,
-  ExtractAbiEventNames,
+import {
+  type Abi,
+  type AbiEvent,
+  type AbiParametersToPrimitiveTypes,
+  type ExtractAbiEvent,
+  type ExtractAbiEventNames,
 } from 'abitype'
 
 export declare function watchEvent<

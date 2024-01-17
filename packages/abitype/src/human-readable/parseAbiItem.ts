@@ -1,18 +1,18 @@
-import type { Abi } from '../abi.js'
-import type { Narrow } from '../narrow.js'
-import type { Error, Filter } from '../types.js'
+import { type Abi } from '../abi.js'
+import { type Narrow } from '../narrow.js'
+import { type Error, type Filter } from '../types.js'
 import { InvalidAbiItemError } from './errors/abiItem.js'
 import { isStructSignature } from './runtime/signatures.js'
 import { parseStructs } from './runtime/structs.js'
 import { parseSignature } from './runtime/utils.js'
-import type { Signature, Signatures } from './types/signatures.js'
-import type { ParseStructs } from './types/structs.js'
-import type { ParseSignature } from './types/utils.js'
+import { type Signature, type Signatures } from './types/signatures.js'
+import { type ParseStructs } from './types/structs.js'
+import { type ParseSignature } from './types/utils.js'
 
 /**
  * Parses human-readable ABI item (e.g. error, event, function) into {@link Abi} item
  *
- * @param TSignature - Human-readable ABI item
+ * @param signature - Human-readable ABI item
  * @returns Parsed {@link Abi} item
  *
  * @example
@@ -26,31 +26,31 @@ import type { ParseSignature } from './types/utils.js'
  * >
  */
 export type ParseAbiItem<
-  TSignature extends string | readonly string[] | readonly unknown[],
+  signature extends string | readonly string[] | readonly unknown[],
 > =
-  | (TSignature extends string
-      ? string extends TSignature
+  | (signature extends string
+      ? string extends signature
         ? Abi[number]
-        : TSignature extends Signature<TSignature> // Validate signature
-        ? ParseSignature<TSignature>
+        : signature extends Signature<signature> // Validate signature
+        ? ParseSignature<signature>
         : never
       : never)
-  | (TSignature extends readonly string[]
-      ? string[] extends TSignature
+  | (signature extends readonly string[]
+      ? string[] extends signature
         ? Abi[number] // Return generic Abi item since type was no inferrable
-        : TSignature extends Signatures<TSignature> // Validate signature
-        ? ParseStructs<TSignature> extends infer Structs
+        : signature extends Signatures<signature> // Validate signature
+        ? ParseStructs<signature> extends infer structs
           ? {
-              [K in keyof TSignature]: ParseSignature<
-                TSignature[K] extends string ? TSignature[K] : never,
-                Structs
+              [K in keyof signature]: ParseSignature<
+                signature[K] extends string ? signature[K] : never,
+                structs
               >
-            } extends infer Mapped extends readonly unknown[]
+            } extends infer mapped extends readonly unknown[]
             ? // Filter out `never` since those are structs
-              Filter<Mapped, never>[0] extends infer Result
-              ? Result extends undefined // convert `undefined` to `never` (e.g. `ParseAbiItem<['struct Foo { string name; }']>`)
+              Filter<mapped, never>[0] extends infer result
+              ? result extends undefined // convert `undefined` to `never` (e.g. `ParseAbiItem<['struct Foo { string name; }']>`)
                 ? never
-                : Result
+                : result
               : never
             : never
           : never
@@ -75,27 +75,27 @@ export type ParseAbiItem<
  * ])
  */
 export function parseAbiItem<
-  TSignature extends string | readonly string[] | readonly unknown[],
+  signature extends string | readonly string[] | readonly unknown[],
 >(
-  signature: Narrow<TSignature> &
+  signature: Narrow<signature> &
     (
-      | (TSignature extends string
-          ? string extends TSignature
+      | (signature extends string
+          ? string extends signature
             ? unknown
-            : Signature<TSignature>
+            : Signature<signature>
           : never)
-      | (TSignature extends readonly string[]
-          ? TSignature extends readonly [] // empty array
+      | (signature extends readonly string[]
+          ? signature extends readonly [] // empty array
             ? Error<'At least one signature required.'>
-            : string[] extends TSignature
+            : string[] extends signature
             ? unknown
-            : Signatures<TSignature>
+            : Signatures<signature>
           : never)
     ),
-): ParseAbiItem<TSignature> {
+): ParseAbiItem<signature> {
   let abiItem
   if (typeof signature === 'string')
-    abiItem = parseSignature(signature) as ParseAbiItem<TSignature>
+    abiItem = parseSignature(signature) as ParseAbiItem<signature>
   else {
     const structs = parseStructs(signature as readonly string[])
     const length = signature.length as number
@@ -108,5 +108,5 @@ export function parseAbiItem<
   }
 
   if (!abiItem) throw new InvalidAbiItemError({ signature })
-  return abiItem as ParseAbiItem<TSignature>
+  return abiItem as ParseAbiItem<signature>
 }

@@ -1,6 +1,6 @@
 import { assertType, expectTypeOf, test } from 'vitest'
 
-import type { Abi } from './abi.js'
+import { type Abi } from './abi.js'
 import {
   customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
@@ -10,22 +10,22 @@ import {
   wethAbi,
   writingEditionsFactoryAbi,
 } from './abis/json.js'
-import type {
-  AbiParameterToPrimitiveType,
-  AbiParametersToPrimitiveTypes,
-  AbiTypeToPrimitiveType,
-  ExtractAbiError,
-  ExtractAbiErrorNames,
-  ExtractAbiErrors,
-  ExtractAbiEvent,
-  ExtractAbiEventNames,
-  ExtractAbiEvents,
-  ExtractAbiFunction,
-  ExtractAbiFunctionNames,
-  ExtractAbiFunctions,
-  IsAbi,
-  IsTypedData,
-  TypedDataToPrimitiveTypes,
+import {
+  type AbiParameterToPrimitiveType,
+  type AbiParametersToPrimitiveTypes,
+  type AbiTypeToPrimitiveType,
+  type ExtractAbiError,
+  type ExtractAbiErrorNames,
+  type ExtractAbiErrors,
+  type ExtractAbiEvent,
+  type ExtractAbiEventNames,
+  type ExtractAbiEvents,
+  type ExtractAbiFunction,
+  type ExtractAbiFunctionNames,
+  type ExtractAbiFunctions,
+  type IsAbi,
+  type IsTypedData,
+  type TypedDataToPrimitiveTypes,
 } from './utils.js'
 
 const zeroAddress = '0x0000000000000000000000000000000000000000'

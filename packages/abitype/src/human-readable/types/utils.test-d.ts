@@ -1,15 +1,15 @@
 import { assertType, expectTypeOf, test } from 'vitest'
 
-import type {
-  ParseAbiParameter,
-  ParseAbiParameters,
-  ParseSignature,
-  SplitParameters,
-  _ParseFunctionParametersAndStateMutability,
-  _ParseTuple,
-  _SplitNameOrModifier,
-  _UnwrapNameOrModifier,
-  _ValidateAbiParameter,
+import {
+  type ParseAbiParameter,
+  type ParseAbiParameters,
+  type ParseSignature,
+  type SplitParameters,
+  type _ParseFunctionParametersAndStateMutability,
+  type _ParseTuple,
+  type _SplitNameOrModifier,
+  type _UnwrapNameOrModifier,
+  type _ValidateAbiParameter,
 } from './utils.js'
 
 type OptionsWithModifier = { Modifier: 'calldata'; Structs: unknown }

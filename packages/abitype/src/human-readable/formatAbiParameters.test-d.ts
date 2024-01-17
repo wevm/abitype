@@ -1,8 +1,7 @@
 import { expectTypeOf, test } from 'vitest'
 
-import type { AbiParameter } from '../abi.js'
-
-import type { FormatAbiParameters } from './formatAbiParameters.js'
+import { type AbiParameter } from '../abi.js'
+import { type FormatAbiParameters } from './formatAbiParameters.js'
 import { formatAbiParameters } from './formatAbiParameters.js'
 
 test('FormatAbiParameters', () => {

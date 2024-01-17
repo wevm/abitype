@@ -1,4 +1,4 @@
-import type { Abi, Address, ResolvedRegister } from 'abitype'
+import { type Abi, type Address, type ResolvedRegister } from 'abitype'
 import { parseAbi } from 'abitype'
 import {
   wagmiMintExampleAbi,

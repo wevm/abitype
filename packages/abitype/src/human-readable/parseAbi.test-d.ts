@@ -1,10 +1,9 @@
 import { expectTypeOf, test } from 'vitest'
 
-import type { Abi } from '../abi.js'
-
+import { type Abi } from '../abi.js'
 import { seaportHumanReadableAbi } from '../abis/human-readable.js'
-import type { IsAbi } from '../utils.js'
-import type { ParseAbi } from './parseAbi.js'
+import { type IsAbi } from '../utils.js'
+import { type ParseAbi } from './parseAbi.js'
 import { parseAbi } from './parseAbi.js'
 
 test('ParseAbi', () => {

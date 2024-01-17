@@ -1,4 +1,4 @@
-import type { Abi, ResolvedRegister } from 'abitype'
+import { type Abi, type ResolvedRegister } from 'abitype'
 import { wagmiMintExampleAbi, writingEditionsFactoryAbi } from 'abitype/abis'
 import { assertType, test } from 'vitest'
 

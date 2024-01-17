@@ -1,11 +1,11 @@
 import { describe, expectTypeOf, test } from 'vitest'
 
-import type {
-  Abi,
-  AbiConstructor,
-  AbiError,
-  AbiEvent,
-  AbiParameter,
+import {
+  type Abi,
+  type AbiConstructor,
+  type AbiError,
+  type AbiEvent,
+  type AbiParameter,
 } from './abi.js'
 import {
   customSolidityErrorsAbi,

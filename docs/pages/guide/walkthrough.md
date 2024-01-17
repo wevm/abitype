@@ -1,8 +1,3 @@
----
-description: "Let's use ABIType to create a type-safe function that calls \"read\" contract methods. We'll infer function names, argument types, and return types from a user-provided ABI, and make sure it works for function overloads."
-title: 'Walkthrough'
----
-
 # Walkthrough
 
 Let's use ABIType to create a type-safe function that calls "read" contract methods. We'll infer function names, argument types, and return types from a user-provided ABI, and make sure it works for function overloads.
@@ -25,8 +20,9 @@ declare function readContract(config: {
 
 The function accepts a `config` object which includes the ABI, function name, and arguments. The return type is `unknown` since we don't know what the function will return quite yet.[^2] Next, let's call the function using the following values:
 
-::: code-group
-```ts twoslash [readContract.ts]
+:::code-group
+
+```ts [readContract.ts] twoslash
 // @filename: abi.ts
 export const abi = [
   {
@@ -122,6 +118,7 @@ export const abi = [
   },
 ] as const
 ```
+
 :::
 
 ## 2. Adding inference to `functionName`
@@ -186,6 +183,8 @@ const res = readContract({
   abi,
   functionName: 'balanceOf',
   // ^?
+
+
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
 })
 ```
@@ -195,7 +194,7 @@ First, we create two generics `TAbi` and `TFunctionName`, and constrain their ty
 If you are following along in a TypeScript Playground or editor, you can try various values for `functionName`. `functionName` will autocomplete and only accept `'balanceOf' | 'tokenURI'`. You can also try renaming the function names in `abi` and types will update as well.
 
 ```ts twoslash
-// @errors: 2322 1002
+// @noErrors
 // @filename: abi.ts
 export const abi = [
   {
@@ -247,12 +246,12 @@ declare function readContract<
   functionName: TFunctionName | ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>
   args: readonly unknown[]
 }): unknown
-// ---cut---
 
+// ---cut---
 const res = readContract({
   abi,
-  functionName: '
-  //             ^|
+  functionName: ' 
+//               ^|
 })
 ```
 
@@ -327,6 +326,7 @@ const res = readContract({
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
   // ^?
 })
+
 ```
 
 Since `args`'s type can be completely defined inline, we import [`ExtractAbiFunction`](/api/utilities#extractabifunction) and [`AbiParametersToPrimitiveTypes`](/api/utilities#abiparameterstoprimitivetypes) and wire them up. First, we use `ExtractAbiFunction` to get the function from the ABI that matches `TFunctionName`. Then, we use `AbiParametersToPrimitiveTypes` to convert the function's inputs to their TypeScript primitive types.
@@ -402,6 +402,8 @@ declare function readContract<
 
 const res = readContract({
   //  ^?
+
+  
   abi,
   functionName: 'balanceOf',
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
@@ -420,7 +422,7 @@ There are a few other ways to improve the typing that are out of scope for this 
 - `args` can be an empty array if the function doesn't take any arguments, but you could conditionally add `args` to `config` if it's not empty.
 - `readContract`'s return type is an array, but you could unwrap it if the function only has one output or transform it to another type depending on your implementation.
 
-The preceding points are all implemented in throughout the [examples](https://github.com/wagmi-dev/abitype/tree/main/examples) in this directory so check them out if you're interested.
+The preceding points are all implemented in throughout the [examples](https://github.com/wevm/abitype/tree/main/examples) in this directory so check them out if you're interested.
 
 [^1]: We use the `declare` keyword so we don't need to worry about the implementation. In this case, the implementation would look something like encoding arguments and sending with the [`eth_call`](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call) RPC method.
 [^2]: If this was a real function that read via RPC, we'd likely want to make it `async` and return a `Promise`, but we'll leave that out for simplicity.

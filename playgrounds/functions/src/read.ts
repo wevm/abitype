@@ -1,10 +1,10 @@
 import { type Abi } from 'abitype'
-import type { wagmiMintExampleAbi } from 'abitype/abis'
+import { type wagmiMintExampleAbi } from 'abitype/abis'
 
-import type {
-  ContractParameters,
-  ContractReturnType,
-  DeepPartial,
+import {
+  type ContractParameters,
+  type ContractReturnType,
+  type DeepPartial,
 } from './types.js'
 
 export declare function read<

@@ -1,8 +1,8 @@
-import type {
-  ResolvedRegister,
-  TypedData,
-  TypedDataDomain,
-  TypedDataToPrimitiveTypes,
+import {
+  type ResolvedRegister,
+  type TypedData,
+  type TypedDataDomain,
+  type TypedDataToPrimitiveTypes,
 } from 'abitype'
 
 export declare function signTypedData<

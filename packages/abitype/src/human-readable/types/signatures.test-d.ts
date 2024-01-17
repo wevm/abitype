@@ -1,19 +1,19 @@
 import { assertType, expectTypeOf, test } from 'vitest'
 
-import type {
-  IsConstructorSignature,
-  IsErrorSignature,
-  IsEventSignature,
-  IsFunctionSignature,
-  IsName,
-  IsSignature,
-  IsSolidityKeyword,
-  IsStructSignature,
-  IsValidCharacter,
-  Signature,
-  Signatures,
-  SolidityKeywords,
-  ValidateName,
+import {
+  type IsConstructorSignature,
+  type IsErrorSignature,
+  type IsEventSignature,
+  type IsFunctionSignature,
+  type IsName,
+  type IsSignature,
+  type IsSolidityKeyword,
+  type IsStructSignature,
+  type IsValidCharacter,
+  type Signature,
+  type Signatures,
+  type SolidityKeywords,
+  type ValidateName,
 } from './signatures.js'
 
 test('IsErrorSignature', () => {

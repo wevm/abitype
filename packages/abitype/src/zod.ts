@@ -1,14 +1,14 @@
 import { z } from 'zod'
 
-import type {
-  AbiConstructor as AbiConstructorType,
-  AbiEventParameter as AbiEventParameterType,
-  AbiFallback as AbiFallbackType,
-  AbiFunction as AbiFunctionType,
-  AbiParameter as AbiParameterType,
-  AbiReceive as AbiReceiveType,
-  Address as AddressType,
-  TypedData as TTypedData,
+import {
+  type AbiConstructor as AbiConstructorType,
+  type AbiEventParameter as AbiEventParameterType,
+  type AbiFallback as AbiFallbackType,
+  type AbiFunction as AbiFunctionType,
+  type AbiParameter as AbiParameterType,
+  type AbiReceive as AbiReceiveType,
+  type Address as AddressType,
+  type TypedData as TTypedData,
 } from './abi.js'
 
 import { isSolidityType } from './human-readable/runtime/utils.js'

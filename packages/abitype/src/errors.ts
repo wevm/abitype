@@ -1,4 +1,4 @@
-import type { OneOf, Pretty } from './types.js'
+import { type OneOf, type Pretty } from './types.js'
 import { version } from './version.js'
 
 type BaseErrorArgs = Pretty<
