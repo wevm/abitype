@@ -101,7 +101,7 @@ TypeScript type to use for `bytes<M>` values.
 declare module 'abitype' {
   export interface Register {
     BytesType: {
-      inputs: `0x${string}` | Uint8Array
+      inputs: `0x${string}`
       outputs: `0x${string}`
     }
   }
