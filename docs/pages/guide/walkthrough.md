@@ -422,7 +422,7 @@ There are a few other ways to improve the typing that are out of scope for this 
 - `args` can be an empty array if the function doesn't take any arguments, but you could conditionally add `args` to `config` if it's not empty.
 - `readContract`'s return type is an array, but you could unwrap it if the function only has one output or transform it to another type depending on your implementation.
 
-The preceding points are all implemented in throughout the [examples](https://github.com/wevm/abitype/tree/main/examples) in this directory so check them out if you're interested.
+The preceding points are all implemented in throughout the [examples](https://github.com/wevm/abitype/tree/main/playgrounds) in this directory so check them out if you're interested.
 
 [^1]: We use the `declare` keyword so we don't need to worry about the implementation. In this case, the implementation would look something like encoding arguments and sending with the [`eth_call`](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call) RPC method.
 [^2]: If this was a real function that read via RPC, we'd likely want to make it `async` and return a `Promise`, but we'll leave that out for simplicity.
