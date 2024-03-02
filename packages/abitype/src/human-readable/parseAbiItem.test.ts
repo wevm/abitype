@@ -61,6 +61,12 @@ test.each([
       ],
     },
   },
+  {
+    signature: ['fallback() external'],
+    expected: {
+      type: 'fallback',
+    },
+  },
 ])('parseAbiItem($signature)', ({ signature, expected }) => {
   expect(parseAbiItem(signature)).toEqual(expected)
 })

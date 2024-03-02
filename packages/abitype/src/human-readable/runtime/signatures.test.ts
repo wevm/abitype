@@ -217,7 +217,13 @@ test('execConstructorSignature', () => {
 })
 
 test('isFallbackSignature', () => {
-  expect(isFallbackSignature('fallback()')).toMatchInlineSnapshot('true')
+  expect(isFallbackSignature('fallback() external')).toMatchInlineSnapshot(
+    'true',
+  )
+  expect(
+    isFallbackSignature('fallback() external payable'),
+  ).toMatchInlineSnapshot('true')
+
   expect(isFallbackSignature('function name(string)')).toMatchInlineSnapshot(
     'false',
   )
