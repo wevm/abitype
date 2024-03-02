@@ -1,5 +1,11 @@
 # abitype
 
+## 1.0.1
+
+### Patch Changes
+
+- [#229](https://github.com/wevm/abitype/pull/229) [`a9300dd`](https://github.com/wevm/abitype/commit/a9300ddc8fa11561e4e5a48328170f7780663d0a) Thanks [@kyscott18](https://github.com/kyscott18)! - Fixed regex for fallback signatures.
+
 ## 1.0.0
 
 ### Major Changes
