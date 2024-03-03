@@ -164,7 +164,7 @@ export const AbiFallback = z.preprocess(
      * @deprecated use `pure` or `view` from {@link AbiStateMutability} instead
      * https://github.com/ethereum/solidity/issues/992
      */
-    inputs: z.tuple([]).optional(),
+    inputs: z.tuple([]).readonly().optional(),
     /**
      * @deprecated use `payable` or `nonpayable` from {@link AbiStateMutability} instead
      * https://github.com/ethereum/solidity/issues/992
