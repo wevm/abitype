@@ -51,14 +51,34 @@ export type ParseAbiParameters<
                   >
               : never
           } extends infer Mapped extends readonly unknown[]
-          ? Filter<Mapped, never>[0] extends infer Result
-            ? Result extends undefined
-              ? never
-              : Result
+          ? Filter<Mapped, never> extends readonly [...infer Content]
+            ? DeepFlatten<Content>
             : never
           : never
         : never
       : never)
+
+/**
+ * Flatten all members of {@link T}
+ *
+ * @param T - List of items to flatten
+ * @param Acc - The accumulator used while recursing
+ * @returns The flattened array
+ *
+ * @example
+ * type Result = DeepFlatten<[['a', 'b'], [['c']]]>
+ * //   ^? type Result = ['a', 'b', 'c']
+ */
+type DeepFlatten<
+  T extends readonly unknown[],
+  Acc extends readonly unknown[] = readonly [],
+> = T extends readonly [infer Head, ...infer Tail]
+  ? Tail extends undefined
+    ? never
+    : Head extends readonly unknown[]
+    ? DeepFlatten<Tail, readonly [...Acc, ...DeepFlatten<Head>]>
+    : DeepFlatten<Tail, readonly [...Acc, Head]>
+  : Acc
 
 /**
  * Parses human-readable ABI parameters into {@link AbiParameter}s
@@ -122,5 +142,5 @@ export function parseAbiParameters<
   if (abiParameters.length === 0)
     throw new InvalidAbiParametersError({ params })
 
-  return abiParameters as ParseAbiParameters<TParams>
+  return abiParameters as unknown as ParseAbiParameters<TParams>
 }
