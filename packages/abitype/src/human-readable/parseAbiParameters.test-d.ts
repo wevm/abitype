@@ -109,4 +109,52 @@ test('parseAbiParameters', () => {
   expectTypeOf(parseAbiParameters(param)).toEqualTypeOf<
     readonly AbiParameter[]
   >()
+
+  expectTypeOf(parseAbiParameters(['(uint256 a),(uint256 b)'])).toEqualTypeOf<
+    readonly [
+      {
+        readonly type: 'tuple'
+        readonly components: readonly [
+          {
+            readonly type: 'uint256'
+            readonly name: 'a'
+          },
+        ]
+      },
+      {
+        readonly type: 'tuple'
+        readonly components: readonly [
+          {
+            readonly type: 'uint256'
+            readonly name: 'b'
+          },
+        ]
+      },
+    ]
+  >()
+
+  expectTypeOf(
+    parseAbiParameters(['(uint256 a)', '(uint256 b)']),
+  ).toEqualTypeOf<
+    readonly [
+      {
+        readonly type: 'tuple'
+        readonly components: readonly [
+          {
+            readonly type: 'uint256'
+            readonly name: 'a'
+          },
+        ]
+      },
+      {
+        readonly type: 'tuple'
+        readonly components: readonly [
+          {
+            readonly type: 'uint256'
+            readonly name: 'b'
+          },
+        ]
+      },
+    ]
+  >()
 })

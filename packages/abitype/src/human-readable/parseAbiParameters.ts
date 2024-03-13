@@ -52,7 +52,9 @@ export type ParseAbiParameters<
               : never
           } extends infer Mapped extends readonly unknown[]
           ? Filter<Mapped, never> extends readonly [...infer Content]
-            ? DeepFlatten<Content>
+            ? Content['length'] extends 0
+              ? never
+              : DeepFlatten<Content>
             : never
           : never
         : never
@@ -142,5 +144,5 @@ export function parseAbiParameters<
   if (abiParameters.length === 0)
     throw new InvalidAbiParametersError({ params })
 
-  return abiParameters as unknown as ParseAbiParameters<TParams>
+  return abiParameters as ParseAbiParameters<TParams>
 }
