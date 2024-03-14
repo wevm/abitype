@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-Fix type detection when using an array in (encode|parse)AbiParameters
+Fixed type detection when using an array in `ParseAbiParameters`
