@@ -1,5 +1,11 @@
 # abitype
 
+## 1.0.2
+
+### Patch Changes
+
+- [#232](https://github.com/wevm/abitype/pull/232) [`22a5f3a`](https://github.com/wevm/abitype/commit/22a5f3a52659d4bf8f6098bfff19ca7e4f6a198f) Thanks [@xenoliss](https://github.com/xenoliss)! - Fixed type detection when using an array in `ParseAbiParameters`
+
 ## 1.0.1
 
 ### Patch Changes
