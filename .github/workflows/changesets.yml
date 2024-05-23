@@ -58,3 +58,22 @@ jobs:
           pnpm changeset version --no-git-tag --snapshot canary
           pnpm changeset:prepublish
           pnpm changeset publish --no-git-tag --snapshot canary --tag canary
+
+  jsr:
+    name: JSR
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Publish to JSR
+        run: pnpm version:update && cd packages/abitype && pnpx jsr publish --allow-slow-types --allow-dirty

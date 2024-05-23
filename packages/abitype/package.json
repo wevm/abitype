@@ -16,14 +16,15 @@
   },
   "files": [
     "dist",
-    "!dist/**/*.tsbuildinfo",
-    "src/**/*.ts",
-    "!src/**/*.test.ts",
-    "!src/**/*.test-d.ts",
-    "!src/**/*.bench.ts",
-    "!src/**/*.bench-d.ts",
     "/abis",
-    "/zod"
+    "/zod",
+    "src/**/*.ts",
+    "!dist/**/*.tsbuildinfo",
+    "!jsr.json",
+    "!src/**/*.bench-d.ts",
+    "!src/**/*.bench.ts",
+    "!src/**/*.test-d.ts",
+    "!src/**/*.test.ts"
   ],
   "sideEffects": false,
   "type": "module",
