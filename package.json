@@ -50,7 +50,7 @@
     "typescript": "5.0.4",
     "vitest": "^1.6.0"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@9.0.4",
   "simple-git-hooks": {
     "pre-commit": "pnpm format && pnpm lint:fix"
   },

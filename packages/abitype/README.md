@@ -70,7 +70,7 @@ Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/st
 ABIType might be a good option for your project if:
 
 - You want to [typecheck](https://abitype.dev/api/types) your ABIs or EIP-712 Typed Data.
-- You want to add type inference and autocomplete to your library based on user-provided ABIs or EIP-712 Typed Data, like [wagmi](https://wagmi.sh) and [viem](https://viem.sh).
+- You want to add type inference and autocomplete to your library based on user-provided ABIs or EIP-712 Typed Data, like [Wagmi](https://wagmi.sh) and [Viem](https://viem.sh).
 - You need to [convert ABI types](https://abitype.dev/api/utilities#abiparameterstoprimitivetypes) (e.g. `'string'`) to TypeScript types (e.g. `string`) or other type transformations.
 - You need to validate ABIs at [runtime](https://abitype.dev/api/zod) (e.g. after fetching from external resource).
 - You don’t want to set up a build process to generate types (e.g. TypeChain).
@@ -87,7 +87,7 @@ For help, discussion about best practices, or any other conversation that would 
 
 For casual chit-chat with others using the library:
 
-[Join the Wagmi Discord](https://discord.gg/SghfWBKexF)
+[Join the Wevm Discord](https://discord.gg/SghfWBKexF)
 
 ## Sponsors
 
