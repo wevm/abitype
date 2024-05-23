@@ -110,9 +110,7 @@ export type AbiParameter = Pretty<
   )
 >
 
-export type AbiEventParameter = Pretty<
-  AbiParameter & { indexed?: boolean | undefined }
->
+export type AbiEventParameter = AbiParameter & { indexed?: boolean | undefined }
 
 /**
  * State mutability for {@link AbiFunction}

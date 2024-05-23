@@ -4,6 +4,6 @@
   "include": [".scripts/**/*.ts", "vitest.workspace.ts"],
   "exclude": [],
   "compilerOptions": {
-    "types": ["bun-types"]
+    "types": ["@types/bun"]
   }
 }

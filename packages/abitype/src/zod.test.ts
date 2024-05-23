@@ -80,19 +80,19 @@ describe('AbiSchema', () => {
         },
       ]),
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
-      "[
+      [ZodError: [
         {
-          \\"validation\\": \\"regex\\",
-          \\"code\\": \\"invalid_string\\",
-          \\"message\\": \\"Invalid\\",
-          \\"path\\": [
+          "validation": "regex",
+          "code": "invalid_string",
+          "message": "Invalid",
+          "path": [
             0,
-            \\"inputs\\",
+            "inputs",
             0,
-            \\"type\\"
+            "type"
           ]
         }
-      ]"
+      ]]
     `)
   })
 
@@ -294,18 +294,18 @@ describe('AbiFunction', () => {
         type: 'function',
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
-      "[
+      [ZodError: [
         {
-          \\"validation\\": \\"regex\\",
-          \\"code\\": \\"invalid_string\\",
-          \\"message\\": \\"Invalid\\",
-          \\"path\\": [
-            \\"inputs\\",
+          "validation": "regex",
+          "code": "invalid_string",
+          "message": "Invalid",
+          "path": [
+            "inputs",
             0,
-            \\"type\\"
+            "type"
           ]
         }
-      ]"
+      ]]
     `)
   })
 
@@ -665,13 +665,13 @@ test('AddressType', () => {
     Address.parse('0x0000000000000000000000000000000000000000'),
   ).toMatchInlineSnapshot('"0x0000000000000000000000000000000000000000"')
   expect(() => Address.parse('0x')).toThrowErrorMatchingInlineSnapshot(`
-  "[
-    {
-      \\"code\\": \\"custom\\",
-      \\"message\\": \\"Invalid Address 0x\\",
-      \\"path\\": []
-    }
-  ]"
+    [ZodError: [
+      {
+        "code": "custom",
+        "message": "Invalid Address 0x",
+        "path": []
+      }
+    ]]
   `)
 })
 
@@ -696,74 +696,74 @@ test('EIP-712 TypedData', () => {
   }
 
   expect(() => TypedData.parse(types)).toThrowErrorMatchingInlineSnapshot(`
-  "[
-    {
-      \\"code\\": \\"custom\\",
-      \\"message\\": \\"Invalid type. Name is a self reference.\\",
-      \\"path\\": []
-    }
-  ]"
+    [ZodError: [
+      {
+        "code": "custom",
+        "message": "Invalid type. Name is a self reference.",
+        "path": []
+      }
+    ]]
   `)
 
   expect(() => TypedData.parse(types)).toThrowErrorMatchingInlineSnapshot(`
-  "[
-    {
-      \\"code\\": \\"custom\\",
-      \\"message\\": \\"Invalid type. Name is a self reference.\\",
-      \\"path\\": []
-    }
-  ]"
+    [ZodError: [
+      {
+        "code": "custom",
+        "message": "Invalid type. Name is a self reference.",
+        "path": []
+      }
+    ]]
   `)
 
   expect(() => TypedData.parse(unknowType)).toThrowErrorMatchingInlineSnapshot(`
-  "[
-    {
-      \\"code\\": \\"custom\\",
-      \\"message\\": \\"Invalid type. Foo is not a valid EIP-712 type.\\",
-      \\"path\\": []
-    }
-  ]"
+    [ZodError: [
+      {
+        "code": "custom",
+        "message": "Invalid type. Foo is not a valid EIP-712 type.",
+        "path": []
+      }
+    ]]
   `)
 
   expect(() =>
     TypedData.parse(circularReference),
   ).toThrowErrorMatchingInlineSnapshot(`
-  "[
-    {
-      \\"code\\": \\"custom\\",
-      \\"message\\": \\"Invalid type. Bar is a circular reference.\\",
-      \\"path\\": []
-    },
-    {
-      \\"code\\": \\"custom\\",
-      \\"message\\": \\"Invalid type. Foo is a circular reference.\\",
-      \\"path\\": []
-    }
-  ]"
+    [ZodError: [
+      {
+        "code": "custom",
+        "message": "Invalid type. Bar is a circular reference.",
+        "path": []
+      },
+      {
+        "code": "custom",
+        "message": "Invalid type. Foo is a circular reference.",
+        "path": []
+      }
+    ]]
   `)
 
   expect(() =>
     TypedData.parse({ address: [{ name: 'owner', type: 'address' }] }),
   ).toThrowErrorMatchingInlineSnapshot(`
-  "[
-    {
-      \\"code\\": \\"custom\\",
-      \\"message\\": \\"Invalid key. address is a solidity type.\\",
-      \\"path\\": []
-    }
-  ]"
+    [ZodError: [
+      {
+        "code": "custom",
+        "message": "Invalid key. address is a solidity type.",
+        "path": []
+      }
+    ]]
   `)
 
   expect(() =>
     TypedData.parse({ Foo: [{ name: 'owner', type: '' }] }),
   ).toThrowErrorMatchingInlineSnapshot(`
-  "[
-    {
-      \\"code\\": \\"custom\\",
-      \\"message\\": \\"Invalid type. Foo does not have a type.\\",
-      \\"path\\": []
-    }
-  ]"
+    [ZodError: [
+      {
+        "code": "custom",
+        "message": "Invalid type. Foo does not have a type.",
+        "path": []
+      }
+    ]]
   `)
 
   const single = {

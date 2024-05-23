@@ -6,32 +6,32 @@ test('parseAbiItem', () => {
   // @ts-expect-error invalid signature type
   expect(() => parseAbiItem('')).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unknown signature.
+    [UnknownSignatureError: Unknown signature.
 
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
   // @ts-expect-error invalid signature type
   expect(() => parseAbiItem([])).toThrowErrorMatchingInlineSnapshot(
     `
-    "Failed to parse ABI item.
+    [InvalidAbiItemError: Failed to parse ABI item.
 
     Docs: https://abitype.dev/api/human#parseabiitem-1
     Details: parseAbiItem([])
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
   expect(() =>
     parseAbiItem(['struct Foo { string name; }']),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Failed to parse ABI item.
+    [InvalidAbiItemError: Failed to parse ABI item.
 
     Docs: https://abitype.dev/api/human#parseabiitem-1
     Details: parseAbiItem([
-      \\"struct Foo { string name; }\\"
+      "struct Foo { string name; }"
     ])
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 })

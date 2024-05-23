@@ -6,32 +6,32 @@ test('parseAbiParameter', () => {
   // @ts-expect-error invalid signature type
   expect(() => parseAbiParameter('')).toThrowErrorMatchingInlineSnapshot(
     `
-    "Invalid ABI parameter.
+    [InvalidParameterError: Invalid ABI parameter.
 
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
   // @ts-expect-error invalid signature type
   expect(() => parseAbiParameter([])).toThrowErrorMatchingInlineSnapshot(
     `
-    "Failed to parse ABI parameter.
+    [InvalidAbiParameterError: Failed to parse ABI parameter.
 
     Docs: https://abitype.dev/api/human#parseabiparameter-1
     Details: parseAbiParameter([])
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
   expect(() =>
     parseAbiParameter(['struct Foo { string name; }']),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Failed to parse ABI parameter.
+    [InvalidAbiParameterError: Failed to parse ABI parameter.
 
     Docs: https://abitype.dev/api/human#parseabiparameter-1
     Details: parseAbiParameter([
-      \\"struct Foo { string name; }\\"
+      "struct Foo { string name; }"
     ])
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 
@@ -39,12 +39,12 @@ test('parseAbiParameter', () => {
     parseAbiParameter(['struct Foo { string memory bar; }', 'Foo indexed foo']),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Invalid ABI parameter.
+    [InvalidModifierError: Invalid ABI parameter.
 
-    Modifier \\"memory\\" not allowed in \\"struct\\" type.
+    Modifier "memory" not allowed in "struct" type.
 
     Details: string memory bar
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 
@@ -96,6 +96,7 @@ test.each([
       ],
     },
   },
+  { signature: 'string[]', expected: { type: 'string[]' } },
 ])('parseAbiParameter($signature)', ({ signature, expected }) => {
   expect(parseAbiParameter(signature)).toEqual(expected)
 })

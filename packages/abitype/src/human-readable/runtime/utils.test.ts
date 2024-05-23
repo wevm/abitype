@@ -100,19 +100,19 @@ test.each([
 test('invalid signature', () => {
   expect(() => parseSignature('')).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unknown signature.
+    [UnknownSignatureError: Unknown signature.
 
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
   expect(() =>
     parseSignature('method foo(string) (address)'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unknown signature.
+    [UnknownSignatureError: Unknown signature.
 
     Details: method foo(string) (address)
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 
@@ -120,12 +120,12 @@ test('invalid signature', () => {
     parseSignature('error Foo(string memory foo)'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Invalid ABI parameter.
+    [InvalidModifierError: Invalid ABI parameter.
 
-    Modifier \\"memory\\" not allowed in \\"error\\" type.
+    Modifier "memory" not allowed in "error" type.
 
     Details: string memory foo
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 
@@ -133,12 +133,12 @@ test('invalid signature', () => {
     parseSignature('event Foo(string memory foo)'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Invalid ABI parameter.
+    [InvalidModifierError: Invalid ABI parameter.
 
-    Modifier \\"memory\\" not allowed in \\"event\\" type.
+    Modifier "memory" not allowed in "event" type.
 
     Details: string memory foo
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 
@@ -146,10 +146,10 @@ test('invalid signature', () => {
     parseSignature('function 9abc()'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unknown signature.
+    [UnknownSignatureError: Unknown signature.
 
     Details: function 9abc()
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 
@@ -157,10 +157,10 @@ test('invalid signature', () => {
     parseSignature('method foo_(string)'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unknown signature.
+    [UnknownSignatureError: Unknown signature.
 
     Details: method foo_(string)
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 })
@@ -168,18 +168,18 @@ test('invalid signature', () => {
 test('empty string', () => {
   expect(() => parseAbiParameter('')).toThrowErrorMatchingInlineSnapshot(
     `
-    "Invalid ABI parameter.
+    [InvalidParameterError: Invalid ABI parameter.
 
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 
   expect(() => parseAbiParameter('foo ,')).toThrowErrorMatchingInlineSnapshot(
     `
-    "Invalid ABI parameter.
+    [InvalidParameterError: Invalid ABI parameter.
 
     Details: foo ,
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 })
@@ -188,48 +188,48 @@ test('Invalid solidity type', () => {
   expect(() =>
     parseAbiParameter('strings'),
   ).toThrowErrorMatchingInlineSnapshot(`
-      "Unknown type.
+    [UnknownSolidityTypeError: Unknown type.
 
-      Type \\"strings\\" is not a valid ABI type.
+    Type "strings" is not a valid ABI type.
 
-      Version: abitype@x.y.z"
-    `)
+    Version: abitype@x.y.z]
+  `)
 })
 
 test('Invalid solidity type in tuple', () => {
   expect(() =>
     parseAbiParameter('(strings)'),
   ).toThrowErrorMatchingInlineSnapshot(`
-      "Unknown type.
+    [UnknownSolidityTypeError: Unknown type.
 
-      Type \\"strings\\" is not a valid ABI type.
+    Type "strings" is not a valid ABI type.
 
-      Version: abitype@x.y.z"
-    `)
+    Version: abitype@x.y.z]
+  `)
 })
 
 test('Invalid solidity type in nested tuple', () => {
   expect(() =>
     parseAbiParameter('((strings))'),
   ).toThrowErrorMatchingInlineSnapshot(`
-      "Unknown type.
+    [UnknownSolidityTypeError: Unknown type.
 
-      Type \\"strings\\" is not a valid ABI type.
+    Type "strings" is not a valid ABI type.
 
-      Version: abitype@x.y.z"
-    `)
+    Version: abitype@x.y.z]
+  `)
 })
 
 test('Struct type without context', () => {
   expect(() =>
     parseAbiParameter('Demo demo'),
   ).toThrowErrorMatchingInlineSnapshot(`
-      "Unknown type.
+    [UnknownSolidityTypeError: Unknown type.
 
-      Type \\"Demo\\" is not a valid ABI type.
+    Type "Demo" is not a valid ABI type.
 
-      Version: abitype@x.y.z"
-    `)
+    Version: abitype@x.y.z]
+  `)
 })
 
 test('Struct type with context', () => {
@@ -244,12 +244,12 @@ test('indexed not allowed', () => {
     parseAbiParameter('string indexed foo'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Invalid ABI parameter.
+    [InvalidModifierError: Invalid ABI parameter.
 
-    Modifier \\"indexed\\" not allowed.
+    Modifier "indexed" not allowed.
 
     Details: string indexed foo
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 })
@@ -259,12 +259,12 @@ test('modifier not allowed', () => {
     parseAbiParameter('uint256 calldata foo'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Invalid ABI parameter.
+    [InvalidModifierError: Invalid ABI parameter.
 
-    Modifier \\"calldata\\" not allowed.
+    Modifier "calldata" not allowed.
 
     Details: uint256 calldata foo
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 })
@@ -296,12 +296,12 @@ test('invalid name', () => {
     parseAbiParameter('uint256 address'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Invalid ABI parameter.
+    [SolidityProtectedKeywordError: Invalid ABI parameter.
 
-    \\"address\\" is a protected Solidity keyword. More info: https://docs.soliditylang.org/en/latest/cheatsheet.html
+    "address" is a protected Solidity keyword. More info: https://docs.soliditylang.org/en/latest/cheatsheet.html
 
     Details: uint256 address
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 
@@ -309,10 +309,10 @@ test('invalid name', () => {
     parseAbiParameter('uint256 9abc'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Invalid ABI parameter.
+    [InvalidParameterError: Invalid ABI parameter.
 
     Details: uint256 9abc
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 })
@@ -322,13 +322,13 @@ test('invalid data location', () => {
     parseAbiParameter('uint256 memory foo', { modifiers: functionModifiers }),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Invalid ABI parameter.
+    [InvalidFunctionModifierError: Invalid ABI parameter.
 
-    Modifier \\"memory\\" not allowed.
-    Data location can only be specified for array, struct, or mapping types, but \\"memory\\" was given.
+    Modifier "memory" not allowed.
+    Data location can only be specified for array, struct, or mapping types, but "memory" was given.
 
     Details: uint256 memory foo
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 })
@@ -636,12 +636,12 @@ test('Unbalanced Parethesis', () => {
     splitParameters('address owner, ((string name)'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unbalanced parentheses.
+    [InvalidParenthesisError: Unbalanced parentheses.
 
-    \\"((string name)\\" has too many opening parentheses.
+    "((string name)" has too many opening parentheses.
 
-    Details: Depth \\"1\\"
-    Version: abitype@x.y.z"
+    Details: Depth "1"
+    Version: abitype@x.y.z]
   `,
   )
 
@@ -649,24 +649,24 @@ test('Unbalanced Parethesis', () => {
     splitParameters('address owner, (((string name)'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unbalanced parentheses.
+    [InvalidParenthesisError: Unbalanced parentheses.
 
-    \\"(((string name)\\" has too many opening parentheses.
+    "(((string name)" has too many opening parentheses.
 
-    Details: Depth \\"2\\"
-    Version: abitype@x.y.z"
+    Details: Depth "2"
+    Version: abitype@x.y.z]
   `,
   )
   expect(() =>
     splitParameters('address owner, (string name))'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unbalanced parentheses.
+    [InvalidParenthesisError: Unbalanced parentheses.
 
-    \\"(string name))\\" has too many closing parentheses.
+    "(string name))" has too many closing parentheses.
 
-    Details: Depth \\"-1\\"
-    Version: abitype@x.y.z"
+    Details: Depth "-1"
+    Version: abitype@x.y.z]
   `,
   )
 
@@ -674,12 +674,12 @@ test('Unbalanced Parethesis', () => {
     splitParameters('address owner, (string name)))'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Unbalanced parentheses.
+    [InvalidParenthesisError: Unbalanced parentheses.
 
-    \\"(string name)))\\" has too many closing parentheses.
+    "(string name)))" has too many closing parentheses.
 
-    Details: Depth \\"-2\\"
-    Version: abitype@x.y.z"
+    Details: Depth "-2"
+    Version: abitype@x.y.z]
   `,
   )
 })
