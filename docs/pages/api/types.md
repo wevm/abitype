@@ -72,7 +72,7 @@ import { AbiInternalType } from 'abitype'
 
 ## `AbiParameter`
 
-`inputs` and `ouputs` item for ABI functions, errors, and constructors
+`inputs` and `outputs` item for ABI functions, errors, and constructors
 
 ```ts twoslash noplayground
 import { AbiParameter } from 'abitype'
