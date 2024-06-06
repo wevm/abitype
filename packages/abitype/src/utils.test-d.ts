@@ -1,7 +1,7 @@
 import { assertType, expectTypeOf, test } from 'vitest'
 
 import type { Abi } from './abi.js'
-import {
+import type {
   customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
   nestedTupleArrayAbi,

@@ -34,30 +34,33 @@ export type ParseAbiParameters<
       ? TParams extends ''
         ? never
         : string extends TParams
-        ? readonly AbiParameter[]
-        : ParseAbiParameters_<SplitParameters<TParams>, { Modifier: Modifier }>
+          ? readonly AbiParameter[]
+          : ParseAbiParameters_<
+              SplitParameters<TParams>,
+              { Modifier: Modifier }
+            >
       : never)
   | (TParams extends readonly string[]
       ? string[] extends TParams
         ? AbiParameter // Return generic AbiParameter item since type was no inferrable
         : ParseStructs<TParams> extends infer Structs
-        ? {
-            [K in keyof TParams]: TParams[K] extends string
-              ? IsStructSignature<TParams[K]> extends true
+          ? {
+              [K in keyof TParams]: TParams[K] extends string
+                ? IsStructSignature<TParams[K]> extends true
+                  ? never
+                  : ParseAbiParameters_<
+                      SplitParameters<TParams[K]>,
+                      { Modifier: Modifier; Structs: Structs }
+                    >
+                : never
+            } extends infer Mapped extends readonly unknown[]
+            ? Filter<Mapped, never> extends readonly [...infer Content]
+              ? Content['length'] extends 0
                 ? never
-                : ParseAbiParameters_<
-                    SplitParameters<TParams[K]>,
-                    { Modifier: Modifier; Structs: Structs }
-                  >
+                : DeepFlatten<Content>
               : never
-          } extends infer Mapped extends readonly unknown[]
-          ? Filter<Mapped, never> extends readonly [...infer Content]
-            ? Content['length'] extends 0
-              ? never
-              : DeepFlatten<Content>
             : never
           : never
-        : never
       : never)
 
 /**
@@ -78,8 +81,8 @@ type DeepFlatten<
   ? Tail extends undefined
     ? never
     : Head extends readonly unknown[]
-    ? DeepFlatten<Tail, readonly [...Acc, ...DeepFlatten<Head>]>
-    : DeepFlatten<Tail, readonly [...Acc, Head]>
+      ? DeepFlatten<Tail, readonly [...Acc, ...DeepFlatten<Head>]>
+      : DeepFlatten<Tail, readonly [...Acc, Head]>
   : Acc
 
 /**
@@ -113,8 +116,8 @@ export function parseAbiParameters<
           ? TParams extends readonly [] // empty array
             ? Error<'At least one parameter required.'>
             : string[] extends TParams
-            ? unknown
-            : unknown // TODO: Validate param string
+              ? unknown
+              : unknown // TODO: Validate param string
           : never)
     ),
 ): ParseAbiParameters<TParams> {

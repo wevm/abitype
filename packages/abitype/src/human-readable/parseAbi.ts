@@ -26,22 +26,22 @@ export type ParseAbi<TSignatures extends readonly string[]> =
   string[] extends TSignatures
     ? Abi // If `T` was not able to be inferred (e.g. just `string[]`), return `Abi`
     : TSignatures extends readonly string[]
-    ? TSignatures extends Signatures<TSignatures> // Validate signatures
-      ? ParseStructs<TSignatures> extends infer Structs
-        ? {
-            [K in keyof TSignatures]: TSignatures[K] extends string
-              ? ParseSignature<TSignatures[K], Structs>
+      ? TSignatures extends Signatures<TSignatures> // Validate signatures
+        ? ParseStructs<TSignatures> extends infer Structs
+          ? {
+              [K in keyof TSignatures]: TSignatures[K] extends string
+                ? ParseSignature<TSignatures[K], Structs>
+                : never
+            } extends infer Mapped extends readonly unknown[]
+            ? Filter<Mapped, never> extends infer Result
+              ? Result extends readonly []
+                ? never
+                : Result
               : never
-          } extends infer Mapped extends readonly unknown[]
-          ? Filter<Mapped, never> extends infer Result
-            ? Result extends readonly []
-              ? never
-              : Result
             : never
           : never
         : never
       : never
-    : never
 
 /**
  * Parses human-readable ABI into JSON {@link Abi}
@@ -60,8 +60,8 @@ export function parseAbi<const TSignatures extends readonly string[]>(
   signatures: TSignatures['length'] extends 0
     ? Error<'At least one signature required'>
     : Signatures<TSignatures> extends TSignatures
-    ? TSignatures
-    : Signatures<TSignatures>,
+      ? TSignatures
+      : Signatures<TSignatures>,
 ): ParseAbi<TSignatures> {
   const structs = parseStructs(signatures as readonly string[])
   const abi = []

@@ -13,11 +13,11 @@ import {
   erc20Abi,
 } from './abis/json.js'
 import {
-  Abi as AbiSchema,
   AbiConstructor as AbiConstructorSchema,
   AbiError as AbiErrorSchema,
   AbiEvent as AbiEventSchema,
   AbiParameter as AbiParameterSchema,
+  Abi as AbiSchema,
 } from './zod.js'
 
 describe('Zod Types', () => {

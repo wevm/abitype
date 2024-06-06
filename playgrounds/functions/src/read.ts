@@ -1,4 +1,4 @@
-import { type Abi } from 'abitype'
+import type { Abi } from 'abitype'
 import type { wagmiMintExampleAbi } from 'abitype/abis'
 
 import type {

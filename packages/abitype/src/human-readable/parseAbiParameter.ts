@@ -32,30 +32,30 @@ export type ParseAbiParameter<
       ? TParam extends ''
         ? never
         : string extends TParam
-        ? AbiParameter
-        : ParseAbiParameter_<TParam, { Modifier: Modifier }>
+          ? AbiParameter
+          : ParseAbiParameter_<TParam, { Modifier: Modifier }>
       : never)
   | (TParam extends readonly string[]
       ? string[] extends TParam
         ? AbiParameter // Return generic AbiParameter item since type was no inferrable
         : ParseStructs<TParam> extends infer Structs
-        ? {
-            [K in keyof TParam]: TParam[K] extends string
-              ? IsStructSignature<TParam[K]> extends true
+          ? {
+              [K in keyof TParam]: TParam[K] extends string
+                ? IsStructSignature<TParam[K]> extends true
+                  ? never
+                  : ParseAbiParameter_<
+                      TParam[K],
+                      { Modifier: Modifier; Structs: Structs }
+                    >
+                : never
+            } extends infer Mapped extends readonly unknown[]
+            ? Filter<Mapped, never>[0] extends infer Result
+              ? Result extends undefined
                 ? never
-                : ParseAbiParameter_<
-                    TParam[K],
-                    { Modifier: Modifier; Structs: Structs }
-                  >
+                : Result
               : never
-          } extends infer Mapped extends readonly unknown[]
-          ? Filter<Mapped, never>[0] extends infer Result
-            ? Result extends undefined
-              ? never
-              : Result
             : never
           : never
-        : never
       : never)
 
 /**
@@ -89,12 +89,12 @@ export function parseAbiParameter<
           ? TParam extends readonly [] // empty array
             ? Error<'At least one parameter required.'>
             : string[] extends TParam
-            ? unknown
-            : unknown // TODO: Validate param string
+              ? unknown
+              : unknown // TODO: Validate param string
           : never)
     ),
 ): ParseAbiParameter<TParam> {
-  let abiParameter
+  let abiParameter: AbiParameter | undefined
   if (typeof param === 'string')
     abiParameter = parseAbiParameter_(param, {
       modifiers,

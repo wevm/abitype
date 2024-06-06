@@ -29,11 +29,11 @@ export type IsFunctionSignature<T> = T extends FunctionSignature<infer Name>
     ? T extends ValidFunctionSignatures
       ? true
       : // Check that `Parameters` is not absorbing other types (e.g. `returns`)
-      T extends `function ${string}(${infer Parameters})`
-      ? Parameters extends InvalidFunctionParameters
-        ? false
-        : true
-      : false
+        T extends `function ${string}(${infer Parameters})`
+        ? Parameters extends InvalidFunctionParameters
+          ? false
+          : true
+        : false
     : false
   : false
 export type Scope = 'public' | 'external' // `internal` or `private` functions wouldn't make it to ABI so can ignore
@@ -107,10 +107,10 @@ export type Signature<
 > = IsSignature<T> extends true
   ? T
   : string extends T // if exactly `string` (not narrowed), then pass through as valid
-  ? T
-  : Error<`Signature "${T}" is invalid${K extends string
-      ? ` at position ${K}`
-      : ''}.`>
+    ? T
+    : Error<`Signature "${T}" is invalid${K extends string
+        ? ` at position ${K}`
+        : ''}.`>
 
 export type Signatures<T extends readonly string[]> = {
   [K in keyof T]: Signature<T[K], K>
@@ -126,8 +126,8 @@ export type EventModifier = Extract<Modifier, 'indexed'>
 export type IsName<TName extends string> = TName extends ''
   ? false
   : ValidateName<TName> extends TName
-  ? true
-  : false
+    ? true
+    : false
 
 export type AssertName<TName extends string> =
   ValidateName<TName> extends infer InvalidName extends string[]
@@ -140,16 +140,16 @@ export type ValidateName<
 > = TName extends `${string}${' '}${string}`
   ? Error<`Identifier "${TName}" cannot contain whitespace.`>
   : IsSolidityKeyword<TName> extends true
-  ? Error<`"${TName}" is a protected Solidity keyword.`>
-  : TName extends `${number}`
-  ? Error<`Identifier "${TName}" cannot be a number string.`>
-  : TName extends `${number}${string}`
-  ? Error<`Identifier "${TName}" cannot start with a number.`>
-  : CheckCharacters extends true
-  ? IsValidCharacter<TName> extends true
-    ? TName
-    : Error<`"${TName}" contains invalid character.`>
-  : TName
+    ? Error<`"${TName}" is a protected Solidity keyword.`>
+    : TName extends `${number}`
+      ? Error<`Identifier "${TName}" cannot be a number string.`>
+      : TName extends `${number}${string}`
+        ? Error<`Identifier "${TName}" cannot start with a number.`>
+        : CheckCharacters extends true
+          ? IsValidCharacter<TName> extends true
+            ? TName
+            : Error<`"${TName}" contains invalid character.`>
+          : TName
 
 export type IsSolidityKeyword<T extends string> = T extends SolidityKeywords
   ? true

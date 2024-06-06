@@ -1,13 +1,13 @@
-import {
-  type Abi,
-  type AbiFunction,
-  type AbiParameter,
-  type AbiParametersToPrimitiveTypes,
-  type AbiStateMutability,
-  type Address,
-  type ExtractAbiFunction,
-  type ExtractAbiFunctionNames,
-  type ResolvedRegister,
+import type {
+  Abi,
+  AbiFunction,
+  AbiParameter,
+  AbiParametersToPrimitiveTypes,
+  AbiStateMutability,
+  Address,
+  ExtractAbiFunction,
+  ExtractAbiFunctionNames,
+  ResolvedRegister,
 } from 'abitype'
 
 export type ContractParameters<
@@ -54,8 +54,8 @@ type GetArgs<
   readonly [] extends primitiveTypes
     ? 'args'
     : Abi extends abi
-    ? 'args'
-    : string
+      ? 'args'
+      : string
 >
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +71,8 @@ export type ContractReturnType<
       : AbiFunction
   ) extends infer abiFunction_ extends AbiFunction
     ? IsUnion<abiFunction_> extends true // narrow overloads by `args` by converting to tuple and filtering out overloads that don't match
-      ? UnionToTuple<abiFunction_> extends infer abiFunctions extends readonly AbiFunction[]
+      ? UnionToTuple<abiFunction_> extends infer abiFunctions extends
+          readonly AbiFunction[]
         ? {
             [K in keyof abiFunctions]: (
               readonly unknown[] | undefined extends args // for functions that don't have inputs, `args` can be `undefined` so fallback to `readonly []`
@@ -95,12 +96,13 @@ export type ContractReturnType<
 > = [abiFunction] extends [never]
   ? unknown // `abiFunction` was not inferrable (e.g. `abi` declared as `Abi`)
   : readonly unknown[] extends primitiveTypes
-  ? unknown // `abiFunction` was not inferrable (e.g. `abi` not const-asserted)
-  : primitiveTypes extends readonly [] // unwrap `primitiveTypes`
-  ? void // no outputs
-  : primitiveTypes extends readonly [infer primitiveType]
-  ? primitiveType // single output
-  : primitiveTypes
+    ? unknown // `abiFunction` was not inferrable (e.g. `abi` not const-asserted)
+    : primitiveTypes extends readonly [] // unwrap `primitiveTypes`
+      ? // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
+        void // no outputs
+      : primitiveTypes extends readonly [infer primitiveType]
+        ? primitiveType // single output
+        : primitiveTypes
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -141,8 +143,8 @@ type ReadonlyWiden<TType> =
       ? TType extends Address
         ? Address
         : TType extends ResolvedRegister['BytesType']['inputs']
-        ? ResolvedRegister['BytesType']
-        : string
+          ? ResolvedRegister['BytesType']
+          : string
       : never)
   | (TType extends readonly [] ? readonly [] : never)
   | (TType extends Record<string, unknown>
@@ -163,5 +165,7 @@ export type DeepPartial<
 > = Depth['length'] extends MaxDepth
   ? T
   : T extends object
-  ? { [P in keyof T]?: DeepPartial<T[P], MaxDepth, [...Depth, 1]> | undefined }
-  : T
+    ? {
+        [P in keyof T]?: DeepPartial<T[P], MaxDepth, [...Depth, 1]> | undefined
+      }
+    : T

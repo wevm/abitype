@@ -114,18 +114,18 @@ export function formatAbiItem<const TAbiItem extends Abi[number]>(
         ? ` returns (${formatAbiParameters(abiItem.outputs as Params)})`
         : ''
     }`
-  else if (abiItem.type === 'event')
+  if (abiItem.type === 'event')
     return `event ${abiItem.name}(${formatAbiParameters(
       abiItem.inputs as Params,
     )})`
-  else if (abiItem.type === 'error')
+  if (abiItem.type === 'error')
     return `error ${abiItem.name}(${formatAbiParameters(
       abiItem.inputs as Params,
     )})`
-  else if (abiItem.type === 'constructor')
+  if (abiItem.type === 'constructor')
     return `constructor(${formatAbiParameters(abiItem.inputs as Params)})${
       abiItem.stateMutability === 'payable' ? ' payable' : ''
     }`
-  else if (abiItem.type === 'fallback') return 'fallback()' as Result
+  if (abiItem.type === 'fallback') return 'fallback()' as Result
   return 'receive() external payable' as Result
 }

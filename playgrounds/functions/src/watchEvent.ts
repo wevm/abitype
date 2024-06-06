@@ -31,13 +31,13 @@ export type WatchEventParameters<
   onEmit: Abi extends abi
     ? (...args: unknown[]) => void // `abi` declared as `Abi`
     : abi extends Abi
-    ? (
-        // `abi` was inferrable
-        ...args: primitiveTypes extends readonly unknown[]
-          ? primitiveTypes
-          : unknown[]
-      ) => void
-    : (...args: unknown[]) => void // fallback
+      ? (
+          // `abi` was inferrable
+          ...args: primitiveTypes extends readonly unknown[]
+            ? primitiveTypes
+            : unknown[]
+        ) => void
+      : (...args: unknown[]) => void // fallback
 }
 
 export type WatchEventReturnType = () => void

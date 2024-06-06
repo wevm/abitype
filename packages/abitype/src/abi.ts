@@ -54,10 +54,13 @@ type _BuildArrayTypes<
 > = ResolvedRegister['ArrayMaxDepth'] extends false
   ? `${T}[${string}]`
   : Depth['length'] extends ResolvedRegister['ArrayMaxDepth']
-  ? T
-  : T extends `${any}[${SolidityFixedArrayRange | ''}]`
-  ? _BuildArrayTypes<T | `${T}[${SolidityFixedArrayRange | ''}]`, [...Depth, 1]>
-  : _BuildArrayTypes<`${T}[${SolidityFixedArrayRange | ''}]`, [...Depth, 1]>
+    ? T
+    : T extends `${any}[${SolidityFixedArrayRange | ''}]`
+      ? _BuildArrayTypes<
+          T | `${T}[${SolidityFixedArrayRange | ''}]`,
+          [...Depth, 1]
+        >
+      : _BuildArrayTypes<`${T}[${SolidityFixedArrayRange | ''}]`, [...Depth, 1]>
 
 // Modeling fixed-length (`<type>[M]`) and dynamic (`<type>[]`) arrays
 // Tuple and non-tuple versions are separated out for narrowing anywhere structs show up

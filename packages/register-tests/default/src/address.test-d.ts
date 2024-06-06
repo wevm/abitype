@@ -1,4 +1,4 @@
-import { type Address } from 'abitype'
+import type { Address } from 'abitype'
 import { expectTypeOf, test } from 'vitest'
 
 test('default', async () => {

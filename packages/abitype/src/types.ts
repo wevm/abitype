@@ -53,10 +53,10 @@ export type Filter<
 export type IsNarrowable<T, U> = IsUnknown<T> extends true
   ? false
   : IsNever<
-      (T extends U ? true : false) & (U extends T ? false : true)
-    > extends true
-  ? false
-  : true
+        (T extends U ? true : false) & (U extends T ? false : true)
+      > extends true
+    ? false
+    : true
 
 /**
  * Checks if {@link T} is `never`
@@ -163,13 +163,13 @@ export type Range<
   ? Current extends Start
     ? [Current]
     : Result extends []
-    ? []
-    : [...Result, Current]
+      ? []
+      : [...Result, Current]
   : Current extends Start
-  ? Range<Start, Stop, [Current], Padding>
-  : Result extends []
-  ? Range<Start, Stop, [], [...Padding, 0]>
-  : Range<Start, Stop, [...Result, Current], Padding>
+    ? Range<Start, Stop, [Current], Padding>
+    : Result extends []
+      ? Range<Start, Stop, [], [...Padding, 0]>
+      : Range<Start, Stop, [...Result, Current], Padding>
 
 /**
  * Trims empty space from type T.

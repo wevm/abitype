@@ -10,12 +10,12 @@ import { type FormatAbiItem, formatAbiItem } from './formatAbiItem.js'
 export type FormatAbi<TAbi extends Abi | readonly unknown[]> = Abi extends TAbi
   ? readonly string[]
   : TAbi extends readonly []
-  ? never
-  : TAbi extends Abi
-  ? {
-      [K in keyof TAbi]: FormatAbiItem<TAbi[K]>
-    }
-  : readonly string[]
+    ? never
+    : TAbi extends Abi
+      ? {
+          [K in keyof TAbi]: FormatAbiItem<TAbi[K]>
+        }
+      : readonly string[]
 
 /**
  * Parses JSON ABI into human-readable ABI

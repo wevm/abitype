@@ -109,6 +109,7 @@ test('args', () => {
         },
       ],
     })
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     assertType<[void, ResolvedRegister['BytesType']['outputs']]>(result)
   })
 })
@@ -124,6 +125,7 @@ test('behavior', () => {
         },
       ],
     })
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     assertType<[void]>(result)
   })
 

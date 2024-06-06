@@ -1,4 +1,4 @@
-import { Sidebar } from 'vocs'
+import type { Sidebar } from 'vocs'
 
 export const sidebar = {
   '/': [

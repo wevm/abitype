@@ -12,7 +12,7 @@
     "enabled": true,
     "formatWithErrors": false,
     "indentStyle": "space",
-    "indentSize": 2,
+    "indentWidth": 2,
     "lineWidth": 80
   },
   "linter": {
@@ -24,10 +24,6 @@
       },
       "correctness": {
         "noUnusedVariables": "error"
-      },
-      "nursery": {
-        "useExhaustiveDependencies": "error",
-        "useGroupedTypeImport": "off"
       },
       "performance": {
         "noDelete": "off"
@@ -47,7 +43,7 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "single",
-      "trailingComma": "all",
+      "trailingCommas": "all",
       "semicolons": "asNeeded"
     }
   },
