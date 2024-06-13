@@ -1,12 +1,13 @@
 import { attest } from '@arktype/attest'
 import { test } from 'vitest'
+
 import type {
   AbiParametersToPrimitiveTypes,
   TypedDataToPrimitiveTypes,
 } from './utils.js'
 
 test('deeply nested parameters', () => {
-  type Result = AbiParametersToPrimitiveTypes<
+  const res = {} as AbiParametersToPrimitiveTypes<
     [
       {
         name: 's'
@@ -40,34 +41,12 @@ test('deeply nested parameters', () => {
       },
     ]
   >
-  attest<
-    [
-      {
-        a: number
-        b: readonly number[]
-        c: readonly { x: number; y: number }[]
-      },
-      { x: number; y: number },
-      number,
-      readonly [{ x: bigint; y: bigint }, { x: bigint; y: bigint }],
-    ],
-    Result
-  >()
+  attest(res).snap()
 })
 
 test('self-referencing', () => {
-  type Result = TypedDataToPrimitiveTypes<{
+  const res = {} as TypedDataToPrimitiveTypes<{
     Name: [{ name: 'first'; type: 'Name' }, { name: 'last'; type: 'string' }]
   }>
-  attest<
-    {
-      Name: {
-        first: [
-          "Error: Cannot convert self-referencing struct 'Name' to primitive type.",
-        ]
-        last: string
-      }
-    },
-    Result
-  >()
+  attest(res).snap()
 })
