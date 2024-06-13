@@ -32,7 +32,7 @@
     "version:update": "bun .scripts/updateVersion.ts"
   },
   "devDependencies": {
-    "@arktype/attest": "0.7.5",
+    "@arktype/attest": "0.7.10",
     "@biomejs/biome": "^1.8.0",
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.27.1",

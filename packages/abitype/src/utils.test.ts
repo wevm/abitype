@@ -41,12 +41,47 @@ test('deeply nested parameters', () => {
       },
     ]
   >
-  attest(res).snap()
+  attest.instantiations([646, 'instantiations'])
+  attest<
+    [
+      {
+        a: number
+        b: readonly number[]
+        c: readonly {
+          x: number
+          y: number
+        }[]
+      },
+      {
+        x: number
+        y: number
+      },
+      number,
+      readonly [
+        {
+          x: bigint
+          y: bigint
+        },
+        {
+          x: bigint
+          y: bigint
+        },
+      ],
+    ]
+  >(res)
 })
 
 test('self-referencing', () => {
   const res = {} as TypedDataToPrimitiveTypes<{
     Name: [{ name: 'first'; type: 'Name' }, { name: 'last'; type: 'string' }]
   }>
-  attest(res).snap()
+  attest.instantiations([104, 'instantiations'])
+  attest<{
+    Name: {
+      first: [
+        "Error: Cannot convert self-referencing struct 'Name' to primitive type.",
+      ]
+      last: string
+    }
+  }>(res)
 })
