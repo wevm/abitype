@@ -1,5 +1,11 @@
 # abitype
 
+## 1.0.3
+
+### Patch Changes
+
+- [`f412bf8fa16d6f40829d841b1813baa031b66bfe`](https://github.com/wevm/abitype/commit/f412bf8fa16d6f40829d841b1813baa031b66bfe) Thanks [@tmm](https://github.com/tmm)! - Switched to lowercase generic names for core type utilities.
+
 ## 1.0.2
 
 ### Patch Changes

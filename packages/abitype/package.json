@@ -1,7 +1,7 @@
 {
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "repository": "wevm/abitype",
   "scripts": {
@@ -50,8 +50,12 @@
   },
   "typesVersions": {
     "*": {
-      "abis": ["./dist/types/exports/abis.d.ts"],
-      "zod": ["./dist/types/exports/zod.d.ts"]
+      "abis": [
+        "./dist/types/exports/abis.d.ts"
+      ],
+      "zod": [
+        "./dist/types/exports/zod.d.ts"
+      ]
     }
   },
   "peerDependencies": {
@@ -69,7 +73,10 @@
   "devDependencies": {
     "zod": "^3.22.4"
   },
-  "contributors": ["awkweb.eth <t@wevm.dev>", "jxom.eth <j@wevm.dev>"],
+  "contributors": [
+    "awkweb.eth <t@wevm.dev>",
+    "jxom.eth <j@wevm.dev>"
+  ],
   "funding": "https://github.com/sponsors/wevm",
   "keywords": [
     "abi",
