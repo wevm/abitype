@@ -25,14 +25,13 @@
     "test:typecheck": "vitest typecheck -c ./packages/abitype/test/vitest.config.ts",
     "test:update": "vitest --update",
     "trace": "tsc --noEmit --generateTrace ./playgrounds/performance/out --incremental false --project playgrounds/performance/tsconfig.json && echo \"Open playgrounds/performance/out/trace.json in https://ui.perfetto.dev\"",
-    "typebench": "pnpm run --r --parallel typebench",
     "typecheck": "pnpm run --r --parallel typecheck && tsc --noEmit",
     "typecheck:propertyTypes": "pnpm run --r --parallel typecheck --exactOptionalPropertyTypes false && tsc --noEmit --exactOptionalPropertyTypes false",
     "typeperf": "pnpm run --r --parallel typeperf",
     "version:update": "bun .scripts/updateVersion.ts"
   },
   "devDependencies": {
-    "@arktype/attest": "0.0.4",
+    "@arktype/attest": "0.8.0",
     "@biomejs/biome": "^1.8.0",
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.27.1",
@@ -46,11 +45,10 @@
     "publint": "^0.2.7",
     "sherif": "^0.8.4",
     "simple-git-hooks": "^2.11.1",
-    "tsx": "^4.7.0",
-    "typescript": "5.0.4",
+    "typescript": "5.4.5",
     "vitest": "^1.6.0"
   },
-  "packageManager": "pnpm@9.0.4",
+  "packageManager": "pnpm@9.1.4",
   "simple-git-hooks": {
     "pre-commit": "pnpm format && pnpm lint:fix"
   },
