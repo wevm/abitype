@@ -13,9 +13,9 @@ Converts `AbiParameter` to corresponding TypeScript primitive type.
 
 | Name                | Description                                        | Type                          |
 | ------------------- | -------------------------------------------------- | ----------------------------- |
-| `TAbiParameter`     | Parameter to convert to TypeScript representation. | `AbiParameter`                |
-| `TAbiParameterKind` | Kind to narrow by parameter type.                  | `AbiParameterKind` (optional) |
-| returns             | TypeScript primitive type.                         | `TType` (inferred)            |
+| `abiParameter`      | Parameter to convert to TypeScript representation. | `AbiParameter`                |
+| `abiParameterKind`  | Kind to narrow by parameter type.                  | `AbiParameterKind` (optional) |
+| returns             | TypeScript primitive type.                         | `type`  (inferred)            |
 
 #### Example
 
@@ -37,9 +37,9 @@ Converts array of `AbiParameter` to corresponding TypeScript primitive types.
 
 | Name                | Description                                          | Type                          |
 | ------------------- | ---------------------------------------------------- | ----------------------------- |
-| `TAbiParameters`    | Parameters to convert to TypeScript representations. | `readonly AbiParameter[]`     |
-| `TAbiParameterKind` | Kind to narrow by parameter type.                    | `AbiParameterKind` (optional) |
-| returns             | TypeScript primitive types.                          | `TType[]` (inferred)          |
+| `abiParameters`     | Parameters to convert to TypeScript representations. | `readonly AbiParameter[]`     |
+| `abiParameterKind`  | Kind to narrow by parameter type.                    | `AbiParameterKind` (optional) |
+| returns             | TypeScript primitive types.                          | `type[]` (in ferred)          |
 
 #### Example
 
@@ -62,9 +62,9 @@ Converts `AbiType` to corresponding TypeScript primitive type.
 
 | Name                | Description                                       | Type                          |
 | ------------------- | ------------------------------------------------- | ----------------------------- |
-| `TAbiType`          | ABI type to convert to TypeScript representation. | `AbiType`                     |
-| `TAbiParameterKind` | Kind to narrow by parameter type.                 | `AbiParameterKind` (optional) |
-| returns             | TypeScript primitive type.                        | `TType` (inferred)            |
+| `abiType`           | ABI type to convert to TypeScript representation. | `AbiType`                     |
+| `abiParameterKind`  | Kind to narrow by parameter type.                 | `AbiParameterKind` (optional) |
+| returns             | TypeScript primitive type.                        | `type` (inferred)             |
 
 :::info[NOTE]
 Does not include full array or tuple conversion. Use [`AbiParameterToPrimitiveType`](#abiparametertoprimitivetype) to fully convert array and tuple types.
@@ -86,8 +86,8 @@ Extracts `AbiError` with name from `Abi`.
 
 | Name         | Description    | Type                |
 | ------------ | -------------- | ------------------- |
-| `TAbi`       | ABI.           | `Abi`               |
-| `TErrorName` | Name of error. | `string` (inferred) |
+| `abi`        | ABI.           | `Abi`               |
+| `errorName`  | Name of error. | `string` (inferred) |
 | returns      | ABI Error.     | `AbiError`          |
 
 #### Example
@@ -115,7 +115,7 @@ Extracts all `AbiError` names from `Abi`.
 
 | Name    | Description      | Type                |
 | ------- | ---------------- | ------------------- |
-| `TAbi`  | ABI.             | `Abi`               |
+| `abi`   | ABI.             | `Abi`               |
 | returns | ABI Error names. | `string` (inferred) |
 
 #### Example
@@ -139,7 +139,7 @@ Extracts all `AbiError` types from `Abi`.
 
 | Name    | Description | Type               |
 | ------- | ----------- | ------------------ |
-| `TAbi`  | ABI.        | `Abi`              |
+| `abi`   | ABI.        | `Abi`              |
 | returns | ABI Errors. | `AbiError` (union) |
 
 #### Example
@@ -171,8 +171,8 @@ Extracts `AbiEvent` with name from `Abi`.
 
 | Name         | Description    | Type                |
 | ------------ | -------------- | ------------------- |
-| `TAbi`       | ABI.           | `Abi`               |
-| `TEventName` | Name of event. | `string` (inferred) |
+| `abi`        | ABI.           | `Abi`               |
+| `eventName`  | Name of event. | `string` (inferred) |
 | returns      | ABI Event.     | `AbiEvent`          |
 
 #### Example
@@ -228,7 +228,7 @@ Extracts all `AbiEvent` names from `Abi`.
 
 | Name    | Description      | Type                |
 | ------- | ---------------- | ------------------- |
-| `TAbi`  | ABI.             | `Abi`               |
+| `abi`   | ABI.             | `Abi`               |
 | returns | ABI Error names. | `string` (inferred) |
 
 #### Example
@@ -270,7 +270,7 @@ Extracts all `AbiEvent` types from `Abi`.
 
 | Name    | Description | Type               |
 | ------- | ----------- | ------------------ |
-| `TAbi`  | ABI.        | `Abi`              |
+| `abi`   | ABI.        | `Abi`              |
 | returns | ABI Events. | `AbiEvent` (union) |
 
 #### Example
@@ -324,9 +324,9 @@ Extracts `AbiFunction` with name from `Abi`.
 
 | Name                  | Description           | Type                            |
 | --------------------- | --------------------- | ------------------------------- |
-| `TAbi`                | ABI.                  | `Abi`                           |
-| `TFunctionName`       | Name of function.     | `string` (inferred)             |
-| `TAbiStateMutability` | ABI state mutability. | `AbiStateMutability` (optional) |
+| `abi`                 | ABI.                  | `Abi`                           |
+| `functionName`        | Name of function.     | `string` (inferred)             |
+| `abiStateMutability`  | ABI state mutability. | `AbiStateMutability` (optional) |
 | returns               | ABI Function.         | `AbiFunction`                   |
 
 #### Example
@@ -377,8 +377,8 @@ Extracts all `AbiFunction` names from `Abi`.
 
 | Name                  | Description           | Type                            |
 | --------------------- | --------------------- | ------------------------------- |
-| `TAbi`                | ABI.                  | `Abi`                           |
-| `TAbiStateMutability` | ABI state mutability. | `AbiStateMutability` (optional) |
+| `abi`                 | ABI.                  | `Abi`                           |
+| `abiStateMutability`  | ABI state mutability. | `AbiStateMutability` (optional) |
 | returns               | ABI Event names.      | `string` (inferred)             |
 
 #### Example
@@ -418,7 +418,7 @@ Extracts all `AbiFunction` types from `Abi`.
 
 | Name    | Description    | Type                  |
 | ------- | -------------- | --------------------- |
-| `TAbi`  | ABI.           | `Abi`                 |
+| `abi`   | ABI.           | `Abi`                 |
 | returns | ABI Functions. | `AbiFunction` (union) |
 
 #### Example
@@ -477,7 +477,7 @@ Checks if type is `Abi`.
 
 | Name    | Description                                           | Type      |
 | ------- | ----------------------------------------------------- | --------- |
-| `TAbi`  | ABI.                                                  | `Abi`     |
+| `abi`   | ABI.                                                  | `Abi`     |
 | returns | Boolean value. `true` if valid `Abi`, `false` if not. | `boolean` |
 
 #### Example
@@ -517,7 +517,7 @@ Checks if type is `TypedData`.
 
 | Name         | Description                                                 | Type        |
 | ------------ | ----------------------------------------------------------- | ----------- |
-| `TTypedData` | EIP-712 Typed Data schema.                                  | `TypedData` |
+| `typedData`  | EIP-712 Typed Data schema.                                  | `TypedData` |
 | returns      | Boolean value. `true` if valid `TypedData`, `false` if not. | `boolean`   |
 
 #### Example
@@ -548,8 +548,8 @@ Converts [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-st
 
 | Name         | Description                          | Type                                   |
 | ------------ | ------------------------------------ | -------------------------------------- |
-| `TTypedData` | EIP-712 Typed Data schema.           | `TypedData`                            |
-| returns      | TypeScript representation of schema. | `{ [name: string]: TType }` (inferred) |
+| `typedData`  | EIP-712 Typed Data schema.           | `TypedData`                            |
+| returns      | TypeScript representation of schema. | `{ [name: string]: type }` (inferred)  |
 
 #### Example
 
