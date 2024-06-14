@@ -10,7 +10,6 @@
     "build:esm+types": "tsc --project tsconfig.build.json --module es2020 --outDir ./dist/esm --declaration --declarationMap --declarationDir ./dist/types && echo > ./dist/esm/package.json '{\"type\":\"module\",\"sideEffects\":false}'",
     "clean": "rm -rf dist tsconfig.tsbuildinfo abis zod",
     "test:build": "publint --strict",
-    "typebench": "tsx test/typebench.ts --benchPercentThreshold 20 --benchErrorOnThresholdExceeded",
     "typecheck": "tsc --noEmit",
     "typeperf": "tsc --noEmit --extendedDiagnostics --composite false --incremental false"
   },
@@ -21,7 +20,6 @@
     "src/**/*.ts",
     "!dist/**/*.tsbuildinfo",
     "!jsr.json",
-    "!src/**/*.bench-d.ts",
     "!src/**/*.bench.ts",
     "!src/**/*.test-d.ts",
     "!src/**/*.test.ts"

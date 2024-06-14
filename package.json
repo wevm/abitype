@@ -25,14 +25,13 @@
     "test:typecheck": "vitest typecheck -c ./packages/abitype/test/vitest.config.ts",
     "test:update": "vitest --update",
     "trace": "tsc --noEmit --generateTrace ./playgrounds/performance/out --incremental false --project playgrounds/performance/tsconfig.json && echo \"Open playgrounds/performance/out/trace.json in https://ui.perfetto.dev\"",
-    "typebench": "pnpm run --r --parallel typebench",
     "typecheck": "pnpm run --r --parallel typecheck && tsc --noEmit",
     "typecheck:propertyTypes": "pnpm run --r --parallel typecheck --exactOptionalPropertyTypes false && tsc --noEmit --exactOptionalPropertyTypes false",
     "typeperf": "pnpm run --r --parallel typeperf",
     "version:update": "bun .scripts/updateVersion.ts"
   },
   "devDependencies": {
-    "@arktype/attest": "0.7.10",
+    "@arktype/attest": "0.8.0",
     "@biomejs/biome": "^1.8.0",
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.27.1",

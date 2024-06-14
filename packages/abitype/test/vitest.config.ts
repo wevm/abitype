@@ -10,7 +10,6 @@ export default defineConfig({
       exclude: [
         '**/dist/**',
         '**/*.bench.ts',
-        '**/*.bench-d.ts',
         '**/*.test.ts',
         '**/*.test-d.ts',
         'packages/abitype/src/version.ts',
