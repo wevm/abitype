@@ -21,12 +21,12 @@ jobs:
       - name: Lint repo
         run: pnpm lint:repo
 
-      - name: Lint code
-        run: pnpm format && pnpm lint:fix
-
       - name: Update package versions
         run: pnpm version:update
       
+      - name: Lint code
+        run: pnpm format && pnpm lint:fix
+
       - uses: stefanzweifel/git-auto-commit-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
