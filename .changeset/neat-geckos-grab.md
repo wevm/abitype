@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-Changed type parameters to camelCase.
+Changed type parameters and register properties to camelCase.
