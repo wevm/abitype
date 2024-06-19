@@ -43,9 +43,9 @@ test('args', () => {
       abi: wagmiMintExampleAbi,
       eventName: 'Transfer',
       onEmit(from, to, tokenId) {
-        assertType<ResolvedRegister['AddressType']>(from)
-        assertType<ResolvedRegister['AddressType']>(to)
-        assertType<ResolvedRegister['BigIntType']>(tokenId)
+        assertType<ResolvedRegister['addressType']>(from)
+        assertType<ResolvedRegister['addressType']>(to)
+        assertType<ResolvedRegister['bigIntType']>(tokenId)
       },
     })
   })
@@ -118,7 +118,7 @@ test('behavior', () => {
       ],
       eventName: 'Foo',
       onEmit(name) {
-        assertType<ResolvedRegister['AddressType']>(name)
+        assertType<ResolvedRegister['addressType']>(name)
       },
     })
   })

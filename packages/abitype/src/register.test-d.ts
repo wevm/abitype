@@ -3,25 +3,25 @@ import { assertType, test } from 'vitest'
 import type { ResolvedRegister } from './register.js'
 
 test('ResolvedRegister', () => {
-  assertType<ResolvedRegister['ArrayMaxDepth']>(false)
-  assertType<ResolvedRegister['FixedArrayMinLength']>(1)
-  assertType<ResolvedRegister['FixedArrayMaxLength']>(99)
+  assertType<ResolvedRegister['arrayMaxDepth']>(false)
+  assertType<ResolvedRegister['fixedArrayMinLength']>(1)
+  assertType<ResolvedRegister['fixedArrayMaxLength']>(99)
 
-  type AddressType = ResolvedRegister['AddressType']
+  type AddressType = ResolvedRegister['addressType']
   assertType<AddressType>('0x0000000000000000000000000000000000000000')
 
-  type BytesType = ResolvedRegister['BytesType']
+  type BytesType = ResolvedRegister['bytesType']
   assertType<BytesType>({
     inputs: '0xfoobarbaz',
     outputs: '0xfoobarbaz',
   })
 
-  type IntType = ResolvedRegister['IntType']
+  type IntType = ResolvedRegister['intType']
   assertType<IntType>(123)
 
-  type BigIntType = ResolvedRegister['BigIntType']
+  type BigIntType = ResolvedRegister['bigIntType']
   assertType<BigIntType>(123n)
 
-  type StrictAbiType = ResolvedRegister['StrictAbiType']
+  type StrictAbiType = ResolvedRegister['strictAbiType']
   assertType<StrictAbiType>(false)
 })

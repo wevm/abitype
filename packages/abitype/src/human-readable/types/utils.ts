@@ -215,7 +215,7 @@ export type _ValidateAbiParameter<abiParameter extends AbiParameter> =
   ) extends infer parameter
     ? // Validate `type` against `AbiType`
       (
-        ResolvedRegister['StrictAbiType'] extends true
+        ResolvedRegister['strictAbiType'] extends true
           ? parameter extends { type: AbiType }
             ? parameter
             : Merge<

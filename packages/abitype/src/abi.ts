@@ -1,7 +1,7 @@
 import type { ResolvedRegister } from './register.js'
 import type { Pretty, Range } from './types.js'
 
-export type Address = ResolvedRegister['AddressType']
+export type Address = ResolvedRegister['addressType']
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Solidity Types
@@ -37,8 +37,8 @@ export type SolidityInt = `${'u' | ''}int${MBits}` // `(u)int<M>`: (un)signed in
 //   | `${'u' | ''}fixed${MBits}x${Range<1, 20>[number]}`
 
 export type SolidityFixedArrayRange = Range<
-  ResolvedRegister['FixedArrayMinLength'],
-  ResolvedRegister['FixedArrayMaxLength']
+  ResolvedRegister['fixedArrayMinLength'],
+  ResolvedRegister['fixedArrayMaxLength']
 >[number]
 export type SolidityFixedArraySizeLookup = {
   [Prop in SolidityFixedArrayRange as `${Prop}`]: Prop
@@ -51,9 +51,9 @@ export type SolidityFixedArraySizeLookup = {
 type _BuildArrayTypes<
   T extends string,
   Depth extends readonly number[] = [],
-> = ResolvedRegister['ArrayMaxDepth'] extends false
+> = ResolvedRegister['arrayMaxDepth'] extends false
   ? `${T}[${string}]`
-  : Depth['length'] extends ResolvedRegister['ArrayMaxDepth']
+  : Depth['length'] extends ResolvedRegister['arrayMaxDepth']
     ? T
     : T extends `${any}[${SolidityFixedArrayRange | ''}]`
       ? _BuildArrayTypes<
@@ -87,7 +87,7 @@ export type AbiType =
   | SolidityInt
   | SolidityString
   | SolidityTuple
-type ResolvedAbiType = ResolvedRegister['StrictAbiType'] extends true
+type ResolvedAbiType = ResolvedRegister['strictAbiType'] extends true
   ? AbiType
   : string
 
@@ -221,7 +221,7 @@ export type Abi = readonly (
 export type TypedDataDomain = {
   chainId?: number | undefined
   name?: string | undefined
-  salt?: ResolvedRegister['BytesType']['outputs'] | undefined
+  salt?: ResolvedRegister['bytesType']['outputs'] | undefined
   verifyingContract?: Address | undefined
   version?: string | undefined
 }
