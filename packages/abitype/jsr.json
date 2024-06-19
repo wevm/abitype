@@ -1,6 +1,6 @@
 {
   "name": "@wevm/abitype",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "exports": {
     ".": "./src/exports/index.ts",
     "./abis": "./src/exports/abis.ts",
