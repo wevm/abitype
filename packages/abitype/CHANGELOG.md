@@ -1,16 +1,11 @@
 # abitype
 
-## 1.0.4
-
-### Patch Changes
-
-- [#239](https://github.com/wevm/abitype/pull/239) [`f083a7c20709a28b04c987e2ff6048bf25324759`](https://github.com/wevm/abitype/commit/f083a7c20709a28b04c987e2ff6048bf25324759) Thanks [@tmm](https://github.com/tmm)! - Changed type parameters and register properties to camelCase.
-
 ## 1.0.3
 
 ### Patch Changes
 
-- [`f412bf8fa16d6f40829d841b1813baa031b66bfe`](https://github.com/wevm/abitype/commit/f412bf8fa16d6f40829d841b1813baa031b66bfe) Thanks [@tmm](https://github.com/tmm)! - Switched to lowercase generic names for core type utilities.
+- [#239](https://github.com/wevm/abitype/pull/239) [`f083a7c20709a28b04c987e2ff6048bf25324759`](https://github.com/wevm/abitype/commit/f083a7c20709a28b04c987e2ff6048bf25324759) Thanks [@tmm](https://github.com/tmm)! - Changed type parameters and register properties to camelCase.
+- [`f412bf8fa16d6f40829d841b1813baa031b66bfe`](https://github.com/wevm/abitype/commit/f412bf8fa16d6f40829d841b1813baa031b66bfe) Thanks [@tmm](https://github.com/tmm)! - Switched to camelCase generic names for core type utilities.
 
 ## 1.0.2
 
