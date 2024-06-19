@@ -13,12 +13,12 @@ ABIType's types are customizable using [declaration merging](https://www.typescr
 ```ts twoslash
 declare module 'abitype' {
   export interface Register {
-    BigIntType: bigint & { foo: 'bar' }
+    bigIntType: bigint & { foo: 'bar' }
   }
 }
 
 import { ResolvedRegister } from 'abitype'
-type Result = ResolvedRegister['BigIntType']
+type Result = ResolvedRegister['bigIntType']
 //   ^?
 
 
@@ -31,7 +31,7 @@ If you are using ABIType via another package (e.g. [`viem`](https://viem.sh)), y
 ```ts
 declare module 'viem/node_modules/abitype' {
   export interface Register {
-    BigIntType: MyCustomBigIntType
+    bigIntType: MyCustomBigIntType
   }
 }
 ```
@@ -42,10 +42,10 @@ declare module 'viem/node_modules/abitype' {
 ABIType tries to strike a balance between type exhaustiveness and speed with sensible defaults. In some cases, you might want to tune your configuration (e.g. use a custom `bigint` type). To do this, the following configuration options are available:
 
 :::warning
-When configuring `ArrayMaxDepth`, `FixedArrayMinLength`, and `FixedArrayMaxLength`, there are trade-offs. For example, choosing a non-false value for `ArrayMaxDepth` and increasing the range between `FixedArrayMinLength` and `FixedArrayMaxLength` will make your types more exhaustive, but will also slow down the compiler for type checking, autocomplete, etc.
+When configuring `arrayMaxDepth`, `fixedArrayMinLength`, and `fixedArrayMaxLength`, there are trade-offs. For example, choosing a non-false value for `arrayMaxDepth` and increasing the range between `fixedArrayMinLength` and `fixedArrayMaxLength` will make your types more exhaustive, but will also slow down the compiler for type checking, autocomplete, etc.
 :::
 
-### `AddressType`
+### `addressType`
 
 TypeScript type to use for `address` values.
 
@@ -55,12 +55,12 @@ TypeScript type to use for `address` values.
 ```ts twoslash
 declare module 'abitype' {
   export interface Register {
-    AddressType: `0x${string}`
+    addressType: `0x${string}`
   }
 }
 ```
 
-### `ArrayMaxDepth`
+### `arrayMaxDepth`
 
 Maximum depth for nested array types (e.g. `string[][]`). When `false`, there is no maximum array depth.
 
@@ -75,7 +75,7 @@ declare module 'abitype' {
 }
 ```
 
-### `BigIntType`
+### `bigIntType`
 
 TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48`.
 
@@ -85,12 +85,12 @@ TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48`.
 ```ts twoslash
 declare module 'abitype' {
   export interface Register {
-    BigIntType: bigint
+    bigIntType: bigint
   }
 }
 ```
 
-### `BytesType`
+### `bytesType`
 
 TypeScript type to use for `bytes<M>` values.
 
@@ -100,7 +100,7 @@ TypeScript type to use for `bytes<M>` values.
 ```ts twoslash
 declare module 'abitype' {
   export interface Register {
-    BytesType: {
+    bytesType: {
       inputs: `0x${string}`
       outputs: `0x${string}`
     }
@@ -108,7 +108,7 @@ declare module 'abitype' {
 }
 ```
 
-### `FixedArrayMinLength`
+### `fixedArrayMinLength`
 
 Lower bound for fixed-length arrays.
 
@@ -123,7 +123,7 @@ declare module 'abitype' {
 }
 ```
 
-### `FixedArrayMaxLength`
+### `fixedArrayMaxLength`
 
 Upper bound for fixed-length arrays.
 
@@ -138,7 +138,7 @@ declare module 'abitype' {
 }
 ```
 
-### `IntType`
+### `intType`
 
 TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48`.
 
@@ -148,12 +148,12 @@ TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48`.
 ```ts twoslash
 declare module 'abitype' {
   export interface Register {
-    IntType: number
+    intType: number
   }
 }
 ```
 
-### `StrictAbiType`
+### `strictAbiType`
 
 When set, validates `AbiParameter`'s `type` against `AbiType`.
 
@@ -163,7 +163,7 @@ When set, validates `AbiParameter`'s `type` against `AbiType`.
 ```ts twoslash
 declare module 'abitype' {
   export interface Register {
-    StrictAbiType: false
+    strictAbiType: false
   }
 }
 ```

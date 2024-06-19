@@ -40,9 +40,9 @@ interface PrimitiveTypeLookup
   extends SolidityIntMap,
     SolidityByteMap,
     SolidityArrayMap {
-  address: ResolvedRegister['AddressType']
+  address: ResolvedRegister['addressType']
   bool: boolean
-  function: `${ResolvedRegister['AddressType']}${string}`
+  function: `${ResolvedRegister['addressType']}${string}`
   string: string
   tuple: Record<string, unknown>
 }
@@ -56,7 +56,7 @@ type SolidityIntMap = {
 }
 
 type SolidityByteMap = {
-  [_ in SolidityBytes]: ResolvedRegister['BytesType']
+  [_ in SolidityBytes]: ResolvedRegister['bytesType']
 }
 
 type SolidityArrayMap = { [_ in SolidityArray]: readonly unknown[] }
@@ -66,9 +66,9 @@ type LessThanOrEqualTo48Bits = Exclude<MBits, GreaterThan48Bits | NoBits>
 type NoBits = ''
 
 type BitsTypeLookup = {
-  [K in MBits]: ResolvedRegister[K extends LessThanOrEqualTo48Bits
-    ? 'IntType'
-    : 'BigIntType']
+  [key in MBits]: ResolvedRegister[key extends LessThanOrEqualTo48Bits
+    ? 'intType'
+    : 'bigIntType']
 }
 
 /**
@@ -98,8 +98,8 @@ export type AbiParameterToPrimitiveType<
       ? AbiArrayToPrimitiveType<abiParameter, abiParameterKind, head, size>
       : // 4. If type is not basic, tuple, or array, we don't know what the type is.
         // This can happen when a fixed-length array is out of range (`Size` doesn't exist in `SolidityFixedArraySizeLookup`),
-        // the array has depth greater than `Config['ArrayMaxDepth']`, etc.
-        ResolvedRegister['StrictAbiType'] extends true
+        // the array has depth greater than `ResolvedRegister['arrayMaxDepth']`, etc.
+        ResolvedRegister['strictAbiType'] extends true
         ? Error<`Unknown type '${abiParameter['type'] & string}'.`>
         : // 5. If we've gotten this far, let's check for errors in tuple components.
           // (Happens for recursive tuple typed data types.)

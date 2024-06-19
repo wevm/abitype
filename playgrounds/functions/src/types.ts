@@ -136,14 +136,14 @@ type MaybePartialBy<TType, TKeys extends string> = TKeys extends keyof TType
 
 type ReadonlyWiden<TType> =
   | (TType extends Function ? TType : never)
-  | (TType extends ResolvedRegister['BigIntType'] ? bigint : never)
+  | (TType extends ResolvedRegister['bigIntType'] ? bigint : never)
   | (TType extends boolean ? boolean : never)
-  | (TType extends ResolvedRegister['IntType'] ? number : never)
+  | (TType extends ResolvedRegister['intType'] ? number : never)
   | (TType extends string
       ? TType extends Address
         ? Address
-        : TType extends ResolvedRegister['BytesType']['inputs']
-          ? ResolvedRegister['BytesType']
+        : TType extends ResolvedRegister['bytesType']['inputs']
+          ? ResolvedRegister['bytesType']
           : string
       : never)
   | (TType extends readonly [] ? readonly [] : never)

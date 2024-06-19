@@ -27,11 +27,11 @@ test('args', () => {
       [
         string,
         readonly [
-          ResolvedRegister['BigIntType'],
-          ResolvedRegister['BigIntType'],
-          ResolvedRegister['BigIntType'],
-          ResolvedRegister['BigIntType'],
-          ResolvedRegister['AddressType'],
+          ResolvedRegister['bigIntType'],
+          ResolvedRegister['bigIntType'],
+          ResolvedRegister['bigIntType'],
+          ResolvedRegister['bigIntType'],
+          ResolvedRegister['addressType'],
           boolean,
         ],
       ]
@@ -54,7 +54,7 @@ test('args', () => {
       ],
     })
     assertType<
-      [ResolvedRegister['BigIntType'], ResolvedRegister['AddressType']]
+      [ResolvedRegister['bigIntType'], ResolvedRegister['addressType']]
     >(result)
   })
 
@@ -110,7 +110,7 @@ test('args', () => {
       ],
     })
     // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
-    assertType<[void, ResolvedRegister['BytesType']['outputs']]>(result)
+    assertType<[void, ResolvedRegister['bytesType']['outputs']]>(result)
   })
 })
 

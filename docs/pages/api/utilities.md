@@ -39,7 +39,7 @@ Converts array of `AbiParameter` to corresponding TypeScript primitive types.
 | ------------------- | ---------------------------------------------------- | ----------------------------- |
 | `abiParameters`     | Parameters to convert to TypeScript representations. | `readonly AbiParameter[]`     |
 | `abiParameterKind`  | Kind to narrow by parameter type.                    | `AbiParameterKind` (optional) |
-| returns             | TypeScript primitive types.                          | `type[]` (in ferred)          |
+| returns             | TypeScript primitive types.                          | `type[]` (inferred)           |
 
 #### Example
 

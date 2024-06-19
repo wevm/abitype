@@ -53,6 +53,9 @@ describe('AbiParameterToPrimitiveType', () => {
       nonce: bigint
       fee: number
     }>({} as Result)
+    attest({} as Result).type.toString.snap(
+      '{ name: string; symbol: string; description: string; imageURI: string; contentURI: string; price: bigint; limit: bigint; fundingRecipient: `0x${string}`; renderer: `0x${string}`; nonce: bigint; fee: number; }',
+    )
   })
 
   test('array', () => {

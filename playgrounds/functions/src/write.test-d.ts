@@ -65,7 +65,7 @@ test('args', () => {
         },
       ],
     })
-    assertType<ResolvedRegister['AddressType']>(result)
+    assertType<ResolvedRegister['addressType']>(result)
 
     write({
       abi: parseAbi([
@@ -99,7 +99,7 @@ test('return types', () => {
       functionName: 'setSubnodeOwner',
       args: ['0xfoo', '0xbar', '0x'],
     })
-    assertType<ResolvedRegister['BytesType']['outputs']>(result)
+    assertType<ResolvedRegister['bytesType']['outputs']>(result)
   })
 
   test('tuple', () => {
@@ -125,7 +125,7 @@ test('return types', () => {
     type Output = {
       name: string
       symbol: string
-      fundingRecipient: ResolvedRegister['AddressType']
+      fundingRecipient: ResolvedRegister['addressType']
     }
     const result = write({
       abi,
@@ -142,8 +142,8 @@ test('return types', () => {
     })
     assertType<
       readonly {
-        x: ResolvedRegister['BigIntType']
-        y: ResolvedRegister['BigIntType']
+        x: ResolvedRegister['bigIntType']
+        y: ResolvedRegister['bigIntType']
       }[]
     >(result)
   })
@@ -225,7 +225,7 @@ test('behavior', () => {
       functionName: 'foo',
       args: ['bar'],
     })
-    assertType<ResolvedRegister['AddressType']>(result)
+    assertType<ResolvedRegister['addressType']>(result)
   })
 
   test('human readable', () => {
