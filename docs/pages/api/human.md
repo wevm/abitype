@@ -203,10 +203,10 @@ Types for parsing and formatting human-readable ABIs.
 
 Parses human-readable ABI into JSON [`Abi`](/api/types#abi).
 
-| Name          | Description                    | Type              |
-| ------------- | ------------------------------ | ----------------- |
-| `signatures` | Human-Readable ABI.            | `string[]`        |
-| returns       | Parsed [`Abi`](/api/types#abi) | `abi` (inferred) |
+| Name         | Description                    | Type             |
+| ------------ | ------------------------------ | ---------------- |
+| `signatures` | Human-Readable ABI.            | `string[]`       |
+| returns      | Parsed [`Abi`](/api/types#abi) | `abi` (inferred) |
 
 #### Example
 
@@ -239,10 +239,10 @@ let result: Result
 
 Parses human-readable ABI item (e.g. error, event, function) into ABI item.
 
-| Name         | Description              | Type                  |
-| ------------ | ------------------------ | --------------------- |
-| `signature` | Human-Readable ABI item. | `string[]`            |
-| returns      | Parsed ABI item          | `abiItem` (inferred) |
+| Name        | Description              | Type                 |
+| ----------- | ------------------------ | -------------------- |
+| `signature` | Human-Readable ABI item. | `string[]`           |
+| returns     | Parsed ABI item          | `abiItem` (inferred) |
 
 #### Example
 
@@ -293,10 +293,10 @@ let resultStruct: ResultStruct
 
 Parses human-readable ABI parameter into [`AbiParameter`](/api/types#abiparameter).
 
-| Name     | Description                                      | Type                       |
-| -------- | ------------------------------------------------ | -------------------------- |
-| `param` | Human-Readable ABI parameter.                    | `string \| string[]`       |
-| returns  | Parsed [`AbiParameter`](/api/types#abiparameter) | `abiParameter` (inferred) |
+| Name    | Description                                      | Type                      |
+| ------- | ------------------------------------------------ | ------------------------- |
+| `param` | Human-Readable ABI parameter.                    | `string \| string[]`      |
+| returns | Parsed [`AbiParameter`](/api/types#abiparameter) | `abiParameter` (inferred) |
 
 #### Example
 
@@ -331,10 +331,10 @@ type ResultStruct = ParseAbiParameter<[
 
 Parses human-readable ABI parameters into [`AbiParameter`s](/api/types#abiparameter).
 
-| Name      | Description                                       | Type                         |
-| --------- | ------------------------------------------------- | ---------------------------- |
-| `params` | Human-Readable ABI parameters.                    | `string \| string[]`         |
-| returns   | Parsed [`AbiParameter`s](/api/types#abiparameter) | `abiParameter[]` (inferred) |
+| Name     | Description                                       | Type                        |
+| -------- | ------------------------------------------------- | --------------------------- |
+| `params` | Human-Readable ABI parameters.                    | `string \| string[]`        |
+| returns  | Parsed [`AbiParameter`s](/api/types#abiparameter) | `abiParameter[]` (inferred) |
 
 #### Example
 
@@ -373,10 +373,10 @@ type ResultStruct = ParseAbiParameters<[
 
 Formats [`Abi`](/api/types#abi) into human-readable ABI.
 
-| Name        | Description         | Type                        |
-| ----------- | ------------------- | --------------------------- |
-| `abi`      | ABI                 | [`Abi`](/api/types#abi)     |
-| returns     | Human-Readable ABI. | `string[]` (inferred)       |
+| Name    | Description         | Type                    |
+| ------- | ------------------- | ----------------------- |
+| `abi`   | ABI                 | [`Abi`](/api/types#abi) |
+| returns | Human-Readable ABI. | `string[]` (inferred)   |
 
 #### Example
 
@@ -411,10 +411,10 @@ type Result = FormatAbi<[
 
 Formats Abi item (e.g. error, event, function) into human-readable ABI parameter.
 
-| Name            | Description              | Type                                |
-| --------------- | ------------------------ | ----------------------------------- |
-| `abiItem`      | ABI item                 | [`Abi[number]`](/api/types#abi)     |
-| returns         | Human-Readable ABI item. | `string` (inferred)                 |
+| Name      | Description              | Type                            |
+| --------- | ------------------------ | ------------------------------- |
+| `abiItem` | ABI item                 | [`Abi[number]`](/api/types#abi) |
+| returns   | Human-Readable ABI item. | `string` (inferred)             |
 
 #### Example
 
@@ -438,10 +438,10 @@ type Result = FormatAbiItem<{
 
 Formats [`AbiParameter`](/api/types#abiparameter) into human-readable ABI parameter.
 
-| Name            | Description                    | Type                                             |
-| --------------- | ------------------------------ | ------------------------------------------------ |
-| `abiParameter` | ABI parameter                  | [`AbiParameter`](/api/types#abiparameter)        |
-| returns         | Human-Readable ABI parameters. | `string[]` (inferred)                            |
+| Name           | Description                    | Type                                      |
+| -------------- | ------------------------------ | ----------------------------------------- |
+| `abiParameter` | ABI parameter                  | [`AbiParameter`](/api/types#abiparameter) |
+| returns        | Human-Readable ABI parameters. | `string[]` (inferred)                     |
 
 #### Example
 
@@ -456,10 +456,10 @@ type Result = FormatAbiParameter<{ type: 'address'; name: 'from' }>
 
 Formats [`AbiParameter`s](/api/types#abiparameter) into human-readable ABI parameters.
 
-| Name             | Description                   | Type                                               |
-| ---------------- | ----------------------------- | -------------------------------------------------- |
-| `abiParameters` | ABI parameters                | [`AbiParameter[]`](/api/types#abiparameter)        |
-| returns          | Human-Readable ABI parameter. | `string` (inferred)                                |
+| Name            | Description                   | Type                                        |
+| --------------- | ----------------------------- | ------------------------------------------- |
+| `abiParameters` | ABI parameters                | [`AbiParameter[]`](/api/types#abiparameter) |
+| returns         | Human-Readable ABI parameter. | `string` (inferred)                         |
 
 #### Example
 
@@ -487,9 +487,9 @@ These functions throw [errors](#errors-1) for invalid inputs. Make sure you hand
 
 Parses human-readable ABI into JSON [`Abi`](/api/types#abi).
 
-| Name         | Description                    | Type              |
-| ------------ | ------------------------------ | ----------------- |
-| `signatures` | Human-Readable ABI.            | `string[]`        |
+| Name         | Description                    | Type             |
+| ------------ | ------------------------------ | ---------------- |
+| `signatures` | Human-Readable ABI.            | `string[]`       |
 | returns      | Parsed [`Abi`](/api/types#abi) | `abi` (inferred) |
 
 #### Example
@@ -522,9 +522,9 @@ abi
 
 Parses human-readable ABI item (e.g. error, event, function) into ABI item.
 
-| Name        | Description              | Type                  |
-| ----------- | ------------------------ | --------------------- |
-| `signature` | Human-Readable ABI item. | `string \| string[]`  |
+| Name        | Description              | Type                 |
+| ----------- | ------------------------ | -------------------- |
+| `signature` | Human-Readable ABI item. | `string \| string[]` |
 | returns     | Parsed ABI item          | `abiItem` (inferred) |
 
 #### Example
@@ -577,9 +577,9 @@ abiItemStruct
 
 Parses human-readable ABI parameter into [`AbiParameter`](/api/types#abiparameter).
 
-| Name    | Description                                      | Type                       |
-| ------- | ------------------------------------------------ | -------------------------- |
-| `param` | Human-Readable ABI parameter.                    | `string \| string[]`       |
+| Name    | Description                                      | Type                      |
+| ------- | ------------------------------------------------ | ------------------------- |
+| `param` | Human-Readable ABI parameter.                    | `string \| string[]`      |
 | returns | Parsed [`AbiParameter`](/api/types#abiparameter) | `abiParameter` (inferred) |
 
 #### Example
@@ -615,9 +615,9 @@ abiParameterStruct
 
 Parses human-readable ABI parameters into [`AbiParameter`s](/api/types#abiparameter).
 
-| Name     | Description                                       | Type                         |
-| -------- | ------------------------------------------------- | ---------------------------- |
-| `params` | Human-Readable ABI parameters.                    | `string \| string[]`         |
+| Name     | Description                                       | Type                        |
+| -------- | ------------------------------------------------- | --------------------------- |
+| `params` | Human-Readable ABI parameters.                    | `string \| string[]`        |
 | returns  | Parsed [`AbiParameter`s](/api/types#abiparameter) | `abiParameter[]` (inferred) |
 
 #### Example
@@ -662,10 +662,10 @@ abiParametersStruct
 
 Formats [`Abi`](/api/types#abi) into human-readable ABI.
 
-| Name        | Description         | Type                        |
-| ----------- | ------------------- | --------------------------- |
-| `abi`       | ABI                 | [`Abi`](/api/types#abi)     |
-| returns     | Human-Readable ABI. | `string[]` (inferred)       |
+| Name        | Description         | Type                    |
+| ----------- | ------------------- | ----------------------- |
+| `abi`       | ABI                 | [`Abi`](/api/types#abi) |
+| returns     | Human-Readable ABI. | `string[]` (inferred)   |
 
 #### Example
 
@@ -700,10 +700,10 @@ const result = formatAbi([
 
 Formats Abi item (e.g. error, event, function) into human-readable ABI parameter.
 
-| Name            | Description              | Type                                |
-| --------------- | ------------------------ | ----------------------------------- |
-| `abiItem`       | ABI item                 | [`Abi[number]`](/api/types#abi)     |
-| returns         | Human-Readable ABI item. | `string` (inferred)                 |
+| Name            | Description              | Type                            |
+| --------------- | ------------------------ | ------------------------------- |
+| `abiItem`       | ABI item                 | [`Abi[number]`](/api/types#abi) |
+| returns         | Human-Readable ABI item. | `string` (inferred)             |
 
 #### Example
 
@@ -727,10 +727,10 @@ const result = formatAbiItem({
 
 Formats [`AbiParameter`](/api/types#abiparameter) into human-readable ABI parameter.
 
-| Name           | Description                   | Type                                             |
-| -------------- | ----------------------------- | ------------------------------------------------ |
-| `abiParameter` | ABI parameter                 | [`AbiParameter`](/api/types#abiparameter)        |
-| returns        | Human-Readable ABI parameter. | `string` (inferred)                              |
+| Name           | Description                   | Type                                      |
+| -------------- | ----------------------------- | ----------------------------------------- |
+| `abiParameter` | ABI parameter                 | [`AbiParameter`](/api/types#abiparameter) |
+| returns        | Human-Readable ABI parameter. | `string` (inferred)                       |
 
 #### Example
 
@@ -745,10 +745,10 @@ const result = formatAbiParameter({ type: 'address', name: 'from' })
 
 Formats [`AbiParameter`s](/api/types#abiparameter) into human-readable ABI parameters.
 
-| Name             | Description                   | Type                                               |
-| ---------------- | ----------------------------- | -------------------------------------------------- |
-| `abiParameters`  | ABI parameters                | [`AbiParameter[]`](/api/types#abiparameter)        |
-| returns          | Human-Readable ABI parameter. | `string` (inferred)                                |
+| Name             | Description                   | Type                                        |
+| ---------------- | ----------------------------- | ------------------------------------------- |
+| `abiParameters`  | ABI parameters                | [`AbiParameter[]`](/api/types#abiparameter) |
+| returns          | Human-Readable ABI parameter. | `string` (inferred)                         |
 
 #### Example
 
