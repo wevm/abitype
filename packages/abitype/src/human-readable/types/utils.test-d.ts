@@ -12,10 +12,10 @@ import type {
   _ValidateAbiParameter,
 } from './utils.js'
 
-type OptionsWithModifier = { Modifier: 'calldata'; Structs: unknown }
-type OptionsWithIndexed = { Modifier: 'indexed'; Structs: unknown }
+type OptionsWithModifier = { modifier: 'calldata'; structs: unknown }
+type OptionsWithIndexed = { modifier: 'indexed'; structs: unknown }
 type OptionsWithStructs = {
-  Structs: {
+  structs: {
     Foo: [{ type: 'address'; name: 'bar' }]
   }
 }
@@ -980,13 +980,13 @@ test('_SplitNameOrModifier', () => {
     readonly name: 'foo'
   }>()
   expectTypeOf<
-    _SplitNameOrModifier<'indexed foo', { Modifier: 'indexed' }>
+    _SplitNameOrModifier<'indexed foo', { modifier: 'indexed' }>
   >().toEqualTypeOf<{
     readonly name: 'foo'
     readonly indexed: true
   }>()
   expectTypeOf<
-    _SplitNameOrModifier<'calldata foo', { Modifier: 'calldata' }>
+    _SplitNameOrModifier<'calldata foo', { modifier: 'calldata' }>
   >().toEqualTypeOf<{
     readonly name: 'foo'
   }>()
@@ -995,14 +995,14 @@ test('_SplitNameOrModifier', () => {
 test('_UnwrapNameOrModifier', () => {
   expectTypeOf<_UnwrapNameOrModifier<'bar) foo'>>().toEqualTypeOf<{
     End: 'bar'
-    NameOrModifier: 'foo'
+    nameOrModifier: 'foo'
   }>()
   expectTypeOf<_UnwrapNameOrModifier<'baz) bar) foo'>>().toEqualTypeOf<{
     End: 'baz) bar'
-    NameOrModifier: 'foo'
+    nameOrModifier: 'foo'
   }>()
   expectTypeOf<_UnwrapNameOrModifier<'string) calldata foo'>>().toEqualTypeOf<{
     End: 'string'
-    NameOrModifier: 'calldata foo'
+    nameOrModifier: 'calldata foo'
   }>()
 })

@@ -8,7 +8,7 @@ import {
 /**
  * Formats {@link AbiParameter}s to human-readable ABI parameter.
  *
- * @param TAbiParameters - ABI parameters
+ * @param abiParameters - ABI parameters
  * @returns Human-readable ABI parameters
  *
  * @example
@@ -19,13 +19,13 @@ import {
  * ]>
  */
 export type FormatAbiParameters<
-  TAbiParameters extends readonly [
+  abiParameters extends readonly [
     AbiParameter | AbiEventParameter,
     ...(readonly (AbiParameter | AbiEventParameter)[]),
   ],
 > = Join<
   {
-    [K in keyof TAbiParameters]: FormatAbiParameter<TAbiParameters[K]>
+    [key in keyof abiParameters]: FormatAbiParameter<abiParameters[key]>
   },
   ', '
 >
@@ -44,11 +44,11 @@ export type FormatAbiParameters<
  * ])
  */
 export function formatAbiParameters<
-  const TAbiParameters extends readonly [
+  const abiParameters extends readonly [
     AbiParameter | AbiEventParameter,
     ...(readonly (AbiParameter | AbiEventParameter)[]),
   ],
->(abiParameters: TAbiParameters): FormatAbiParameters<TAbiParameters> {
+>(abiParameters: abiParameters): FormatAbiParameters<abiParameters> {
   let params = ''
   const length = abiParameters.length
   for (let i = 0; i < length; i++) {
@@ -56,5 +56,5 @@ export function formatAbiParameters<
     params += formatAbiParameter(abiParameter)
     if (i !== length - 1) params += ', '
   }
-  return params as FormatAbiParameters<TAbiParameters>
+  return params as FormatAbiParameters<abiParameters>
 }

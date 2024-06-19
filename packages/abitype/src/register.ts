@@ -1,5 +1,6 @@
 export type Register = {}
 
+// TODO: Convert to lowercase (e.g. `AddressType` to `addressType`)
 export type ResolvedRegister = {
   /**
    * TypeScript type to use for `address` values
