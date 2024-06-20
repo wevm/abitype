@@ -1,4 +1,5 @@
-export type Register = {}
+// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
+export interface Register {}
 
 // TODO: Remove deprecated properties next major version
 export type ResolvedRegister = {
