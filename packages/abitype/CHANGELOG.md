@@ -1,5 +1,11 @@
 # abitype
 
+## 1.0.4
+
+### Patch Changes
+
+- [`13132c5c8a8fb4a332e1032c1279136f0683c29b`](https://github.com/wevm/abitype/commit/13132c5c8a8fb4a332e1032c1279136f0683c29b) Thanks [@tmm](https://github.com/tmm)! - Switched `Register` to `interface` to fix declaration merging.
+
 ## 1.0.3
 
 ### Patch Changes

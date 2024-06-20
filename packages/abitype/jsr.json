@@ -1,13 +1,22 @@
 {
   "name": "@wevm/abitype",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "exports": {
     ".": "./src/exports/index.ts",
     "./abis": "./src/exports/abis.ts",
     "./zod": "./src/exports/zod.ts"
   },
   "publish": {
-    "include": ["LICENSE", "README.md", "CHANGELOG.md", "src/**/*.ts"],
-    "exclude": ["src/**/*.bench.ts", "src/**/*.test.ts", "src/**/*.test-d.ts"]
+    "include": [
+      "LICENSE",
+      "README.md",
+      "CHANGELOG.md",
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "src/**/*.bench.ts",
+      "src/**/*.test.ts",
+      "src/**/*.test-d.ts"
+    ]
   }
 }
