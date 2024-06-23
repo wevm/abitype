@@ -32,6 +32,7 @@ export type {
   TypedDataType,
 } from '../abi.js'
 
+// biome-ignore lint/performance/noBarrelFile: <explanation>
 export { BaseError } from '../errors.js'
 
 export type { Narrow } from '../narrow.js'

@@ -26,6 +26,7 @@
         "noUnusedVariables": "error"
       },
       "performance": {
+        "noBarrelFile": "error",
         "noDelete": "off"
       },
       "style": {
