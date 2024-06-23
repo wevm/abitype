@@ -8,7 +8,6 @@ const __dirname = dirname(__filename)
 export default function () {
   return setup({
     benchErrorOnThresholdExceeded: true,
-    benchPercentThreshold: 10,
     tsconfig: resolve(__dirname, '../tsconfig.json'),
     formatter: 'pnpm biome format --write',
   })

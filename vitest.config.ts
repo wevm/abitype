@@ -9,13 +9,17 @@ export default defineConfig({
     coverage: {
       exclude: [
         '**/dist/**',
+        '**/test/**',
         '**/*.bench.ts',
         '**/*.test.ts',
         '**/*.test-d.ts',
-        'packages/abitype/src/version.ts',
+        'src/version.ts',
       ],
-      include: ['packages/abitype/src/**/*.ts'],
       reporter: process.env.CI ? ['lcov'] : ['text', 'json', 'html'],
     },
+    environment: 'node',
+    globalSetup: ['./test/globalSetup.ts'],
+    root: './packages/abitype',
+    setupFiles: ['./test/setup.ts'],
   },
 })
