@@ -21,8 +21,9 @@
     "!dist/**/*.tsbuildinfo",
     "!jsr.json",
     "!src/**/*.bench.ts",
-    "!src/**/*.test-d.ts",
-    "!src/**/*.test.ts"
+    "!src/**/*.bench-d.ts",
+    "!src/**/*.test.ts",
+    "!src/**/*.test-d.ts"
   ],
   "sideEffects": false,
   "type": "module",

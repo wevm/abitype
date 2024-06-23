@@ -22,7 +22,7 @@
     "test": "vitest",
     "test:build": "pnpm run --r --parallel test:build",
     "test:cov": "vitest run --coverage",
-    "test:typecheck": "vitest typecheck",
+    "test:types": "TYPES=true vitest bench-d.ts",
     "test:update": "vitest --update",
     "trace": "tsc --noEmit --generateTrace ./playgrounds/performance/out --incremental false --project playgrounds/performance/tsconfig.json && echo \"Open playgrounds/performance/out/trace.json in https://ui.perfetto.dev\"",
     "typecheck": "pnpm run --r --parallel typecheck && tsc --noEmit",
