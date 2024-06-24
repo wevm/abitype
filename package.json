@@ -53,32 +53,18 @@
     "pre-commit": "pnpm format && pnpm lint:fix"
   },
   "knip": {
-    "ignoreBinaries": [
-      "dev",
-      "only-allow"
-    ],
-    "ignoreWorkspaces": [
-      "packages/register-tests/**",
-      "playgrounds/**"
-    ],
+    "ignoreBinaries": ["dev", "only-allow"],
+    "ignoreWorkspaces": ["packages/register-tests/**", "playgrounds/**"],
     "workspaces": {
       ".": {
         "project": ".scripts/*.ts"
       },
       "docs": {
-        "project": [
-          "**/*.ts",
-          "**/*.tsx"
-        ]
+        "project": ["**/*.ts", "**/*.tsx"]
       },
       "packages/abitype": {
-        "entry": [
-          "src/exports/{abis,index,zod}.ts!"
-        ],
-        "project": [
-          "src/**/*.ts",
-          "test/**/*.ts"
-        ]
+        "entry": ["src/exports/{abis,index,zod}.ts!"],
+        "project": ["src/**/*.ts", "test/**/*.ts"]
       }
     }
   }
