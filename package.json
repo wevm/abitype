@@ -3,6 +3,7 @@
   "type": "module",
   "scripts": {
     "bench": "vitest bench",
+    "bench:types": "TYPES=true vitest bench-d.ts",
     "build": "pnpm run --r --filter \"./packages/**\" build",
     "changeset:prepublish": "pnpm version:update && pnpm build && bun .scripts/formatPackageJson.ts && bun .scripts/generateProxyPackages.ts",
     "changeset:publish": "pnpm changeset:prepublish && changeset publish",
@@ -22,7 +23,6 @@
     "test": "vitest",
     "test:build": "pnpm run --r --parallel test:build",
     "test:cov": "vitest run --coverage",
-    "test:types": "TYPES=true vitest bench-d.ts",
     "test:update": "vitest --update",
     "trace": "tsc --noEmit --generateTrace ./playgrounds/performance/out --incremental false --project playgrounds/performance/tsconfig.json && echo \"Open playgrounds/performance/out/trace.json in https://ui.perfetto.dev\"",
     "typecheck": "pnpm run --r --parallel typecheck && tsc --noEmit",
@@ -31,7 +31,7 @@
     "version:update": "bun .scripts/updateVersion.ts"
   },
   "devDependencies": {
-    "@arktype/attest": "0.8.1",
+    "@arktype/attest": "0.8.0",
     "@biomejs/biome": "^1.8.2",
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.27.6",
@@ -49,6 +49,9 @@
     "vitest": "^1.6.0"
   },
   "packageManager": "pnpm@9.4.0",
+  "engines": {
+    "node": "22.x"
+  },
   "simple-git-hooks": {
     "pre-commit": "pnpm format && pnpm lint:fix"
   },

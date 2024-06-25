@@ -79,8 +79,8 @@ jobs:
       - name: Link packages
         run: pnpm preconstruct
         
-      - name: Test types
-        run: 'pnpm test:types'
+      - name: Bench types
+        run: 'pnpm bench:types'
 
       - name: Check types
         run: pnpm typecheck

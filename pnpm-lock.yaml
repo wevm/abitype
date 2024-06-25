@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@arktype/attest':
-        specifier: 0.8.1
-        version: 0.8.1(typescript@5.5.2)
+        specifier: 0.8.0
+        version: 0.8.0(typescript@5.5.2)
       '@biomejs/biome':
         specifier: ^1.8.2
         version: 1.8.2
@@ -121,8 +121,8 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@arktype/attest@0.8.1':
-    resolution: {integrity: sha512-CU0HCaogQ88sFXRix48pYtX0vEgsui7X+OzmM/M3mt8U+kh4kfabo6HXGfkzFi2huPPwZGIiwfEw7NTCD46L+A==}
+  '@arktype/attest@0.8.0':
+    resolution: {integrity: sha512-wxQ8PdXSrlQyHzlQeXiMMARumAS4whpuvvqV+DWWDECAhrsyhV0yixAavapz1X7qu8253cCiF6h/dabpGYAtpw==}
     hasBin: true
     peerDependencies:
       typescript: '*'
@@ -130,11 +130,14 @@ packages:
   '@arktype/fs@0.0.20':
     resolution: {integrity: sha512-WnoIFrhiDKnWixd7xmcvFTlP7ZVReT7j37nTbCpieUCsVaUldb38pgQjxdvlJN40UL3kkjxyiYIRmc7BOvgy1A==}
 
-  '@arktype/schema@0.1.17':
-    resolution: {integrity: sha512-jIjVrfaBZkZ7rbIinIF5ML4gmh7tf+F0mxfv1X69iATQ7pi+LRoBB4L1kQXU1QL+o/SkvQYymAwmYe727Ymn/Q==}
+  '@arktype/schema@0.1.18':
+    resolution: {integrity: sha512-6xMboHvnO3NtgYNP160PmghElUDpKe/aDMqH2hRRHoMb1Nh0bPilDfr9LJnXQEwfA5hDguqRM+vifOKkROtOLA==}
 
-  '@arktype/util@0.0.50':
-    resolution: {integrity: sha512-FkUNfl8MY7xuyiC28D+sx1qDrFlMP77oKMts0zTah01Ia3G56dSpZA1RGUPH9eTHPZGa75RA4r2NA9T9e/A9kw==}
+  '@arktype/util@0.0.49':
+    resolution: {integrity: sha512-ptlPUDZ8EECx23S7OjQnMulUSt8lmhxq5pQXmiyMlVt9g9EhUOVpdFrNqSCntFURtennxwFDJaYa+7rKQrGrew==}
+
+  '@arktype/util@0.0.51':
+    resolution: {integrity: sha512-lukmZcbSVI27ZJ4uJA7ztCKM5OligUfdTrr0E6k+F0tzz9iSEcplS0KZbVD2WfrLL3HXNKBE6g/w3nhYMAMoqw==}
 
   '@babel/code-frame@7.24.2':
     resolution: {integrity: sha512-y5+tLQyV8pg3fsiln67BVLD1P13Eg4lh5RW9mF0zUuvLrv9uIQ4MCL+CRT+FTsBlBjcIan6PGsLcBN0m3ClUyQ==}
@@ -1530,8 +1533,8 @@ packages:
   arity-n@1.0.4:
     resolution: {integrity: sha512-fExL2kFDC1Q2DUOx3whE/9KoN66IzkY4b4zUHUBFM1ojEYjZZYDcUW3bek/ufGionX9giIKDC5redH2IlGqcQQ==}
 
-  arktype@2.0.0-dev.25:
-    resolution: {integrity: sha512-cm/u+TgHY84rQOg5Zu5Ag6kDxM0kq+Skheml22cn6KSOzIsOPVaYjnVRHtPo5aAXYfRzjxXjTZikQK11TfBvzQ==}
+  arktype@2.0.0-dev.26:
+    resolution: {integrity: sha512-L7JkKHPkvEoDRKhtXyrCQcHast2oXFo7sOX1SZ3GSbIFJcEnTRRW12lFvH8M4fFR589CaOE9LleHMg9jZFR2TA==}
 
   array-last@1.3.0:
     resolution: {integrity: sha512-eOCut5rXlI6aCOS7Z7kCplKRKyiFQ6dHFBem4PwlwKeNFk2/XxTrhRh5T9PyaEWGy/NHTZWbY+nsZlNFJu9rYg==}
@@ -3835,24 +3838,26 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@arktype/attest@0.8.1(typescript@5.5.2)':
+  '@arktype/attest@0.8.0(typescript@5.5.2)':
     dependencies:
       '@arktype/fs': 0.0.20
-      '@arktype/util': 0.0.50
+      '@arktype/util': 0.0.49
       '@typescript/analyze-trace': 0.10.1
       '@typescript/vfs': 1.5.3(typescript@5.5.2)
-      arktype: 2.0.0-dev.25
+      arktype: 2.0.0-dev.26
       typescript: 5.5.2
     transitivePeerDependencies:
       - supports-color
 
   '@arktype/fs@0.0.20': {}
 
-  '@arktype/schema@0.1.17':
+  '@arktype/schema@0.1.18':
     dependencies:
-      '@arktype/util': 0.0.50
+      '@arktype/util': 0.0.51
 
-  '@arktype/util@0.0.50': {}
+  '@arktype/util@0.0.49': {}
+
+  '@arktype/util@0.0.51': {}
 
   '@babel/code-frame@7.24.2':
     dependencies:
@@ -5422,10 +5427,10 @@ snapshots:
 
   arity-n@1.0.4: {}
 
-  arktype@2.0.0-dev.25:
+  arktype@2.0.0-dev.26:
     dependencies:
-      '@arktype/schema': 0.1.17
-      '@arktype/util': 0.0.50
+      '@arktype/schema': 0.1.18
+      '@arktype/util': 0.0.51
 
   array-last@1.3.0:
     dependencies:

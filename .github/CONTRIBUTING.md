@@ -52,21 +52,21 @@ gh repo clone wevm/abitype
   <a href="#basic-guide">&uarr; back to top</a></b>
 </div>
 
-## Installing Node.js and pnpm
+## 2. Installing Node.js and pnpm
 
-ABIType uses [pnpm](https://pnpm.io) as its package manager. You need to install **Node.js v16 or higher** and **pnpm v7 or higher**.
-
-You can run the following commands in your terminal to check your local Node.js and npm versions:
+ABIType uses Node.js with [pnpm workspaces](https://pnpm.io/workspaces) to manage multiple projects. You can run the following command in your terminal to check your local Node.js version.
 
 ```bash
 node -v
-pnpm -v
 ```
 
-If the versions are not correct or you don't have Node.js or pnpm installed, download and follow their setup instructions:
+If **`node@22`** is not installed, you can install via [fnm](https://github.com/Schniz/fnm) or from the [official website](https://nodejs.org).
 
-- Install Node.js using [fnm](https://github.com/Schniz/fnm) or from the [official website](https://nodejs.org)
-- Install [pnpm](https://pnpm.io/installation)
+Once Node.js is installed, run the following to install [Corepack](https://nodejs.org/api/corepack.html). Corepack automatically installs and manages pnpm.
+
+```bash
+corepack enable
+```
 
 <div align="right">
   <a href="#basic-guide">&uarr; back to top</a></b>
@@ -74,15 +74,13 @@ If the versions are not correct or you don't have Node.js or pnpm installed, dow
 
 ## Installing dependencies
 
-Once in the project's root directory, run the following command to install the project's dependencies:
+Once in the project's root directory, run the following command to install pnpm (via Corepack) and the project's dependencies:
 
 ```bash
 pnpm install
 ```
 
 After the install completes, pnpm links packages across the project for development and [git hooks](https://github.com/toplenboren/simple-git-hooks) are set up.
-
-> **Note:** In case you have to install new packages or upgrade packages make sure to use **pnpm@8.8.0** and **typescript@5.0.4**
 
 <div align="right">
   <a href="#basic-guide">&uarr; back to top</a></b>
@@ -94,10 +92,7 @@ Tests are run with [Vitest](https://vitest.dev/guide/testing-types.html):
 
 ```bash
 pnpm test
-pnpm test:typecheck
 ```
-
-> **Note** Ensure to build the package (`pnpm build`) before running the `test:typecheck` suite.
 
 <div align="right">
   <a href="#basic-guide">&uarr; back to top</a></b>
