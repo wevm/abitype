@@ -12,8 +12,7 @@
     "deps": "pnpx taze -r",
     "docs:dev": "pnpm -r --filter docs dev",
     "format": "biome format --write",
-    "lint": "biome check",
-    "lint:fix": "pnpm lint --fix",
+    "lint": "biome check --write",
     "lint:repo": "sherif",
     "lint:unused": "pnpm clean && knip",
     "postinstall": "pnpm preconstruct",
@@ -53,7 +52,7 @@
     "node": "22.x"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm format && pnpm lint:fix"
+    "pre-commit": "pnpm lint"
   },
   "knip": {
     "ignoreBinaries": ["dev", "only-allow"],
