@@ -1,5 +1,11 @@
 # abitype
 
+## 1.0.5
+
+### Patch Changes
+
+- [#244](https://github.com/wevm/abitype/pull/244) [`8a5e5dc`](https://github.com/wevm/abitype/commit/8a5e5dc109ad9e7e571ad440f7aa883fc8fd89de) Thanks [@tmm](https://github.com/tmm)! - Fixed human-readable ABI item parsing with nested tuple parameters.
+
 ## 1.0.4
 
 ### Patch Changes
