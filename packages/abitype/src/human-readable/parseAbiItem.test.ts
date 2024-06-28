@@ -87,3 +87,176 @@ test.each([
 ])('parseAbiItem($signature)', ({ signature, expected }) => {
   expect(parseAbiItem(signature)).toEqual(expected)
 })
+
+test('nested tuples', () => {
+  const formattedAbiItem =
+    'function stepChanges((uint256 characterID, uint64 newPosition, uint24 xp, uint24 epoch, uint8 hp, (int32 x, int32 y, uint8 hp, uint8 kind)[5] monsters, (uint8 monsterIndexPlus1, uint8 attackCardsUsed1, uint8 attackCardsUsed2, uint8 defenseCardsUsed1, uint8 defenseCardsUsed2) battle) stateChanges, uint256 action, bool revetOnInvalidMoves) pure returns ((uint256 characterID, uint64 newPosition, uint24 xp, uint24 epoch, uint8 hp, (int32 x, int32 y, uint8 hp, uint8 kind)[5] monsters, (uint8 monsterIndexPlus1, uint8 attackCardsUsed1, uint8 attackCardsUsed2, uint8 defenseCardsUsed1, uint8 defenseCardsUsed2) battle))'
+  expect(parseAbiItem(formattedAbiItem)).toMatchInlineSnapshot(
+    `
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "name": "characterID",
+              "type": "uint256",
+            },
+            {
+              "name": "newPosition",
+              "type": "uint64",
+            },
+            {
+              "name": "xp",
+              "type": "uint24",
+            },
+            {
+              "name": "epoch",
+              "type": "uint24",
+            },
+            {
+              "name": "hp",
+              "type": "uint8",
+            },
+            {
+              "components": [
+                {
+                  "name": "x",
+                  "type": "int32",
+                },
+                {
+                  "name": "y",
+                  "type": "int32",
+                },
+                {
+                  "name": "hp",
+                  "type": "uint8",
+                },
+                {
+                  "name": "kind",
+                  "type": "uint8",
+                },
+              ],
+              "name": "monsters",
+              "type": "tuple[5]",
+            },
+            {
+              "components": [
+                {
+                  "name": "monsterIndexPlus1",
+                  "type": "uint8",
+                },
+                {
+                  "name": "attackCardsUsed1",
+                  "type": "uint8",
+                },
+                {
+                  "name": "attackCardsUsed2",
+                  "type": "uint8",
+                },
+                {
+                  "name": "defenseCardsUsed1",
+                  "type": "uint8",
+                },
+                {
+                  "name": "defenseCardsUsed2",
+                  "type": "uint8",
+                },
+              ],
+              "name": "battle",
+              "type": "tuple",
+            },
+          ],
+          "name": "stateChanges",
+          "type": "tuple",
+        },
+        {
+          "name": "action",
+          "type": "uint256",
+        },
+        {
+          "name": "revetOnInvalidMoves",
+          "type": "bool",
+        },
+      ],
+      "name": "stepChanges",
+      "outputs": [
+        {
+          "components": [
+            {
+              "name": "characterID",
+              "type": "uint256",
+            },
+            {
+              "name": "newPosition",
+              "type": "uint64",
+            },
+            {
+              "name": "xp",
+              "type": "uint24",
+            },
+            {
+              "name": "epoch",
+              "type": "uint24",
+            },
+            {
+              "name": "hp",
+              "type": "uint8",
+            },
+            {
+              "components": [
+                {
+                  "name": "x",
+                  "type": "int32",
+                },
+                {
+                  "name": "y",
+                  "type": "int32",
+                },
+                {
+                  "name": "hp",
+                  "type": "uint8",
+                },
+                {
+                  "name": "kind",
+                  "type": "uint8",
+                },
+              ],
+              "name": "monsters",
+              "type": "tuple[5]",
+            },
+            {
+              "components": [
+                {
+                  "name": "monsterIndexPlus1",
+                  "type": "uint8",
+                },
+                {
+                  "name": "attackCardsUsed1",
+                  "type": "uint8",
+                },
+                {
+                  "name": "attackCardsUsed2",
+                  "type": "uint8",
+                },
+                {
+                  "name": "defenseCardsUsed1",
+                  "type": "uint8",
+                },
+                {
+                  "name": "defenseCardsUsed2",
+                  "type": "uint8",
+                },
+              ],
+              "name": "battle",
+              "type": "tuple",
+            },
+          ],
+          "type": "tuple",
+        },
+      ],
+      "stateMutability": "pure",
+      "type": "function",
+    }
+  `,
+  )
+})
