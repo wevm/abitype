@@ -255,13 +255,26 @@ export type _ParseFunctionParametersAndStateMutability<
           | `${Scope} ${AbiStateMutability}`}`
       ? {
           Inputs: parameters
-          StateMutability: scopeOrStateMutability extends `${Scope} ${infer stateMutability extends AbiStateMutability}`
-            ? stateMutability
-            : scopeOrStateMutability extends AbiStateMutability
-              ? scopeOrStateMutability
-              : 'nonpayable'
+          StateMutability: _ParseStateMutability<scopeOrStateMutability>
         }
-      : never
+      : signature extends `function ${string}(${infer tail}`
+        ? _UnwrapNameOrModifier<tail> extends {
+            nameOrModifier: infer scopeOrStateMutability extends string
+            End: infer parameters
+          }
+          ? {
+              Inputs: parameters
+              StateMutability: _ParseStateMutability<scopeOrStateMutability>
+            }
+          : never
+        : never
+
+type _ParseStateMutability<signature extends string> =
+  signature extends `${Scope} ${infer stateMutability extends AbiStateMutability}`
+    ? stateMutability
+    : signature extends AbiStateMutability
+      ? signature
+      : 'nonpayable'
 
 type _ParseConstructorParametersAndStateMutability<signature extends string> =
   signature extends `constructor(${infer parameters}) payable`
