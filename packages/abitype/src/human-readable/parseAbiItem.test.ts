@@ -260,4 +260,3 @@ test('nested tuples', () => {
   `,
   )
 })
-
