@@ -1,5 +1,11 @@
 # abitype
 
+## 1.0.6
+
+### Patch Changes
+
+- [#248](https://github.com/wevm/abitype/pull/248) [`0870111`](https://github.com/wevm/abitype/commit/08701112d7bdfb0c6bdcf053e80a5b8441e95327) Thanks [@tmm](https://github.com/tmm)! - Removed `inputs` from `AbiFallback` type and Zod schema.
+
 ## 1.0.5
 
 ### Patch Changes
