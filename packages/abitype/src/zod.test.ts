@@ -485,7 +485,6 @@ describe('AbiFallback', () => {
       }),
     ).toMatchInlineSnapshot(`
       {
-        "inputs": [],
         "stateMutability": "nonpayable",
         "type": "fallback",
       }
@@ -502,7 +501,6 @@ describe('AbiFallback', () => {
         }),
       ).toMatchInlineSnapshot(`
         {
-          "inputs": [],
           "payable": false,
           "stateMutability": "nonpayable",
           "type": "fallback",
@@ -516,7 +514,6 @@ describe('AbiFallback', () => {
         }),
       ).toMatchInlineSnapshot(`
         {
-          "inputs": [],
           "payable": true,
           "stateMutability": "payable",
           "type": "fallback",

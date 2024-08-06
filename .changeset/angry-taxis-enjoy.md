@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-normalize AbiFallback.inputs type and zod
+Removed `inputs` from `AbiFallback` type and Zod schema.
