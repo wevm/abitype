@@ -30,7 +30,7 @@ for (const packagePath of packagePaths) {
     `${JSON.stringify(packageJson, undefined, 2)}\n`,
   )
 
-  const { devDependencies: _dD, scripts: _s, ...rest } = packageJson
+  const { devDependencies: _dD, scripts: _s, type: _t, ...rest } = packageJson
   await Bun.write(packagePath, `${JSON.stringify(rest, undefined, 2)}\n`)
 }
 

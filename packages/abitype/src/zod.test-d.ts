@@ -16,13 +16,13 @@ import {
   wethAbi,
 } from './abis/json.js'
 import {
-  Abi as AbiSchema,
   AbiConstructor as AbiConstructorSchema,
   AbiError as AbiErrorSchema,
   AbiEvent as AbiEventSchema,
   AbiFallback as AbiFallbackSchema,
   AbiFunction as AbiFunctionSchema,
   AbiParameter as AbiParameterSchema,
+  Abi as AbiSchema,
 } from './zod.js'
 
 describe('Zod Types', () => {

@@ -1,23 +1,16 @@
 *.local
 .DS_Store
-.next
+.attest
+.env
+.env.*local
+.envrc
 .pnpm-debug.log*
+bench
 cache
 coverage
 dist
 node_modules
-tsconfig*.tsbuildinfo
-bench
-playgrounds/performance/out
-
-# local env files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.envrc
-
-# proxy packages
 packages/abitype/abis
 packages/abitype/zod
+playgrounds/performance/out
+tsconfig*.tsbuildinfo

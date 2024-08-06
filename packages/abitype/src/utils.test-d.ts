@@ -1,7 +1,7 @@
-import { assertType, expectTypeOf, test } from 'vitest'
+import { assertType, describe, expectTypeOf, test } from 'vitest'
 
 import type { Abi } from './abi.js'
-import {
+import type {
   customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
   nestedTupleArrayAbi,
@@ -30,7 +30,7 @@ import type {
 
 const zeroAddress = '0x0000000000000000000000000000000000000000'
 
-test('AbiTypeToPrimitiveType', () => {
+describe('AbiTypeToPrimitiveType', () => {
   test('address', () => {
     assertType<AbiTypeToPrimitiveType<'address'>>(zeroAddress)
   })
@@ -92,7 +92,7 @@ test('AbiTypeToPrimitiveType', () => {
   })
 })
 
-test('AbiParameterToPrimitiveType', () => {
+describe('AbiParameterToPrimitiveType', () => {
   test('address', () => {
     type Result = AbiParameterToPrimitiveType<{
       name: 'owner'
@@ -421,7 +421,7 @@ test('AbiParameterToPrimitiveType', () => {
   })
 })
 
-test('AbiParametersToPrimitiveTypes', () => {
+describe('AbiParametersToPrimitiveTypes', () => {
   test('no parameters', () => {
     type Result = AbiParametersToPrimitiveTypes<[]>
     assertType<Result>([])
@@ -519,7 +519,7 @@ test('AbiParametersToPrimitiveTypes', () => {
   })
 })
 
-test('IsAbi', () => {
+describe('IsAbi', () => {
   test('const assertion', () => {
     assertType<IsAbi<typeof nestedTupleArrayAbi>>(true)
     assertType<IsAbi<typeof wagmiMintExampleAbi>>(true)
@@ -562,7 +562,7 @@ test('IsAbi', () => {
   })
 })
 
-test('Function', () => {
+describe('Function', () => {
   test('ExtractAbiFunctions', () => {
     const abiFunction = {
       type: 'function',
@@ -628,7 +628,7 @@ test('Function', () => {
   })
 })
 
-test('Events', () => {
+describe('Events', () => {
   test('ExtractAbiEvents', () => {
     const abiEvent = {
       type: 'event',
@@ -672,7 +672,7 @@ test('Events', () => {
   })
 })
 
-test('Error', () => {
+describe('Error', () => {
   test('ExtractAbiErrors', () => {
     const abiError = {
       type: 'error',
@@ -708,7 +708,7 @@ test('Error', () => {
   })
 })
 
-test('TypedDataToPrimitiveTypes', () => {
+describe('TypedDataToPrimitiveTypes', () => {
   const contributor = {
     name: 'John Doe',
     address: '0x0000000000000000000000000000000000000000' as const,

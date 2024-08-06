@@ -14,7 +14,7 @@ import type { ParseAbiParameters as ParseAbiParameters_ } from './types/utils.js
 /**
  * Parses human-readable ABI parameters into {@link AbiParameter}s
  *
- * @param TParams - Human-readable ABI parameters
+ * @param params - Human-readable ABI parameters
  * @returns Parsed {@link AbiParameter}s
  *
  * @example
@@ -28,37 +28,59 @@ import type { ParseAbiParameters as ParseAbiParameters_ } from './types/utils.js
  * >
  */
 export type ParseAbiParameters<
-  TParams extends string | readonly string[] | readonly unknown[],
+  params extends string | readonly string[] | readonly unknown[],
 > =
-  | (TParams extends string
-      ? TParams extends ''
+  | (params extends string
+      ? params extends ''
         ? never
-        : string extends TParams
-        ? readonly AbiParameter[]
-        : ParseAbiParameters_<SplitParameters<TParams>, { Modifier: Modifier }>
+        : string extends params
+          ? readonly AbiParameter[]
+          : ParseAbiParameters_<SplitParameters<params>, { modifier: Modifier }>
       : never)
-  | (TParams extends readonly string[]
-      ? string[] extends TParams
+  | (params extends readonly string[]
+      ? string[] extends params
         ? AbiParameter // Return generic AbiParameter item since type was no inferrable
-        : ParseStructs<TParams> extends infer Structs
-        ? {
-            [K in keyof TParams]: TParams[K] extends string
-              ? IsStructSignature<TParams[K]> extends true
+        : ParseStructs<params> extends infer structs
+          ? {
+              [key in keyof params]: params[key] extends string
+                ? IsStructSignature<params[key]> extends true
+                  ? never
+                  : ParseAbiParameters_<
+                      SplitParameters<params[key]>,
+                      { modifier: Modifier; structs: structs }
+                    >
+                : never
+            } extends infer mapped extends readonly unknown[]
+            ? Filter<mapped, never> extends readonly [...infer content]
+              ? content['length'] extends 0
                 ? never
-                : ParseAbiParameters_<
-                    SplitParameters<TParams[K]>,
-                    { Modifier: Modifier; Structs: Structs }
-                  >
+                : DeepFlatten<content>
               : never
-          } extends infer Mapped extends readonly unknown[]
-          ? Filter<Mapped, never>[0] extends infer Result
-            ? Result extends undefined
-              ? never
-              : Result
             : never
           : never
-        : never
       : never)
+
+/**
+ * Flatten all members of {@link T}
+ *
+ * @param T - List of items to flatten
+ * @param Acc - The accumulator used while recursing
+ * @returns The flattened array
+ *
+ * @example
+ * type Result = DeepFlatten<[['a', 'b'], [['c']]]>
+ * //   ^? type Result = ['a', 'b', 'c']
+ */
+type DeepFlatten<
+  T extends readonly unknown[],
+  Acc extends readonly unknown[] = readonly [],
+> = T extends readonly [infer head, ...infer tail]
+  ? tail extends undefined
+    ? never
+    : head extends readonly unknown[]
+      ? DeepFlatten<tail, readonly [...Acc, ...DeepFlatten<head>]>
+      : DeepFlatten<tail, readonly [...Acc, head]>
+  : Acc
 
 /**
  * Parses human-readable ABI parameters into {@link AbiParameter}s
@@ -78,24 +100,24 @@ export type ParseAbiParameters<
  * ])
  */
 export function parseAbiParameters<
-  TParams extends string | readonly string[] | readonly unknown[],
+  params extends string | readonly string[] | readonly unknown[],
 >(
-  params: Narrow<TParams> &
+  params: Narrow<params> &
     (
-      | (TParams extends string
-          ? TParams extends ''
+      | (params extends string
+          ? params extends ''
             ? Error<'Empty string is not allowed.'>
             : unknown
           : never)
-      | (TParams extends readonly string[]
-          ? TParams extends readonly [] // empty array
+      | (params extends readonly string[]
+          ? params extends readonly [] // empty array
             ? Error<'At least one parameter required.'>
-            : string[] extends TParams
-            ? unknown
-            : unknown // TODO: Validate param string
+            : string[] extends params
+              ? unknown
+              : unknown // TODO: Validate param string
           : never)
     ),
-): ParseAbiParameters<TParams> {
+): ParseAbiParameters<params> {
   const abiParameters: AbiParameter[] = []
   if (typeof params === 'string') {
     const parameters = splitParameters(params)
@@ -122,5 +144,5 @@ export function parseAbiParameters<
   if (abiParameters.length === 0)
     throw new InvalidAbiParametersError({ params })
 
-  return abiParameters as ParseAbiParameters<TParams>
+  return abiParameters as ParseAbiParameters<params>
 }

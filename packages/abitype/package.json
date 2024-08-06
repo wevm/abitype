@@ -1,26 +1,29 @@
 {
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs",
-  "version": "0.10.1",
+  "version": "1.0.5",
   "license": "MIT",
-  "repository": "wagmi-dev/abitype",
+  "repository": "wevm/abitype",
   "scripts": {
     "build": "pnpm run clean && pnpm run build:cjs && pnpm run build:esm+types",
     "build:cjs": "tsc --project tsconfig.build.json --module commonjs --moduleResolution node10 --outDir ./dist/cjs --removeComments --verbatimModuleSyntax false && echo > ./dist/cjs/package.json '{\"type\":\"commonjs\"}'",
-    "build:esm+types": "tsc --project tsconfig.build.json --module es2020 --outDir ./dist/esm --declaration --declarationMap --declarationDir ./dist/types",
+    "build:esm+types": "tsc --project tsconfig.build.json --module nodenext --outDir ./dist/esm --declaration --declarationMap --declarationDir ./dist/types && echo > ./dist/esm/package.json '{\"type\":\"module\",\"sideEffects\":false}'",
     "clean": "rm -rf dist tsconfig.tsbuildinfo abis zod",
     "test:build": "publint --strict",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "typeperf": "tsc --noEmit --extendedDiagnostics --composite false --incremental false"
   },
   "files": [
     "dist",
-    "!dist/**/*.tsbuildinfo",
-    "src/**/*.ts",
-    "!src/**/*.test.ts",
-    "!src/**/*.test-d.ts",
-    "!src/**/*.bench.ts",
     "/abis",
-    "/zod"
+    "/zod",
+    "src/**/*.ts",
+    "!dist/**/*.tsbuildinfo",
+    "!jsr.json",
+    "!src/**/*.bench.ts",
+    "!src/**/*.bench-d.ts",
+    "!src/**/*.test.ts",
+    "!src/**/*.test-d.ts"
   ],
   "sideEffects": false,
   "type": "module",
@@ -48,12 +51,8 @@
   },
   "typesVersions": {
     "*": {
-      "abis": [
-        "./dist/types/exports/abis.d.ts"
-      ],
-      "zod": [
-        "./dist/types/exports/zod.d.ts"
-      ]
+      "abis": ["./dist/types/exports/abis.d.ts"],
+      "zod": ["./dist/types/exports/zod.d.ts"]
     }
   },
   "peerDependencies": {
@@ -69,23 +68,19 @@
     }
   },
   "devDependencies": {
-    "@ethersproject/abi": "^5.7.0",
-    "ethers": "^6.5.1",
-    "zod": "^3.22.4"
+    "zod": "^3.23.8"
   },
-  "contributors": [
-    "awkweb.eth <t@wagmi.sh>",
-    "jxom.eth <j@wagmi.sh>"
-  ],
-  "funding": "https://github.com/sponsors/wagmi-dev",
+  "contributors": ["awkweb.eth <t@wevm.dev>", "jxom.eth <j@wevm.dev>"],
+  "funding": "https://github.com/sponsors/wevm",
   "keywords": [
     "abi",
     "eth",
     "ethereum",
-    "typescript",
     "types",
-    "web3",
+    "typescript",
     "viem",
-    "wagmi"
+    "wagmi",
+    "web3",
+    "wevm"
   ]
 }

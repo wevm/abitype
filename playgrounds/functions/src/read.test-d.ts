@@ -62,7 +62,7 @@ test('read', () => {
         functionName: 'balanceOf',
         args: ['0x'],
       })
-      assertType<ResolvedRegister['BigIntType']>(result)
+      assertType<ResolvedRegister['bigIntType']>(result)
     })
   })
 

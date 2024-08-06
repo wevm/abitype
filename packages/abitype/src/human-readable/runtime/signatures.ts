@@ -73,8 +73,9 @@ export function execConstructorSignature(signature: string) {
   }>(constructorSignatureRegex, signature)
 }
 
-// https://regexr.com/78u18
-const fallbackSignatureRegex = /^fallback\(\)$/
+// https://regexr.com/7srtn
+const fallbackSignatureRegex =
+  /^fallback\(\) external(?:\s(?<stateMutability>payable{1}))?$/
 export function isFallbackSignature(signature: string) {
   return fallbackSignatureRegex.test(signature)
 }

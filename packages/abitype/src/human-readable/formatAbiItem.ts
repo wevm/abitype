@@ -19,71 +19,71 @@ import type { AssertName } from './types/signatures.js'
 /**
  * Formats ABI item (e.g. error, event, function) into human-readable ABI item
  *
- * @param TAbiItem - ABI item
+ * @param abiItem - ABI item
  * @returns Human-readable ABI item
  */
-export type FormatAbiItem<TAbiItem extends Abi[number]> =
-  Abi[number] extends TAbiItem
+export type FormatAbiItem<abiItem extends Abi[number]> =
+  Abi[number] extends abiItem
     ? string
     :
-        | (TAbiItem extends AbiFunction
-            ? AbiFunction extends TAbiItem
+        | (abiItem extends AbiFunction
+            ? AbiFunction extends abiItem
               ? string
-              : `function ${AssertName<TAbiItem['name']>}(${FormatAbiParameters<
-                  TAbiItem['inputs']
-                >})${TAbiItem['stateMutability'] extends Exclude<
+              : `function ${AssertName<abiItem['name']>}(${FormatAbiParameters<
+                  abiItem['inputs']
+                >})${abiItem['stateMutability'] extends Exclude<
                   AbiStateMutability,
                   'nonpayable'
                 >
-                  ? ` ${TAbiItem['stateMutability']}`
-                  : ''}${TAbiItem['outputs']['length'] extends 0
+                  ? ` ${abiItem['stateMutability']}`
+                  : ''}${abiItem['outputs']['length'] extends 0
                   ? ''
-                  : ` returns (${FormatAbiParameters<TAbiItem['outputs']>})`}`
+                  : ` returns (${FormatAbiParameters<abiItem['outputs']>})`}`
             : never)
-        | (TAbiItem extends AbiEvent
-            ? AbiEvent extends TAbiItem
+        | (abiItem extends AbiEvent
+            ? AbiEvent extends abiItem
               ? string
-              : `event ${AssertName<TAbiItem['name']>}(${FormatAbiParameters<
-                  TAbiItem['inputs']
+              : `event ${AssertName<abiItem['name']>}(${FormatAbiParameters<
+                  abiItem['inputs']
                 >})`
             : never)
-        | (TAbiItem extends AbiError
-            ? AbiError extends TAbiItem
+        | (abiItem extends AbiError
+            ? AbiError extends abiItem
               ? string
-              : `error ${AssertName<TAbiItem['name']>}(${FormatAbiParameters<
-                  TAbiItem['inputs']
+              : `error ${AssertName<abiItem['name']>}(${FormatAbiParameters<
+                  abiItem['inputs']
                 >})`
             : never)
-        | (TAbiItem extends AbiConstructor
-            ? AbiConstructor extends TAbiItem
+        | (abiItem extends AbiConstructor
+            ? AbiConstructor extends abiItem
               ? string
               : `constructor(${FormatAbiParameters<
-                  TAbiItem['inputs']
-                >})${TAbiItem['stateMutability'] extends 'payable'
+                  abiItem['inputs']
+                >})${abiItem['stateMutability'] extends 'payable'
                   ? ' payable'
                   : ''}`
             : never)
-        | (TAbiItem extends AbiFallback
-            ? AbiFallback extends TAbiItem
+        | (abiItem extends AbiFallback
+            ? AbiFallback extends abiItem
               ? string
               : 'fallback()'
             : never)
-        | (TAbiItem extends AbiReceive
-            ? AbiReceive extends TAbiItem
+        | (abiItem extends AbiReceive
+            ? AbiReceive extends abiItem
               ? string
               : 'receive() external payable'
             : never)
 
 type FormatAbiParameters<
-  TAbiParameters extends readonly (AbiParameter | AbiEventParameter)[],
-> = TAbiParameters['length'] extends 0
+  abiParameters extends readonly (AbiParameter | AbiEventParameter)[],
+> = abiParameters['length'] extends 0
   ? ''
   : FormatAbiParameters_<
-      TAbiParameters extends readonly [
+      abiParameters extends readonly [
         AbiParameter | AbiEventParameter,
         ...(readonly (AbiParameter | AbiEventParameter)[]),
       ]
-        ? TAbiParameters
+        ? abiParameters
         : never
     >
 
@@ -93,10 +93,10 @@ type FormatAbiParameters<
  * @param abiItem - ABI item
  * @returns Human-readable ABI item
  */
-export function formatAbiItem<const TAbiItem extends Abi[number]>(
-  abiItem: TAbiItem,
-): FormatAbiItem<TAbiItem> {
-  type Result = FormatAbiItem<TAbiItem>
+export function formatAbiItem<const abiItem extends Abi[number]>(
+  abiItem: abiItem,
+): FormatAbiItem<abiItem> {
+  type Result = FormatAbiItem<abiItem>
   type Params = readonly [
     AbiParameter | AbiEventParameter,
     ...(readonly (AbiParameter | AbiEventParameter)[]),
@@ -114,18 +114,18 @@ export function formatAbiItem<const TAbiItem extends Abi[number]>(
         ? ` returns (${formatAbiParameters(abiItem.outputs as Params)})`
         : ''
     }`
-  else if (abiItem.type === 'event')
+  if (abiItem.type === 'event')
     return `event ${abiItem.name}(${formatAbiParameters(
       abiItem.inputs as Params,
     )})`
-  else if (abiItem.type === 'error')
+  if (abiItem.type === 'error')
     return `error ${abiItem.name}(${formatAbiParameters(
       abiItem.inputs as Params,
     )})`
-  else if (abiItem.type === 'constructor')
+  if (abiItem.type === 'constructor')
     return `constructor(${formatAbiParameters(abiItem.inputs as Params)})${
       abiItem.stateMutability === 'payable' ? ' payable' : ''
     }`
-  else if (abiItem.type === 'fallback') return 'fallback()' as Result
+  if (abiItem.type === 'fallback') return 'fallback()' as Result
   return 'receive() external payable' as Result
 }

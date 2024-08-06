@@ -6,34 +6,34 @@ test('parseAbiParameters', () => {
   // @ts-expect-error invalid signature type
   expect(() => parseAbiParameters('')).toThrowErrorMatchingInlineSnapshot(
     `
-    "Failed to parse ABI parameters.
+    [InvalidAbiParametersError: Failed to parse ABI parameters.
 
-    Docs: https://abitype.dev/api/human.html#parseabiparameters-1
-    Details: parseAbiParameters(\\"\\")
-    Version: abitype@x.y.z"
+    Docs: https://abitype.dev/api/human#parseabiparameters-1
+    Details: parseAbiParameters("")
+    Version: abitype@x.y.z]
   `,
   )
   // @ts-expect-error invalid signature type
   expect(() => parseAbiParameters([])).toThrowErrorMatchingInlineSnapshot(
     `
-    "Failed to parse ABI parameters.
+    [InvalidAbiParametersError: Failed to parse ABI parameters.
 
-    Docs: https://abitype.dev/api/human.html#parseabiparameters-1
+    Docs: https://abitype.dev/api/human#parseabiparameters-1
     Details: parseAbiParameters([])
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
   expect(() =>
     parseAbiParameters(['struct Foo { string name; }']),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    "Failed to parse ABI parameters.
+    [InvalidAbiParametersError: Failed to parse ABI parameters.
 
-    Docs: https://abitype.dev/api/human.html#parseabiparameters-1
+    Docs: https://abitype.dev/api/human#parseabiparameters-1
     Details: parseAbiParameters([
-      \\"struct Foo { string name; }\\"
+      "struct Foo { string name; }"
     ])
-    Version: abitype@x.y.z"
+    Version: abitype@x.y.z]
   `,
   )
 

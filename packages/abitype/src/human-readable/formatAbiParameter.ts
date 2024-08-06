@@ -6,7 +6,7 @@ import type { AssertName } from './types/signatures.js'
 /**
  * Formats {@link AbiParameter} to human-readable ABI parameter.
  *
- * @param TAbiParameter - ABI parameter
+ * @param abiParameter - ABI parameter
  * @returns Human-readable ABI parameter
  *
  * @example
@@ -14,41 +14,41 @@ import type { AssertName } from './types/signatures.js'
  * //   ^? type Result = 'address from'
  */
 export type FormatAbiParameter<
-  TAbiParameter extends AbiParameter | AbiEventParameter,
-> = TAbiParameter extends {
-  name?: infer Name extends string
-  type: `tuple${infer Array}`
-  components: infer Components extends readonly AbiParameter[]
-  indexed?: infer Indexed extends boolean
+  abiParameter extends AbiParameter | AbiEventParameter,
+> = abiParameter extends {
+  name?: infer name extends string
+  type: `tuple${infer array}`
+  components: infer components extends readonly AbiParameter[]
+  indexed?: infer indexed extends boolean
 }
   ? FormatAbiParameter<
       {
         type: `(${Join<
           {
-            [K in keyof Components]: FormatAbiParameter<
+            [key in keyof components]: FormatAbiParameter<
               {
-                type: Components[K]['type']
-              } & (IsNarrowable<Components[K]['name'], string> extends true
-                ? { name: Components[K]['name'] }
+                type: components[key]['type']
+              } & (IsNarrowable<components[key]['name'], string> extends true
+                ? { name: components[key]['name'] }
                 : unknown) &
-                (Components[K] extends { components: readonly AbiParameter[] }
-                  ? { components: Components[K]['components'] }
+                (components[key] extends { components: readonly AbiParameter[] }
+                  ? { components: components[key]['components'] }
                   : unknown)
             >
           },
           ', '
-        >})${Array}`
-      } & (IsNarrowable<Name, string> extends true ? { name: Name } : unknown) &
-        (IsNarrowable<Indexed, boolean> extends true
-          ? { indexed: Indexed }
+        >})${array}`
+      } & (IsNarrowable<name, string> extends true ? { name: name } : unknown) &
+        (IsNarrowable<indexed, boolean> extends true
+          ? { indexed: indexed }
           : unknown)
     >
-  : `${TAbiParameter['type']}${TAbiParameter extends { indexed: true }
+  : `${abiParameter['type']}${abiParameter extends { indexed: true }
       ? ' indexed'
-      : ''}${TAbiParameter['name'] extends infer Name extends string
-      ? Name extends ''
+      : ''}${abiParameter['name'] extends infer name extends string
+      ? name extends ''
         ? ''
-        : ` ${AssertName<Name>}`
+        : ` ${AssertName<name>}`
       : ''}`
 
 // https://regexr.com/7f7rv
@@ -65,9 +65,9 @@ const tupleRegex = /^tuple(?<array>(\[(\d*)\])*)$/
  * //    ^? const result: 'address from'
  */
 export function formatAbiParameter<
-  const TAbiParameter extends AbiParameter | AbiEventParameter,
->(abiParameter: TAbiParameter): FormatAbiParameter<TAbiParameter> {
-  type Result = FormatAbiParameter<TAbiParameter>
+  const abiParameter extends AbiParameter | AbiEventParameter,
+>(abiParameter: abiParameter): FormatAbiParameter<abiParameter> {
+  type Result = FormatAbiParameter<abiParameter>
 
   let type = abiParameter.type
   if (tupleRegex.test(abiParameter.type) && 'components' in abiParameter) {

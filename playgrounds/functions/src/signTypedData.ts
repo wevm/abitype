@@ -33,4 +33,4 @@ export type SignTypedDataParameters<
     : message
 }
 
-export type SignTypedDataReturnType = ResolvedRegister['BytesType']['outputs']
+export type SignTypedDataReturnType = ResolvedRegister['bytesType']['outputs']

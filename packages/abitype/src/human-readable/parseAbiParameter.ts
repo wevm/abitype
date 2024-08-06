@@ -12,7 +12,7 @@ import type { ParseAbiParameter as ParseAbiParameter_ } from './types/utils.js'
 /**
  * Parses human-readable ABI parameter into {@link AbiParameter}
  *
- * @param TParam - Human-readable ABI parameter
+ * @param param - Human-readable ABI parameter
  * @returns Parsed {@link AbiParameter}
  *
  * @example
@@ -26,36 +26,36 @@ import type { ParseAbiParameter as ParseAbiParameter_ } from './types/utils.js'
  * >
  */
 export type ParseAbiParameter<
-  TParam extends string | readonly string[] | readonly unknown[],
+  param extends string | readonly string[] | readonly unknown[],
 > =
-  | (TParam extends string
-      ? TParam extends ''
+  | (param extends string
+      ? param extends ''
         ? never
-        : string extends TParam
-        ? AbiParameter
-        : ParseAbiParameter_<TParam, { Modifier: Modifier }>
+        : string extends param
+          ? AbiParameter
+          : ParseAbiParameter_<param, { modifier: Modifier }>
       : never)
-  | (TParam extends readonly string[]
-      ? string[] extends TParam
+  | (param extends readonly string[]
+      ? string[] extends param
         ? AbiParameter // Return generic AbiParameter item since type was no inferrable
-        : ParseStructs<TParam> extends infer Structs
-        ? {
-            [K in keyof TParam]: TParam[K] extends string
-              ? IsStructSignature<TParam[K]> extends true
+        : ParseStructs<param> extends infer structs
+          ? {
+              [key in keyof param]: param[key] extends string
+                ? IsStructSignature<param[key]> extends true
+                  ? never
+                  : ParseAbiParameter_<
+                      param[key],
+                      { modifier: Modifier; structs: structs }
+                    >
+                : never
+            } extends infer mapped extends readonly unknown[]
+            ? Filter<mapped, never>[0] extends infer result
+              ? result extends undefined
                 ? never
-                : ParseAbiParameter_<
-                    TParam[K],
-                    { Modifier: Modifier; Structs: Structs }
-                  >
+                : result
               : never
-          } extends infer Mapped extends readonly unknown[]
-          ? Filter<Mapped, never>[0] extends infer Result
-            ? Result extends undefined
-              ? never
-              : Result
             : never
           : never
-        : never
       : never)
 
 /**
@@ -76,29 +76,29 @@ export type ParseAbiParameter<
  * ])
  */
 export function parseAbiParameter<
-  TParam extends string | readonly string[] | readonly unknown[],
+  param extends string | readonly string[] | readonly unknown[],
 >(
-  param: Narrow<TParam> &
+  param: Narrow<param> &
     (
-      | (TParam extends string
-          ? TParam extends ''
+      | (param extends string
+          ? param extends ''
             ? Error<'Empty string is not allowed.'>
             : unknown
           : never)
-      | (TParam extends readonly string[]
-          ? TParam extends readonly [] // empty array
+      | (param extends readonly string[]
+          ? param extends readonly [] // empty array
             ? Error<'At least one parameter required.'>
-            : string[] extends TParam
-            ? unknown
-            : unknown // TODO: Validate param string
+            : string[] extends param
+              ? unknown
+              : unknown // TODO: Validate param string
           : never)
     ),
-): ParseAbiParameter<TParam> {
-  let abiParameter
+): ParseAbiParameter<param> {
+  let abiParameter: AbiParameter | undefined
   if (typeof param === 'string')
     abiParameter = parseAbiParameter_(param, {
       modifiers,
-    }) as ParseAbiParameter<TParam>
+    }) as ParseAbiParameter<param>
   else {
     const structs = parseStructs(param as readonly string[])
     const length = param.length as number
@@ -112,5 +112,5 @@ export function parseAbiParameter<
 
   if (!abiParameter) throw new InvalidAbiParameterError({ param })
 
-  return abiParameter as ParseAbiParameter<TParam>
+  return abiParameter as ParseAbiParameter<param>
 }

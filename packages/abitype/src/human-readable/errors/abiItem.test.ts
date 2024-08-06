@@ -8,12 +8,12 @@ import {
 
 test('InvalidAbiItemError', () => {
   expect(
-    new InvalidAbiItemError({ signature: 'addres' }),
+    new InvalidAbiItemError({ signature: 'address' }),
   ).toMatchInlineSnapshot(`
     [InvalidAbiItemError: Failed to parse ABI item.
 
-    Docs: https://abitype.dev/api/human.html#parseabiitem-1
-    Details: parseAbiItem("addres")
+    Docs: https://abitype.dev/api/human#parseabiitem-1
+    Details: parseAbiItem("address")
     Version: abitype@x.y.z]
   `)
 })

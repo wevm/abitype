@@ -1,12 +1,18 @@
 {
   "files": {
-    "ignore": ["CHANGELOG.md", "pnpm-lock.yaml", "trace/**", "tsconfig.*.json"]
+    "ignore": [
+      ".vocs",
+      "CHANGELOG.md",
+      "pnpm-lock.yaml",
+      "trace/**",
+      "tsconfig.*.json"
+    ]
   },
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
     "indentStyle": "space",
-    "indentSize": 2,
+    "indentWidth": 2,
     "lineWidth": 80
   },
   "linter": {
@@ -19,11 +25,8 @@
       "correctness": {
         "noUnusedVariables": "error"
       },
-      "nursery": {
-        "useExhaustiveDependencies": "error",
-        "useGroupedTypeImport": "off"
-      },
       "performance": {
+        "noBarrelFile": "error",
         "noDelete": "off"
       },
       "style": {
@@ -41,7 +44,7 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "single",
-      "trailingComma": "all",
+      "trailingCommas": "all",
       "semicolons": "asNeeded"
     }
   },

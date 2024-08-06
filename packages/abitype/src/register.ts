@@ -1,36 +1,48 @@
-export type Register = {}
+// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
+export interface Register {}
 
+// TODO: Remove deprecated properties next major version
 export type ResolvedRegister = {
   /**
    * TypeScript type to use for `address` values
    * @default `0x${string}`
    */
-  AddressType: Register extends { AddressType: infer type }
+  addressType: Register extends { addressType: infer type }
     ? type
-    : DefaultRegister['AddressType']
+    : Register extends { AddressType: infer type }
+      ? type
+      : DefaultRegister['addressType']
   /**
    * TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48`
    * @default bigint
    */
-  BigIntType: Register extends { BigIntType: infer type }
+  bigIntType: Register extends { bigIntType: infer type }
     ? type
-    : DefaultRegister['BigIntType']
+    : Register extends { BigIntType: infer type }
+      ? type
+      : DefaultRegister['bigIntType']
   /**
    * TypeScript type to use for `bytes` values
    * @default { inputs: `0x${string}`; outputs: `0x${string}`; }
    */
-  BytesType: Register extends {
-    BytesType: infer type extends { inputs: unknown; outputs: unknown }
+  bytesType: Register extends {
+    bytesType: infer type extends { inputs: unknown; outputs: unknown }
   }
     ? type
-    : DefaultRegister['BytesType']
+    : Register extends {
+          BytesType: infer type extends { inputs: unknown; outputs: unknown }
+        }
+      ? type
+      : DefaultRegister['bytesType']
   /**
    * TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48`
    * @default number
    */
-  IntType: Register extends { IntType: infer type }
+  intType: Register extends { intType: infer type }
     ? type
-    : DefaultRegister['IntType']
+    : Register extends { IntType: infer type }
+      ? type
+      : DefaultRegister['intType']
 
   /**
    * Maximum depth for nested array types (e.g. string[][])
@@ -40,29 +52,41 @@ export type ResolvedRegister = {
    *
    * @default false
    */
-  ArrayMaxDepth: Register extends {
-    ArrayMaxDepth: infer type extends number | false
+  arrayMaxDepth: Register extends {
+    arrayMaxDepth: infer type extends number | false
   }
     ? type
-    : DefaultRegister['ArrayMaxDepth']
+    : Register extends {
+          ArrayMaxDepth: infer type extends number | false
+        }
+      ? type
+      : DefaultRegister['arrayMaxDepth']
   /**
    * Lower bound for fixed array length
    * @default 1
    */
-  FixedArrayMinLength: Register extends {
-    FixedArrayMinLength: infer type extends number
+  fixedArrayMinLength: Register extends {
+    fixedArrayMinLength: infer type extends number
   }
     ? type
-    : DefaultRegister['FixedArrayMinLength']
+    : Register extends {
+          FixedArrayMinLength: infer type extends number
+        }
+      ? type
+      : DefaultRegister['fixedArrayMinLength']
   /**
    * Upper bound for fixed array length
    * @default 99
    */
-  FixedArrayMaxLength: Register extends {
-    FixedArrayMaxLength: infer type extends number
+  fixedArrayMaxLength: Register extends {
+    fixedArrayMaxLength: infer type extends number
   }
     ? type
-    : DefaultRegister['FixedArrayMaxLength']
+    : Register extends {
+          FixedArrayMaxLength: infer type extends number
+        }
+      ? type
+      : DefaultRegister['fixedArrayMaxLength']
 
   /**
    * When set, validates {@link AbiParameter}'s `type` against {@link AbiType}
@@ -72,33 +96,72 @@ export type ResolvedRegister = {
    *
    * @default false
    */
-  StrictAbiType: Register extends { StrictAbiType: infer type extends boolean }
+  strictAbiType: Register extends { strictAbiType: infer type extends boolean }
     ? type
-    : DefaultRegister['StrictAbiType']
+    : Register extends { StrictAbiType: infer type extends boolean }
+      ? type
+      : DefaultRegister['strictAbiType']
+
+  /** @deprecated Use `addressType` instead */
+  AddressType: ResolvedRegister['addressType']
+  /** @deprecated Use `addressType` instead */
+  BigIntType: ResolvedRegister['bigIntType']
+  /** @deprecated Use `bytesType` instead */
+  BytesType: ResolvedRegister['bytesType']
+  /** @deprecated Use `intType` instead */
+  IntType: ResolvedRegister['intType']
+  /** @deprecated Use `arrayMaxDepth` instead */
+  ArrayMaxDepth: ResolvedRegister['arrayMaxDepth']
+  /** @deprecated Use `fixedArrayMinLength` instead */
+  FixedArrayMinLength: ResolvedRegister['fixedArrayMinLength']
+  /** @deprecated Use `fixedArrayMaxLength` instead */
+  FixedArrayMaxLength: ResolvedRegister['fixedArrayMaxLength']
+  /** @deprecated Use `strictAbiType` instead */
+  StrictAbiType: ResolvedRegister['strictAbiType']
 }
 
 export type DefaultRegister = {
   /** Maximum depth for nested array types (e.g. string[][]) */
-  ArrayMaxDepth: false
+  arrayMaxDepth: false
   /** Lower bound for fixed array length */
-  FixedArrayMinLength: 1
+  fixedArrayMinLength: 1
   /** Upper bound for fixed array length */
-  FixedArrayMaxLength: 99
+  fixedArrayMaxLength: 99
 
   /** TypeScript type to use for `address` values */
-  AddressType: `0x${string}`
+  addressType: `0x${string}`
   /** TypeScript type to use for `bytes` values */
-  BytesType: {
+  bytesType: {
     /** TypeScript type to use for `bytes` input values */
     inputs: `0x${string}`
     /** TypeScript type to use for `bytes` output values */
     outputs: `0x${string}`
   }
   /** TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48` */
-  BigIntType: bigint
+  bigIntType: bigint
   /** TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48` */
-  IntType: number
+  intType: number
 
   /** When set, validates {@link AbiParameter}'s `type` against {@link AbiType} */
-  StrictAbiType: false
+  strictAbiType: false
+
+  /** @deprecated Use `arrayMaxDepth` instead */
+  ArrayMaxDepth: DefaultRegister['arrayMaxDepth']
+  /** @deprecated Use `fixedArrayMinLength` instead */
+  FixedArrayMinLength: DefaultRegister['fixedArrayMinLength']
+  /** @deprecated Use `fixedArrayMaxLength` instead */
+  FixedArrayMaxLength: DefaultRegister['fixedArrayMaxLength']
+  /** @deprecated Use `addressType` instead */
+  AddressType: DefaultRegister['addressType']
+  /** @deprecated Use `bytesType` instead */
+  BytesType: {
+    inputs: DefaultRegister['bytesType']['inputs']
+    outputs: DefaultRegister['bytesType']['outputs']
+  }
+  /** @deprecated Use `bigIntType` instead */
+  BigIntType: DefaultRegister['bigIntType']
+  /** @deprecated Use `intType` instead */
+  IntType: DefaultRegister['intType']
+  /** @deprecated Use `strictAbiType` instead */
+  StrictAbiType: DefaultRegister['strictAbiType']
 }

@@ -1,11 +1,12 @@
-## Description
+<!-- What is this PR solving? Write a clear description or reference the issues it solves (e.g. `fixes #123`). What other alternatives have you explored? Are there any parts you think require more attention from reviewers? -->
 
-What changes are made in this PR? Is it a feature or a bug fix?
+<!----------------------------------------------------------------------
+Before creating the pull request, please make sure you do the following:
 
-## Additional Information
+- Read the Contributing Guidelines at https://github.com/wevm/abitype/blob/main/.github/CONTRIBUTING.md
+- Check that there isn't already a PR that solves the problem the same way. If you find a duplicate, please help us review it.
+- Update the corresponding documentation if needed.
+- Include relevant tests that fail without this PR, but pass with it.
 
-Before submitting this issue, please make sure you do the following.
-
-- [ ] Read the [contributing guide](https://github.com/wagmi-dev/abitype/blob/main/.github/CONTRIBUTING.md)
-- [ ] Added documentation related to the changes made.
-- [ ] Added or updated tests (and snapshots) related to the changes made.
+Thank you for contributing to ABIType!
+----------------------------------------------------------------------->

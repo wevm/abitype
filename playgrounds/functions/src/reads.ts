@@ -20,7 +20,7 @@ export declare function useReads<
   const args extends readonly unknown[] | undefined,
   contracts extends Contract<abi, functionName, args>[],
 >(
-  // TODO(@tmm): Broke for `typescript@5.1.3` https://github.com/wagmi-dev/abitype/issues/153
+  // TODO(@tmm): Broke for `typescript@5.1.3` https://github.com/wevm/abitype/issues/153
   // parameters: DeepPartial<ReadsParameters<contracts>, 3>,
   parameters: DeepPartial<
     { contracts: readonly [...DeepPartial<ContractsParameters<contracts>, 2>] },
@@ -62,36 +62,44 @@ type ContractsParameters<
 > = depth['length'] extends MAXIMUM_DEPTH
   ? UninferrableContracts
   : contracts extends []
-  ? []
-  : contracts extends [infer head extends Contract]
-  ? [...result, ReadParameters<head['abi'], head['functionName'], head['args']>]
-  : contracts extends [
-      infer head extends Contract,
-      ...infer tail extends Contract[],
-    ]
-  ? ContractsParameters<
-      [...tail],
-      [
-        ...result,
-        ReadParameters<head['abi'], head['functionName'], head['args']>,
-      ],
-      [...depth, 1]
-    >
-  : unknown[] extends contracts
-  ? contracts
-  : // If `contracts` is *some* array but we couldn't assign `unknown[]` to it, then it must hold some known/homogenous type!
-  // use this to infer the param types in the case of Array.map() argument
-  contracts extends {
-      abi: infer abi extends Abi | readonly unknown[]
-      functionName: infer functionName extends string
-      args?: infer args extends readonly unknown[] | undefined
-    }[]
-  ? string extends functionName // if `functionName` is exactly `string`, then we can't infer the type param
-    ? UninferrableContracts
-    : (ContractParameters<abi, functionName, ReadsStateMutability, args> & {
-        abi: abi
-      })[]
-  : UninferrableContracts
+    ? []
+    : contracts extends [infer head extends Contract]
+      ? [
+          ...result,
+          ReadParameters<head['abi'], head['functionName'], head['args']>,
+        ]
+      : contracts extends [
+            infer head extends Contract,
+            ...infer tail extends Contract[],
+          ]
+        ? ContractsParameters<
+            [...tail],
+            [
+              ...result,
+              ReadParameters<head['abi'], head['functionName'], head['args']>,
+            ],
+            [...depth, 1]
+          >
+        : unknown[] extends contracts
+          ? contracts
+          : // If `contracts` is *some* array but we couldn't assign `unknown[]` to it, then it must hold some known/homogenous type!
+            // use this to infer the param types in the case of Array.map() argument
+            contracts extends {
+                abi: infer abi extends Abi | readonly unknown[]
+                functionName: infer functionName extends string
+                args?: infer args extends readonly unknown[] | undefined
+              }[]
+            ? string extends functionName // if `functionName` is exactly `string`, then we can't infer the type param
+              ? UninferrableContracts
+              : (ContractParameters<
+                  abi,
+                  functionName,
+                  ReadsStateMutability,
+                  args
+                > & {
+                  abi: abi
+                })[]
+            : UninferrableContracts
 
 // recursively maps type param to results
 type ContractsReturnType<
@@ -101,28 +109,32 @@ type ContractsReturnType<
 > = depth['length'] extends MAXIMUM_DEPTH
   ? ContractReturnType[]
   : contracts extends []
-  ? []
-  : contracts extends [infer head extends Contract]
-  ? [
-      ...result,
-      ContractReturnType<head['abi'], head['functionName'], head['args']>,
-    ]
-  : contracts extends [
-      infer head extends Contract,
-      ...infer tail extends Contract[],
-    ]
-  ? ContractsReturnType<
-      [...tail],
-      [
-        ...result,
-        ContractReturnType<head['abi'], head['functionName'], head['args']>,
-      ],
-      [...depth, 1]
-    >
-  : contracts extends {
-      abi: infer abi extends Abi | readonly unknown[]
-      functionName: infer functionName extends string
-      args?: infer args extends readonly unknown[] | undefined
-    }[]
-  ? ContractReturnType<abi, functionName, args>[]
-  : ContractReturnType[]
+    ? []
+    : contracts extends [infer head extends Contract]
+      ? [
+          ...result,
+          ContractReturnType<head['abi'], head['functionName'], head['args']>,
+        ]
+      : contracts extends [
+            infer head extends Contract,
+            ...infer tail extends Contract[],
+          ]
+        ? ContractsReturnType<
+            [...tail],
+            [
+              ...result,
+              ContractReturnType<
+                head['abi'],
+                head['functionName'],
+                head['args']
+              >,
+            ],
+            [...depth, 1]
+          >
+        : contracts extends {
+              abi: infer abi extends Abi | readonly unknown[]
+              functionName: infer functionName extends string
+              args?: infer args extends readonly unknown[] | undefined
+            }[]
+          ? ContractReturnType<abi, functionName, args>[]
+          : ContractReturnType[]

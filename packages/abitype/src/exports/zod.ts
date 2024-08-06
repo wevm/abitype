@@ -1,3 +1,4 @@
+// biome-ignore lint/performance/noBarrelFile: <explanation>
 export {
   Address,
   SolidityAddress,

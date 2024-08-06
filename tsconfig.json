@@ -1,9 +1,9 @@
 {
   // This configuration is used for local development and type checking.
   "extends": "./tsconfig.base.json",
-  "include": [".scripts/**/*.ts", "vitest.workspace.ts"],
+  "include": ["scripts/**/*.ts", "vitest.workspace.ts"],
   "exclude": [],
   "compilerOptions": {
-    "types": ["bun-types"]
+    "types": ["@types/bun"]
   }
 }

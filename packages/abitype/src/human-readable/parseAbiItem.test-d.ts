@@ -156,3 +156,12 @@ test('parseAbiItem', () => {
   const signature: string = 'function foo()'
   expectTypeOf(parseAbiItem(signature)).toEqualTypeOf<Abi[number]>()
 })
+
+test('nested tuples', () => {
+  const formattedAbiItem =
+    'function stepChanges((uint256 characterID, uint64 newPosition, uint24 xp, uint24 epoch, uint8 hp, (int32 x, int32 y, uint8 hp, uint8 kind)[5] monsters, (uint8 monsterIndexPlus1, uint8 attackCardsUsed1, uint8 attackCardsUsed2, uint8 defenseCardsUsed1, uint8 defenseCardsUsed2) battle) stateChanges, uint256 action, bool revetOnInvalidMoves) pure returns ((uint256 characterID, uint64 newPosition, uint24 xp, uint24 epoch, uint8 hp, (int32 x, int32 y, uint8 hp, uint8 kind)[5] monsters, (uint8 monsterIndexPlus1, uint8 attackCardsUsed1, uint8 attackCardsUsed2, uint8 defenseCardsUsed1, uint8 defenseCardsUsed2) battle))'
+
+  const abiItem = parseAbiItem(formattedAbiItem)
+  expectTypeOf(abiItem.stateMutability).toEqualTypeOf<'pure'>()
+  expectTypeOf(abiItem.inputs.length).toEqualTypeOf<3>()
+})

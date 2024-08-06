@@ -3,8 +3,8 @@
 <p align="center">
   <a href="https://abitype.dev">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-dark.svg">
-      <img alt="ABIType logo" src="https://raw.githubusercontent.com/wagmi-dev/abitype/main/.github/logo-light.svg" width="auto" height="45">
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wevm/abitype/main/.github/logo-dark.svg">
+      <img alt="ABIType logo" src="https://raw.githubusercontent.com/wevm/abitype/main/.github/logo-light.svg" width="auto" height="45">
     </picture>
   </a>
 </p>
@@ -26,7 +26,7 @@
       <img src="https://img.shields.io/npm/dm/abitype?colorA=f6f8fa&colorB=f6f8fa&style=flat" alt="Downloads per month">
     </picture>
   </a>
-  <a href="https://github.com/wagmi-dev/abitype/blob/main/LICENSE">
+  <a href="https://github.com/wevm/abitype/blob/main/LICENSE">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/npm/l/abitype?colorA=21262d&colorB=21262d&style=flat">
       <img src="https://img.shields.io/npm/l/abitype?colorA=f6f8fa&colorB=f6f8fa&style=flat" alt="MIT License">
@@ -34,14 +34,14 @@
   </a>
   <a href="https://bestofjs.org/projects/abitype">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/endpoint?colorA=21262d&colorB=21262d&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wagmi-dev%2Fabitype%26since=daily">
-      <img src="https://img.shields.io/endpoint?colorA=f6f8fa&colorB=f6f8fa&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wagmi-dev%2Fabitype%26since=daily" alt="Best of JS">
+      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/endpoint?colorA=21262d&colorB=21262d&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wevm%2Fabitype%26since=daily">
+      <img src="https://img.shields.io/endpoint?colorA=f6f8fa&colorB=f6f8fa&style=flat&url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=wevm%2Fabitype%26since=daily" alt="Best of JS">
     </picture>
   </a>
-  <a href="https://app.codecov.io/gh/wagmi-dev/abitype">
+  <a href="https://app.codecov.io/gh/wevm/abitype">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/codecov/c/github/wagmi-dev/abitype?colorA=21262d&colorB=21262d">
-      <img src="https://img.shields.io/codecov/c/github/wagmi-dev/abitype?colorA=f6f8fa&colorB=f6f8fa" alt="Code coverage">
+      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/codecov/c/github/wevm/abitype?colorA=21262d&colorB=21262d">
+      <img src="https://img.shields.io/codecov/c/github/wevm/abitype?colorA=f6f8fa&colorB=f6f8fa" alt="Code coverage">
     </picture>
   </a>
 </div>
@@ -69,10 +69,10 @@ Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/st
 
 ABIType might be a good option for your project if:
 
-- You want to [typecheck](https://abitype.dev/api/types.html) your ABIs or EIP-712 Typed Data.
-- You want to add type inference and autocomplete to your library based on user-provided ABIs or EIP-712 Typed Data, like [wagmi](https://wagmi.sh) and [viem](https://viem.sh).
-- You need to [convert ABI types](https://abitype.dev/api/utilities.html#abiparameterstoprimitivetypes) (e.g. `'string'`) to TypeScript types (e.g. `string`) or other type transformations.
-- You need to validate ABIs at [runtime](https://abitype.dev/api/zod.html) (e.g. after fetching from external resource).
+- You want to [typecheck](https://abitype.dev/api/types) your ABIs or EIP-712 Typed Data.
+- You want to add type inference and autocomplete to your library based on user-provided ABIs or EIP-712 Typed Data, like [Wagmi](https://wagmi.sh) and [Viem](https://viem.sh).
+- You need to [convert ABI types](https://abitype.dev/api/utilities#abiparameterstoprimitivetypes) (e.g. `'string'`) to TypeScript types (e.g. `string`) or other type transformations.
+- You need to validate ABIs at [runtime](https://abitype.dev/api/zod) (e.g. after fetching from external resource).
 - You don’t want to set up a build process to generate types (e.g. TypeChain).
 
 ## Documentation
@@ -83,16 +83,16 @@ For documentation and guides, visit [abitype.dev](https://abitype.dev).
 
 For help, discussion about best practices, or any other conversation that would benefit from being searchable:
 
-[Discuss ABIType on GitHub](https://github.com/wagmi-dev/abitype/discussions)
+[Discuss ABIType on GitHub](https://github.com/wevm/abitype/discussions)
 
 For casual chit-chat with others using the library:
 
-[Join the Wagmi Discord](https://discord.gg/SghfWBKexF)
+[Join the Wevm Discord](https://discord.gg/SghfWBKexF)
 
 ## Sponsors
 
-If you find ABIType useful or use it for work, please consider supporting development on [GitHub Sponsors](https://github.com/sponsors/wagmi-dev?metadata_campaign=abitype_readme) or sending crypto to `wagmi-dev.eth`. Thank you 🙏
+If you find ABIType useful or use it for work, please consider supporting development on [GitHub Sponsors](https://github.com/sponsors/wevm?metadata_campaign=abitype_readme) or sending crypto to `wevm.eth`. Thank you 🙏
 
 ## Contributing
 
-Contributions to ABIType are greatly appreciated! If you're interested in contributing to ABIType, please read the [Contributing Guide](https://github.com/wagmi-dev/abitype/blob/main/.github/CONTRIBUTING.md) **before submitting a pull request**.
+Contributions to ABIType are greatly appreciated! If you're interested in contributing to ABIType, please read the [Contributing Guide](https://github.com/wevm/abitype/blob/main/.github/CONTRIBUTING.md) **before submitting a pull request**.

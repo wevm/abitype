@@ -5,83 +5,82 @@ import type { ParseAbiParameter } from './utils.js'
 
 export type StructLookup = Record<string, readonly AbiParameter[]>
 
-export type ParseStructs<TSignatures extends readonly string[]> =
+export type ParseStructs<signatures extends readonly string[]> =
   // Create "shallow" version of each struct (and filter out non-structs or invalid structs)
   {
-    [Signature in
-      TSignatures[number] as ParseStruct<Signature> extends infer Struct extends {
+    [signature in signatures[number] as ParseStruct<signature> extends infer struct extends
+      {
         name: string
       }
-        ? Struct['name']
-        : never]: ParseStruct<Signature>['components']
-  } extends infer Structs extends Record<
+      ? struct['name']
+      : never]: ParseStruct<signature>['components']
+  } extends infer structs extends Record<
     string,
     readonly (AbiParameter & { type: string })[]
   >
     ? // Resolve nested structs inside each struct
       {
-        [StructName in keyof Structs]: ResolveStructs<
-          Structs[StructName],
-          Structs
+        [structName in keyof structs]: ResolveStructs<
+          structs[structName],
+          structs
         >
       }
     : never
 
 export type ParseStruct<
-  TSignature extends string,
-  TStructs extends StructLookup | unknown = unknown,
-> = TSignature extends StructSignature<infer Name, infer Properties>
+  signature extends string,
+  structs extends StructLookup | unknown = unknown,
+> = signature extends StructSignature<infer name, infer properties>
   ? {
-      readonly name: Trim<Name>
-      readonly components: ParseStructProperties<Properties, TStructs>
+      readonly name: Trim<name>
+      readonly components: ParseStructProperties<properties, structs>
     }
   : never
 
 export type ResolveStructs<
-  TAbiParameters extends readonly (AbiParameter & { type: string })[],
-  TStructs extends Record<string, readonly (AbiParameter & { type: string })[]>,
-  TKeyReferences extends { [_: string]: unknown } | unknown = unknown,
+  abiParameters extends readonly (AbiParameter & { type: string })[],
+  structs extends Record<string, readonly (AbiParameter & { type: string })[]>,
+  keyReferences extends { [_: string]: unknown } | unknown = unknown,
 > = readonly [
   ...{
-    [K in
-      keyof TAbiParameters]: TAbiParameters[K]['type'] extends `${infer Head extends string &
-      keyof TStructs}[${infer Tail}]` // Struct arrays (e.g. `type: 'Struct[]'`, `type: 'Struct[10]'`, `type: 'Struct[][]'`)
-      ? Head extends keyof TKeyReferences
-        ? Error<`Circular reference detected. Struct "${TAbiParameters[K]['type']}" is a circular reference.`>
+    [key in keyof abiParameters]: abiParameters[key]['type'] extends `${infer head extends
+      string & keyof structs}[${infer tail}]` // Struct arrays (e.g. `type: 'Struct[]'`, `type: 'Struct[10]'`, `type: 'Struct[][]'`)
+      ? head extends keyof keyReferences
+        ? Error<`Circular reference detected. Struct "${abiParameters[key]['type']}" is a circular reference.`>
         : {
-            readonly name: TAbiParameters[K]['name']
-            readonly type: `tuple[${Tail}]`
+            readonly name: abiParameters[key]['name']
+            readonly type: `tuple[${tail}]`
             readonly components: ResolveStructs<
-              TStructs[Head],
-              TStructs,
-              TKeyReferences & { [_ in Head]: true }
+              structs[head],
+              structs,
+              keyReferences & { [_ in head]: true }
             >
           }
       : // Basic struct (e.g. `type: 'Struct'`)
-      TAbiParameters[K]['type'] extends keyof TStructs
-      ? TAbiParameters[K]['type'] extends keyof TKeyReferences
-        ? Error<`Circular reference detected. Struct "${TAbiParameters[K]['type']}" is a circular reference.`>
-        : {
-            readonly name: TAbiParameters[K]['name']
-            readonly type: 'tuple'
-            readonly components: ResolveStructs<
-              TStructs[TAbiParameters[K]['type']],
-              TStructs,
-              TKeyReferences & { [_ in TAbiParameters[K]['type']]: true }
-            >
-          }
-      : TAbiParameters[K]
+        abiParameters[key]['type'] extends keyof structs
+        ? abiParameters[key]['type'] extends keyof keyReferences
+          ? Error<`Circular reference detected. Struct "${abiParameters[key]['type']}" is a circular reference.`>
+          : {
+              readonly name: abiParameters[key]['name']
+              readonly type: 'tuple'
+              readonly components: ResolveStructs<
+                structs[abiParameters[key]['type']],
+                structs,
+                keyReferences & { [_ in abiParameters[key]['type']]: true }
+              >
+            }
+        : abiParameters[key]
   },
 ]
 
 export type ParseStructProperties<
-  T extends string,
-  TStructs extends StructLookup | unknown = unknown,
-  Result extends any[] = [],
-> = Trim<T> extends `${infer Head};${infer Tail}`
+  signature extends string,
+  structs extends StructLookup | unknown = unknown,
+  result extends any[] = [],
+> = Trim<signature> extends `${infer head};${infer tail}`
   ? ParseStructProperties<
-      Tail,
-      TStructs,
-      [...Result, ParseAbiParameter<Head, { Structs: TStructs }>]
+      tail,
+      structs,
+      [...result, ParseAbiParameter<head, { structs: structs }>]
     >
-  : Result
+  : result

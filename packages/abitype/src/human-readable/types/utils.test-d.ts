@@ -12,10 +12,10 @@ import type {
   _ValidateAbiParameter,
 } from './utils.js'
 
-type OptionsWithModifier = { Modifier: 'calldata'; Structs: unknown }
-type OptionsWithIndexed = { Modifier: 'indexed'; Structs: unknown }
+type OptionsWithModifier = { modifier: 'calldata'; structs: unknown }
+type OptionsWithIndexed = { modifier: 'indexed'; structs: unknown }
 type OptionsWithStructs = {
-  Structs: {
+  structs: {
     Foo: [{ type: 'address'; name: 'bar' }]
   }
 }
@@ -676,6 +676,20 @@ test('_ParseFunctionParametersAndStateMutability', () => {
     Inputs: 'string bar'
     StateMutability: 'view'
   }>()
+
+  expectTypeOf<
+    _ParseFunctionParametersAndStateMutability<'function foo(string bar, uint256) external view'>
+  >().toEqualTypeOf<{
+    Inputs: 'string bar, uint256'
+    StateMutability: 'view'
+  }>()
+
+  expectTypeOf<
+    _ParseFunctionParametersAndStateMutability<'function stepChanges((uint256 characterID, uint64 newPosition, uint24 xp, uint24 epoch, uint8 hp, (int32 x, int32 y, uint8 hp, uint8 kind)[5] monsters, (uint8 monsterIndexPlus1, uint8 attackCardsUsed1, uint8 attackCardsUsed2, uint8 defenseCardsUsed1, uint8 defenseCardsUsed2) battle) stateChanges, uint256 action, bool revetOnInvalidMoves) pure returns ((uint256 characterID, uint64 newPosition, uint24 xp, uint24 epoch, uint8 hp, (int32 x, int32 y, uint8 hp, uint8 kind)[5] monsters, (uint8 monsterIndexPlus1, uint8 attackCardsUsed1, uint8 attackCardsUsed2, uint8 defenseCardsUsed1, uint8 defenseCardsUsed2) battle))'>
+  >().toEqualTypeOf<{
+    Inputs: '(uint256 characterID, uint64 newPosition, uint24 xp, uint24 epoch, uint8 hp, (int32 x, int32 y, uint8 hp, uint8 kind)[5] monsters, (uint8 monsterIndexPlus1, uint8 attackCardsUsed1, uint8 attackCardsUsed2, uint8 defenseCardsUsed1, uint8 defenseCardsUsed2) battle) stateChanges, uint256 action, bool revetOnInvalidMoves'
+    StateMutability: 'pure'
+  }>()
 })
 
 test('_ParseTuple', () => {
@@ -980,13 +994,13 @@ test('_SplitNameOrModifier', () => {
     readonly name: 'foo'
   }>()
   expectTypeOf<
-    _SplitNameOrModifier<'indexed foo', { Modifier: 'indexed' }>
+    _SplitNameOrModifier<'indexed foo', { modifier: 'indexed' }>
   >().toEqualTypeOf<{
     readonly name: 'foo'
     readonly indexed: true
   }>()
   expectTypeOf<
-    _SplitNameOrModifier<'calldata foo', { Modifier: 'calldata' }>
+    _SplitNameOrModifier<'calldata foo', { modifier: 'calldata' }>
   >().toEqualTypeOf<{
     readonly name: 'foo'
   }>()
@@ -995,14 +1009,14 @@ test('_SplitNameOrModifier', () => {
 test('_UnwrapNameOrModifier', () => {
   expectTypeOf<_UnwrapNameOrModifier<'bar) foo'>>().toEqualTypeOf<{
     End: 'bar'
-    NameOrModifier: 'foo'
+    nameOrModifier: 'foo'
   }>()
   expectTypeOf<_UnwrapNameOrModifier<'baz) bar) foo'>>().toEqualTypeOf<{
     End: 'baz) bar'
-    NameOrModifier: 'foo'
+    nameOrModifier: 'foo'
   }>()
   expectTypeOf<_UnwrapNameOrModifier<'string) calldata foo'>>().toEqualTypeOf<{
     End: 'string'
-    NameOrModifier: 'calldata foo'
+    nameOrModifier: 'calldata foo'
   }>()
 })

@@ -12,7 +12,7 @@ import type { ParseSignature } from './types/utils.js'
 /**
  * Parses human-readable ABI item (e.g. error, event, function) into {@link Abi} item
  *
- * @param TSignature - Human-readable ABI item
+ * @param signature - Human-readable ABI item
  * @returns Parsed {@link Abi} item
  *
  * @example
@@ -26,35 +26,35 @@ import type { ParseSignature } from './types/utils.js'
  * >
  */
 export type ParseAbiItem<
-  TSignature extends string | readonly string[] | readonly unknown[],
+  signature extends string | readonly string[] | readonly unknown[],
 > =
-  | (TSignature extends string
-      ? string extends TSignature
+  | (signature extends string
+      ? string extends signature
         ? Abi[number]
-        : TSignature extends Signature<TSignature> // Validate signature
-        ? ParseSignature<TSignature>
-        : never
+        : signature extends Signature<signature> // Validate signature
+          ? ParseSignature<signature>
+          : never
       : never)
-  | (TSignature extends readonly string[]
-      ? string[] extends TSignature
+  | (signature extends readonly string[]
+      ? string[] extends signature
         ? Abi[number] // Return generic Abi item since type was no inferrable
-        : TSignature extends Signatures<TSignature> // Validate signature
-        ? ParseStructs<TSignature> extends infer Structs
-          ? {
-              [K in keyof TSignature]: ParseSignature<
-                TSignature[K] extends string ? TSignature[K] : never,
-                Structs
-              >
-            } extends infer Mapped extends readonly unknown[]
-            ? // Filter out `never` since those are structs
-              Filter<Mapped, never>[0] extends infer Result
-              ? Result extends undefined // convert `undefined` to `never` (e.g. `ParseAbiItem<['struct Foo { string name; }']>`)
-                ? never
-                : Result
+        : signature extends Signatures<signature> // Validate signature
+          ? ParseStructs<signature> extends infer structs
+            ? {
+                [key in keyof signature]: ParseSignature<
+                  signature[key] extends string ? signature[key] : never,
+                  structs
+                >
+              } extends infer mapped extends readonly unknown[]
+              ? // Filter out `never` since those are structs
+                Filter<mapped, never>[0] extends infer result
+                ? result extends undefined // convert `undefined` to `never` (e.g. `ParseAbiItem<['struct Foo { string name; }']>`)
+                  ? never
+                  : result
+                : never
               : never
             : never
           : never
-        : never
       : never)
 
 /**
@@ -75,38 +75,38 @@ export type ParseAbiItem<
  * ])
  */
 export function parseAbiItem<
-  TSignature extends string | readonly string[] | readonly unknown[],
+  signature extends string | readonly string[] | readonly unknown[],
 >(
-  signature: Narrow<TSignature> &
+  signature: Narrow<signature> &
     (
-      | (TSignature extends string
-          ? string extends TSignature
+      | (signature extends string
+          ? string extends signature
             ? unknown
-            : Signature<TSignature>
+            : Signature<signature>
           : never)
-      | (TSignature extends readonly string[]
-          ? TSignature extends readonly [] // empty array
+      | (signature extends readonly string[]
+          ? signature extends readonly [] // empty array
             ? Error<'At least one signature required.'>
-            : string[] extends TSignature
-            ? unknown
-            : Signatures<TSignature>
+            : string[] extends signature
+              ? unknown
+              : Signatures<signature>
           : never)
     ),
-): ParseAbiItem<TSignature> {
-  let abiItem
+): ParseAbiItem<signature> {
+  let abiItem: ParseAbiItem<signature> | undefined
   if (typeof signature === 'string')
-    abiItem = parseSignature(signature) as ParseAbiItem<TSignature>
+    abiItem = parseSignature(signature) as ParseAbiItem<signature>
   else {
     const structs = parseStructs(signature as readonly string[])
     const length = signature.length as number
     for (let i = 0; i < length; i++) {
       const signature_ = (signature as readonly string[])[i]!
       if (isStructSignature(signature_)) continue
-      abiItem = parseSignature(signature_, structs)
+      abiItem = parseSignature(signature_, structs) as ParseAbiItem<signature>
       break
     }
   }
 
   if (!abiItem) throw new InvalidAbiItemError({ signature })
-  return abiItem as ParseAbiItem<TSignature>
+  return abiItem as ParseAbiItem<signature>
 }

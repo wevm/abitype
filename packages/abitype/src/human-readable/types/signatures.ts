@@ -2,43 +2,38 @@ import type { AbiStateMutability } from '../../abi.js'
 import type { Error } from '../../types.js'
 
 export type ErrorSignature<
-  TName extends string = string,
-  TParameters extends string = string,
-> = `error ${TName}(${TParameters})`
-export type IsErrorSignature<T extends string> = T extends ErrorSignature<
-  infer Name
->
-  ? IsName<Name>
-  : false
+  name extends string = string,
+  parameters extends string = string,
+> = `error ${name}(${parameters})`
+export type IsErrorSignature<signature extends string> =
+  signature extends ErrorSignature<infer name> ? IsName<name> : false
 export type EventSignature<
-  TName extends string = string,
-  TParameters extends string = string,
-> = `event ${TName}(${TParameters})`
-export type IsEventSignature<T extends string> = T extends EventSignature<
-  infer Name
->
-  ? IsName<Name>
-  : false
+  name extends string = string,
+  parameters extends string = string,
+> = `event ${name}(${parameters})`
+export type IsEventSignature<signature extends string> =
+  signature extends EventSignature<infer name> ? IsName<name> : false
 
 export type FunctionSignature<
-  TName extends string = string,
-  TTail extends string = string,
-> = `function ${TName}(${TTail}`
-export type IsFunctionSignature<T> = T extends FunctionSignature<infer Name>
-  ? IsName<Name> extends true
-    ? T extends ValidFunctionSignatures
-      ? true
-      : // Check that `Parameters` is not absorbing other types (e.g. `returns`)
-      T extends `function ${string}(${infer Parameters})`
-      ? Parameters extends InvalidFunctionParameters
-        ? false
-        : true
+  name extends string = string,
+  tail extends string = string,
+> = `function ${name}(${tail}`
+export type IsFunctionSignature<signature> =
+  signature extends FunctionSignature<infer name>
+    ? IsName<name> extends true
+      ? signature extends ValidFunctionSignatures
+        ? true
+        : // Check that `Parameters` is not absorbing other types (e.g. `returns`)
+          signature extends `function ${string}(${infer parameters})`
+          ? parameters extends InvalidFunctionParameters
+            ? false
+            : true
+          : false
       : false
     : false
-  : false
 export type Scope = 'public' | 'external' // `internal` or `private` functions wouldn't make it to ABI so can ignore
 type Returns = `returns (${string})` | `returns(${string})`
-// Almost all valid function signatures, except `function ${string}(${infer Parameters})` since `Parameters` can absorb returns
+// Almost all valid function signatures, except `function ${string}(${infer parameters})` since `parameters` can absorb returns
 type ValidFunctionSignatures =
   | `function ${string}()`
   // basic
@@ -60,60 +55,56 @@ type ValidFunctionSignatures =
   | `function ${string}(${string}) ${Scope} ${AbiStateMutability} ${Returns}`
 
 export type StructSignature<
-  TName extends string = string,
-  TProperties extends string = string,
-> = `struct ${TName} {${TProperties}}`
-export type IsStructSignature<T extends string> = T extends StructSignature<
-  infer Name
->
-  ? IsName<Name>
-  : false
+  name extends string = string,
+  properties extends string = string,
+> = `struct ${name} {${properties}}`
+export type IsStructSignature<signature extends string> =
+  signature extends StructSignature<infer name> ? IsName<name> : false
 
-type ConstructorSignature<TTail extends string = string> =
-  `constructor(${TTail}`
-export type IsConstructorSignature<T> = T extends ConstructorSignature
-  ? T extends ValidConstructorSignatures
-    ? true
+type ConstructorSignature<tail extends string = string> = `constructor(${tail}`
+export type IsConstructorSignature<signature> =
+  signature extends ConstructorSignature
+    ? signature extends ValidConstructorSignatures
+      ? true
+      : false
     : false
-  : false
 type ValidConstructorSignatures =
   | `constructor(${string})`
   | `constructor(${string}) payable`
 
-export type FallbackSignature<
-  TAbiStateMutability extends '' | ' payable' = '',
-> = `fallback() external${TAbiStateMutability}`
+export type FallbackSignature<abiStateMutability extends '' | ' payable' = ''> =
+  `fallback() external${abiStateMutability}`
 
 export type ReceiveSignature = 'receive() external payable'
 
 // TODO: Maybe use this for signature validation one day
 // https://twitter.com/devanshj__/status/1610423724708343808
-export type IsSignature<T extends string> =
-  | (IsErrorSignature<T> extends true ? true : never)
-  | (IsEventSignature<T> extends true ? true : never)
-  | (IsFunctionSignature<T> extends true ? true : never)
-  | (IsStructSignature<T> extends true ? true : never)
-  | (IsConstructorSignature<T> extends true ? true : never)
-  | (T extends FallbackSignature ? true : never)
-  | (T extends ReceiveSignature ? true : never) extends infer Condition
-  ? [Condition] extends [never]
+export type IsSignature<type extends string> =
+  | (IsErrorSignature<type> extends true ? true : never)
+  | (IsEventSignature<type> extends true ? true : never)
+  | (IsFunctionSignature<type> extends true ? true : never)
+  | (IsStructSignature<type> extends true ? true : never)
+  | (IsConstructorSignature<type> extends true ? true : never)
+  | (type extends FallbackSignature ? true : never)
+  | (type extends ReceiveSignature ? true : never) extends infer condition
+  ? [condition] extends [never]
     ? false
     : true
   : false
 
 export type Signature<
-  T extends string,
-  K extends string | unknown = unknown,
-> = IsSignature<T> extends true
-  ? T
-  : string extends T // if exactly `string` (not narrowed), then pass through as valid
-  ? T
-  : Error<`Signature "${T}" is invalid${K extends string
-      ? ` at position ${K}`
-      : ''}.`>
+  string1 extends string,
+  string2 extends string | unknown = unknown,
+> = IsSignature<string1> extends true
+  ? string1
+  : string extends string1 // if exactly `string` (not narrowed), then pass through as valid
+    ? string1
+    : Error<`Signature "${string1}" is invalid${string2 extends string
+        ? ` at position ${string2}`
+        : ''}.`>
 
-export type Signatures<T extends readonly string[]> = {
-  [K in keyof T]: Signature<T[K], K>
+export type Signatures<signatures extends readonly string[]> = {
+  [key in keyof signatures]: Signature<signatures[key], key>
 }
 
 export type Modifier = 'calldata' | 'indexed' | 'memory' | 'storage'
@@ -123,37 +114,36 @@ export type FunctionModifier = Extract<
 >
 export type EventModifier = Extract<Modifier, 'indexed'>
 
-export type IsName<TName extends string> = TName extends ''
+export type IsName<name extends string> = name extends ''
   ? false
-  : ValidateName<TName> extends TName
-  ? true
-  : false
+  : ValidateName<name> extends name
+    ? true
+    : false
 
-export type AssertName<TName extends string> =
-  ValidateName<TName> extends infer InvalidName extends string[]
-    ? `[${InvalidName[number]}]`
-    : TName
+export type AssertName<name extends string> =
+  ValidateName<name> extends infer invalidName extends string[]
+    ? `[${invalidName[number]}]`
+    : name
 
 export type ValidateName<
-  TName extends string,
-  CheckCharacters extends boolean = false,
-> = TName extends `${string}${' '}${string}`
-  ? Error<`Identifier "${TName}" cannot contain whitespace.`>
-  : IsSolidityKeyword<TName> extends true
-  ? Error<`"${TName}" is a protected Solidity keyword.`>
-  : TName extends `${number}`
-  ? Error<`Identifier "${TName}" cannot be a number string.`>
-  : TName extends `${number}${string}`
-  ? Error<`Identifier "${TName}" cannot start with a number.`>
-  : CheckCharacters extends true
-  ? IsValidCharacter<TName> extends true
-    ? TName
-    : Error<`"${TName}" contains invalid character.`>
-  : TName
+  name extends string,
+  checkCharacters extends boolean = false,
+> = name extends `${string}${' '}${string}`
+  ? Error<`Identifier "${name}" cannot contain whitespace.`>
+  : IsSolidityKeyword<name> extends true
+    ? Error<`"${name}" is a protected Solidity keyword.`>
+    : name extends `${number}`
+      ? Error<`Identifier "${name}" cannot be a number string.`>
+      : name extends `${number}${string}`
+        ? Error<`Identifier "${name}" cannot start with a number.`>
+        : checkCharacters extends true
+          ? IsValidCharacter<name> extends true
+            ? name
+            : Error<`"${name}" contains invalid character.`>
+          : name
 
-export type IsSolidityKeyword<T extends string> = T extends SolidityKeywords
-  ? true
-  : false
+export type IsSolidityKeyword<type extends string> =
+  type extends SolidityKeywords ? true : false
 
 export type SolidityKeywords =
   | 'after'
@@ -220,11 +210,11 @@ export type SolidityKeywords =
   | `bytes${number | ''}${`[${string}]` | ''}`
   | `${'u' | ''}int${number | ''}${`[${string}]` | ''}`
 
-export type IsValidCharacter<T extends string> =
-  T extends `${ValidCharacters}${infer Tail}`
-    ? Tail extends ''
+export type IsValidCharacter<character extends string> =
+  character extends `${ValidCharacters}${infer tail}`
+    ? tail extends ''
       ? true
-      : IsValidCharacter<Tail>
+      : IsValidCharacter<tail>
     : false
 
 // biome-ignore format: no formatting

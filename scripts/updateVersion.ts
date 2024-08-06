@@ -35,6 +35,11 @@ for (const packagePath of packagePaths) {
     versionFilePath,
     `export const version = '${packageJson.version}'\n`,
   )
+
+  const jsrFilePath = path.resolve(path.dirname(packagePath), 'jsr.json')
+  const jsrJson = await Bun.file(jsrFilePath).json()
+  jsrJson.version = packageJson.version
+  Bun.write(jsrFilePath, JSON.stringify(jsrJson, null, 2))
 }
 
 console.log(
