@@ -89,6 +89,18 @@ export type ResolvedRegister = {
       : DefaultRegister['fixedArrayMaxLength']
 
   /**
+   * Custom Struct types matched against `AbiParameter.internalType`
+   *
+   * Note: format is Record<struct_name, matched_type>
+   * @default {}
+   */
+  structTypeMatches: Register extends {
+    structTypeMatches: infer type extends Record<string, any>
+  }
+    ? type
+    : DefaultRegister['structTypeMatches']
+
+  /**
    * When set, validates {@link AbiParameter}'s `type` against {@link AbiType}
    *
    * Note: You probably only want to set this to `true` if parsed types are returning as `unknown`
@@ -141,6 +153,9 @@ export type DefaultRegister = {
   bigIntType: bigint
   /** TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48` */
   intType: number
+
+  /** Typescript types to use for custom structs */
+  structTypeMatches: {}
 
   /** When set, validates {@link AbiParameter}'s `type` against {@link AbiType} */
   strictAbiType: false

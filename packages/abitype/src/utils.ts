@@ -5,6 +5,8 @@ import type {
   AbiStateMutability,
   AbiType,
   MBits,
+  ResolvedStructMatchesMap,
+  ResolvedStructMatchesUnion,
   SolidityArray,
   SolidityBytes,
   SolidityFixedArrayRange,
@@ -79,33 +81,38 @@ type BitsTypeLookup = {
  * @returns TypeScript primitive type
  */
 export type AbiParameterToPrimitiveType<
-  abiParameter extends AbiParameter | { name: string; type: unknown },
+  abiParameter extends
+    | AbiParameter
+    | { name: string; type: unknown; internalType?: unknown },
   abiParameterKind extends AbiParameterKind = AbiParameterKind,
   // 1. Check to see if type is basic (not tuple or array) and can be looked up immediately.
 > = abiParameter['type'] extends AbiBasicType
   ? AbiTypeToPrimitiveType<abiParameter['type'], abiParameterKind>
-  : // 2. Check if type is tuple and covert each component
-    abiParameter extends {
-        type: SolidityTuple
-        components: infer components extends readonly AbiParameter[]
-      }
-    ? AbiComponentsToPrimitiveType<components, abiParameterKind>
-    : // 3. Check if type is array.
-      MaybeExtractArrayParameterType<abiParameter['type']> extends [
-          infer head extends string,
-          infer size,
-        ]
-      ? AbiArrayToPrimitiveType<abiParameter, abiParameterKind, head, size>
-      : // 4. If type is not basic, tuple, or array, we don't know what the type is.
-        // This can happen when a fixed-length array is out of range (`Size` doesn't exist in `SolidityFixedArraySizeLookup`),
-        // the array has depth greater than `ResolvedRegister['arrayMaxDepth']`, etc.
-        ResolvedRegister['strictAbiType'] extends true
-        ? Error<`Unknown type '${abiParameter['type'] & string}'.`>
-        : // 5. If we've gotten this far, let's check for errors in tuple components.
-          // (Happens for recursive tuple typed data types.)
-          abiParameter extends { components: Error<string> }
-          ? abiParameter['components']
-          : unknown
+  : // 2. Check if internalType matches user defined struct matches
+    abiParameter['internalType'] extends ResolvedStructMatchesUnion
+    ? ResolvedStructMatchesMap[abiParameter['internalType']]
+    : // 3. Check if type is tuple and covert each component
+      abiParameter extends {
+          type: SolidityTuple
+          components: infer components extends readonly AbiParameter[]
+        }
+      ? AbiComponentsToPrimitiveType<components, abiParameterKind>
+      : // 4. Check if type is array.
+        MaybeExtractArrayParameterType<abiParameter['type']> extends [
+            infer head extends string,
+            infer size,
+          ]
+        ? AbiArrayToPrimitiveType<abiParameter, abiParameterKind, head, size>
+        : // 5. If type is not basic, tuple, or array, we don't know what the type is.
+          // This can happen when a fixed-length array is out of range (`Size` doesn't exist in `SolidityFixedArraySizeLookup`),
+          // the array has depth greater than `ResolvedRegister['arrayMaxDepth']`, etc.
+          ResolvedRegister['strictAbiType'] extends true
+          ? Error<`Unknown type '${abiParameter['type'] & string}'.`>
+          : // 6. If we've gotten this far, let's check for errors in tuple components.
+            // (Happens for recursive tuple typed data types.)
+            abiParameter extends { components: Error<string> }
+            ? abiParameter['components']
+            : unknown
 
 type AbiBasicType = Exclude<AbiType, SolidityTuple | SolidityArray>
 

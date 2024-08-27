@@ -76,6 +76,16 @@ export type SolidityArrayWithTuple = _BuildArrayTypes<SolidityTuple>
 export type SolidityArray = SolidityArrayWithoutTuple | SolidityArrayWithTuple
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+// User Defined Struct Types
+
+type ResolvedStructTypeMatches = ResolvedRegister['structTypeMatches']
+export type ResolvedStructMatchesMap = {
+  [P in keyof ResolvedStructTypeMatches &
+    string as `struct ${P}`]: ResolvedStructTypeMatches[P]
+}
+export type ResolvedStructMatchesUnion = keyof ResolvedStructMatchesMap
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // Abi Types
 
 export type AbiType =
