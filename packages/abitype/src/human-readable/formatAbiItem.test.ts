@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest'
 
+import type { Abi } from '../abi.js'
 import { seaportAbi } from '../abis/json.js'
 import { formatAbiItem } from './formatAbiItem.js'
-import type { Abi } from '../abi.js'
 
 test('default', () => {
   const result = formatAbiItem(seaportAbi[1])
@@ -88,7 +88,8 @@ test.each([
       outputs: undefined,
       stateMutability: 'nonpayable',
     } as const,
-    expected: 'function initWormhole((uint256 chainId, uint16 wormholeChainId)[] configs)',
+    expected:
+      'function initWormhole((uint256 chainId, uint16 wormholeChainId)[] configs)',
   },
 ])('formatAbiItem($expected)', ({ abiItem, expected }) => {
   expect(formatAbiItem(abiItem as Abi[number])).toEqual(expected)
