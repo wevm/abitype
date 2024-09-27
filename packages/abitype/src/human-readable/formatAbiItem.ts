@@ -110,7 +110,7 @@ export function formatAbiItem<const abiItem extends Abi[number]>(
         ? ` ${abiItem.stateMutability}`
         : ''
     }${
-      abiItem.outputs.length
+      abiItem.outputs?.length
         ? ` returns (${formatAbiParameters(abiItem.outputs as Params)})`
         : ''
     }`
