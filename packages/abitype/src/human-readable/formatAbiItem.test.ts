@@ -2,6 +2,7 @@ import { expect, test } from 'vitest'
 
 import { seaportAbi } from '../abis/json.js'
 import { formatAbiItem } from './formatAbiItem.js'
+import type { Abi } from '../abi.js'
 
 test('default', () => {
   const result = formatAbiItem(seaportAbi[1])
@@ -64,6 +65,31 @@ test.each([
     } as const,
     expected: 'receive() external payable',
   },
+  {
+    abiItem: {
+      type: 'function',
+      name: 'initWormhole',
+      inputs: [
+        {
+          type: 'tuple[]',
+          name: 'configs',
+          components: [
+            {
+              type: 'uint256',
+              name: 'chainId',
+            },
+            {
+              type: 'uint16',
+              name: 'wormholeChainId',
+            },
+          ],
+        },
+      ],
+      outputs: undefined,
+      stateMutability: 'nonpayable',
+    } as const,
+    expected: 'function initWormhole((uint256 chainId, uint16 wormholeChainId)[] configs)',
+  },
 ])('formatAbiItem($expected)', ({ abiItem, expected }) => {
-  expect(formatAbiItem(abiItem)).toEqual(expected)
+  expect(formatAbiItem(abiItem as Abi[number])).toEqual(expected)
 })
