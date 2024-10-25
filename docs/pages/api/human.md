@@ -483,6 +483,33 @@ Runtime functions for parsing and formatting human-readable ABIs.
 These functions throw [errors](#errors-1) for invalid inputs. Make sure you handle errors appropriately.
 :::
 
+### `signatureAbiItem`
+
+Formats [`Abi`](/api/types#abi) into the corresponding signature used to create selectors for both [functions](https://docs.soliditylang.org/en/develop/abi-spec.html#function-selector) and [events](https://docs.soliditylang.org/en/develop/abi-spec.html#events).
+
+| Name         | Description   | Type                        |
+| ------------ | ------------- | ----------------------------|
+| `abiItem`    | ABI item      | `AbiFunction` \| `AbiEvent` |
+| returns      | signature     | `string` (inferred)         |
+
+#### Example
+
+```ts twoslash
+import { signatureAbiItem } from 'abitype'
+
+const result = signatureAbiItem({
+//    ^? 
+
+
+
+  name: 'balanceOf',
+  type: 'function',
+  stateMutability: 'view',
+  inputs: [{ type: 'address', name: 'owner' }],
+  outputs: [{ type: 'uint256' }],
+})
+```
+
 ### `parseAbi`
 
 Parses human-readable ABI into JSON [`Abi`](/api/types#abi).

@@ -15,6 +15,7 @@ it('exports', () => {
       "parseAbiItem",
       "parseAbiParameter",
       "parseAbiParameters",
+      "signatureAbiItem",
       "UnknownTypeError",
       "InvalidAbiItemError",
       "UnknownSolidityTypeError",

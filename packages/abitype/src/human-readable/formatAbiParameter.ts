@@ -52,7 +52,7 @@ export type FormatAbiParameter<
       : ''}`
 
 // https://regexr.com/7f7rv
-const tupleRegex = /^tuple(?<array>(\[(\d*)\])*)$/
+export const tupleRegex = /^tuple(?<array>(\[(\d*)\])*)$/
 
 /**
  * Formats {@link AbiParameter} to human-readable ABI parameter.

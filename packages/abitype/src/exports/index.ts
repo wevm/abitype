@@ -103,6 +103,11 @@ export {
 } from '../human-readable/parseAbiParameters.js'
 
 export {
+  signatureAbiItem,
+  type signatureAbiItem,
+} from '../human-readable/signatureAbiItem.js'
+
+export {
   UnknownTypeError,
   InvalidAbiItemError,
   UnknownSolidityTypeError,
