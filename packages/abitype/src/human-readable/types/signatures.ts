@@ -72,7 +72,8 @@ type ValidConstructorSignatures =
   | `constructor(${string})`
   | `constructor(${string}) payable`
 
-export type FallbackSignature = `fallback() external${'' | ' payable'}`
+export type FallbackSignature<abiStateMutability extends '' | ' payable' = ''> =
+  `fallback() external${abiStateMutability}`
 
 export type ReceiveSignature = 'receive() external payable'
 
