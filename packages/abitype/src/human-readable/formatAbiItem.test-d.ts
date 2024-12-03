@@ -105,4 +105,11 @@ test('formatAbiItem', () => {
     stateMutability: 'nonpayable',
   }
   expectTypeOf(formatAbiItem(abiItem)).toEqualTypeOf<string>()
+
+  expectTypeOf(
+    formatAbiItem({ type: 'fallback', stateMutability: 'nonpayable' }),
+  ).toEqualTypeOf<'fallback() external'>()
+  expectTypeOf(
+    formatAbiItem({ type: 'fallback', stateMutability: 'payable' }),
+  ).toEqualTypeOf<'fallback() external payable'>()
 })

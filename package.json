@@ -8,13 +8,15 @@
     "changeset:prepublish": "pnpm version:update && pnpm build && bun scripts/formatPackageJson.ts && bun scripts/generateProxyPackages.ts",
     "changeset:publish": "pnpm changeset:prepublish && changeset publish",
     "changeset:version": "changeset version && pnpm version:update && pnpm format",
+    "check": "biome check --write",
+    "check:repo": "sherif",
+    "check:types": "pnpm run --r --parallel check:types && tsc --noEmit",
+    "check:types:propertyTypes": "pnpm run --r --parallel typecheck --exactOptionalPropertyTypes false && tsc --noEmit --exactOptionalPropertyTypes false",
+    "check:unused": "pnpm clean && knip",
     "clean": "pnpm run --r --parallel clean && rm -rf packages/**/*.json.tmp",
     "deps": "pnpx taze -r",
     "docs:dev": "pnpm -r --filter docs dev",
     "format": "biome format --write",
-    "lint": "biome check --write",
-    "lint:repo": "sherif",
-    "lint:unused": "pnpm clean && knip",
     "postinstall": "pnpm preconstruct",
     "preconstruct": "bun scripts/preconstruct.ts",
     "preinstall": "pnpx only-allow pnpm",
@@ -24,16 +26,14 @@
     "test:cov": "vitest run --coverage",
     "test:update": "vitest --update",
     "trace": "tsc --noEmit --generateTrace ./playgrounds/performance/out --incremental false --project playgrounds/performance/tsconfig.json && echo \"Open playgrounds/performance/out/trace.json in https://ui.perfetto.dev\"",
-    "typecheck": "pnpm run --r --parallel typecheck && tsc --noEmit",
-    "typecheck:propertyTypes": "pnpm run --r --parallel typecheck --exactOptionalPropertyTypes false && tsc --noEmit --exactOptionalPropertyTypes false",
     "typeperf": "pnpm run --r --parallel typeperf",
     "version:update": "bun scripts/updateVersion.ts"
   },
   "devDependencies": {
     "@arktype/attest": "0.8.0",
-    "@biomejs/biome": "^1.8.2",
+    "@biomejs/biome": "1.9.4",
     "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.27.6",
+    "@changesets/cli": "2.27.10",
     "@ethersproject/abi": "^5.7.0",
     "@types/bun": "^1.1.5",
     "@vitest/coverage-v8": "^1.6.0",
@@ -41,18 +41,18 @@
     "ethers": "^6.13.1",
     "glob": "^10.4.2",
     "knip": "^5.22.3",
-    "publint": "^0.2.8",
+    "publint": "^0.2.12",
     "sherif": "^0.9.0",
     "simple-git-hooks": "^2.11.1",
-    "typescript": "5.5.2",
+    "typescript": "5.7.2",
     "vitest": "^1.6.0"
   },
-  "packageManager": "pnpm@9.4.0",
+  "packageManager": "pnpm@9.14.4",
   "engines": {
     "node": "22.x"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint"
+    "pre-commit": "pnpm check"
   },
   "knip": {
     "ignoreBinaries": ["dev", "only-allow"],

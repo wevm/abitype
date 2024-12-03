@@ -56,7 +56,14 @@ test.each([
       type: 'fallback',
       stateMutability: 'nonpayable',
     } as const,
-    expected: 'fallback()',
+    expected: 'fallback() external',
+  },
+  {
+    abiItem: {
+      type: 'fallback',
+      stateMutability: 'payable',
+    } as const,
+    expected: 'fallback() external payable',
   },
   {
     abiItem: {
