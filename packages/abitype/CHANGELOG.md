@@ -1,5 +1,15 @@
 # abitype
 
+## 1.0.7
+
+### Patch Changes
+
+- [`20cb1fd`](https://github.com/wevm/abitype/commit/20cb1fd23689d659d7547444a3b3aa4c829530c3) Thanks [@tmm](https://github.com/tmm)! - Fixed `parseAbi` caching for structs.
+
+- [#259](https://github.com/wevm/abitype/pull/259) [`f417a23`](https://github.com/wevm/abitype/commit/f417a2305c055014bc9147a033d983b5d0f0c318) Thanks [@KedziaPawel](https://github.com/KedziaPawel)! - Fixed `formatAbiItem` fallback item formatting.
+
+- [#257](https://github.com/wevm/abitype/pull/257) [`ee60e67`](https://github.com/wevm/abitype/commit/ee60e674458824fccfd22874a8815075cc5b269a) Thanks [@freemanzMrojo](https://github.com/freemanzMrojo)! - Updated `TypedDataDomain` `chainId` to support `uint256` values via `bigint`.
+
 ## 1.0.6
 
 ### Patch Changes
