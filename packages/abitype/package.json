@@ -8,9 +8,9 @@
     "build": "pnpm run clean && pnpm run build:cjs && pnpm run build:esm+types",
     "build:cjs": "tsc --project tsconfig.build.json --module commonjs --moduleResolution node10 --outDir ./dist/cjs --removeComments --verbatimModuleSyntax false && echo > ./dist/cjs/package.json '{\"type\":\"commonjs\"}'",
     "build:esm+types": "tsc --project tsconfig.build.json --module nodenext --outDir ./dist/esm --declaration --declarationMap --declarationDir ./dist/types && echo > ./dist/esm/package.json '{\"type\":\"module\",\"sideEffects\":false}'",
+    "check:types": "tsc --noEmit",
     "clean": "rm -rf dist tsconfig.tsbuildinfo abis zod",
     "test:build": "publint --strict",
-    "typecheck": "tsc --noEmit",
     "typeperf": "tsc --noEmit --extendedDiagnostics --composite false --incremental false"
   },
   "files": [
