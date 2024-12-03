@@ -71,6 +71,32 @@ test.each([
     } as const,
     expected: 'receive() external payable',
   },
+  {
+    abiItem: {
+      type: 'function',
+      name: 'initWormhole',
+      inputs: [
+        {
+          type: 'tuple[]',
+          name: 'configs',
+          components: [
+            {
+              type: 'uint256',
+              name: 'chainId',
+            },
+            {
+              type: 'uint16',
+              name: 'wormholeChainId',
+            },
+          ],
+        },
+      ],
+      outputs: [],
+      stateMutability: 'nonpayable',
+    } as const,
+    expected:
+      'function initWormhole((uint256 chainId, uint16 wormholeChainId)[] configs)',
+  },
 ])('formatAbiItem($expected)', ({ abiItem, expected }) => {
   expect(formatAbiItem(abiItem)).toEqual(expected)
 })
