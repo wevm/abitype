@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-Fixed formatAbiItem fallback formatting
+Fixed `formatAbiItem` fallback item formatting.
