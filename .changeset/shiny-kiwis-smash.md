@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-EIP712 - `chainId` should support `uint256` values
+Updated `TypedDataDomain` `chainId` to support `uint256` values via `bigint`.
