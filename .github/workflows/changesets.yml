@@ -68,5 +68,8 @@ jobs:
       - name: Install dependencies
         uses: wevm/actions/.github/actions/pnpm@main
 
+      - name: Prepare
+        run: pnpm version:update && cd packages/abitype && cp ../../LICENSE LICENSE
+
       - name: Publish to JSR
-        run: pnpm version:update && cd packages/abitype && cp ../../LICENSE LICENSE && pnpx jsr publish --allow-slow-types --allow-dirty
+        run: pnpx jsr publish --allow-slow-types --allow-dirty
