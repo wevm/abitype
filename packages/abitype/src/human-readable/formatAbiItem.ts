@@ -66,7 +66,9 @@ export type FormatAbiItem<abiItem extends Abi[number]> =
         | (abiItem extends AbiFallback
             ? AbiFallback extends abiItem
               ? string
-              : 'fallback()'
+              : `fallback() external${abiItem['stateMutability'] extends 'payable'
+                  ? ' payable'
+                  : ''}`
             : never)
         | (abiItem extends AbiReceive
             ? AbiReceive extends abiItem
@@ -126,6 +128,9 @@ export function formatAbiItem<const abiItem extends Abi[number]>(
     return `constructor(${formatAbiParameters(abiItem.inputs as Params)})${
       abiItem.stateMutability === 'payable' ? ' payable' : ''
     }`
-  if (abiItem.type === 'fallback') return 'fallback()' as Result
+  if (abiItem.type === 'fallback')
+    return `fallback() external${
+      abiItem.stateMutability === 'payable' ? ' payable' : ''
+    }` as Result
   return 'receive() external payable' as Result
 }
