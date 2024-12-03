@@ -69,4 +69,4 @@ jobs:
         uses: wevm/actions/.github/actions/pnpm@main
 
       - name: Publish to JSR
-        run: pnpm version:update && cd packages/abitype && pnpx jsr publish --allow-slow-types --allow-dirty
+        run: pnpm version:update && cd packages/abitype && cp ../../LICENSE LICENSE && pnpx jsr publish --allow-slow-types --allow-dirty

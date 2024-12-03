@@ -21,20 +21,6 @@ jobs:
       - name: Check repo
         run: pnpm check:repo
 
-      - name: Check code
-        run: pnpm check
-
-      - name: Update package versions
-        run: pnpm version:update
-      
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          commit_message: 'chore: format'
-          commit_user_name: 'github-actions[bot]'
-          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
-
   build:
     name: Build
     needs: check
