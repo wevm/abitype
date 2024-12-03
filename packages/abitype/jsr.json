@@ -1,13 +1,19 @@
 {
   "name": "@wevm/abitype",
   "version": "1.0.6",
+  "license": "MIT",
   "exports": {
     ".": "./src/exports/index.ts",
     "./abis": "./src/exports/abis.ts",
     "./zod": "./src/exports/zod.ts"
   },
   "publish": {
-    "include": ["LICENSE", "README.md", "CHANGELOG.md", "src/**/*.ts"],
+    "include": [
+      "LICENSE",
+      "README.md",
+      "CHANGELOG.md",
+      "src/**/*.ts"
+    ],
     "exclude": [
       "src/**/*.bench.ts",
       "src/**/*.bench-d.ts",

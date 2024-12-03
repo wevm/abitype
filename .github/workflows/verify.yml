@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint:
-    name: Lint
+  check:
+    name: Check
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -18,26 +18,12 @@ jobs:
       - name: Install dependencies
         uses: wevm/actions/.github/actions/pnpm@main
 
-      - name: Lint repo
-        run: pnpm lint:repo
-
-      - name: Update package versions
-        run: pnpm version:update
-      
-      - name: Lint code
-        run: pnpm lint
-
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          commit_message: 'chore: format'
-          commit_user_name: 'github-actions[bot]'
-          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+      - name: Check repo
+        run: pnpm check:repo
 
   build:
     name: Build
-    needs: lint
+    needs: check
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -59,7 +45,7 @@ jobs:
 
   types:
     name: Types
-    needs: lint
+    needs: check
     runs-on: ubuntu-latest
     timeout-minutes: 5
     strategy:
@@ -80,13 +66,13 @@ jobs:
         run: pnpm preconstruct
         
       - name: Bench types
-        run: 'pnpm bench:types'
+        run: pnpm bench:types
 
       - name: Check types
-        run: pnpm typecheck
+        run: pnpm check:types
 
       - name: Check types (--exactOptionalPropertyTypes false)
-        run: pnpm typecheck:propertyTypes
+        run: pnpm check:types:propertyTypes
 
   test:
     name: Test
@@ -104,7 +90,7 @@ jobs:
         run: pnpm test:cov
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
