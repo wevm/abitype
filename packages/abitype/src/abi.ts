@@ -218,7 +218,7 @@ export type Abi = readonly (
 // Typed Data Types
 
 export type TypedDataDomain = {
-  chainId?: number | undefined
+  chainId?: number | bigint | undefined
   name?: string | undefined
   salt?: ResolvedRegister['bytesType']['outputs'] | undefined
   verifyingContract?: Address | undefined

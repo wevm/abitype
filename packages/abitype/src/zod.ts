@@ -299,7 +299,7 @@ export const Abi = z
 // Typed Data Types
 
 export const TypedDataDomain = z.object({
-  chainId: z.number().optional(),
+  chainId: z.union([z.number(), z.bigint()]).optional(),
   name: Identifier.optional(),
   salt: z.string().optional(),
   verifyingContract: Address.optional(),
