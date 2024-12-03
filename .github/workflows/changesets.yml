@@ -72,4 +72,4 @@ jobs:
         run: pnpm version:update && cd packages/abitype && cp ../../LICENSE LICENSE
 
       - name: Publish to JSR
-        run: pnpx jsr publish --allow-slow-types --allow-dirty
+        run: cd packages/abitype && pnpx jsr publish --allow-slow-types --allow-dirty

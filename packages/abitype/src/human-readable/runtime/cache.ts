@@ -1,4 +1,5 @@
 import type { AbiItemType, AbiParameter } from '../../abi.js'
+import type { StructLookup } from '../types/structs.js'
 
 /**
  * Gets {@link parameterCache} cache key namespaced by {@link type}. This prevents parameters from being accessible to types that don't allow them (e.g. `string indexed foo` not allowed outside of `type: 'event'`).
@@ -9,8 +10,19 @@ import type { AbiItemType, AbiParameter } from '../../abi.js'
 export function getParameterCacheKey(
   param: string,
   type?: AbiItemType | 'struct',
+  structs?: StructLookup,
 ) {
-  if (type) return `${type}:${param}`
+  let structKey = ''
+  if (structs)
+    for (const struct of Object.entries(structs)) {
+      if (!struct) continue
+      let propertyKey = ''
+      for (const property of struct[1]) {
+        propertyKey += `[${property.type}${property.name ? `:${property.name}` : ''}]`
+      }
+      structKey += `(${struct[0]}{${propertyKey}})`
+    }
+  if (type) return `${type}:${param}${structKey}`
   return param
 }
 

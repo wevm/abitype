@@ -162,7 +162,11 @@ type ParseOptions = {
 
 export function parseAbiParameter(param: string, options?: ParseOptions) {
   // optional namespace cache by `type`
-  const parameterCacheKey = getParameterCacheKey(param, options?.type)
+  const parameterCacheKey = getParameterCacheKey(
+    param,
+    options?.type,
+    options?.structs,
+  )
   if (parameterCache.has(parameterCacheKey))
     return parameterCache.get(parameterCacheKey)!
 
