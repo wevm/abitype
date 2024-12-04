@@ -49,7 +49,12 @@ for (const packagePath of packagePaths) {
   const jsrFilePath = path.resolve(path.dirname(packagePath), 'jsr.json')
   const jsrJson = await Bun.file(jsrFilePath).json()
   jsrJson.version = version
-  Bun.write(jsrFilePath, JSON.stringify(jsrJson, null, 2))
+  await Bun.write(jsrFilePath, JSON.stringify(jsrJson, null, 2))
+
+  if (Bun.env.PKG_PR_NEW) {
+    packageJson.version = version
+    await Bun.write(packagePath, JSON.stringify(packageJson, null, 2))
+  }
 }
 
 console.log(
