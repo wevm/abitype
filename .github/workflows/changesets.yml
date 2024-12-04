@@ -50,7 +50,7 @@ jobs:
           git reset --hard origin/main
           pnpm clean
           pnpm changeset:prepublish
-          pnpx pkg-pr-new publish --pnpm --compact './packages/abitype'
+          PKG_PR_NEW=true pnpx pkg-pr-new publish --pnpm --compact './packages/abitype'
 
   jsr:
     name: JSR

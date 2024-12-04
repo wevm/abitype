@@ -13,6 +13,25 @@ jobs:
     uses: ./.github/workflows/verify.yml
     secrets: inherit
 
+  preview:
+    name: Preview
+    needs: verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        uses: wevm/actions/.github/actions/pnpm@main
+
+      - name: Publish preview
+        run: |
+          pnpm changeset:prepublish
+          PKG_PR_NEW=true pnpx pkg-pr-new publish --pnpm --compact './packages/abitype'
+
   bench:
     name: Benchmark
     runs-on: ubuntu-latest
