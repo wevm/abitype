@@ -93,6 +93,20 @@ test.each([
       stateMutability: 'payable',
     },
   },
+  {
+    signature: 'fallback() external payable',
+    expected: {
+      type: 'fallback',
+      stateMutability: 'payable',
+    },
+  },
+  {
+    signature: 'fallback() external',
+    expected: {
+      type: 'fallback',
+      stateMutability: 'nonpayable',
+    },
+  },
 ])('parseSignature($signature)', ({ signature, expected }) => {
   expect(parseSignature(signature)).toEqual(expected)
 })

@@ -65,6 +65,14 @@ test.each([
     signature: ['fallback() external'],
     expected: {
       type: 'fallback',
+      stateMutability: 'nonpayable',
+    },
+  },
+  {
+    signature: ['fallback() external payable'],
+    expected: {
+      type: 'fallback',
+      stateMutability: 'payable',
     },
   },
 ])('parseAbiItem($signature)', ({ signature, expected }) => {

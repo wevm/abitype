@@ -32,6 +32,7 @@ import {
   execConstructorSignature,
   execErrorSignature,
   execEventSignature,
+  execFallbackSignature,
   execFunctionSignature,
   functionModifiers,
   isConstructorSignature,
@@ -138,7 +139,16 @@ export function parseSignature(signature: string, structs: StructLookup = {}) {
     }
   }
 
-  if (isFallbackSignature(signature)) return { type: 'fallback' }
+  if (isFallbackSignature(signature)) {
+    const match = execFallbackSignature(signature)
+    if (!match) throw new InvalidSignatureError({ signature, type: 'fallback' })
+
+    return {
+      type: 'fallback',
+      stateMutability: match.stateMutability ?? 'nonpayable',
+    }
+  }
+
   if (isReceiveSignature(signature))
     return {
       type: 'receive',

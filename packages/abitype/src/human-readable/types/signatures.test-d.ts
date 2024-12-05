@@ -4,6 +4,7 @@ import type {
   IsConstructorSignature,
   IsErrorSignature,
   IsEventSignature,
+  IsFallbackSignature,
   IsFunctionSignature,
   IsName,
   IsSignature,
@@ -141,6 +142,15 @@ test('IsConstructorSignature', () => {
 
   assertType<IsConstructorSignature<'constructor()payable'>>(false)
   assertType<IsConstructorSignature<'constructor(string'>>(false)
+})
+
+test('IsFallbackSignature', () => {
+  assertType<IsFallbackSignature<'fallback() external'>>(true)
+  assertType<IsFallbackSignature<'fallback() external payable'>>(true)
+
+  assertType<IsFallbackSignature<'fallback() externalpayable'>>(false)
+  assertType<IsFallbackSignature<'fallback() external nonpayable'>>(false)
+  assertType<IsFallbackSignature<'fallback()'>>(false)
 })
 
 test('IsSignature', () => {
