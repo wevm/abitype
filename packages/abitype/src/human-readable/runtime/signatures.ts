@@ -82,7 +82,7 @@ export function isFallbackSignature(signature: string) {
 export function execFallbackSignature(signature: string) {
   return execTyped<{
     parameters: string
-    stateMutability: Extract<AbiStateMutability, 'payable'>
+    stateMutability?: Extract<AbiStateMutability, 'payable'>
   }>(fallbackSignatureRegex, signature)
 }
 
