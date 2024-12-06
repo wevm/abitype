@@ -79,6 +79,12 @@ const fallbackSignatureRegex =
 export function isFallbackSignature(signature: string) {
   return fallbackSignatureRegex.test(signature)
 }
+export function execFallbackSignature(signature: string) {
+  return execTyped<{
+    parameters: string
+    stateMutability?: Extract<AbiStateMutability, 'payable'>
+  }>(fallbackSignatureRegex, signature)
+}
 
 // https://regexr.com/78u1k
 const receiveSignatureRegex = /^receive\(\) external payable$/

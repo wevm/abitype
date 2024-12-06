@@ -155,6 +155,22 @@ test('parseAbiItem', () => {
 
   const signature: string = 'function foo()'
   expectTypeOf(parseAbiItem(signature)).toEqualTypeOf<Abi[number]>()
+
+  // fallback
+  expectTypeOf(parseAbiItem('fallback() external')).toEqualTypeOf<{
+    readonly type: 'fallback'
+    readonly stateMutability: 'nonpayable'
+  }>()
+  expectTypeOf(parseAbiItem('fallback() external payable')).toEqualTypeOf<{
+    readonly type: 'fallback'
+    readonly stateMutability: 'payable'
+  }>()
+
+  // receive
+  expectTypeOf(parseAbiItem('receive() external payable')).toEqualTypeOf<{
+    readonly type: 'receive'
+    readonly stateMutability: 'payable'
+  }>()
 })
 
 test('nested tuples', () => {

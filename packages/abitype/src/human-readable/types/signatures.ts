@@ -72,7 +72,12 @@ type ValidConstructorSignatures =
   | `constructor(${string})`
   | `constructor(${string}) payable`
 
-export type FallbackSignature<abiStateMutability extends '' | ' payable' = ''> =
+export type IsFallbackSignature<signature extends string> = signature extends
+  | FallbackSignature<''>
+  | FallbackSignature<' payable'>
+  ? true
+  : false
+export type FallbackSignature<abiStateMutability extends '' | ' payable'> =
   `fallback() external${abiStateMutability}`
 
 export type ReceiveSignature = 'receive() external payable'
@@ -85,7 +90,7 @@ export type IsSignature<type extends string> =
   | (IsFunctionSignature<type> extends true ? true : never)
   | (IsStructSignature<type> extends true ? true : never)
   | (IsConstructorSignature<type> extends true ? true : never)
-  | (type extends FallbackSignature ? true : never)
+  | (IsFallbackSignature<type> extends true ? true : never)
   | (type extends ReceiveSignature ? true : never) extends infer condition
   ? [condition] extends [never]
     ? false
