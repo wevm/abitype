@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-Fixed parseAbiItem fallback parsing
+Fixed `parseAbiItem` fallback signature parsing
