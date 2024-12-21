@@ -1,5 +1,11 @@
 # abitype
 
+## 1.0.8
+
+### Patch Changes
+
+- [#261](https://github.com/wevm/abitype/pull/261) [`889e85d`](https://github.com/wevm/abitype/commit/889e85d363da1b985dce056dde2b7929dfb227b9) Thanks [@KedziaPawel](https://github.com/KedziaPawel)! - Fixed `parseAbiItem` fallback signature parsing
+
 ## 1.0.7
 
 ### Patch Changes
