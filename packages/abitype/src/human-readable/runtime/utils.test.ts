@@ -6,6 +6,11 @@ import {
   isSolidityType,
   isValidDataLocation,
   parseAbiParameter,
+  parseConstructorSignature,
+  parseErrorSignature,
+  parseEventSignature,
+  parseFallbackSignature,
+  parseFunctionSignature,
   parseSignature,
   splitParameters,
 } from './utils.js'
@@ -93,6 +98,20 @@ test.each([
       stateMutability: 'payable',
     },
   },
+  {
+    signature: 'fallback() external payable',
+    expected: {
+      type: 'fallback',
+      stateMutability: 'payable',
+    },
+  },
+  {
+    signature: 'fallback() external',
+    expected: {
+      type: 'fallback',
+      stateMutability: 'nonpayable',
+    },
+  },
 ])('parseSignature($signature)', ({ signature, expected }) => {
   expect(parseSignature(signature)).toEqual(expected)
 })
@@ -154,12 +173,56 @@ test('invalid signature', () => {
   )
 
   expect(() =>
-    parseSignature('method foo_(string)'),
+    parseFunctionSignature('function foo() invalid'),
   ).toThrowErrorMatchingInlineSnapshot(
     `
-    [UnknownSignatureError: Unknown signature.
+    [InvalidSignatureError: Invalid function signature.
 
-    Details: method foo_(string)
+    Details: function foo() invalid
+    Version: abitype@x.y.z]
+  `,
+  )
+
+  expect(() =>
+    parseEventSignature('event Foo(string memory foo) invalid'),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `
+    [InvalidSignatureError: Invalid event signature.
+
+    Details: event Foo(string memory foo) invalid
+    Version: abitype@x.y.z]
+  `,
+  )
+
+  expect(() => {
+    parseErrorSignature('error Foo(string memory foo) invalid')
+  }).toThrowErrorMatchingInlineSnapshot(
+    `
+    [InvalidSignatureError: Invalid error signature.
+
+    Details: error Foo(string memory foo) invalid
+    Version: abitype@x.y.z]
+    `,
+  )
+
+  expect(() => {
+    parseConstructorSignature('constructor() invalid')
+  }).toThrowErrorMatchingInlineSnapshot(
+    `
+    [InvalidSignatureError: Invalid constructor signature.
+
+    Details: constructor() invalid
+    Version: abitype@x.y.z]
+    `,
+  )
+
+  expect(() => {
+    parseFallbackSignature('fallback() external invalid')
+  }).toThrowErrorMatchingInlineSnapshot(
+    `
+    [InvalidSignatureError: Invalid fallback signature.
+
+    Details: fallback() external invalid
     Version: abitype@x.y.z]
   `,
   )
