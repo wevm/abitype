@@ -121,7 +121,7 @@ export function parseEventSignature(
   const params = splitParameters(match.parameters)
   const abiParameters = []
   const length = params.length
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++)
     abiParameters.push(
       parseAbiParameter(params[i]!, {
         modifiers: eventModifiers,
@@ -129,7 +129,6 @@ export function parseEventSignature(
         type: 'event',
       }),
     )
-  }
   return { name: match.name, type: 'event', inputs: abiParameters }
 }
 
@@ -143,11 +142,10 @@ export function parseErrorSignature(
   const params = splitParameters(match.parameters)
   const abiParameters = []
   const length = params.length
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++)
     abiParameters.push(
       parseAbiParameter(params[i]!, { structs, type: 'error' }),
     )
-  }
   return { name: match.name, type: 'error', inputs: abiParameters }
 }
 
@@ -162,11 +160,10 @@ export function parseConstructorSignature(
   const params = splitParameters(match.parameters)
   const abiParameters = []
   const length = params.length
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++)
     abiParameters.push(
       parseAbiParameter(params[i]!, { structs, type: 'constructor' }),
     )
-  }
   return {
     type: 'constructor',
     stateMutability: match.stateMutability ?? 'nonpayable',
