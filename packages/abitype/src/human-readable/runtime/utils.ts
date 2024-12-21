@@ -43,6 +43,30 @@ import {
   isReceiveSignature,
 } from './signatures.js'
 
+export function parseSignature(signature: string, structs: StructLookup = {}) {
+  if (isFunctionSignature(signature))
+    return parseFunctionSignature(signature, structs)
+
+  if (isEventSignature(signature))
+    return parseEventSignature(signature, structs)
+
+  if (isErrorSignature(signature))
+    return parseErrorSignature(signature, structs)
+
+  if (isConstructorSignature(signature))
+    return parseConstructorSignature(signature, structs)
+
+  if (isFallbackSignature(signature)) return parseFallbackSignature(signature)
+
+  if (isReceiveSignature(signature))
+    return {
+      type: 'receive',
+      stateMutability: 'payable',
+    }
+
+  throw new UnknownSignatureError({ signature })
+}
+
 export function parseFunctionSignature(
   signature: string,
   structs: StructLookup = {},
@@ -158,36 +182,6 @@ export function parseFallbackSignature(signature: string) {
     type: 'fallback',
     stateMutability: match.stateMutability ?? 'nonpayable',
   }
-}
-
-export function parseSignature(signature: string, structs: StructLookup = {}) {
-  if (isFunctionSignature(signature)) {
-    return parseFunctionSignature(signature, structs)
-  }
-
-  if (isEventSignature(signature)) {
-    return parseEventSignature(signature, structs)
-  }
-
-  if (isErrorSignature(signature)) {
-    return parseErrorSignature(signature, structs)
-  }
-
-  if (isConstructorSignature(signature)) {
-    return parseConstructorSignature(signature, structs)
-  }
-
-  if (isFallbackSignature(signature)) {
-    return parseFallbackSignature(signature)
-  }
-
-  if (isReceiveSignature(signature))
-    return {
-      type: 'receive',
-      stateMutability: 'payable',
-    }
-
-  throw new UnknownSignatureError({ signature })
 }
 
 const abiParameterWithoutTupleRegex =
