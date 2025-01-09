@@ -96,3 +96,11 @@ If you find ABIType useful or use it for work, please consider supporting develo
 ## Contributing
 
 Contributions to ABIType are greatly appreciated! If you're interested in contributing to ABIType, please read the [Contributing Guide](https://github.com/wevm/abitype/blob/main/.github/CONTRIBUTING.md) **before submitting a pull request**.
+
+<br />
+<br />
+
+<a href="https://vercel.com/?utm_source=wevm&utm_campaign=oss">
+  <img src="https://www.datocms-assets.com/31049/1618983297-powered-by-vercel.svg" alt="Powered by Vercel" height="35">
+</a>
+
