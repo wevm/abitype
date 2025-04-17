@@ -27,10 +27,10 @@ export type ParseAbi<signatures extends readonly string[]> =
     ? Abi // If `T` was not able to be inferred (e.g. just `string[]`), return `Abi`
     : signatures extends readonly string[]
       ? signatures extends Signatures<signatures> // Validate signatures
-        ? ParseStructs<signatures> extends infer sructs
+        ? ParseStructs<signatures> extends infer structs
           ? {
               [key in keyof signatures]: signatures[key] extends string
-                ? ParseSignature<signatures[key], sructs>
+                ? ParseSignature<signatures[key], structs>
                 : never
             } extends infer mapped extends readonly unknown[]
             ? Filter<mapped, never> extends infer result
