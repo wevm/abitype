@@ -1,6 +1,8 @@
 packages:
-  - 'docs'
-  - 'packages/*'
+  - docs
+  - packages/*
   - '!packages/register-tests'
-  - 'packages/register-tests/*'
-  - 'playgrounds/*'
+  - packages/register-tests/*
+  - playgrounds/*
+onlyBuiltDependencies:
+  - bun

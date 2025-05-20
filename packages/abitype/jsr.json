@@ -8,12 +8,7 @@
     "./zod": "./src/exports/zod.ts"
   },
   "publish": {
-    "include": [
-      "LICENSE",
-      "README.md",
-      "CHANGELOG.md",
-      "src/**/*.ts"
-    ],
+    "include": ["LICENSE", "README.md", "CHANGELOG.md", "src/**/*.ts"],
     "exclude": [
       "src/**/*.bench.ts",
       "src/**/*.bench-d.ts",
