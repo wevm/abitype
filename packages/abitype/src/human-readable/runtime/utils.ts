@@ -182,7 +182,7 @@ export function parseFallbackSignature(signature: string) {
 }
 
 const abiParameterWithoutTupleRegex =
-  /^(?<type>[a-zA-Z$_][a-zA-Z0-9$_]*)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z$_][a-zA-Z0-9$_]*))?$/
+  /^(?<type>[a-zA-Z$_][a-zA-Z0-9$_]*(?:\spayable)?)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z$_][a-zA-Z0-9$_]*))?$/
 const abiParameterWithTupleRegex =
   /^\((?<type>.+?)\)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z$_][a-zA-Z0-9$_]*))?$/
 const dynamicIntegerRegex = /^u?int$/
@@ -238,6 +238,8 @@ export function parseAbiParameter(param: string, options?: ParseOptions) {
     components = { components: structs[match.type] }
   } else if (dynamicIntegerRegex.test(match.type)) {
     type = `${match.type}256`
+  } else if (match.type === 'address payable') {
+    type = 'address'
   } else {
     type = match.type
     if (!(options?.type === 'struct') && !isSolidityType(type))
