@@ -137,7 +137,8 @@ export type ParseAbiParameter<
               >
             : never
           : never
-        : Trim<tail> extends infer trimmed extends string
+        : // TODO: data location modifiers only allowed for struct/array types
+          Trim<tail> extends infer trimmed extends string
           ? { readonly type: Trim<type> } & _SplitNameOrModifier<
               trimmed,
               options
