@@ -129,13 +129,19 @@ export type ParseAbiParameter<
       // Check for `${Type} ${nameOrModifier}` format (e.g. `uint256 foo`, `uint256 indexed`, `uint256 indexed foo`)
       signature extends `${infer type} ${infer tail}`
       ? Trim<tail> extends `payable ${infer _tail}`
-        ? Trim<type> extends "address"
+        ? Trim<type> extends 'address'
           ? Trim<_tail> extends infer trimmed extends string
-            ? { readonly type: "address" } &  _SplitNameOrModifier<trimmed, options>
+            ? { readonly type: 'address' } & _SplitNameOrModifier<
+                trimmed,
+                options
+              >
             : never
           : never
         : Trim<tail> extends infer trimmed extends string
-          ? { readonly type: Trim<type> } & _SplitNameOrModifier<trimmed, options>
+          ? { readonly type: Trim<type> } & _SplitNameOrModifier<
+              trimmed,
+              options
+            >
           : never
       : // Must be `${Type}` format (e.g. `uint256`)
         { readonly type: signature }
