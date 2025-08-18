@@ -1,5 +1,11 @@
 # abitype
 
+## 1.0.9
+
+### Patch Changes
+
+- [`3446180`](https://github.com/wevm/abitype/commit/3446180b2677e64d259868d8e89be70f8f7fcaf4) Thanks [@khaidarkairbek](https://github.com/khaidarkairbek)! - Fixed `parseAbi` runtime logic to support `"payable"` function argument modifier.
+
 ## 1.0.8
 
 ### Patch Changes
