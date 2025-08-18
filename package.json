@@ -11,7 +11,7 @@
     "check": "biome check --write",
     "check:repo": "sherif",
     "check:types": "pnpm run --r --parallel check:types && tsc --noEmit",
-    "check:types:propertyTypes": "pnpm run --r --parallel typecheck --exactOptionalPropertyTypes false && tsc --noEmit --exactOptionalPropertyTypes false",
+    "check:types:propertyTypes": "pnpm run --r --parallel check:types --exactOptionalPropertyTypes false && tsc --noEmit --exactOptionalPropertyTypes false",
     "check:unused": "pnpm clean && knip",
     "clean": "pnpm run --r --parallel clean && rm -rf packages/**/*.json.tmp",
     "deps": "pnpx taze -r",
