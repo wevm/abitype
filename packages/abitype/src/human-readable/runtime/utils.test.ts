@@ -57,6 +57,14 @@ test.each([
     },
   },
   {
+    signature: 'function foo(address payable to) external',
+    expected: {
+      ...baseFunctionExpected,
+      inputs: [{ type: 'address', name: 'to' }],
+      stateMutability: 'nonpayable',
+    },
+  },
+  {
     signature: 'function foo(string) public view returns (string)',
     expected: {
       ...baseFunctionExpected,

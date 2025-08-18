@@ -209,6 +209,13 @@ test('ParseSignature', () => {
     inputs: [{ type: 'string' }],
     outputs: [],
   })
+  assertType<ParseSignature<'function foo(address payable to) external'>>({
+    name: 'foo',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [{ type: 'address', name: 'to' }],
+    outputs: [],
+  })
 
   assertType<ParseSignature<'function foo(string indexed)'>>({
     name: 'foo',
