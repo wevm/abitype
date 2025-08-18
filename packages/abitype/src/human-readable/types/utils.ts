@@ -128,22 +128,10 @@ export type ParseAbiParameter<
     : // Convert string to shallow AbiParameter (structs resolved yet)
       // Check for `${Type} ${nameOrModifier}` format (e.g. `uint256 foo`, `uint256 indexed`, `uint256 indexed foo`)
       signature extends `${infer type} ${infer tail}`
-      ? Trim<tail> extends `payable ${infer _tail}`
-        ? Trim<type> extends 'address'
-          ? Trim<_tail> extends infer trimmed extends string
-            ? { readonly type: 'address' } & _SplitNameOrModifier<
-                trimmed,
-                options
-              >
-            : never
-          : never
-        : // TODO: data location modifiers only allowed for struct/array types
-          Trim<tail> extends infer trimmed extends string
-          ? { readonly type: Trim<type> } & _SplitNameOrModifier<
-              trimmed,
-              options
-            >
-          : never
+      ? Trim<tail> extends infer trimmed extends string
+        ? // TODO: data location modifiers only allowed for struct/array types
+          { readonly type: Trim<type> } & _SplitNameOrModifier<trimmed, options>
+        : never
       : // Must be `${Type}` format (e.g. `uint256`)
         { readonly type: signature }
 ) extends infer shallowParameter extends AbiParameter & {

@@ -113,10 +113,10 @@ export type Signatures<signatures extends readonly string[]> = {
   [key in keyof signatures]: Signature<signatures[key], key>
 }
 
-export type Modifier = 'calldata' | 'indexed' | 'memory' | 'storage'
+export type Modifier = 'calldata' | 'indexed' | 'memory' | 'payable' | 'storage'
 export type FunctionModifier = Extract<
   Modifier,
-  'calldata' | 'memory' | 'storage'
+  'calldata' | 'memory' | 'payable' | 'storage'
 >
 export type EventModifier = Extract<Modifier, 'indexed'>
 
