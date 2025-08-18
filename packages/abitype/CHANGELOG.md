@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- [`445bd39`](https://github.com/wevm/abitype/commit/445bd39c6ae8a4a77ec616f02a4d31726b41fd79) Thanks [@tmm](https://github.com/tmm)! - Fixed `parseAbi` runtime logic to support `"payable"` function argument modifier.
+- [`445bd39`](https://github.com/wevm/abitype/commit/445bd39c6ae8a4a77ec616f02a4d31726b41fd79) Thanks [@khaidarkairbek](https://github.com/khaidarkairbek)! - Fixed `parseAbi` runtime logic to support `"payable"` function argument modifier.
 
 ## 1.0.8
 
