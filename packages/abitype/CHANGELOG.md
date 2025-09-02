@@ -1,5 +1,11 @@
 # abitype
 
+## 1.1.0
+
+### Minor Changes
+
+- [#278](https://github.com/wevm/abitype/pull/278) [`c15ef92`](https://github.com/wevm/abitype/commit/c15ef92d2f2bdd29e483ee381fd5f107f9434c60) Thanks [@wobsoriano](https://github.com/wobsoriano)! - Added support for Zod v4.
+
 ## 1.0.9
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
   "name": "abitype",
   "description": "Strict TypeScript types for Ethereum ABIs",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "license": "MIT",
   "repository": "wevm/abitype",
   "scripts": {
