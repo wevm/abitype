@@ -57,7 +57,7 @@
   },
   "peerDependencies": {
     "typescript": ">=5.0.4",
-    "zod": "^3 >=3.22.0"
+    "zod": "^3.22.0 || ^4.0.0"
   },
   "peerDependenciesMeta": {
     "typescript": {
