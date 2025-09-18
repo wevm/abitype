@@ -1,12 +1,14 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@2.1.0/schema.json",
-  "access": "public",
-  "baseBranch": "main",
-  "changelog": ["@changesets/changelog-github", { "repo": "wevm/abitype" }],
+  "$schema": "https://unpkg.com/@changesets/config@3.0.5/schema.json",
+  "changelog": [
+    "@svitejs/changesets-changelog-github-compact",
+    { "repo": "wevm/abitype" }
+  ],
   "commit": false,
-  "ignore": ["default-register", "docs", "functions", "performance"],
-  "updateInternalDependencies": "patch",
-  "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
-    "onlyUpdatePeerDependentsWhenOutOfRange": true
-  }
+  "access": "public",
+  "fixed": [],
+  "linked": [],
+  "baseBranch": "main",
+  "updateInternalDependencies": "minor",
+  "ignore": ["default-register", "docs", "functions", "performance"]
 }

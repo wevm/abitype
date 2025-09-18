@@ -16,10 +16,12 @@ jobs:
   changesets:
     name: Publish
     needs: verify
+    # prevents this action from running on forks
+    if: github.repository == 'wevm/abitype'
     permissions:
-      contents: write
-      id-token: write
-      pull-requests: write
+      contents: write # to create release (changesets/action)
+      id-token: write # OpenID Connect token needed for provenance
+      pull-requests: write # to create pull request (changesets/action)
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -32,6 +34,8 @@ jobs:
 
       - name: Install dependencies
         uses: wevm/actions/.github/actions/pnpm@main
+        with:
+          node-version: 24
 
       - name: PR or publish
         uses: changesets/action@06245a4e0a36c064a573d4150030f5ec548e4fcc
@@ -43,6 +47,7 @@ jobs:
           version: pnpm changeset:version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ''
 
       - name: Publish prerelease
         run: |
