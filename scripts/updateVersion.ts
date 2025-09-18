@@ -46,10 +46,20 @@ for (const packagePath of packagePaths) {
   )
   await Bun.write(versionFilePath, `export const version = '${version}'\n`)
 
-  const jsrFilePath = path.resolve(path.dirname(packagePath), 'jsr.json')
-  const jsrJson = await Bun.file(jsrFilePath).json()
-  jsrJson.version = version
-  await Bun.write(jsrFilePath, JSON.stringify(jsrJson, null, 2))
+  try {
+    const jsrFilePath = path.resolve(path.dirname(packagePath), 'jsr.json')
+    const jsrJson = await Bun.file(jsrFilePath).json()
+    jsrJson.version = version
+    await Bun.write(jsrFilePath, JSON.stringify(jsrJson, null, 2))
+  } catch (error) {
+    if (
+      error &&
+      typeof error === 'object' &&
+      'code' in error &&
+      error.code !== 'ENOENT'
+    )
+      throw error
+  }
 
   if (Bun.env.PKG_PR_NEW) {
     packageJson.version = version

@@ -11,6 +11,7 @@ coverage
 dist
 node_modules
 packages/abitype/abis
+packages/abitype/jsr.json
 packages/abitype/zod
 playgrounds/performance/out
 tsconfig*.tsbuildinfo
