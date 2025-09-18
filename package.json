@@ -32,9 +32,9 @@
   "devDependencies": {
     "@arktype/attest": "0.8.0",
     "@biomejs/biome": "1.9.4",
-    "@svitejs/changesets-changelog-github-compact": "^1.2.0",
     "@changesets/cli": "^3.0.0-next.0",
     "@ethersproject/abi": "^5.7.0",
+    "@svitejs/changesets-changelog-github-compact": "^1.2.0",
     "@types/bun": "^1.1.10",
     "@vitest/coverage-v8": "^1.6.0",
     "bun": "^1.1.29",
@@ -48,8 +48,12 @@
     "vitest": "^1.6.0"
   },
   "packageManager": "pnpm@10.16.1",
-  "engines": {
-    "node": "22.x"
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24.5.1",
+      "onFail": "download"
+    }
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm check"

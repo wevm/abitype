@@ -1,7 +1,7 @@
 lockfileVersion: '9.0'
 
 settings:
-  autoInstallPeers: false
+  autoInstallPeers: true
   excludeLinksFromLockfile: false
 
 importers:
@@ -41,6 +41,9 @@ importers:
       knip:
         specifier: ^5.22.3
         version: 5.22.3(@types/node@20.12.12)(typescript@5.7.2)
+      node:
+        specifier: runtime:^24.5.1
+        version: runtime:24.8.0
       publint:
         specifier: ^0.2.12
         version: 0.2.12
@@ -85,6 +88,10 @@ importers:
         version: 1.0.0-alpha.17(@types/node@20.12.12)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.18.0)(typescript@5.7.2)
 
   packages/abitype:
+    dependencies:
+      typescript:
+        specifier: '>=5.0.4'
+        version: 5.7.2
     devDependencies:
       zod:
         specifier: ^3.23.8
@@ -2785,6 +2792,96 @@ packages:
 
   node-releases@2.0.14:
     resolution: {integrity: sha512-y10wOWt8yZpqXmOgRo77WaHEmhYQYGNA6y421PKsKYWEK8aW+cqAphborZDhqfyKrbZEN92CN1X2KbafY2s7Yw==}
+
+  node@runtime:24.8.0:
+    resolution:
+      type: variations
+      variants:
+        - resolution:
+            archive: tarball
+            bin: bin/node
+            integrity: sha256-ViWzv/qbOYEdyD4U9AraL4/mk96TrZt189ZSZ50MqCM=
+            type: binary
+            url: https://nodejs.org/download/release/v24.8.0/node-v24.8.0-aix-ppc64.tar.gz
+          targets:
+            - cpu: ppc64
+              os: aix
+        - resolution:
+            archive: tarball
+            bin: bin/node
+            integrity: sha256-2BGRoYZnYOuRjKqXbAIwNrwfx0BeoxsUiQUhFSIEV2c=
+            type: binary
+            url: https://nodejs.org/download/release/v24.8.0/node-v24.8.0-darwin-arm64.tar.gz
+          targets:
+            - cpu: arm64
+              os: darwin
+        - resolution:
+            archive: tarball
+            bin: bin/node
+            integrity: sha256-b9hJa1m6qPhqJOPrAzCLdjCRcW/8a24QlNGl5Wlt1t0=
+            type: binary
+            url: https://nodejs.org/download/release/v24.8.0/node-v24.8.0-darwin-x64.tar.gz
+          targets:
+            - cpu: x64
+              os: darwin
+        - resolution:
+            archive: tarball
+            bin: bin/node
+            integrity: sha256-XrFrFK9aX0lO1UdwgiFE6EfHRP5ZD43wk61JJ8891/0=
+            type: binary
+            url: https://nodejs.org/download/release/v24.8.0/node-v24.8.0-linux-arm64.tar.gz
+          targets:
+            - cpu: arm64
+              os: linux
+        - resolution:
+            archive: tarball
+            bin: bin/node
+            integrity: sha256-IKCFbnsVKl6DtP1v49UJqlS3XWFwzYkGbDQdVvbF3nY=
+            type: binary
+            url: https://nodejs.org/download/release/v24.8.0/node-v24.8.0-linux-ppc64le.tar.gz
+          targets:
+            - cpu: ppc64le
+              os: linux
+        - resolution:
+            archive: tarball
+            bin: bin/node
+            integrity: sha256-cI1O36/KIhj6mODouMINwUgzTy+IL86hI3xlNuhYbQY=
+            type: binary
+            url: https://nodejs.org/download/release/v24.8.0/node-v24.8.0-linux-s390x.tar.gz
+          targets:
+            - cpu: s390x
+              os: linux
+        - resolution:
+            archive: tarball
+            bin: bin/node
+            integrity: sha256-2vaEBLR4tMNhZmZYDQJQCiQUjA9Dnk0BNNZc5w6Q5lU=
+            type: binary
+            url: https://nodejs.org/download/release/v24.8.0/node-v24.8.0-linux-x64.tar.gz
+          targets:
+            - cpu: x64
+              os: linux
+        - resolution:
+            archive: zip
+            bin: node.exe
+            integrity: sha256-2mO6FGxFXrdLf1xuj0U1XQGxTZu6tAVL3yUPxOn10Ag=
+            prefix: node-v24.8.0-win-arm64
+            type: binary
+            url: https://nodejs.org/download/release/v24.8.0/node-v24.8.0-win-arm64.zip
+          targets:
+            - cpu: arm64
+              os: win32
+        - resolution:
+            archive: zip
+            bin: node.exe
+            integrity: sha256-lw7MEhoW9UYXS2qHAhXKTMDeM/imFrQsFsjALmawfQU=
+            prefix: node-v24.8.0-win-x64
+            type: binary
+            url: https://nodejs.org/download/release/v24.8.0/node-v24.8.0-win-x64.zip
+          targets:
+            - cpu: x64
+              os: win32
+    version: 24.8.0
+    hasBin: true
 
   normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
@@ -6968,6 +7065,8 @@ snapshots:
       whatwg-url: 5.0.0
 
   node-releases@2.0.14: {}
+
+  node@runtime:24.8.0: {}
 
   normalize-path@3.0.0: {}
 
