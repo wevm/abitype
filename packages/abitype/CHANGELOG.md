@@ -1,5 +1,11 @@
 # abitype
 
+## 1.1.1
+
+### Patch Changes
+
+- [`599ca2e`](https://github.com/wevm/abitype/commit/599ca2e54bd0dcc50ef4b8f2e401522184b0ddac) Thanks [@tmm](https://github.com/tmm)! - Enabled trusted publisher
+
 ## 1.1.0
 
 ### Minor Changes
