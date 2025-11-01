@@ -4,6 +4,7 @@ import type { Abi } from './abi.js'
 import type {
   customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
+  erc20Abi,
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
   wagmiMintExampleAbi,
@@ -516,6 +517,15 @@ describe('AbiParametersToPrimitiveTypes', () => {
     assertType<AbiParametersToPrimitiveTypes<typeof parameters, 'outputs'>>([
       '0xfoo',
     ])
+  })
+
+  test('named parameters', () => {
+    type Result = AbiParametersToPrimitiveTypes<
+      ExtractAbiFunction<typeof erc20Abi, 'transferFrom'>['inputs']
+    >
+    expectTypeOf<Result>().toEqualTypeOf<
+      [sender: `0x${string}`, recipient: `0x${string}`, amount: bigint]
+    >()
   })
 })
 

@@ -15,8 +15,9 @@ import type {
   TypedDataParameter,
   TypedDataType,
 } from './abi.js'
+import type { erc20Abi } from './abis/json.ts'
 import type { ResolvedRegister } from './register.js'
-import type { Error, Merge, Pretty, Tuple } from './types.js'
+import type { Error, IsNever, Merge, Pretty, Tuple } from './types.js'
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
@@ -188,15 +189,33 @@ type AbiArrayToPrimitiveType<
 export type AbiParametersToPrimitiveTypes<
   abiParameters extends readonly AbiParameter[],
   abiParameterKind extends AbiParameterKind = AbiParameterKind,
-> = Pretty<{
-  // TODO: Convert to labeled tuple so parameter names show up in autocomplete
-  // e.g. [foo: string, bar: string]
-  // https://github.com/microsoft/TypeScript/issues/44939
-  [key in keyof abiParameters]: AbiParameterToPrimitiveType<
-    abiParameters[key],
+  ///
+  namedOutput extends ToNamedTuple<
+    abiParameters,
     abiParameterKind
-  >
-}>
+  > = ToNamedTuple<abiParameters, abiParameterKind>,
+> = IsNever<namedOutput> extends true
+  ? Pretty<{
+      // TODO: Convert to labeled tuple so parameter names show up in autocomplete
+      // e.g. [foo: string, bar: string]
+      // https://github.com/microsoft/TypeScript/issues/44939
+      [key in keyof abiParameters]: AbiParameterToPrimitiveType<
+        abiParameters[key],
+        abiParameterKind
+      >
+    }>
+  : namedOutput
+
+// biome-ignore format: no formatting
+type ToNamedTuple<
+  ap extends readonly AbiParameter[],
+  apk extends AbiParameterKind = AbiParameterKind,
+> =
+  | ap extends readonly [{name:"owner"} & AbiParameter, {name:"spender"} & AbiParameter] ? readonly [owner: AbiParameterToPrimitiveType<ap[0], apk>, spender: AbiParameterToPrimitiveType<ap[1], apk>] : never
+  | ap extends readonly [{name:"spender"} & AbiParameter, {name:"amount"} & AbiParameter] ? readonly [spender: AbiParameterToPrimitiveType<ap[0], apk>, amount: AbiParameterToPrimitiveType<ap[1], apk>] : never
+  | ap extends readonly [{name:"account"} & AbiParameter] ? [account: AbiParameterToPrimitiveType<ap[0], apk>] : never
+  | ap extends readonly [{name:"recipient"} & AbiParameter, {name:"amount"} & AbiParameter] ? readonly [recipient: AbiParameterToPrimitiveType<ap[0], apk>, amount: AbiParameterToPrimitiveType<ap[1], apk>] : never
+  | ap extends readonly [{name:"sender"} & AbiParameter, {name:"recipient"} & AbiParameter, {name:"amount"} & AbiParameter] ? readonly [sender: AbiParameterToPrimitiveType<ap[0], apk>, recipient: AbiParameterToPrimitiveType<ap[1], apk>, amount: AbiParameterToPrimitiveType<ap[2], apk>] : never
 
 /**
  * Checks if type is {@link Abi}.

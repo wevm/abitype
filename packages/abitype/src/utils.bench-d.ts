@@ -1,9 +1,11 @@
 import { attest } from '@arktype/attest'
 import { describe, test } from 'vitest'
 
+import type { erc20Abi } from './abis/json.js'
 import type {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
+  ExtractAbiFunction,
   TypedDataToPrimitiveTypes,
 } from './utils.js'
 
@@ -265,4 +267,13 @@ test('self-referencing', () => {
       last: string
     }
   }>(res)
+})
+
+type abiItem = ExtractAbiFunction<typeof erc20Abi, 'transferFrom'>['inputs']
+test('custom named tuples', () => {
+  const res = {} as AbiParametersToPrimitiveTypes<abiItem>
+  attest.instantiations([902, 'instantiations'])
+  attest<
+    readonly [sender: `0x${string}`, recipient: `0x${string}`, amount: bigint]
+  >(res)
 })
