@@ -1,5 +1,11 @@
 # abitype
 
+## 1.1.2
+
+### Patch Changes
+
+- Fixed struct name collision in `parseAbiParameter` cache ([#282](https://github.com/wevm/abitype/pull/282))
+
 ## 1.1.1
 
 ### Patch Changes
