@@ -19,9 +19,7 @@ export function getParameterCacheKey(
       if (!struct) continue
       let propertyKey = ''
       for (const property of struct[1]) {
-        propertyKey += `[${property.type}${
-          property.name ? `:${property.name}` : ''
-        }]`
+        propertyKey += `[${property.type}${property.name ? `:${property.name}` : ''}]`
       }
       structKey += `(${struct[0]}{${propertyKey}})`
     }

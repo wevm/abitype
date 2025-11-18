@@ -2,4 +2,4 @@
 "abitype": patch
 ---
 
-Fixed struct name collision in parseAbiParameter cache
+Fixed struct name collision in `parseAbiParameter` cache
