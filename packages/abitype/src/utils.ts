@@ -1,5 +1,6 @@
 import type {
   Abi,
+  AbiFunction,
   AbiParameter,
   AbiParameterKind,
   AbiStateMutability,
@@ -15,9 +16,8 @@ import type {
   TypedDataParameter,
   TypedDataType,
 } from './abi.js'
-import type { erc20Abi } from './abis/json.ts'
 import type { ResolvedRegister } from './register.js'
-import type { Error, IsNever, Merge, Pretty, Tuple } from './types.js'
+import type { Error, Merge, Pretty, Tuple } from './types.js'
 
 /**
  * Converts {@link AbiType} to corresponding TypeScript primitive type.
@@ -190,32 +190,91 @@ export type AbiParametersToPrimitiveTypes<
   abiParameters extends readonly AbiParameter[],
   abiParameterKind extends AbiParameterKind = AbiParameterKind,
   ///
-  namedOutput extends ToNamedTuple<
-    abiParameters,
-    abiParameterKind
-  > = ToNamedTuple<abiParameters, abiParameterKind>,
-> = IsNever<namedOutput> extends true
-  ? Pretty<{
-      // TODO: Convert to labeled tuple so parameter names show up in autocomplete
-      // e.g. [foo: string, bar: string]
-      // https://github.com/microsoft/TypeScript/issues/44939
-      [key in keyof abiParameters]: AbiParameterToPrimitiveType<
-        abiParameters[key],
-        abiParameterKind
-      >
-    }>
-  : namedOutput
+  namedTuples extends boolean = ResolvedRegister['namedTuples'],
+> = namedTuples extends true
+  ? AbiParametersToPrimitiveTypes_named<abiParameters, abiParameterKind>
+  : AbiParametersToPrimitiveTypes_mapped<abiParameters, abiParameterKind>
 
-// biome-ignore format: no formatting
+export type AbiParametersToPrimitiveTypes_mapped<
+  abiParameters extends readonly AbiParameter[],
+  abiParameterKind extends AbiParameterKind = AbiParameterKind,
+> = Pretty<{
+  [key in keyof abiParameters]: AbiParameterToPrimitiveType<
+    abiParameters[key],
+    abiParameterKind
+  >
+}>
+
+export type AbiParametersToPrimitiveTypes_named<
+  abiParameters extends readonly AbiParameter[],
+  abiParameterKind extends AbiParameterKind = AbiParameterKind,
+  ///
+  acc extends readonly unknown[] = [],
+  // FIXME: Workaround to create labeled tuple so parameter names show up in autocomplete
+  // e.g. [foo: string, bar: string]
+  // Ideally this is a simple mapped type instead of tail recurision, but TypeScript does not support dynamic tuple labels
+  // https://github.com/microsoft/TypeScript/issues/44939
+> = abiParameters extends readonly [
+  infer head extends AbiParameter,
+  ...infer tail extends readonly AbiParameter[],
+]
+  ? AbiParametersToPrimitiveTypes_named<
+      tail,
+      abiParameterKind,
+      readonly [...acc, ...ToNamedTuple<head, abiParameterKind>]
+    >
+  : acc extends readonly []
+    ? abiParameters extends readonly []
+      ? readonly []
+      : readonly unknown[]
+    : acc
+
 type ToNamedTuple<
-  ap extends readonly AbiParameter[],
-  apk extends AbiParameterKind = AbiParameterKind,
-> =
-  | ap extends readonly [{name:"owner"} & AbiParameter, {name:"spender"} & AbiParameter] ? readonly [owner: AbiParameterToPrimitiveType<ap[0], apk>, spender: AbiParameterToPrimitiveType<ap[1], apk>] : never
-  | ap extends readonly [{name:"spender"} & AbiParameter, {name:"amount"} & AbiParameter] ? readonly [spender: AbiParameterToPrimitiveType<ap[0], apk>, amount: AbiParameterToPrimitiveType<ap[1], apk>] : never
-  | ap extends readonly [{name:"account"} & AbiParameter] ? [account: AbiParameterToPrimitiveType<ap[0], apk>] : never
-  | ap extends readonly [{name:"recipient"} & AbiParameter, {name:"amount"} & AbiParameter] ? readonly [recipient: AbiParameterToPrimitiveType<ap[0], apk>, amount: AbiParameterToPrimitiveType<ap[1], apk>] : never
-  | ap extends readonly [{name:"sender"} & AbiParameter, {name:"recipient"} & AbiParameter, {name:"amount"} & AbiParameter] ? readonly [sender: AbiParameterToPrimitiveType<ap[0], apk>, recipient: AbiParameterToPrimitiveType<ap[1], apk>, amount: AbiParameterToPrimitiveType<ap[2], apk>] : never
+  abiParameter extends AbiParameter,
+  abiParameterKind extends AbiParameterKind,
+  ///
+  type = AbiParameterToPrimitiveType<abiParameter, abiParameterKind>,
+> = NameLookup<type>[(abiParameter & { name: string })['name']]
+
+interface NameLookup<type> extends Record<string, [type]> {
+  account: [account: type]
+  address: [address: type]
+  admin: [admin: type]
+  allowed: [allowed: type]
+  amount: [amount: type]
+  authority: [authority: type]
+  available: [available: type]
+  count: [count: type]
+  currency: [currency: type]
+  deadline: [deadline: type]
+  from: [from: type]
+  funder: [funder: type]
+  hash: [hash: type]
+  id: [id: type]
+  memo: [memo: type]
+  nonce: [nonce: type]
+  nonceKey: [nonceKey: type]
+  owner: [owner: type]
+  policyId: [policyId: type]
+  policyType: [policyType: type]
+  quoteToken: [quoteToken: type]
+  r: [r: type]
+  recipient: [recipient: type]
+  refund: [refund: type]
+  restricted: [restricted: type]
+  s: [s: type]
+  secs: [secs: type]
+  sender: [sender: type]
+  signature: [signature: type]
+  symbol: [symbol: type]
+  to: [to: type]
+  token: [token: type]
+  tokenId: [tokenId: type]
+  updater: [updater: type]
+  user: [user: type]
+  v: [v: type]
+  value: [value: type]
+}
 
 /**
  * Checks if type is {@link Abi}.

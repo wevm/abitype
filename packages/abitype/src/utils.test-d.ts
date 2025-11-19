@@ -524,7 +524,7 @@ describe('AbiParametersToPrimitiveTypes', () => {
       ExtractAbiFunction<typeof erc20Abi, 'transferFrom'>['inputs']
     >
     expectTypeOf<Result>().toEqualTypeOf<
-      [sender: `0x${string}`, recipient: `0x${string}`, amount: bigint]
+      readonly [sender: `0x${string}`, recipient: `0x${string}`, amount: bigint]
     >()
   })
 })

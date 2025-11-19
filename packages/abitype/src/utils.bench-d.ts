@@ -1,6 +1,5 @@
 import { attest } from '@arktype/attest'
 import { describe, test } from 'vitest'
-
 import type { erc20Abi } from './abis/json.js'
 import type {
   AbiParameterToPrimitiveType,
@@ -227,7 +226,7 @@ test('deeply nested parameters', () => {
   attest.instantiations([11348, 'instantiations'])
   attest<
     [
-      {
+      s: {
         a: number
         b: readonly number[]
         c: readonly {
@@ -269,11 +268,52 @@ test('self-referencing', () => {
   }>(res)
 })
 
-type abiItem = ExtractAbiFunction<typeof erc20Abi, 'transferFrom'>['inputs']
-test('custom named tuples', () => {
-  const res = {} as AbiParametersToPrimitiveTypes<abiItem>
-  attest.instantiations([902, 'instantiations'])
+type transferFrom = ExtractAbiFunction<
+  typeof erc20Abi,
+  'transferFrom'
+>['inputs']
+test('basic without named tuple', () => {
+  const res = {} as AbiParametersToPrimitiveTypes<transferFrom, 'inputs', false>
+  attest.instantiations([917, 'instantiations'])
   attest<
     readonly [sender: `0x${string}`, recipient: `0x${string}`, amount: bigint]
   >(res)
+})
+test('basic with named tuple', () => {
+  const res = {} as AbiParametersToPrimitiveTypes<transferFrom, 'inputs', true>
+  attest.instantiations([1172, 'instantiations'])
+  attest<
+    readonly [sender: `0x${string}`, recipient: `0x${string}`, amount: bigint]
+  >(res)
+})
+
+type parameters = readonly [
+  { name: 'account'; type: 'uint8' },
+  { name: 'address'; type: 'uint8' },
+  { name: 'admin'; type: 'uint8' },
+  { name: 'allowed'; type: 'uint8' },
+  { name: 'amount'; type: 'uint8' },
+  { name: 'authority'; type: 'uint8' },
+  { name: 'available'; type: 'uint8' },
+  { name: 'count'; type: 'uint8' },
+  { name: 'currency'; type: 'uint8' },
+  { name: 'deadline'; type: 'uint8' },
+  { name: 'from'; type: 'uint8' },
+  { name: 'funder'; type: 'uint8' },
+  { name: 'hash'; type: 'address' },
+  { name: 'id'; type: 'uint8' },
+  { name: 'memo'; type: 'uint8' },
+  { name: 'nonce'; type: 'uint8' },
+  { name: 'nonceKey'; type: 'uint8' },
+  { name: 'owner'; type: 'uint8' },
+  { name: 'policyId'; type: 'uint8' },
+  { name: 'policyType'; type: 'uint8' },
+]
+test('without named tuples', () => {
+  ;({}) as AbiParametersToPrimitiveTypes<parameters, 'inputs', false>
+  attest.instantiations([1286, 'instantiations'])
+})
+test('with named tuples', () => {
+  ;({}) as AbiParametersToPrimitiveTypes<parameters, 'inputs', true>
+  attest.instantiations([3591, 'instantiations'])
 })

@@ -102,6 +102,11 @@ export type ResolvedRegister = {
       ? type
       : DefaultRegister['strictAbiType']
 
+  /** TODO */
+  namedTuples: Register extends { namedTuples: infer type extends boolean }
+    ? type
+    : DefaultRegister['namedTuples']
+
   /** @deprecated Use `addressType` instead */
   AddressType: ResolvedRegister['addressType']
   /** @deprecated Use `addressType` instead */
@@ -144,6 +149,8 @@ export type DefaultRegister = {
 
   /** When set, validates {@link AbiParameter}'s `type` against {@link AbiType} */
   strictAbiType: false
+
+  namedTuples: false
 
   /** @deprecated Use `arrayMaxDepth` instead */
   ArrayMaxDepth: DefaultRegister['arrayMaxDepth']
