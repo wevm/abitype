@@ -1,8 +1,8 @@
 import type {
   Abi,
-  AbiFunction,
   AbiParameter,
   AbiParameterKind,
+  AbiParameterTupleNameLookup,
   AbiStateMutability,
   AbiType,
   MBits,
@@ -234,47 +234,7 @@ type ToNamedTuple<
   abiParameterKind extends AbiParameterKind,
   ///
   type = AbiParameterToPrimitiveType<abiParameter, abiParameterKind>,
-> = NameLookup<type>[(abiParameter & { name: string })['name']]
-
-interface NameLookup<type> extends Record<string, [type]> {
-  account: [account: type]
-  address: [address: type]
-  admin: [admin: type]
-  allowed: [allowed: type]
-  amount: [amount: type]
-  authority: [authority: type]
-  available: [available: type]
-  count: [count: type]
-  currency: [currency: type]
-  deadline: [deadline: type]
-  from: [from: type]
-  funder: [funder: type]
-  hash: [hash: type]
-  id: [id: type]
-  memo: [memo: type]
-  nonce: [nonce: type]
-  nonceKey: [nonceKey: type]
-  owner: [owner: type]
-  policyId: [policyId: type]
-  policyType: [policyType: type]
-  quoteToken: [quoteToken: type]
-  r: [r: type]
-  recipient: [recipient: type]
-  refund: [refund: type]
-  restricted: [restricted: type]
-  s: [s: type]
-  secs: [secs: type]
-  sender: [sender: type]
-  signature: [signature: type]
-  symbol: [symbol: type]
-  to: [to: type]
-  token: [token: type]
-  tokenId: [tokenId: type]
-  updater: [updater: type]
-  user: [user: type]
-  v: [v: type]
-  value: [value: type]
-}
+> = AbiParameterTupleNameLookup<type>[(abiParameter & { name: string })['name']]
 
 /**
  * Checks if type is {@link Abi}.
