@@ -252,6 +252,7 @@ export type TypedData = Pretty<
 // TODO: Generate fields from common/ERC ABIs
 export interface AbiParameterTupleNameLookup<type>
   extends Record<string, [type]> {
+  _data: [_data: type]
   account: [account: type]
   accounts: [accounts: type]
   address: [address: type]

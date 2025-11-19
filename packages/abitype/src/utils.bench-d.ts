@@ -225,7 +225,7 @@ test('deeply nested parameters', () => {
   >
   attest.instantiations([11348, 'instantiations'])
   attest<
-    [
+    readonly [
       s: {
         a: number
         b: readonly number[]
