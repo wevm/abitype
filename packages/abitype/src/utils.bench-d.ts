@@ -315,5 +315,5 @@ test('without named tuples', () => {
 })
 test('with named tuples', () => {
   ;({}) as AbiParametersToPrimitiveTypes<parameters, 'inputs', true>
-  attest.instantiations([3591, 'instantiations'])
+  attest.instantiations([3800, 'instantiations'])
 })
