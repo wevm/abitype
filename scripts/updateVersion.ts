@@ -1,33 +1,38 @@
-import { execSync } from 'node:child_process'
+import child_process from 'node:child_process'
+import fs from 'node:fs/promises'
 import path from 'node:path'
-import { glob } from 'glob'
 
 // Updates package version.ts files (so you can use the version in code without importing package.json).
 
 console.log('Updating version files.')
 
 // Get all package.json files
-const packagePaths = await glob('**/package.json', {
-  ignore: ['**/dist/**', '**/node_modules/**'],
+const packagePaths = fs.glob('packages/**/package.json', {
+  exclude: ['**/dist/**', '**/node_modules/**'],
 })
 
 let count = 0
-for (const packagePath of packagePaths) {
+for await (const packagePath of packagePaths) {
   type Package = {
     name?: string | undefined
     private?: boolean | undefined
     version?: string | undefined
   }
-  const file = Bun.file(packagePath)
-  const packageJson = (await file.json()) as Package
+  const packageJson = JSON.parse(
+    await fs.readFile(packagePath, 'utf-8'),
+  ) as Package
 
   // Skip private packages
   if (packageJson.private) continue
 
   const version = (() => {
-    if (Bun.env.PKG_PR_NEW) {
-      const gitHash = execSync('git rev-parse --short HEAD').toString().trim()
-      const branch = execSync('git branch --show-current')
+    if (process.env.PKG_PR_NEW) {
+      const gitHash = child_process
+        .execSync('git rev-parse --short HEAD')
+        .toString()
+        .trim()
+      const branch = child_process
+        .execSync('git branch --show-current')
         .toString()
         .trim()
         .replace(/[^a-zA-Z0-9]/g, '_')
@@ -44,13 +49,23 @@ for (const packagePath of packagePaths) {
     'src',
     'version.ts',
   )
-  await Bun.write(versionFilePath, `export const version = '${version}'\n`)
+  await fs.writeFile(
+    versionFilePath,
+    `export const version = '${version}'\n`,
+    'utf-8',
+  )
 
   try {
     const jsrFilePath = path.resolve(path.dirname(packagePath), 'jsr.json')
-    const jsrJson = await Bun.file(jsrFilePath).json()
+    const jsrJson = JSON.parse(
+      await fs.readFile(jsrFilePath, 'utf-8'),
+    ) as Package
     jsrJson.version = version
-    await Bun.write(jsrFilePath, JSON.stringify(jsrJson, null, 2))
+    await fs.writeFile(
+      jsrFilePath,
+      `${JSON.stringify(jsrJson, null, 2)}\n`,
+      'utf-8',
+    )
   } catch (error) {
     if (
       error &&
@@ -61,9 +76,13 @@ for (const packagePath of packagePaths) {
       throw error
   }
 
-  if (Bun.env.PKG_PR_NEW) {
+  if (process.env.PKG_PR_NEW) {
     packageJson.version = version
-    await Bun.write(packagePath, JSON.stringify(packageJson, null, 2))
+    await fs.writeFile(
+      packagePath,
+      `${JSON.stringify(packageJson, null, 2)}\n`,
+      'utf-8',
+    )
   }
 }
 
