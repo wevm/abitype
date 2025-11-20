@@ -21,7 +21,11 @@ export type WatchEventParameters<
   abiEvent extends AbiEvent = abi extends Abi
     ? ExtractAbiEvent<abi, eventName>
     : AbiEvent,
-  primitiveTypes = AbiParametersToPrimitiveTypes<abiEvent['inputs'], 'inputs'>,
+  primitiveTypes = AbiParametersToPrimitiveTypes<
+    abiEvent['inputs'],
+    'inputs',
+    true
+  >,
 > = {
   abi: abi
   eventName:

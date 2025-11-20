@@ -274,14 +274,14 @@ type transferFrom = ExtractAbiFunction<
 >['inputs']
 test('basic without named tuple', () => {
   const res = {} as AbiParametersToPrimitiveTypes<transferFrom, 'inputs', false>
-  attest.instantiations([917, 'instantiations'])
+  attest.instantiations([906, 'instantiations'])
   attest<
     readonly [sender: `0x${string}`, recipient: `0x${string}`, amount: bigint]
   >(res)
 })
 test('basic with named tuple', () => {
   const res = {} as AbiParametersToPrimitiveTypes<transferFrom, 'inputs', true>
-  attest.instantiations([1172, 'instantiations'])
+  attest.instantiations([1131, 'instantiations'])
   attest<
     readonly [sender: `0x${string}`, recipient: `0x${string}`, amount: bigint]
   >(res)
@@ -311,9 +311,9 @@ type parameters = readonly [
 ]
 test('without named tuples', () => {
   ;({}) as AbiParametersToPrimitiveTypes<parameters, 'inputs', false>
-  attest.instantiations([1286, 'instantiations'])
+  attest.instantiations([1276, 'instantiations'])
 })
 test('with named tuples', () => {
   ;({}) as AbiParametersToPrimitiveTypes<parameters, 'inputs', true>
-  attest.instantiations([3800, 'instantiations'])
+  attest.instantiations([1998, 'instantiations'])
 })

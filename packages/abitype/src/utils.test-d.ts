@@ -1,6 +1,6 @@
 import { assertType, describe, expectTypeOf, test } from 'vitest'
 
-import type { Abi } from './abi.js'
+import type { Abi, AbiParameterKind } from './abi.js'
 import type {
   customSolidityErrorsAbi,
   ensRegistryWithFallbackAbi,
@@ -424,12 +424,14 @@ describe('AbiParameterToPrimitiveType', () => {
 
 describe('AbiParametersToPrimitiveTypes', () => {
   test('no parameters', () => {
-    type Result = AbiParametersToPrimitiveTypes<[]>
-    assertType<Result>([])
+    type r1 = AbiParametersToPrimitiveTypes<[]>
+    assertType<r1>([])
+    type r2 = AbiParametersToPrimitiveTypes<[], AbiParameterKind, true>
+    assertType<r2>([])
   })
 
   test('single parameter', () => {
-    type Result = AbiParametersToPrimitiveTypes<
+    type r1 = AbiParametersToPrimitiveTypes<
       [
         {
           name: 'tokenId'
@@ -437,23 +439,48 @@ describe('AbiParametersToPrimitiveTypes', () => {
         },
       ]
     >
-    assertType<Result>([[1, 1]])
+    assertType<r1>([[1, 1]])
     //          ^?
+    type r2 = AbiParametersToPrimitiveTypes<
+      [
+        {
+          name: 'tokenId'
+          type: 'uint8[2]'
+        },
+      ],
+      AbiParameterKind,
+      true
+    >
+    expectTypeOf<r2>().toEqualTypeOf<
+      readonly [tokenId: readonly [number, number]]
+    >()
   })
 
   test('multiple parameters', () => {
-    type Result = AbiParametersToPrimitiveTypes<
+    type r1 = AbiParametersToPrimitiveTypes<
       [
         { name: 'to'; type: 'address' },
         { name: 'tokenId'; type: 'uint256' },
         { name: 'trait'; type: 'string[]' },
       ]
     >
-    assertType<Result>([zeroAddress, 1n, ['foo']])
+    assertType<r1>([zeroAddress, 1n, ['foo']])
+    type r2 = AbiParametersToPrimitiveTypes<
+      [
+        { name: 'to'; type: 'address' },
+        { name: 'tokenId'; type: 'uint256' },
+        { name: 'trait'; type: 'string[]' },
+      ],
+      AbiParameterKind,
+      true
+    >
+    expectTypeOf<r2>().toEqualTypeOf<
+      readonly [to: `0x${string}`, tokenId: bigint, readonly string[]]
+    >()
   })
 
   test('deeply nested parameters', () => {
-    type Result = AbiParametersToPrimitiveTypes<
+    type r1 = AbiParametersToPrimitiveTypes<
       [
         {
           name: 's'
@@ -490,7 +517,55 @@ describe('AbiParametersToPrimitiveTypes', () => {
         },
       ]
     >
-    assertType<Result>([
+    assertType<r1>([
+      { a: 1, b: [2], c: [{ x: 1, y: 1 }] },
+      { x: 1, y: 1 },
+      1,
+      [
+        { x: 1n, y: 1n },
+        { x: 1n, y: 1n },
+      ],
+    ])
+    type r2 = AbiParametersToPrimitiveTypes<
+      [
+        {
+          name: 's'
+          type: 'tuple'
+          components: [
+            { name: 'a'; type: 'uint8' },
+            { name: 'b'; type: 'uint8[]' },
+            {
+              name: 'c'
+              type: 'tuple[]'
+              components: [
+                { name: 'x'; type: 'uint8' },
+                { name: 'y'; type: 'uint8' },
+              ]
+            },
+          ]
+        },
+        {
+          name: 't'
+          type: 'tuple'
+          components: [
+            { name: 'x'; type: 'uint8' },
+            { name: 'y'; type: 'uint8' },
+          ]
+        },
+        { name: 'a'; type: 'uint8' },
+        {
+          name: 't'
+          type: 'tuple[2]'
+          components: [
+            { name: 'x'; type: 'uint256' },
+            { name: 'y'; type: 'uint256' },
+          ]
+        },
+      ],
+      AbiParameterKind,
+      true
+    >
+    assertType<r2>([
       { a: 1, b: [2], c: [{ x: 1, y: 1 }] },
       { x: 1, y: 1 },
       1,
@@ -514,14 +589,20 @@ describe('AbiParametersToPrimitiveTypes', () => {
     assertType<AbiParametersToPrimitiveTypes<typeof parameters, 'outputs'>>([
       '0xfoo',
     ])
-    assertType<AbiParametersToPrimitiveTypes<typeof parameters, 'outputs'>>([
-      '0xfoo',
-    ])
+    assertType<
+      AbiParametersToPrimitiveTypes<typeof parameters, 'inputs', true>
+    >(['0xfoo'])
+    assertType<
+      AbiParametersToPrimitiveTypes<typeof parameters, 'outputs', true>
+    >(['0xfoo'])
   })
 
   test('named parameters', () => {
     type Result = AbiParametersToPrimitiveTypes<
-      ExtractAbiFunction<typeof erc20Abi, 'transferFrom'>['inputs']
+      // ^?
+      ExtractAbiFunction<typeof erc20Abi, 'transferFrom'>['inputs'],
+      'inputs',
+      true
     >
     expectTypeOf<Result>().toEqualTypeOf<
       readonly [sender: `0x${string}`, recipient: `0x${string}`, amount: bigint]
