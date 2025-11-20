@@ -36,7 +36,8 @@ type GetArgs<
     : AbiFunction,
   primitiveTypes = AbiParametersToPrimitiveTypes<
     abiFunction['inputs'],
-    'inputs'
+    'inputs',
+    true
   >,
   args_ =
     | primitiveTypes // show all values
@@ -91,7 +92,8 @@ export type ContractReturnType<
   outputs extends readonly AbiParameter[] = abiFunction['outputs'],
   primitiveTypes extends readonly unknown[] = AbiParametersToPrimitiveTypes<
     outputs,
-    'outputs'
+    'outputs',
+    true
   >,
 > = [abiFunction] extends [never]
   ? unknown // `abiFunction` was not inferrable (e.g. `abi` declared as `Abi`)
