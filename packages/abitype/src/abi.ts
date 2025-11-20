@@ -367,4 +367,3 @@ export interface AbiParameterTupleNameLookup<type> extends Record<string, [type]
   y: [y: type]
   z: [z: type]
 }
-
