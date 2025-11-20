@@ -186,3 +186,29 @@ test('nested tuple', () => {
     ]
   }>(result)
 })
+
+test('struct name collision', () => {
+  const result1 = parseAbiParameter(['struct Foo { string bar; }', 'Foo'])
+  expect(result1).toEqual({
+    type: 'tuple',
+    components: [{ name: 'bar', type: 'string' }],
+  })
+
+  const result2 = parseAbiParameter(['struct Foo { address bar; }', 'Foo'])
+  expect(result2).toEqual({
+    type: 'tuple',
+    components: [{ name: 'bar', type: 'address' }],
+  })
+
+  const result3 = parseAbiParameter([
+    'struct Foo { uint256 amount; address token; }',
+    'Foo',
+  ])
+  expect(result3).toEqual({
+    type: 'tuple',
+    components: [
+      { name: 'amount', type: 'uint256' },
+      { name: 'token', type: 'address' },
+    ],
+  })
+})
