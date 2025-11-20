@@ -91,11 +91,13 @@ export type ResolvedRegister = {
   /**
    * Enables named tuple generation in {@link AbiParametersToPrimitiveTypes} for common ABI parameter names.
    *
-   * @default true
+   * @default false
    */
-  namedTuples: Register extends { namedTuples: infer type extends boolean }
+  experimental_namedTuples: Register extends {
+    experimental_namedTuples: infer type extends boolean
+  }
     ? type
-    : DefaultRegister['namedTuples']
+    : DefaultRegister['experimental_namedTuples']
 
   /**
    * When set, validates {@link AbiParameter}'s `type` against {@link AbiType}
@@ -152,7 +154,7 @@ export type DefaultRegister = {
   intType: number
 
   /** Enables named tuple generation in {@link AbiParametersToPrimitiveTypes} for common ABI parameter names */
-  namedTuples: true
+  experimental_namedTuples: false
 
   /** When set, validates {@link AbiParameter}'s `type` against {@link AbiType} */
   strictAbiType: false

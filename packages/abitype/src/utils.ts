@@ -190,8 +190,9 @@ export type AbiParametersToPrimitiveTypes<
   abiParameters extends readonly AbiParameter[],
   abiParameterKind extends AbiParameterKind = AbiParameterKind,
   ///
-  namedTuples extends boolean = ResolvedRegister['namedTuples'],
-> = namedTuples extends true
+  experimental_namedTuples extends
+    boolean = ResolvedRegister['experimental_namedTuples'],
+> = experimental_namedTuples extends true
   ? AbiParametersToPrimitiveTypes_named<abiParameters, abiParameterKind>
   : AbiParametersToPrimitiveTypes_mapped<abiParameters, abiParameterKind>
 

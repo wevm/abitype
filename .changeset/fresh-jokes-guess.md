@@ -2,4 +2,4 @@
 "abitype": minor
 ---
 
-Added common tuple labels to output of `AbiParametersToPrimitiveTypes`
+Added experimental named tuple support to `AbiParametersToPrimitiveTypes`
