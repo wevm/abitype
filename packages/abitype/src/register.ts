@@ -89,6 +89,17 @@ export type ResolvedRegister = {
       : DefaultRegister['fixedArrayMaxLength']
 
   /**
+   * Enables named tuple generation in {@link AbiParametersToPrimitiveTypes} for common ABI parameter names.
+   *
+   * @default false
+   */
+  experimental_namedTuples: Register extends {
+    experimental_namedTuples: infer type extends boolean
+  }
+    ? type
+    : DefaultRegister['experimental_namedTuples']
+
+  /**
    * When set, validates {@link AbiParameter}'s `type` against {@link AbiType}
    *
    * Note: You probably only want to set this to `true` if parsed types are returning as `unknown`
@@ -141,6 +152,9 @@ export type DefaultRegister = {
   bigIntType: bigint
   /** TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48` */
   intType: number
+
+  /** Enables named tuple generation in {@link AbiParametersToPrimitiveTypes} for common ABI parameter names */
+  experimental_namedTuples: false
 
   /** When set, validates {@link AbiParameter}'s `type` against {@link AbiType} */
   strictAbiType: false

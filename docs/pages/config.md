@@ -153,6 +153,21 @@ declare module 'abitype' {
 }
 ```
 
+### `experimental_namedTuples`
+
+Enables named tuple generation in [`AbiParametersToPrimitiveTypes`](/api/utilities#abiparameterstoprimitivetypes) for common ABI parameter names.
+
+- Type `boolean`
+- Default `false`
+
+```ts twoslash
+declare module 'abitype' {
+  export interface Register {
+    experimental_namedTuples: false
+  }
+}
+```
+
 ### `strictAbiType`
 
 When set, validates `AbiParameter`'s `type` against `AbiType`.
