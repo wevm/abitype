@@ -79,7 +79,7 @@ export function formatAbiParameter<
       if (i < length - 1) type += ', '
     }
     const result = execTyped<{ array?: string }>(tupleRegex, abiParameter.type)
-    type += `)${result?.array ?? ''}`
+    type += `)${result?.array || ''}`
     return formatAbiParameter({
       ...abiParameter,
       type,

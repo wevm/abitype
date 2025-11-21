@@ -14,6 +14,7 @@ export default defineConfig({
         '**/*.bench-d.ts',
         '**/*.test.ts',
         '**/*.test-d.ts',
+        'src/exports/**',
         'src/version.ts',
       ],
       reporter: process.env.CI ? ['lcov'] : ['text', 'json', 'html'],
