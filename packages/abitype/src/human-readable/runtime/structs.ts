@@ -56,8 +56,8 @@ const typeWithoutTupleRegex =
   /^(?<type>[a-zA-Z$_][a-zA-Z0-9$_]*)(?<array>(?:\[\d*?\])+?)?$/
 
 function resolveStructs(
-  abiParameters: readonly (AbiParameter & { indexed?: true })[],
-  structs: StructLookup,
+  abiParameters: readonly (AbiParameter & { indexed?: true })[] = [],
+  structs: StructLookup = {},
   ancestors = new Set<string>(),
 ) {
   const components: AbiParameter[] = []
@@ -81,7 +81,7 @@ function resolveStructs(
           ...abiParameter,
           type: `tuple${array ?? ''}`,
           components: resolveStructs(
-            structs[type] ?? [],
+            structs[type],
             structs,
             new Set([...ancestors, type]),
           ),

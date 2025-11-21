@@ -5,7 +5,7 @@
     "bench": "vitest bench",
     "bench:types": "TYPES=true vitest bench-d.ts",
     "build": "pnpm run --r --filter \"./packages/**\" build",
-    "changeset:prepublish": "pnpm version:update && pnpm build && bun scripts/formatPackageJson.ts && bun scripts/generateProxyPackages.ts",
+    "changeset:prepublish": "pnpm version:update && pnpm build && node scripts/formatPackageJson.ts && node scripts/generateProxyPackages.ts",
     "changeset:publish": "pnpm changeset:prepublish && changeset publish",
     "changeset:version": "changeset version && pnpm version:update && pnpm format",
     "check": "biome check --write",
@@ -18,7 +18,7 @@
     "docs:dev": "pnpm -r --filter docs dev",
     "format": "biome format --write",
     "postinstall": "pnpm preconstruct",
-    "preconstruct": "bun scripts/preconstruct.ts",
+    "preconstruct": "node scripts/preconstruct.ts",
     "preinstall": "pnpx only-allow pnpm",
     "prepare": "pnpm simple-git-hooks",
     "test": "vitest",
@@ -27,7 +27,7 @@
     "test:update": "vitest --update",
     "trace": "tsc --noEmit --generateTrace ./playgrounds/performance/out --incremental false --project playgrounds/performance/tsconfig.json && echo \"Open playgrounds/performance/out/trace.json in https://ui.perfetto.dev\"",
     "typeperf": "pnpm run --r --parallel typeperf",
-    "version:update": "bun scripts/updateVersion.ts"
+    "version:update": "node scripts/updateVersion.ts"
   },
   "devDependencies": {
     "@arktype/attest": "0.8.0",
@@ -35,9 +35,8 @@
     "@changesets/cli": "^3.0.0-next.0",
     "@ethersproject/abi": "^5.7.0",
     "@svitejs/changesets-changelog-github-compact": "^1.2.0",
-    "@types/bun": "^1.1.10",
-    "@vitest/coverage-v8": "^1.6.0",
-    "bun": "^1.1.29",
+    "@types/node": "^24.10.1",
+    "@vitest/coverage-v8": "^4.0.10",
     "ethers": "^6.13.1",
     "glob": "^10.4.2",
     "knip": "^5.22.3",
@@ -45,7 +44,7 @@
     "sherif": "^0.9.0",
     "simple-git-hooks": "^2.11.1",
     "typescript": "5.7.2",
-    "vitest": "^1.6.0"
+    "vitest": "^4.0.10"
   },
   "packageManager": "pnpm@10.16.1",
   "devEngines": {

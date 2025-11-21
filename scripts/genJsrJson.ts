@@ -1,8 +1,10 @@
+import fs from 'node:fs/promises'
+
 // Generates jsr.json
 
 console.log('Generating jsr.json')
 
-await Bun.write(
+await fs.writeFile(
   'packages/abitype/jsr.json',
   `${JSON.stringify(
     {
@@ -27,6 +29,7 @@ await Bun.write(
     undefined,
     2,
   )}\n`,
+  'utf-8',
 )
 
 console.log('Done.')
