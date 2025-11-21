@@ -1,5 +1,11 @@
 # abitype
 
+## 1.2.0
+
+### Minor Changes
+
+- Added experimental named tuple support to `AbiParametersToPrimitiveTypes` ([#281](https://github.com/wevm/abitype/pull/281))
+
 ## 1.1.2
 
 ### Patch Changes
