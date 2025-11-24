@@ -3,27 +3,33 @@ import fs from 'node:fs/promises'
 // Generates ABI parameter name lookup from common names
 
 console.log('Generating ABI parameter name lookup.')
+const parameterNames = [...(await names())].sort()
 
 let content =
   'export interface AbiParameterTupleNameLookup<type> extends Record<string, [type]> {\n'
-for (const name of names()) content += `  ${name}: [${name}: type]\n`
+for (const name of parameterNames) {
+  if (name === 'class') continue
+  content += `  ${name}: [${name}: type]\n`
+}
 content += '}\n'
 
-const path = './packages/abitype/src/abi.ts'
-const text = await fs
-  .readFile(path, 'utf8')
-  .then((text) =>
-    text.replace(
-      /export interface AbiParameterTupleNameLookup<type>[\s\S]*$/,
-      content,
-    ),
+const path = './packages/abitype/src/generated.ts'
+await fs.writeFile(path, content, 'utf8')
+
+console.log(`Done. Added ${parameterNames.length} names.`)
+
+async function names() {
+  // s/o @andrewhong5297
+  // https://dune.com/queries/6243195
+  const csv = await fs.readFile(
+    './scripts/most_common_abi_input_names.csv',
+    'utf-8',
   )
-await fs.writeFile(path, text, 'utf8')
-
-console.log(`Done. Added ${names().size} names.`)
-
-function names() {
-  return new Set([
+  const mostCommonNames = csv
+    .split('\n')
+    .filter((line) => line.trim())
+    .map((line) => line.split(',').at(0))
+  const customNames = [
     '_data',
     'a',
     'account',
@@ -170,5 +176,6 @@ function names() {
     'y',
     'z',
     'zone',
-  ])
+  ]
+  return new Set([...customNames, ...mostCommonNames])
 }
