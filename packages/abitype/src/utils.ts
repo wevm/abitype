@@ -2,7 +2,6 @@ import type {
   Abi,
   AbiParameter,
   AbiParameterKind,
-  AbiParameterTupleNameLookup,
   AbiStateMutability,
   AbiType,
   MBits,
@@ -16,6 +15,7 @@ import type {
   TypedDataParameter,
   TypedDataType,
 } from './abi.js'
+import type { AbiParameterTupleNameLookup } from './generated.js'
 import type { ResolvedRegister } from './register.js'
 import type { Error, Merge, Pretty, Tuple } from './types.js'
 
