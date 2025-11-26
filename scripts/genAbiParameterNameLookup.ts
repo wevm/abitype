@@ -7,8 +7,13 @@ const parameterNames = [...(await names())].sort()
 
 let content =
   'export interface AbiParameterTupleNameLookup<type> extends Record<string, [type]> {\n'
+const denylist = [
+  'class',
+  'Ox2f0df76285492e10fd0dc81ae6a456072ab93c56936d7d7ed1840885344d427894f58667f41008d3fceb23655c9184ac1b53eae24145eb0a07ae0e37a8f446fb',
+]
 for (const name of parameterNames) {
-  if (name === 'class') continue
+  if (!name) continue
+  if (denylist.includes(name)) continue
   content += `  ${name}: [${name}: type]\n`
 }
 content += '}\n'
