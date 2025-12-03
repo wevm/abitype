@@ -1,5 +1,13 @@
 # abitype
 
+## 1.2.1
+
+### Patch Changes
+
+- Updated generated ABI parameter tuple names ([`8afc256`](https://github.com/wevm/abitype/commit/8afc25640326e0676489118fab5c59c1ae276171))
+
+- Updated ABI parameter named tuple generation to use most common parameter names from Dune query. ([`8961150`](https://github.com/wevm/abitype/commit/89611508761625edc2c31306a1e9e67d75960cfc))
+
 ## 1.2.0
 
 ### Minor Changes
