@@ -33,7 +33,9 @@ async function names() {
   const mostCommonNames = csv
     .split('\n')
     .filter((line) => line.trim())
-    .map((line) => line.split(',').at(0))
+    .map((line) => line.split(','))
+    .filter(([, count]) => count && Number.parseInt(count) > 200)
+    .map((line) => line.at(0))
   const customNames = [
     '_data',
     'a',
