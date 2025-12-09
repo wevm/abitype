@@ -1,5 +1,11 @@
 # abitype
 
+## 1.2.2
+
+### Patch Changes
+
+- Trimmed generated tuple names. ([`cd23231`](https://github.com/wevm/abitype/commit/cd232316304b3a1b6482dcbfb367c7ef82097b2c))
+
 ## 1.2.1
 
 ### Patch Changes
