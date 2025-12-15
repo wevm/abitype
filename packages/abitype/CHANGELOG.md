@@ -1,5 +1,11 @@
 # abitype
 
+## 1.2.3
+
+### Patch Changes
+
+- Added max depth guard for named tuple tail recursion ([#290](https://github.com/wevm/abitype/pull/290))
+
 ## 1.2.2
 
 ### Patch Changes
@@ -162,7 +168,6 @@
 ### Patch Changes
 
 - [#194](https://github.com/wevm/abitype/pull/194) [`380c9d9`](https://github.com/wevm/abitype/commit/380c9d9786f673185369f652f3bde8564b30ff81) Thanks [@mathieu-bour](https://github.com/mathieu-bour)! - Changed the following types to readonly in zod package:
-
   - `AbiContructor.inputs`
   - `AbiError.inputs`
   - `AbiEvent.inputs`
@@ -351,7 +356,6 @@
 ### Patch Changes
 
 - [#100](https://github.com/wevm/abitype/pull/100) [`4263277`](https://github.com/wevm/abitype/commit/4263277e0630af8fcaedefa084d754f607c588a4) Thanks [@Raiden1411](https://github.com/Raiden1411)! - Bug fixes:
-
   - Fixed `splitParameters` parsing behavior for tuples with too many closing or opening parentheses.
   - Fixed modifiers parsing for `error`, `event`, `struct` signatures.
   - Stopped allowing protected Solidity keywords as parameter names.
