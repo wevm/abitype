@@ -20,12 +20,12 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@main
+        uses: wevm/actions/.github/actions/pnpm@f7ad7f00e16e73322562922c241f21f0c7ffbbec
 
       - name: Publish preview
         run: |
@@ -41,10 +41,10 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@main
+        uses: wevm/actions/.github/actions/pnpm@f7ad7f00e16e73322562922c241f21f0c7ffbbec
 
       - name: Run benchmarks
         run: pnpm bench
@@ -56,13 +56,13 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@main
+        uses: wevm/actions/.github/actions/pnpm@f7ad7f00e16e73322562922c241f21f0c7ffbbec
 
       - name: Report build size
-        uses: preactjs/compressed-size-action@v2
+        uses: preactjs/compressed-size-action@946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a # 2.8.0
         with:
           pattern: 'packages/**/dist/**'
           repo-token: ${{ secrets.GITHUB_TOKEN }}

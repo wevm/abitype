@@ -285,7 +285,7 @@ type transferFrom = ExtractAbiFunction<
 test('basic without named tuple', () => {
   type Result = AbiParametersToPrimitiveTypes<transferFrom, 'inputs', false>
   const res = {} as Result
-  attest.instantiations([906, 'instantiations'])
+  attest.instantiations([907, 'instantiations'])
   attest<
     readonly [sender: `0x${string}`, recipient: `0x${string}`, amount: bigint]
   >(res)
