@@ -211,53 +211,43 @@ export type AbiParametersToPrimitiveTypes_named<
   abiParameterKind extends AbiParameterKind = AbiParameterKind,
   ///
   acc extends readonly unknown[] = [],
+  depth extends readonly number[] = [],
   // FIXME: Workaround to create labeled tuple so parameter names show up in autocomplete
   // e.g. [foo: string, bar: string]
   // Ideally this is a simple mapped type instead of tail recurision, but TypeScript does not support dynamic tuple labels
   // https://github.com/microsoft/TypeScript/issues/44939
-> = abiParameters extends readonly [
-  // Significantly reduce type instantiations by batch proccessing up to six parameters at a time instead of processing one parameter per recursion
-  infer head1 extends AbiParameter,
-  infer head2 extends AbiParameter,
-  infer head3 extends AbiParameter,
-  infer head4 extends AbiParameter,
-  infer head5 extends AbiParameter,
-  infer head6 extends AbiParameter,
-  ...infer tail extends readonly AbiParameter[],
-]
-  ? AbiParametersToPrimitiveTypes_named<
-      tail,
-      abiParameterKind,
-      readonly [
-        ...acc,
-        ...ToNamedTuple<head1, abiParameterKind>,
-        ...ToNamedTuple<head2, abiParameterKind>,
-        ...ToNamedTuple<head3, abiParameterKind>,
-        ...ToNamedTuple<head4, abiParameterKind>,
-        ...ToNamedTuple<head5, abiParameterKind>,
-        ...ToNamedTuple<head6, abiParameterKind>,
-      ]
-    >
+> = depth['length'] extends 15
+  ? readonly unknown[]
   : abiParameters extends readonly [
+        // Significantly reduce type instantiations by batch proccessing up to six parameters at a time instead of processing one parameter per recursion
         infer head1 extends AbiParameter,
         infer head2 extends AbiParameter,
         infer head3 extends AbiParameter,
         infer head4 extends AbiParameter,
         infer head5 extends AbiParameter,
+        infer head6 extends AbiParameter,
+        ...infer tail extends readonly AbiParameter[],
       ]
-    ? readonly [
-        ...acc,
-        ...ToNamedTuple<head1, abiParameterKind>,
-        ...ToNamedTuple<head2, abiParameterKind>,
-        ...ToNamedTuple<head3, abiParameterKind>,
-        ...ToNamedTuple<head4, abiParameterKind>,
-        ...ToNamedTuple<head5, abiParameterKind>,
-      ]
+    ? AbiParametersToPrimitiveTypes_named<
+        tail,
+        abiParameterKind,
+        readonly [
+          ...acc,
+          ...ToNamedTuple<head1, abiParameterKind>,
+          ...ToNamedTuple<head2, abiParameterKind>,
+          ...ToNamedTuple<head3, abiParameterKind>,
+          ...ToNamedTuple<head4, abiParameterKind>,
+          ...ToNamedTuple<head5, abiParameterKind>,
+          ...ToNamedTuple<head6, abiParameterKind>,
+        ],
+        [...depth, 1]
+      >
     : abiParameters extends readonly [
           infer head1 extends AbiParameter,
           infer head2 extends AbiParameter,
           infer head3 extends AbiParameter,
           infer head4 extends AbiParameter,
+          infer head5 extends AbiParameter,
         ]
       ? readonly [
           ...acc,
@@ -265,34 +255,48 @@ export type AbiParametersToPrimitiveTypes_named<
           ...ToNamedTuple<head2, abiParameterKind>,
           ...ToNamedTuple<head3, abiParameterKind>,
           ...ToNamedTuple<head4, abiParameterKind>,
+          ...ToNamedTuple<head5, abiParameterKind>,
         ]
       : abiParameters extends readonly [
             infer head1 extends AbiParameter,
             infer head2 extends AbiParameter,
             infer head3 extends AbiParameter,
+            infer head4 extends AbiParameter,
           ]
         ? readonly [
             ...acc,
             ...ToNamedTuple<head1, abiParameterKind>,
             ...ToNamedTuple<head2, abiParameterKind>,
             ...ToNamedTuple<head3, abiParameterKind>,
+            ...ToNamedTuple<head4, abiParameterKind>,
           ]
         : abiParameters extends readonly [
               infer head1 extends AbiParameter,
               infer head2 extends AbiParameter,
+              infer head3 extends AbiParameter,
             ]
           ? readonly [
               ...acc,
               ...ToNamedTuple<head1, abiParameterKind>,
               ...ToNamedTuple<head2, abiParameterKind>,
+              ...ToNamedTuple<head3, abiParameterKind>,
             ]
-          : abiParameters extends readonly [infer head extends AbiParameter]
-            ? readonly [...acc, ...ToNamedTuple<head, abiParameterKind>]
-            : acc extends readonly []
-              ? abiParameters extends readonly []
-                ? readonly []
-                : readonly unknown[]
-              : acc
+          : abiParameters extends readonly [
+                infer head1 extends AbiParameter,
+                infer head2 extends AbiParameter,
+              ]
+            ? readonly [
+                ...acc,
+                ...ToNamedTuple<head1, abiParameterKind>,
+                ...ToNamedTuple<head2, abiParameterKind>,
+              ]
+            : abiParameters extends readonly [infer head extends AbiParameter]
+              ? readonly [...acc, ...ToNamedTuple<head, abiParameterKind>]
+              : acc extends readonly []
+                ? abiParameters extends readonly []
+                  ? readonly []
+                  : readonly unknown[]
+                : acc
 
 type ToNamedTuple<
   abiParameter extends AbiParameter,

@@ -1,4 +1,4 @@
-import { attest } from '@arktype/attest'
+import { attest } from '@ark/attest'
 import { describe, test } from 'vitest'
 import type { erc20Abi } from './abis/json.js'
 import type {
@@ -54,9 +54,19 @@ describe('AbiParameterToPrimitiveType', () => {
       nonce: bigint
       fee: number
     }>({} as Result)
-    attest({} as Result).type.toString.snap(
-      '{ name: string; symbol: string; description: string; imageURI: string; contentURI: string; price: bigint; limit: bigint; fundingRecipient: `0x${string}`; renderer: `0x${string}`; nonce: bigint; fee: number; }',
-    )
+    attest({} as Result).type.toString.snap(`{
+  name: string
+  symbol: string
+  description: string
+  imageURI: string
+  contentURI: string
+  price: bigint
+  limit: bigint
+  fundingRecipient: \`0x\${string}\`
+  renderer: \`0x\${string}\`
+  nonce: bigint
+  fee: number
+}`)
   })
 
   test('array', () => {
@@ -273,18 +283,28 @@ type transferFrom = ExtractAbiFunction<
   'transferFrom'
 >['inputs']
 test('basic without named tuple', () => {
-  const res = {} as AbiParametersToPrimitiveTypes<transferFrom, 'inputs', false>
-  attest.instantiations([906, 'instantiations'])
+  type Result = AbiParametersToPrimitiveTypes<transferFrom, 'inputs', false>
+  const res = {} as Result
+  attest.instantiations([910, 'instantiations'])
   attest<
     readonly [sender: `0x${string}`, recipient: `0x${string}`, amount: bigint]
   >(res)
+  attest(res).type.toString.snap(
+    'readonly [`0x${string}`, `0x${string}`, bigint]',
+  )
 })
 test('basic with named tuple', () => {
-  const res = {} as AbiParametersToPrimitiveTypes<transferFrom, 'inputs', true>
+  type Result = AbiParametersToPrimitiveTypes<transferFrom, 'inputs', true>
+  const res = {} as Result
   attest.instantiations([1131, 'instantiations'])
   attest<
     readonly [sender: `0x${string}`, recipient: `0x${string}`, amount: bigint]
   >(res)
+  attest(res).type.toString.snap(`readonly [
+  sender: \`0x\${string}\`,
+  recipient: \`0x\${string}\`,
+  amount: bigint
+]`)
 })
 
 type parameters = readonly [
@@ -310,10 +330,56 @@ type parameters = readonly [
   { name: 'policyType'; type: 'uint8' },
 ]
 test('without named tuples', () => {
-  ;({}) as AbiParametersToPrimitiveTypes<parameters, 'inputs', false>
+  type Result = AbiParametersToPrimitiveTypes<parameters, 'inputs', false>
+  ;({}) as Result
   attest.instantiations([1276, 'instantiations'])
+  attest({} as Result).type.toString.snap(`readonly [
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  \`0x\${string}\`,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number
+]`)
 })
 test('with named tuples', () => {
-  ;({}) as AbiParametersToPrimitiveTypes<parameters, 'inputs', true>
+  type Result = AbiParametersToPrimitiveTypes<parameters, 'inputs', true>
+  ;({}) as Result
   attest.instantiations([1998, 'instantiations'])
+  attest({} as Result).type.toString.snap(`readonly [
+  account: number,
+  address: number,
+  admin: number,
+  allowed: number,
+  amount: number,
+  authority: number,
+  available: number,
+  count: number,
+  currency: number,
+  deadline: number,
+  from: number,
+  funder: number,
+  hash: \`0x\${string}\`,
+  id: number,
+  memo: number,
+  nonce: number,
+  nonceKey: number,
+  owner: number,
+  policyId: number,
+  policyType: number
+]`)
 })
