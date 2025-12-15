@@ -34,7 +34,7 @@ async function names() {
     .split('\n')
     .filter((line) => line.trim())
     .map((line) => line.split(','))
-    .filter(([, count]) => count && Number.parseInt(count) > 200)
+    .filter(([, count]) => count && Number.parseInt(count) > 24)
     .map((line) => line.at(0))
   const customNames = [
     '_data',

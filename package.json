@@ -1,4 +1,5 @@
 {
+  "name": "abitype",
   "private": true,
   "type": "module",
   "scripts": {
@@ -30,7 +31,7 @@
     "version:update": "node scripts/updateVersion.ts"
   },
   "devDependencies": {
-    "@arktype/attest": "0.8.0",
+    "@ark/attest": "^0.56.0",
     "@biomejs/biome": "1.9.4",
     "@changesets/cli": "^3.0.0-next.0",
     "@ethersproject/abi": "^5.7.0",
@@ -43,7 +44,7 @@
     "publint": "^0.2.12",
     "sherif": "^0.9.0",
     "simple-git-hooks": "^2.11.1",
-    "typescript": "5.7.2",
+    "typescript": "5.9.3",
     "vitest": "^4.0.10"
   },
   "packageManager": "pnpm@10.16.1",
