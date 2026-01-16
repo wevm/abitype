@@ -155,9 +155,9 @@ declare module 'abitype' {
 
 ### `experimental_namedTuples`
 
-Enables named tuple generation in [`AbiParametersToPrimitiveTypes`](/api/utilities#abiparameterstoprimitivetypes) for common ABI parameter names.
+Enables named tuple generation in [`AbiParametersToPrimitiveTypes`](/api/utilities#abiparameterstoprimitivetypes) for common ABI parameter names. When a string array, adds custom names.
 
-- Type `boolean`
+- Type `boolean | readonly string[]`
 - Default `false`
 
 ```ts twoslash
