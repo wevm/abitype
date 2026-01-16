@@ -191,10 +191,17 @@ export type AbiParametersToPrimitiveTypes<
   abiParameterKind extends AbiParameterKind = AbiParameterKind,
   ///
   experimental_namedTuples extends
-    boolean = ResolvedRegister['experimental_namedTuples'],
-> = experimental_namedTuples extends true
-  ? AbiParametersToPrimitiveTypes_named<abiParameters, abiParameterKind>
-  : AbiParametersToPrimitiveTypes_mapped<abiParameters, abiParameterKind>
+    | boolean
+    | readonly string[] = ResolvedRegister['experimental_namedTuples'],
+> = experimental_namedTuples extends false
+  ? AbiParametersToPrimitiveTypes_mapped<abiParameters, abiParameterKind>
+  : AbiParametersToPrimitiveTypes_named<
+      abiParameters,
+      abiParameterKind,
+      experimental_namedTuples extends readonly string[]
+        ? experimental_namedTuples
+        : readonly []
+    >
 
 export type AbiParametersToPrimitiveTypes_mapped<
   abiParameters extends readonly AbiParameter[],
@@ -209,6 +216,7 @@ export type AbiParametersToPrimitiveTypes_mapped<
 export type AbiParametersToPrimitiveTypes_named<
   abiParameters extends readonly AbiParameter[],
   abiParameterKind extends AbiParameterKind = AbiParameterKind,
+  customNames extends readonly string[] = readonly [],
   ///
   acc extends readonly unknown[] = [],
   depth extends readonly number[] = [],
@@ -231,14 +239,15 @@ export type AbiParametersToPrimitiveTypes_named<
     ? AbiParametersToPrimitiveTypes_named<
         tail,
         abiParameterKind,
+        customNames,
         readonly [
           ...acc,
-          ...ToNamedTuple<head1, abiParameterKind>,
-          ...ToNamedTuple<head2, abiParameterKind>,
-          ...ToNamedTuple<head3, abiParameterKind>,
-          ...ToNamedTuple<head4, abiParameterKind>,
-          ...ToNamedTuple<head5, abiParameterKind>,
-          ...ToNamedTuple<head6, abiParameterKind>,
+          ...ToNamedTuple<head1, abiParameterKind, customNames>,
+          ...ToNamedTuple<head2, abiParameterKind, customNames>,
+          ...ToNamedTuple<head3, abiParameterKind, customNames>,
+          ...ToNamedTuple<head4, abiParameterKind, customNames>,
+          ...ToNamedTuple<head5, abiParameterKind, customNames>,
+          ...ToNamedTuple<head6, abiParameterKind, customNames>,
         ],
         [...depth, 1]
       >
@@ -251,11 +260,11 @@ export type AbiParametersToPrimitiveTypes_named<
         ]
       ? readonly [
           ...acc,
-          ...ToNamedTuple<head1, abiParameterKind>,
-          ...ToNamedTuple<head2, abiParameterKind>,
-          ...ToNamedTuple<head3, abiParameterKind>,
-          ...ToNamedTuple<head4, abiParameterKind>,
-          ...ToNamedTuple<head5, abiParameterKind>,
+          ...ToNamedTuple<head1, abiParameterKind, customNames>,
+          ...ToNamedTuple<head2, abiParameterKind, customNames>,
+          ...ToNamedTuple<head3, abiParameterKind, customNames>,
+          ...ToNamedTuple<head4, abiParameterKind, customNames>,
+          ...ToNamedTuple<head5, abiParameterKind, customNames>,
         ]
       : abiParameters extends readonly [
             infer head1 extends AbiParameter,
@@ -265,10 +274,10 @@ export type AbiParametersToPrimitiveTypes_named<
           ]
         ? readonly [
             ...acc,
-            ...ToNamedTuple<head1, abiParameterKind>,
-            ...ToNamedTuple<head2, abiParameterKind>,
-            ...ToNamedTuple<head3, abiParameterKind>,
-            ...ToNamedTuple<head4, abiParameterKind>,
+            ...ToNamedTuple<head1, abiParameterKind, customNames>,
+            ...ToNamedTuple<head2, abiParameterKind, customNames>,
+            ...ToNamedTuple<head3, abiParameterKind, customNames>,
+            ...ToNamedTuple<head4, abiParameterKind, customNames>,
           ]
         : abiParameters extends readonly [
               infer head1 extends AbiParameter,
@@ -277,9 +286,9 @@ export type AbiParametersToPrimitiveTypes_named<
             ]
           ? readonly [
               ...acc,
-              ...ToNamedTuple<head1, abiParameterKind>,
-              ...ToNamedTuple<head2, abiParameterKind>,
-              ...ToNamedTuple<head3, abiParameterKind>,
+              ...ToNamedTuple<head1, abiParameterKind, customNames>,
+              ...ToNamedTuple<head2, abiParameterKind, customNames>,
+              ...ToNamedTuple<head3, abiParameterKind, customNames>,
             ]
           : abiParameters extends readonly [
                 infer head1 extends AbiParameter,
@@ -287,11 +296,14 @@ export type AbiParametersToPrimitiveTypes_named<
               ]
             ? readonly [
                 ...acc,
-                ...ToNamedTuple<head1, abiParameterKind>,
-                ...ToNamedTuple<head2, abiParameterKind>,
+                ...ToNamedTuple<head1, abiParameterKind, customNames>,
+                ...ToNamedTuple<head2, abiParameterKind, customNames>,
               ]
             : abiParameters extends readonly [infer head extends AbiParameter]
-              ? readonly [...acc, ...ToNamedTuple<head, abiParameterKind>]
+              ? readonly [
+                  ...acc,
+                  ...ToNamedTuple<head, abiParameterKind, customNames>,
+                ]
               : acc extends readonly []
                 ? abiParameters extends readonly []
                   ? readonly []
@@ -301,12 +313,31 @@ export type AbiParametersToPrimitiveTypes_named<
 type ToNamedTuple<
   abiParameter extends AbiParameter,
   abiParameterKind extends AbiParameterKind,
+  customNames extends readonly string[] = readonly [],
 > = unwrapName<
   AbiParameterToPrimitiveType<abiParameter, abiParameterKind>,
-  abiParameter['name']
+  abiParameter['name'],
+  customNames
 >
-type unwrapName<type, name> = name extends string
-  ? AbiParameterTupleNameLookup<type>[name]
+
+type CustomTupleNameLookup<
+  type,
+  customNames extends readonly string[],
+> = customNames extends readonly []
+  ? {}
+  : { [K in customNames[number]]: [K: type] }
+
+type MergedTupleNameLookup<
+  type,
+  customNames extends readonly string[],
+> = AbiParameterTupleNameLookup<type> & CustomTupleNameLookup<type, customNames>
+
+type unwrapName<
+  type,
+  name,
+  customNames extends readonly string[] = readonly [],
+> = name extends string
+  ? MergedTupleNameLookup<type, customNames>[name]
   : [type]
 
 /**

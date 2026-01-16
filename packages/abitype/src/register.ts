@@ -89,12 +89,11 @@ export type ResolvedRegister = {
       : DefaultRegister['fixedArrayMaxLength']
 
   /**
-   * Enables named tuple generation in {@link AbiParametersToPrimitiveTypes} for common ABI parameter names.
-   *
+   * Enables named tuple generation in {@link AbiParametersToPrimitiveTypes} for common ABI parameter names. When a string array, adds custom names.
    * @default false
    */
   experimental_namedTuples: Register extends {
-    experimental_namedTuples: infer type extends boolean
+    experimental_namedTuples: infer type extends boolean | readonly string[]
   }
     ? type
     : DefaultRegister['experimental_namedTuples']

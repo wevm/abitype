@@ -24,4 +24,7 @@ test('ResolvedRegister', () => {
 
   type StrictAbiType = ResolvedRegister['strictAbiType']
   assertType<StrictAbiType>(false)
+
+  type ExperimentalNamedTuples = ResolvedRegister['experimental_namedTuples']
+  assertType<ExperimentalNamedTuples>(false)
 })
