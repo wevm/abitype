@@ -14,7 +14,7 @@ import type {
 import { isSolidityType } from './human-readable/runtime/utils.js'
 import { bytesRegex, execTyped, integerRegex } from './regex.js'
 
-const Identifier = z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/)
+const Identifier = z.string().regex(/^[a-zA-Z$_][a-zA-Z0-9$_]*$/);
 
 export const Address = z.string().transform((val, ctx) => {
   const regex = /^0x[a-fA-F0-9]{40}$/
