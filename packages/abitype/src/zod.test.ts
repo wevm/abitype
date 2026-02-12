@@ -761,7 +761,21 @@ test('EIP-712 TypedData', () => {
         "path": []
       }
     ]]
-  `)
+  `);
+
+  expect(() => TypedData.parse({ café: [{ name: "owner", type: "address" }] }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    [ZodError: [
+      {
+        "validation": "regex",
+        "code": "invalid_string",
+        "message": "Invalid",
+        "path": [
+          "café"
+        ]
+      }
+    ]]
+  `);
 
   const single = {
     Contributor: [
