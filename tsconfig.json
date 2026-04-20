@@ -1,6 +1,9 @@
 {
   // This configuration is used for local development and type checking.
   "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
   "include": ["scripts/**/*.ts", "vitest.workspace.ts"],
   "exclude": []
 }
