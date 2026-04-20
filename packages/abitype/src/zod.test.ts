@@ -763,6 +763,66 @@ test('EIP-712 TypedData', () => {
     ]]
   `)
 
+  expect(() =>
+    TypedData.parse({ café: [{ name: 'owner', type: 'address' }] }),
+  ).toThrowErrorMatchingInlineSnapshot(`
+    [ZodError: [
+      {
+        "validation": "regex",
+        "code": "invalid_string",
+        "message": "Invalid",
+        "path": [
+          "café"
+        ]
+      }
+    ]]
+  `)
+
+  expect(() =>
+    TypedData.parse({ '2g': [{ name: 'owner', type: 'address' }] }),
+  ).toThrowErrorMatchingInlineSnapshot(`
+    [ZodError: [
+      {
+        "validation": "regex",
+        "code": "invalid_string",
+        "message": "Invalid",
+        "path": [
+          "2g"
+        ]
+      }
+    ]]
+  `)
+
+  expect(() =>
+    TypedData.parse({ 'hello👋': [{ name: 'owner', type: 'address' }] }),
+  ).toThrowErrorMatchingInlineSnapshot(`
+    [ZodError: [
+      {
+        "validation": "regex",
+        "code": "invalid_string",
+        "message": "Invalid",
+        "path": [
+          "hello👋"
+        ]
+      }
+    ]]
+  `)
+
+  expect(() =>
+    TypedData.parse({ 'good 運': [{ name: 'owner', type: 'address' }] }),
+  ).toThrowErrorMatchingInlineSnapshot(`
+    [ZodError: [
+      {
+        "validation": "regex",
+        "code": "invalid_string",
+        "message": "Invalid",
+        "path": [
+          "good 運"
+        ]
+      }
+    ]]
+  `)
+
   const single = {
     Contributor: [
       { name: 'name', type: 'string' },
