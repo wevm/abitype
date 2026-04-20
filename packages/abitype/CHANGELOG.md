@@ -1,5 +1,11 @@
 # abitype
 
+## 1.2.4
+
+### Patch Changes
+
+- Fixed Zod identifier regex to anchor start and end, rejecting invalid identifiers like `café`, `2g`, and `hello👋`. ([#296](https://github.com/wevm/abitype/pull/296))
+
 ## 1.2.3
 
 ### Patch Changes
