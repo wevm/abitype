@@ -67,7 +67,7 @@ import { AbiInternalType } from 'abitype'
 `"type"` name for [`Abi`](#abi) items (e.g. `'type': 'function'` for [`AbiFunction`](#abifunction))
 
 ```ts twoslash noplayground
-import { AbiInternalType } from 'abitype'
+import { AbiItemType } from 'abitype'
 ```
 
 ## `AbiParameter`
