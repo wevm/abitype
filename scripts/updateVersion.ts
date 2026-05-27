@@ -54,27 +54,6 @@ for await (const packagePath of packagePaths) {
     'utf-8',
   )
 
-  try {
-    const jsrFilePath = path.resolve(path.dirname(packagePath), 'jsr.json')
-    const jsrJson = JSON.parse(
-      await fs.readFile(jsrFilePath, 'utf-8'),
-    ) as Package
-    jsrJson.version = version
-    await fs.writeFile(
-      jsrFilePath,
-      `${JSON.stringify(jsrJson, null, 2)}\n`,
-      'utf-8',
-    )
-  } catch (error) {
-    if (
-      error &&
-      typeof error === 'object' &&
-      'code' in error &&
-      error.code !== 'ENOENT'
-    )
-      throw error
-  }
-
   if (process.env.PKG_PR_NEW) {
     packageJson.version = version
     await fs.writeFile(

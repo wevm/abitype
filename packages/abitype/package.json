@@ -19,7 +19,6 @@
     "/zod",
     "src/**/*.ts",
     "!dist/**/*.tsbuildinfo",
-    "!jsr.json",
     "!src/**/*.bench.ts",
     "!src/**/*.bench-d.ts",
     "!src/**/*.test.ts",
