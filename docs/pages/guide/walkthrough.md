@@ -9,10 +9,10 @@ You can spin up a [TypeScript Playground](https://www.typescriptlang.org/play) t
 First, we start off by declaring[^1] the function `readContract` with some basic types:
 
 ```ts twoslash
-import { Abi } from 'abitype'
+import type * as a from 'abitype'
 
 declare function readContract(config: {
-  abi: Abi
+  abi: a.abi
   functionName: string
   args: readonly unknown[]
 }): unknown
@@ -62,10 +62,10 @@ export const abi = [
   },
 ] as const
 // @filename: readContract.ts
-import { Abi } from 'abitype'
+import type * as a from 'abitype'
 
 declare function readContract(config: {
-  abi: Abi
+  abi: a.abi
   functionName: string
   args: readonly unknown[]
 }): unknown
@@ -167,15 +167,15 @@ export const abi = [
 
 // @filename: readContract.ts
 // ---cut---
-import { Abi, ExtractAbiFunctionNames } from 'abitype'
+import type * as a from 'abitype'
 import { abi } from './abi'
 
 declare function readContract<
-  abi extends Abi,
-  functionName extends ExtractAbiFunctionNames<abi, 'pure' | 'view'>,
+  abi extends a.abi,
+  functionName extends a.abi.functions.names<abi, 'pure' | 'view'>,
 >(config: {
   abi: abi
-  functionName: functionName | ExtractAbiFunctionNames<abi, 'pure' | 'view'>
+  functionName: functionName | a.abi.functions.names<abi, 'pure' | 'view'>
   args: readonly unknown[]
 }): unknown
 
@@ -189,7 +189,7 @@ const res = readContract({
 })
 ```
 
-First, we create two generics `abi` and `functionName`, and constrain their types. `abi` is set to the `config.abi` property and the `Abi` type. For `functionName`, we import [`ExtractAbiFunctionNames`](/api/utilities#extractabifunctionnames) and use it to parse out all the read function names (state mutability `'pure' | 'view'`[^3]) from the ABI. Finally, `config.functionName` is set to the user-defined `functionName` and another instance of `ExtractAbiFunctionNames`. This allows us to add the full union (not just the current value) to `functionName`'s scope.[^4]
+First, we create two generics `abi` and `functionName`, and constrain their types. `abi` is set to the `config.abi` property and the `a.abi` type. For `functionName`, we use [`a.abi.functions.names`](/api/utilities#extractabifunctionnames) and use it to parse out all the read function names (state mutability `'pure' | 'view'`[^3]) from the ABI. Finally, `config.functionName` is set to the user-defined `functionName` and another instance of `a.abi.functions.names`. This allows us to add the full union (not just the current value) to `functionName`'s scope.[^4]
 
 If you are following along in a TypeScript Playground or editor, you can try various values for `functionName`. `functionName` will autocomplete and only accept `'balanceOf' | 'tokenURI'`. You can also try renaming the function names in `abi` and types will update as well.
 
@@ -235,15 +235,15 @@ export const abi = [
 ] as const
 
 // @filename: readContract.ts
-import { Abi, ExtractAbiFunctionNames } from 'abitype'
+import type * as a from 'abitype'
 import { abi } from './abi'
 
 declare function readContract<
-  abi extends Abi,
-  functionName extends ExtractAbiFunctionNames<abi, 'pure' | 'view'>,
+  abi extends a.abi,
+  functionName extends a.abi.functions.names<abi, 'pure' | 'view'>,
 >(config: {
   abi: abi
-  functionName: functionName | ExtractAbiFunctionNames<abi, 'pure' | 'view'>
+  functionName: functionName | a.abi.functions.names<abi, 'pure' | 'view'>
   args: readonly unknown[]
 }): unknown
 
@@ -300,22 +300,17 @@ export const abi = [
 ] as const
 // @filename: readContract.ts
 // ---cut---
-import {
-  Abi,
-  AbiParametersToPrimitiveTypes,
-  ExtractAbiFunction,
-  ExtractAbiFunctionNames,
-} from 'abitype'
+import type * as a from 'abitype'
 import { abi } from './abi'
 
 declare function readContract<
-  abi extends Abi,
-  functionName extends ExtractAbiFunctionNames<abi, 'pure' | 'view'>,
+  abi extends a.abi,
+  functionName extends a.abi.functions.names<abi, 'pure' | 'view'>,
 >(config: {
   abi: abi
-  functionName: functionName | ExtractAbiFunctionNames<abi, 'pure' | 'view'>
-  args: AbiParametersToPrimitiveTypes<
-    ExtractAbiFunction<abi, functionName>['inputs'],
+  functionName: functionName | a.abi.functions.names<abi, 'pure' | 'view'>
+  args: a.abi.parameters.infer<
+    a.abi.functions.extract<abi, functionName>['inputs'],
     'inputs'
   >
 }): unknown
@@ -329,7 +324,7 @@ const res = readContract({
 
 ```
 
-Since `args`'s type can be completely defined inline, we import [`ExtractAbiFunction`](/api/utilities#extractabifunction) and [`AbiParametersToPrimitiveTypes`](/api/utilities#abiparameterstoprimitivetypes) and wire them up. First, we use `ExtractAbiFunction` to get the function from the ABI that matches `functionName`. Then, we use `AbiParametersToPrimitiveTypes` to convert the function's inputs to their TypeScript primitive types.
+Since `args`'s type can be completely defined inline, we use [`a.abi.functions.extract`](/api/utilities#extractabifunction) and [`a.abi.parameters.infer`](/api/utilities#abiparameterstoprimitivetypes) and wire them up. First, we use `a.abi.functions.extract` to get the function from the ABI that matches `functionName`. Then, we use `a.abi.parameters.infer` to convert the function's inputs to their TypeScript primitive types.
 
 For `abi`, you'll notice there are two `'balanceOf'` functions. This means `'balanceOf'` is overloaded on the contract. The cool thing about TypeScript is that we can still infer the correct types for overloaded functions (e.g. union like `` readonly [`0x${string}`] | readonly [`0x${string}`, bigint] ``)! This uses a TypeScript feature called [distributivity](https://jser.dev/typescript/2023/01/22/distributiveness-in-ts.html) and is worth learning more about if you're interested.
 
@@ -378,27 +373,21 @@ export const abi = [
 ] as const
 // @filename: readContract.ts
 // ---cut---
-import {
-  Abi,
-  AbiFunction,
-  AbiParametersToPrimitiveTypes,
-  ExtractAbiFunction,
-  ExtractAbiFunctionNames,
-} from 'abitype'
+import type * as a from 'abitype'
 import { abi } from './abi'
 
 declare function readContract<
-  abi extends Abi,
-  functionName extends ExtractAbiFunctionNames<abi, 'pure' | 'view'>,
-  abiFunction extends AbiFunction = ExtractAbiFunction<
+  abi extends a.abi,
+  functionName extends a.abi.functions.names<abi, 'pure' | 'view'>,
+  abiFunction extends a.abi.functions.item = a.abi.functions.extract<
     abi,
     functionName
   >,
 >(config: {
   abi: abi
-  functionName: functionName | ExtractAbiFunctionNames<abi, 'pure' | 'view'>
-  args: AbiParametersToPrimitiveTypes<abiFunction['inputs'], 'inputs'>
-}): AbiParametersToPrimitiveTypes<abiFunction['outputs'], 'outputs'>
+  functionName: functionName | a.abi.functions.names<abi, 'pure' | 'view'>
+  args: a.abi.parameters.infer<abiFunction['inputs'], 'inputs'>
+}): a.abi.parameters.infer<abiFunction['outputs'], 'outputs'>
 
 const res = readContract({
   //  ^?
@@ -410,7 +399,7 @@ const res = readContract({
 })
 ```
 
-We can refactor our `ExtractAbiFunction` call into a generic slot `abiFunction` (of type [`AbiFunction`](/api/types#abifunction)) and set the default to the result of `ExtractAbiFunction`. This allows us to use `abiFunction` in for `args` and the return type. Lastly, we wire up another `AbiParametersToPrimitiveTypes` call for the return type—this time using outputs.
+We can refactor our `a.abi.functions.extract` call into a generic slot `abiFunction` (of type [`a.abi.functions.item`](/api/types#abifunction)) and set the default to the result of `a.abi.functions.extract`. This allows us to use `abiFunction` in for `args` and the return type. Lastly, we wire up another `a.abi.parameters.infer` call for the return type—this time using outputs.
 
 ## 5. Wrapping up
 
@@ -427,4 +416,4 @@ The preceding points are all implemented in throughout the [examples](https://gi
 [^1]: We use the `declare` keyword so we don't need to worry about the implementation. In this case, the implementation would look something like encoding arguments and sending with the [`eth_call`](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call) RPC method.
 [^2]: If this was a real function that read via RPC, we'd likely want to make it `async` and return a `Promise`, but we'll leave that out for simplicity.
 [^3]: We could add or change this to `'nonpayable' | 'payable'` to allow write functions.
-[^4]: Try removing `| ExtractAbiFunctionNames<abi, 'pure' | 'view'>` from `functionName`, hover over `functionName` in your editor, and see what happens. You'll notice that the only `functionName` that shows up in the current value.
+[^4]: Try removing `| a.abi.functions.names<abi, 'pure' | 'view'>` from `functionName`, hover over `functionName` in your editor, and see what happens. You'll notice that the only `functionName` that shows up in the current value.

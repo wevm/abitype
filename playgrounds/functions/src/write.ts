@@ -1,9 +1,9 @@
-import type { Abi } from 'abitype'
+import type * as a from 'abitype'
 
 import type { ContractParameters, ContractReturnType } from './types.js'
 
 export declare function write<
-  const abi extends Abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
+  const abi extends a.abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
   functionName extends string,
   const args extends readonly unknown[] | undefined,
 >(
@@ -11,7 +11,7 @@ export declare function write<
 ): WriteReturnType<abi, functionName, args>
 
 export type WriteParameters<
-  abi extends Abi | readonly unknown[],
+  abi extends a.abi | readonly unknown[],
   functionName extends string,
   args extends readonly unknown[] | undefined = readonly unknown[] | undefined,
 > = { abi: abi } & ContractParameters<
@@ -22,7 +22,7 @@ export type WriteParameters<
 >
 
 export type WriteReturnType<
-  abi extends Abi | readonly unknown[],
+  abi extends a.abi | readonly unknown[],
   functionName extends string,
   args extends readonly unknown[] | undefined,
 > = ContractReturnType<abi, functionName, args>

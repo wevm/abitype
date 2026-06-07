@@ -1,4 +1,5 @@
-import { type Address, type ResolvedRegister, parseAbi } from 'abitype'
+import type * as a from 'abitype'
+import { parseAbi } from 'abitype'
 import {
   nestedTupleArrayAbi,
   nounsAuctionHouseAbi,
@@ -27,11 +28,11 @@ test('args', () => {
       [
         string,
         readonly [
-          ResolvedRegister['bigIntType'],
-          ResolvedRegister['bigIntType'],
-          ResolvedRegister['bigIntType'],
-          ResolvedRegister['bigIntType'],
-          ResolvedRegister['addressType'],
+          a.resolvedRegister['bigIntType'],
+          a.resolvedRegister['bigIntType'],
+          a.resolvedRegister['bigIntType'],
+          a.resolvedRegister['bigIntType'],
+          a.resolvedRegister['addressType'],
           boolean,
         ],
       ]
@@ -54,7 +55,7 @@ test('args', () => {
       ],
     })
     assertType<
-      [ResolvedRegister['bigIntType'], ResolvedRegister['addressType']]
+      [a.resolvedRegister['bigIntType'], a.resolvedRegister['addressType']]
     >(result)
   })
 
@@ -110,7 +111,7 @@ test('args', () => {
       ],
     })
     // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
-    assertType<[void, ResolvedRegister['bytesType']['outputs']]>(result)
+    assertType<[void, a.resolvedRegister['bytesType']['outputs']]>(result)
   })
 })
 
@@ -209,7 +210,7 @@ const res = reads({
     },
   ],
 })
-expectTypeOf(res).toEqualTypeOf<[readonly [Address, number], boolean]>()
+expectTypeOf(res).toEqualTypeOf<[readonly [a.abi.address, number], boolean]>()
 
 const res2 = useReads({
   contracts: [
@@ -224,4 +225,4 @@ const res2 = useReads({
     },
   ],
 })
-expectTypeOf(res2).toEqualTypeOf<[readonly [Address, number], boolean]>()
+expectTypeOf(res2).toEqualTypeOf<[readonly [a.abi.address, number], boolean]>()

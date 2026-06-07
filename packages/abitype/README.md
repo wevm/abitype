@@ -1,7 +1,7 @@
 <br/>
 
 <p align="center">
-  <a href="https://abitype.dev">
+  <a href="https://a.dev">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wevm/abitype/main/.github/logo-dark.svg">
       <img alt="ABIType logo" src="https://raw.githubusercontent.com/wevm/abitype/main/.github/logo-light.svg" width="auto" height="45">
@@ -51,15 +51,16 @@
 Strict TypeScript types for Ethereum ABIs. ABIType provides utilities and type definitions for ABI properties and values, covering the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html), as well as [EIP-712](https://eips.ethereum.org/EIPS/eip-712) Typed Data.
 
 ```ts
-import type { AbiParametersToPrimitiveTypes, ExtractAbiFunction, ExtractAbiFunctionNames } from 'abitype'
+import type * as a from 'abitype'
 import { erc20Abi } from 'abitype/abis'
 
-type FunctionNames = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
+type FunctionNames = abi.functions.names<typeof erc20Abi, 'view'>
 //   ^? type FunctionNames = "symbol" | "name" | "allowance" | "balanceOf" | "decimals" | "totalSupply"
 
-type TransferInputTypes = AbiParametersToPrimitiveTypes<
+type Transfer = abi.functions.extract<typeof erc20Abi, 'transfer'>
+type TransferInputTypes = abi.parameters.infer<
   // ^? type TransferInputTypes = readonly [`0x${string}`, bigint]
-  ExtractAbiFunction<typeof erc20Abi, 'transfer'>['inputs']
+  Transfer['inputs']
 >
 ```
 
@@ -69,15 +70,15 @@ Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/st
 
 ABIType might be a good option for your project if:
 
-- You want to [typecheck](https://abitype.dev/api/types) your ABIs or EIP-712 Typed Data.
+- You want to [typecheck](https://a.dev/api/types) your ABIs or EIP-712 Typed Data.
 - You want to add type inference and autocomplete to your library based on user-provided ABIs or EIP-712 Typed Data, like [Wagmi](https://wagmi.sh) and [Viem](https://viem.sh).
-- You need to [convert ABI types](https://abitype.dev/api/utilities#abiparameterstoprimitivetypes) (e.g. `'string'`) to TypeScript types (e.g. `string`) or other type transformations.
-- You need to validate ABIs at [runtime](https://abitype.dev/api/zod) (e.g. after fetching from external resource).
+- You need to [convert ABI types](https://a.dev/api/utilities#abiparameterstoprimitivetypes) (e.g. `'string'`) to TypeScript types (e.g. `string`) or other type transformations.
+- You need to validate ABIs at [runtime](https://a.dev/api/zod) (e.g. after fetching from external resource).
 - You don’t want to set up a build process to generate types (e.g. TypeChain).
 
 ## Documentation
 
-For documentation and guides, visit [abitype.dev](https://abitype.dev).
+For documentation and guides, visit [a.dev](https://a.dev).
 
 ## Community
 

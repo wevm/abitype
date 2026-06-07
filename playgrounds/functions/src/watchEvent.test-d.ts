@@ -1,4 +1,4 @@
-import type { Abi, ResolvedRegister } from 'abitype'
+import type * as a from 'abitype'
 import { wagmiMintExampleAbi, writingEditionsFactoryAbi } from 'abitype/abis'
 import { assertType, test } from 'vitest'
 
@@ -43,9 +43,9 @@ test('args', () => {
       abi: wagmiMintExampleAbi,
       eventName: 'Transfer',
       onEmit(from, to, tokenId) {
-        assertType<ResolvedRegister['addressType']>(from)
-        assertType<ResolvedRegister['addressType']>(to)
-        assertType<ResolvedRegister['bigIntType']>(tokenId)
+        assertType<a.resolvedRegister['addressType']>(from)
+        assertType<a.resolvedRegister['addressType']>(to)
+        assertType<a.resolvedRegister['bigIntType']>(tokenId)
       },
     })
   })
@@ -77,7 +77,7 @@ test('behavior', () => {
   })
 
   test('declared as Abi type', () => {
-    const abi: Abi = [
+    const abi: a.abi = [
       {
         name: 'Foo',
         type: 'event',
@@ -118,7 +118,7 @@ test('behavior', () => {
       ],
       eventName: 'Foo',
       onEmit(name) {
-        assertType<ResolvedRegister['addressType']>(name)
+        assertType<a.resolvedRegister['addressType']>(name)
       },
     })
   })

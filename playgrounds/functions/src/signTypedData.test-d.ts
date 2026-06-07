@@ -1,4 +1,4 @@
-import type { TypedData } from 'abitype'
+import type * as a from 'abitype'
 import { test } from 'vitest'
 
 import { signTypedData } from './signTypedData.js'
@@ -209,7 +209,7 @@ test('behavior', () => {
   })
 
   test('declared as TypedData type', () => {
-    const types: TypedData = {
+    const types: a.typedData.root = {
       Person: [
         { name: 'name', type: 'Name' },
         { name: 'wallet', type: 'address' },

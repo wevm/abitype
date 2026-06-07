@@ -1,4 +1,4 @@
-import type { Abi, Address, ResolvedRegister } from 'abitype'
+import type * as a from 'abitype'
 import { parseAbi } from 'abitype'
 import {
   wagmiMintExampleAbi,
@@ -34,7 +34,7 @@ test('read', () => {
         functionName: 'predictDeterministicAddress',
         args: ['0x', '0xfoo'],
       })
-      assertType<Address>(result)
+      assertType<a.abi.address>(result)
     })
   })
 
@@ -47,13 +47,13 @@ test('read', () => {
       assertType<string>(result)
     })
 
-    test('Address', () => {
+    test('address', () => {
       const result = read({
         abi: wagmiMintExampleAbi,
         functionName: 'ownerOf',
         args: [123n],
       })
-      assertType<Address>(result)
+      assertType<a.abi.address>(result)
     })
 
     test('number', () => {
@@ -62,7 +62,7 @@ test('read', () => {
         functionName: 'balanceOf',
         args: ['0x'],
       })
-      assertType<ResolvedRegister['bigIntType']>(result)
+      assertType<a.resolvedRegister['bigIntType']>(result)
     })
   })
 
@@ -109,7 +109,7 @@ test('read', () => {
     })
 
     test('declared as Abi type', () => {
-      const abi: Abi = [
+      const abi: a.abi = [
         {
           name: 'foo',
           type: 'function',
@@ -232,7 +232,7 @@ expectTypeOf(
     functionName: 'foo',
     args: [123n, '0x'],
   }),
-).toEqualTypeOf<readonly [Address, number]>()
+).toEqualTypeOf<readonly [a.abi.address, number]>()
 expectTypeOf(
   read({
     abi,
@@ -245,4 +245,4 @@ expectTypeOf(
     functionName: 'foo',
     args: [123n, '0x'],
   }),
-).toEqualTypeOf<readonly [Address, number]>()
+).toEqualTypeOf<readonly [a.abi.address, number]>()

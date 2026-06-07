@@ -1,29 +1,24 @@
-import type {
-  ResolvedRegister,
-  TypedData,
-  TypedDataDomain,
-  TypedDataToPrimitiveTypes,
-} from 'abitype'
+import type * as a from 'abitype'
 
 export declare function signTypedData<
-  const typedData extends TypedData | Record<string, unknown>, // `Record<string, unknown>` allows for non-const asserted types
+  const typedData extends a.typedData.root | Record<string, unknown>, // `Record<string, unknown>` allows for non-const asserted types
   primaryType extends keyof typedData,
 >(
   parameters: SignTypedDataParameters<typedData, primaryType>,
 ): SignTypedDataReturnType
 
 export type SignTypedDataParameters<
-  typedData extends TypedData | Record<string, unknown>,
+  typedData extends a.typedData.root | Record<string, unknown>,
   primaryType extends keyof typedData,
   ///
-  schema extends Record<string, unknown> = typedData extends TypedData
-    ? TypedDataToPrimitiveTypes<typedData>
+  schema extends Record<string, unknown> = typedData extends a.typedData.root
+    ? a.typedData.infer<typedData>
     : { [_: string]: any },
   message extends schema[keyof schema] = schema[primaryType extends keyof schema
     ? primaryType
     : keyof schema],
 > = {
-  domain: TypedDataDomain
+  domain: a.typedData.domain
   primaryType:
     | primaryType // infer value
     | keyof typedData // show all values
@@ -33,4 +28,4 @@ export type SignTypedDataParameters<
     : message
 }
 
-export type SignTypedDataReturnType = ResolvedRegister['bytesType']['outputs']
+export type SignTypedDataReturnType = a.resolvedRegister['bytesType']['outputs']

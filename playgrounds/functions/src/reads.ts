@@ -1,4 +1,4 @@
-import type { Abi } from 'abitype'
+import type * as a from 'abitype'
 
 import type { ReadParameters } from './read.js'
 import type {
@@ -8,14 +8,14 @@ import type {
 } from './types.js'
 
 export declare function reads<
-  const abi extends Abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
+  const abi extends a.abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
   functionName extends string,
   const args extends readonly unknown[] | undefined,
   contracts extends Contract<abi, functionName, args>[],
 >(parameters: ReadsParameters<contracts>): ReadsResult<contracts>
 
 export declare function useReads<
-  const abi extends Abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
+  const abi extends a.abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
   functionName extends string,
   const args extends readonly unknown[] | undefined,
   contracts extends Contract<abi, functionName, args>[],
@@ -40,7 +40,7 @@ export type ReadsResult<contracts extends Contract[]> =
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type Contract<
-  abi extends Abi | readonly unknown[] = Abi | readonly unknown[],
+  abi extends a.abi | readonly unknown[] = a.abi | readonly unknown[],
   functionName extends string = string,
   args extends readonly unknown[] | undefined = readonly unknown[] | undefined,
 > = { abi: abi; functionName: functionName; args?: args }
@@ -51,7 +51,7 @@ type MAXIMUM_DEPTH = 20
 type ReadsStateMutability = 'pure' | 'view'
 
 type UninferrableContracts = (ContractParameters & {
-  abi: Abi | readonly unknown[]
+  abi: a.abi | readonly unknown[]
 })[]
 
 // recursively unwraps function arguments to infer/enforce type param
@@ -85,7 +85,7 @@ type ContractsParameters<
           : // If `contracts` is *some* array but we couldn't assign `unknown[]` to it, then it must hold some known/homogenous type!
             // use this to infer the param types in the case of Array.map() argument
             contracts extends {
-                abi: infer abi extends Abi | readonly unknown[]
+                abi: infer abi extends a.abi | readonly unknown[]
                 functionName: infer functionName extends string
                 args?: infer args extends readonly unknown[] | undefined
               }[]
@@ -132,7 +132,7 @@ type ContractsReturnType<
             [...depth, 1]
           >
         : contracts extends {
-              abi: infer abi extends Abi | readonly unknown[]
+              abi: infer abi extends a.abi | readonly unknown[]
               functionName: infer functionName extends string
               args?: infer args extends readonly unknown[] | undefined
             }[]

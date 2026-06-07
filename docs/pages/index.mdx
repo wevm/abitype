@@ -52,17 +52,15 @@ title: 'ABIType: Strict TypeScript types for Ethereum ABIs'
 Strict TypeScript types for Ethereum ABIs. ABIType provides utilities and type definitions for ABI properties and values, covering the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html), as well as [EIP-712](https://eips.ethereum.org/EIPS/eip-712) Typed Data.
 
 ```ts twoslash
-import { 
-  AbiParametersToPrimitiveTypes, 
-  ExtractAbiFunction 
-} from 'abitype'
+import type * as a from 'abitype'
 import { erc20Abi } from 'abitype/abis'
 
-type TransferInputTypes = AbiParametersToPrimitiveTypes<
+type Transfer = abi.functions.extract<typeof erc20Abi, 'transfer'>
+type TransferInputTypes = abi.parameters.infer<
   // ^?
 
 
-  ExtractAbiFunction<typeof erc20Abi, 'transfer'>['inputs']
+  Transfer['inputs']
 >
 ```
 
@@ -114,4 +112,3 @@ If you have questions or need help, reach out to the community at the [ABIType G
 <a href="https://vercel.com/?utm_source=wevm&utm_campaign=oss">
   <img src="https://www.datocms-assets.com/31049/1618983297-powered-by-vercel.svg" alt="Powered by Vercel" style={{ height: '35px !important' }} />
 </a>
-

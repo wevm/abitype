@@ -1,4 +1,4 @@
-import type { Abi } from 'abitype'
+import type * as a from 'abitype'
 import type { wagmiMintExampleAbi } from 'abitype/abis'
 
 import type {
@@ -8,7 +8,7 @@ import type {
 } from './types.js'
 
 export declare function read<
-  const abi extends Abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
+  const abi extends a.abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
   functionName extends string,
   const args extends readonly unknown[] | undefined,
 >(
@@ -26,7 +26,7 @@ export declare function readWagmiMintExample<
 ): ReadReturnType<typeof wagmiMintExampleAbi, functionName, args>
 
 export declare function useRead<
-  const abi extends Abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
+  const abi extends a.abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
   const functionName extends string,
   const args extends readonly unknown[] | undefined,
 >(
@@ -36,13 +36,13 @@ export declare function useRead<
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type ReadParameters<
-  abi extends Abi | readonly unknown[],
+  abi extends a.abi | readonly unknown[],
   functionName extends string,
   args extends readonly unknown[] | undefined = readonly unknown[] | undefined,
 > = { abi: abi } & ContractParameters<abi, functionName, 'pure' | 'view', args>
 
 export type ReadReturnType<
-  abi extends Abi | readonly unknown[],
+  abi extends a.abi | readonly unknown[],
   functionName extends string,
   args extends readonly unknown[] | undefined,
 > = ContractReturnType<abi, functionName, args>

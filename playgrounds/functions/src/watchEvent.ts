@@ -1,40 +1,30 @@
-import type {
-  Abi,
-  AbiEvent,
-  AbiParametersToPrimitiveTypes,
-  ExtractAbiEvent,
-  ExtractAbiEventNames,
-} from 'abitype'
+import type * as a from 'abitype'
 
 export declare function watchEvent<
-  const abi extends Abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
+  const abi extends a.abi | readonly unknown[], // `readonly unknown[]` allows for non-const asserted types
   eventName extends string,
 >(parameters: WatchEventParameters<abi, eventName>): WatchEventReturnType
 
 export type WatchEventParameters<
-  abi extends Abi | readonly unknown[],
+  abi extends a.abi | readonly unknown[],
   eventName extends string,
   ///
-  eventNames extends string = abi extends Abi
-    ? ExtractAbiEventNames<abi>
+  eventNames extends string = abi extends a.abi
+    ? a.abi.events.names<abi>
     : string,
-  abiEvent extends AbiEvent = abi extends Abi
-    ? ExtractAbiEvent<abi, eventName>
-    : AbiEvent,
-  primitiveTypes = AbiParametersToPrimitiveTypes<
-    abiEvent['inputs'],
-    'inputs',
-    true
-  >,
+  abiEvent extends a.abi.events.item = abi extends a.abi
+    ? a.abi.events.extract<abi, eventName>
+    : a.abi.events.item,
+  primitiveTypes = a.abi.parameters.infer<abiEvent['inputs'], 'inputs', true>,
 > = {
   abi: abi
   eventName:
     | eventNames // show all values
     | (eventName extends eventNames ? eventName : never) // infer value (if valid)
-    | (Abi extends abi ? string : never) // fallback if `abi` is declared as `Abi`
-  onEmit: Abi extends abi
+    | (a.abi extends abi ? string : never) // fallback if `abi` is declared as `Abi`
+  onEmit: a.abi extends abi
     ? (...args: unknown[]) => void // `abi` declared as `Abi`
-    : abi extends Abi
+    : abi extends a.abi
       ? (
           // `abi` was inferrable
           ...args: primitiveTypes extends readonly unknown[]

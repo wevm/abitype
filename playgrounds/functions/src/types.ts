@@ -1,47 +1,37 @@
-import type {
-  Abi,
-  AbiFunction,
-  AbiParameter,
-  AbiParametersToPrimitiveTypes,
-  AbiStateMutability,
-  Address,
-  ExtractAbiFunction,
-  ExtractAbiFunctionNames,
-  ResolvedRegister,
-} from 'abitype'
+import type * as a from 'abitype'
 
 export type ContractParameters<
-  abi extends Abi | readonly unknown[] = Abi, // `readonly unknown[]` allows for non-const asserted types
+  abi extends a.abi | readonly unknown[] = a.abi, // `readonly unknown[]` allows for non-const asserted types
   functionName extends string = string,
-  abiStateMutability extends AbiStateMutability = AbiStateMutability,
+  abiStateMutability extends a.abi.stateMutability = a.abi.stateMutability,
   args extends readonly unknown[] | undefined = readonly [],
   ///
-  functionNames extends string = abi extends Abi
-    ? ExtractAbiFunctionNames<abi, abiStateMutability>
+  functionNames extends string = abi extends a.abi
+    ? a.abi.functions.names<abi, abiStateMutability>
     : string,
 > = {
   functionName:
     | functionNames // show all values
     | (functionName extends functionNames ? functionName : never) // infer value (if valid)
-    | (Abi extends abi ? string : never) // fallback if `abi` is declared as `Abi`
+    | (a.abi extends abi ? string : never) // fallback if `abi` is declared as `Abi`
 } & GetArgs<abi, functionName, args>
 
 type GetArgs<
-  abi extends Abi | readonly unknown[] = Abi, // `readonly unknown[]` allows for non-const asserted types
+  abi extends a.abi | readonly unknown[] = a.abi, // `readonly unknown[]` allows for non-const asserted types
   functionName extends string = string,
   args extends readonly unknown[] | undefined = readonly [],
   ///
-  abiFunction extends AbiFunction = abi extends Abi
-    ? ExtractAbiFunction<abi, functionName>
-    : AbiFunction,
-  primitiveTypes = AbiParametersToPrimitiveTypes<
+  abiFunction extends a.abi.functions.item = abi extends a.abi
+    ? a.abi.functions.extract<abi, functionName>
+    : a.abi.functions.item,
+  primitiveTypes = a.abi.parameters.infer<
     abiFunction['inputs'],
     'inputs',
     true
   >,
   args_ =
     | primitiveTypes // show all values
-    | (abi extends Abi
+    | (abi extends a.abi
         ? args extends primitiveTypes // infer value (if valid)
           ? primitiveTypes extends args // make sure `args` exactly matches `primitiveTypes` (e.g. avoid `args: readonly [{ foo: string; bar: number; }] | readonly [{ foo: string; }]`)
             ? // make inferred value of `args` match `primitiveTypes` (e.g. avoid union `args: readonly [123n] | readonly [bigint]`)
@@ -49,12 +39,12 @@ type GetArgs<
             : never
           : never
         : never)
-    | (Abi extends abi ? readonly unknown[] : never), // fallback if `abi` is declared as `Abi`
+    | (a.abi extends abi ? readonly unknown[] : never), // fallback if `abi` is declared as `Abi`
 > = MaybePartialBy<
   { args: args_ },
   readonly [] extends primitiveTypes
     ? 'args'
-    : Abi extends abi
+    : a.abi extends abi
       ? 'args'
       : string
 >
@@ -62,24 +52,24 @@ type GetArgs<
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type ContractReturnType<
-  abi extends Abi | readonly unknown[] = Abi,
+  abi extends a.abi | readonly unknown[] = a.abi,
   functionName extends string = string,
   args extends readonly unknown[] | undefined = readonly unknown[] | undefined,
   ///
-  abiFunction extends AbiFunction = (
-    abi extends Abi
-      ? ExtractAbiFunction<abi, functionName>
-      : AbiFunction
-  ) extends infer abiFunction_ extends AbiFunction
+  abiFunction extends a.abi.functions.item = (
+    abi extends a.abi
+      ? a.abi.functions.extract<abi, functionName>
+      : a.abi.functions.item
+  ) extends infer abiFunction_ extends a.abi.functions.item
     ? IsUnion<abiFunction_> extends true // narrow overloads by `args` by converting to tuple and filtering out overloads that don't match
       ? UnionToTuple<abiFunction_> extends infer abiFunctions extends
-          readonly AbiFunction[]
+          readonly a.abi.functions.item[]
         ? {
             [K in keyof abiFunctions]: (
               readonly unknown[] | undefined extends args // for functions that don't have inputs, `args` can be `undefined` so fallback to `readonly []`
                 ? readonly []
                 : args
-            ) extends AbiParametersToPrimitiveTypes<
+            ) extends a.abi.parameters.infer<
               abiFunctions[K]['inputs'],
               'inputs'
             >
@@ -89,8 +79,8 @@ export type ContractReturnType<
         : never
       : abiFunction_
     : never,
-  outputs extends readonly AbiParameter[] = abiFunction['outputs'],
-  primitiveTypes extends readonly unknown[] = AbiParametersToPrimitiveTypes<
+  outputs extends a.abi.parameters.root = abiFunction['outputs'],
+  primitiveTypes extends readonly unknown[] = a.abi.parameters.infer<
     outputs,
     'outputs',
     true
@@ -138,14 +128,14 @@ type MaybePartialBy<TType, TKeys extends string> = TKeys extends keyof TType
 
 type ReadonlyWiden<TType> =
   | (TType extends Function ? TType : never)
-  | (TType extends ResolvedRegister['bigIntType'] ? bigint : never)
+  | (TType extends a.resolvedRegister['bigIntType'] ? bigint : never)
   | (TType extends boolean ? boolean : never)
-  | (TType extends ResolvedRegister['intType'] ? number : never)
+  | (TType extends a.resolvedRegister['intType'] ? number : never)
   | (TType extends string
-      ? TType extends Address
-        ? Address
-        : TType extends ResolvedRegister['bytesType']['inputs']
-          ? ResolvedRegister['bytesType']
+      ? TType extends a.abi.address
+        ? a.abi.address
+        : TType extends a.resolvedRegister['bytesType']['inputs']
+          ? a.resolvedRegister['bytesType']
           : string
       : never)
   | (TType extends readonly [] ? readonly [] : never)

@@ -1,4 +1,4 @@
-import type { Abi, ResolvedRegister } from 'abitype'
+import type * as a from 'abitype'
 import { parseAbi } from 'abitype'
 import {
   ensRegistryWithFallbackAbi,
@@ -65,7 +65,7 @@ test('args', () => {
         },
       ],
     })
-    assertType<ResolvedRegister['addressType']>(result)
+    assertType<a.resolvedRegister['addressType']>(result)
 
     write({
       abi: parseAbi([
@@ -99,7 +99,7 @@ test('return types', () => {
       functionName: 'setSubnodeOwner',
       args: ['0xfoo', '0xbar', '0x'],
     })
-    assertType<ResolvedRegister['bytesType']['outputs']>(result)
+    assertType<a.resolvedRegister['bytesType']['outputs']>(result)
   })
 
   test('tuple', () => {
@@ -125,7 +125,7 @@ test('return types', () => {
     type Output = {
       name: string
       symbol: string
-      fundingRecipient: ResolvedRegister['addressType']
+      fundingRecipient: a.resolvedRegister['addressType']
     }
     const result = write({
       abi,
@@ -142,8 +142,8 @@ test('return types', () => {
     })
     assertType<
       readonly {
-        x: ResolvedRegister['bigIntType']
-        y: ResolvedRegister['bigIntType']
+        x: a.resolvedRegister['bigIntType']
+        y: a.resolvedRegister['bigIntType']
       }[]
     >(result)
   })
@@ -194,7 +194,7 @@ test('behavior', () => {
   })
 
   test('declared as Abi type', () => {
-    const abi: Abi = [
+    const abi: a.abi = [
       {
         name: 'foo',
         type: 'function',
@@ -225,7 +225,7 @@ test('behavior', () => {
       functionName: 'foo',
       args: ['bar'],
     })
-    assertType<ResolvedRegister['addressType']>(result)
+    assertType<a.resolvedRegister['addressType']>(result)
   })
 
   test('human readable', () => {

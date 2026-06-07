@@ -17,8 +17,8 @@ declare module 'abitype' {
   }
 }
 
-import { ResolvedRegister } from 'abitype'
-type Result = ResolvedRegister['bigIntType']
+import type * as a from 'abitype'
+type Result = abi.resolvedRegister['bigIntType']
 //   ^?
 
 
@@ -155,7 +155,7 @@ declare module 'abitype' {
 
 ### `experimental_namedTuples`
 
-Enables named tuple generation in [`AbiParametersToPrimitiveTypes`](/api/utilities#abiparameterstoprimitivetypes) for common ABI parameter names.
+Enables named tuple generation in [`abi.parameters.infer`](/api/utilities#abiparameterstoprimitivetypes) for common ABI parameter names.
 
 - Type `boolean`
 - Default `false`

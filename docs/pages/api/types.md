@@ -11,7 +11,8 @@ Types covering the [Contract ABI](https://docs.soliditylang.org/en/latest/abi-sp
 Type matching the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html#json)
 
 ```ts twoslash noplayground
-import { Abi } from 'abitype'
+import type * as a from 'abitype'
+type Abi = a.abi
 ```
 
 ## `AbiConstructor`
@@ -19,7 +20,8 @@ import { Abi } from 'abitype'
 ABI [Constructor](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type
 
 ```ts twoslash noplayground
-import { AbiConstructor } from 'abitype'
+import type * as a from 'abitype'
+type AbiConstructor = a.abi.constructors.item
 ```
 
 ## `AbiError`
@@ -27,7 +29,8 @@ import { AbiConstructor } from 'abitype'
 ABI [Error](https://docs.soliditylang.org/en/latest/abi-spec.html#errors) type
 
 ```ts twoslash noplayground
-import { AbiError } from 'abitype'
+import type * as a from 'abitype'
+type AbiError = a.abi.errors.item
 ```
 
 ## `AbiEvent`
@@ -35,7 +38,8 @@ import { AbiError } from 'abitype'
 ABI [Event](https://docs.soliditylang.org/en/latest/abi-spec.html#events) type
 
 ```ts twoslash noplayground
-import { AbiEvent } from 'abitype'
+import type * as a from 'abitype'
+type AbiEvent = a.abi.events.item
 ```
 
 ## `AbiFallback`
@@ -43,7 +47,8 @@ import { AbiEvent } from 'abitype'
 ABI [Fallback](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type
 
 ```ts twoslash noplayground
-import { AbiFallback } from 'abitype'
+import type * as a from 'abitype'
+type AbiFallback = a.abi.fallback.item
 ```
 
 ## `AbiFunction`
@@ -51,7 +56,8 @@ import { AbiFallback } from 'abitype'
 ABI [Function](https://docs.soliditylang.org/en/latest/abi-spec.html#json) type
 
 ```ts twoslash noplayground
-import { AbiFunction } from 'abitype'
+import type * as a from 'abitype'
+type AbiFunction = a.abi.functions.item
 ```
 
 ## `AbiInternalType`
@@ -59,7 +65,8 @@ import { AbiFunction } from 'abitype'
 Representation used by Solidity compiler (e.g. `'string'`, `'int256'`, `'struct Foo'`)
 
 ```ts twoslash noplayground
-import { AbiInternalType } from 'abitype'
+import type * as a from 'abitype'
+type AbiInternalType = a.abi.types.internal
 ```
 
 ## `AbiItemType`
@@ -67,7 +74,8 @@ import { AbiInternalType } from 'abitype'
 `"type"` name for [`Abi`](#abi) items (e.g. `'type': 'function'` for [`AbiFunction`](#abifunction))
 
 ```ts twoslash noplayground
-import { AbiItemType } from 'abitype'
+import type * as a from 'abitype'
+type AbiItemType = a.abi.itemType
 ```
 
 ## `AbiParameter`
@@ -75,7 +83,8 @@ import { AbiItemType } from 'abitype'
 `inputs` and `outputs` item for ABI functions, errors, and constructors
 
 ```ts twoslash noplayground
-import { AbiParameter } from 'abitype'
+import type * as a from 'abitype'
+type AbiParameter = a.abi.parameter.item
 ```
 
 ## `AbiEventParameter`
@@ -83,7 +92,8 @@ import { AbiParameter } from 'abitype'
 `inputs` for ABI events
 
 ```ts twoslash noplayground
-import { AbiEventParameter } from 'abitype'
+import type * as a from 'abitype'
+type AbiEventParameter = a.abi.parameter.event
 ```
 
 ## `AbiParameterKind`
@@ -91,7 +101,8 @@ import { AbiEventParameter } from 'abitype'
 Kind of ABI parameter: `'inputs' | 'outputs'`
 
 ```ts twoslash noplayground
-import { AbiParameterKind } from 'abitype'
+import type * as a from 'abitype'
+type AbiParameterKind = a.abi.parameter.kind
 ```
 
 ## `AbiReceive`
@@ -99,7 +110,8 @@ import { AbiParameterKind } from 'abitype'
 ABI [Receive](https://docs.soliditylang.org/en/latest/contracts.html#receive-ether-function) type
 
 ```ts twoslash noplayground
-import { AbiReceive } from 'abitype'
+import type * as a from 'abitype'
+type AbiReceive = a.abi.receive.item
 ```
 
 ## `AbiStateMutability`
@@ -107,7 +119,8 @@ import { AbiReceive } from 'abitype'
 ABI Function behavior
 
 ```ts twoslash noplayground
-import { AbiStateMutability } from 'abitype'
+import type * as a from 'abitype'
+type AbiStateMutability = a.abi.stateMutability
 ```
 
 ## `AbiType`
@@ -115,7 +128,8 @@ import { AbiStateMutability } from 'abitype'
 ABI canonical [types](https://docs.soliditylang.org/en/latest/abi-spec.html#json)
 
 ```ts twoslash noplayground
-import { AbiType } from 'abitype'
+import type * as a from 'abitype'
+type AbiType = a.abi.types.item
 ```
 
 ## Solidity types
@@ -123,16 +137,16 @@ import { AbiType } from 'abitype'
 [Solidity types](https://docs.soliditylang.org/en/latest/abi-spec.html#types) as template strings
 
 ```ts twoslash noplayground
-import {
-  SolidityAddress,
-  SolidityArray,
-  SolidityBool,
-  SolidityBytes,
-  SolidityFunction,
-  SolidityInt,
-  SolidityString,
-  SolidityTuple,
-} from 'abitype'
+import type * as a from 'abitype'
+
+type SolidityAddress = a.abi.types.address
+type SolidityArray = a.abi.types.array
+type SolidityBool = a.abi.types.bool
+type SolidityBytes = a.abi.types.bytes
+type SolidityFunction = a.abi.types.function
+type SolidityInt = a.abi.types.int
+type SolidityString = a.abi.types.string
+type SolidityTuple = a.abi.types.tuple
 ```
 
 ## `TypedData`
@@ -140,7 +154,8 @@ import {
 [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) Typed Data Specification
 
 ```ts twoslash noplayground
-import { TypedData } from 'abitype'
+import type * as a from 'abitype'
+type TypedData = a.typedData.root
 ```
 
 ## `TypedDataDomain`
@@ -148,7 +163,8 @@ import { TypedData } from 'abitype'
 [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-domainseparator) Domain
 
 ```ts twoslash noplayground
-import { TypedDataDomain } from 'abitype'
+import type * as a from 'abitype'
+type TypedDataDomain = a.typedData.domain
 ```
 
 ## `TypedDataParameter`
@@ -156,7 +172,8 @@ import { TypedDataDomain } from 'abitype'
 Entry in `TypedData` type items
 
 ```ts twoslash noplayground
-import { TypedDataParameter } from 'abitype'
+import type * as a from 'abitype'
+type TypedDataParameter = a.typedData.field
 ```
 
 ## `TypedDataType`
@@ -164,5 +181,6 @@ import { TypedDataParameter } from 'abitype'
 Subset of `AbiType` that excludes `tuple` and `function`
 
 ```ts twoslash noplayground
-import { TypedDataType } from 'abitype'
+import type * as a from 'abitype'
+type TypedDataType = a.typedData.fieldType
 ```

@@ -20,9 +20,9 @@ Converts `AbiParameter` to corresponding TypeScript primitive type.
 #### Example
 
 ```ts twoslash
-import { AbiParameterToPrimitiveType } from 'abitype'
+import type * as a from 'abitype'
 
-type Result = AbiParameterToPrimitiveType<{
+type Result = a.abi.parameter.infer<{
   // ^?
 
   
@@ -44,9 +44,9 @@ Converts array of `AbiParameter` to corresponding TypeScript primitive types.
 #### Example
 
 ```ts twoslash
-import { AbiParametersToPrimitiveTypes } from 'abitype'
+import type * as a from 'abitype'
 
-type Result = AbiParametersToPrimitiveTypes<
+type Result = a.abi.parameters.infer<
   // ^?
 
   [
@@ -73,9 +73,9 @@ Does not include full array or tuple conversion. Use [`AbiParameterToPrimitiveTy
 #### Example
 
 ```ts twoslash
-import { AbiTypeToPrimitiveType } from 'abitype'
+import type * as a from 'abitype'
 
-type Result = AbiTypeToPrimitiveType<'address'>
+type Result = a.abi.types.infer<'address'>
 //   ^?
 
 ```
@@ -93,14 +93,14 @@ Extracts `AbiError` with name from `Abi`.
 #### Example
 
 ```ts twoslash
-import { ExtractAbiError } from 'abitype'
+import type * as a from 'abitype'
 
 const abi = [
   { name: 'BarError', type: 'error', inputs: [] },
   { name: 'FooError', type: 'error', inputs: [] },
 ] as const
 
-type Result = ExtractAbiError<typeof abi, 'FooError'>
+type Result = a.abi.errors.extract<typeof abi, 'FooError'>
   //   ^?
 
 
@@ -121,14 +121,14 @@ Extracts all `AbiError` names from `Abi`.
 #### Example
 
 ```ts twoslash
-import { ExtractAbiErrorNames } from 'abitype'
+import type * as a from 'abitype'
 
 const abi = [
   { name: 'FooError', type: 'error', inputs: [] },
   { name: 'BarError', type: 'error', inputs: [] },
 ] as const
 
-type Result = ExtractAbiErrorNames<typeof abi>
+type Result = a.abi.errors.names<typeof abi>
 //   ^?
 
 ```
@@ -145,14 +145,14 @@ Extracts all `AbiError` types from `Abi`.
 #### Example
 
 ```ts twoslash
-import { ExtractAbiErrors } from 'abitype'
+import type * as a from 'abitype'
 
 const abi = [
   { name: 'FooError', type: 'error', inputs: [] },
   { name: 'BarError', type: 'error', inputs: [] },
 ] as const
 
-type Result = ExtractAbiErrors<typeof abi>
+type Result = a.abi.errors.items<typeof abi>
 //   ^?
 
 
@@ -178,7 +178,7 @@ Extracts `AbiEvent` with name from `Abi`.
 #### Example
 
 ```ts twoslash
-import { ExtractAbiEvent } from 'abitype'
+import type * as a from 'abitype'
 
 const abi = [
   {
@@ -203,7 +203,7 @@ const abi = [
   },
 ] as const
 
-type Result = ExtractAbiEvent<typeof abi, 'Transfer'>
+type Result = a.abi.events.extract<typeof abi, 'Transfer'>
 //   ^?
 
 
@@ -234,7 +234,7 @@ Extracts all `AbiEvent` names from `Abi`.
 #### Example
 
 ```ts twoslash
-import { ExtractAbiEventNames } from 'abitype'
+import type * as a from 'abitype'
 
 const abi = [
   {
@@ -259,7 +259,7 @@ const abi = [
   },
 ] as const
 
-type Result = ExtractAbiEventNames<typeof abi>
+type Result = a.abi.events.names<typeof abi>
 //   ^?
 
 ```
@@ -276,7 +276,7 @@ Extracts all `AbiEvent` types from `Abi`.
 #### Example
 
 ```ts twoslash
-import { ExtractAbiEvents } from 'abitype'
+import type * as a from 'abitype'
 
 const abi = [
   {
@@ -301,7 +301,7 @@ const abi = [
   },
 ] as const
 
-type Result = ExtractAbiEvents<typeof abi>
+type Result = a.abi.events.items<typeof abi>
 //   ^?
 
 
@@ -332,7 +332,7 @@ Extracts `AbiFunction` with name from `Abi`.
 #### Example
 
 ```ts twoslash
-import { ExtractAbiFunction } from 'abitype'
+import type * as a from 'abitype'
 
 const abi = [
   {
@@ -355,7 +355,7 @@ const abi = [
   },
 ] as const
 
-type Result = ExtractAbiFunction<typeof abi, 'balanceOf'>
+type Result = a.abi.functions.extract<typeof abi, 'balanceOf'>
 //   ^?
 
 
@@ -384,7 +384,7 @@ Extracts all `AbiFunction` names from `Abi`.
 #### Example
 
 ```ts twoslash
-import { ExtractAbiFunctionNames } from 'abitype'
+import type * as a from 'abitype'
 
 const abi = [
   {
@@ -407,7 +407,7 @@ const abi = [
   },
 ] as const
 
-type Result = ExtractAbiFunctionNames<typeof abi>
+type Result = a.abi.functions.names<typeof abi>
 //   ^?
 
 ```
@@ -424,7 +424,7 @@ Extracts all `AbiFunction` types from `Abi`.
 #### Example
 
 ```ts twoslash
-import { ExtractAbiFunctions } from 'abitype'
+import type * as a from 'abitype'
 
 const abi = [
   {
@@ -447,7 +447,7 @@ const abi = [
   },
 ] as const
 
-type Result = ExtractAbiFunctions<typeof abi>
+type Result = a.abi.functions.items<typeof abi>
 //   ^?
 
 
@@ -468,7 +468,7 @@ type Result = ExtractAbiFunctions<typeof abi>
 By default, extracts all functions, but you can also filter by `AbiStateMutability`:
 
 ```ts
-type Result = ExtractAbiFunctions<typeof erc721Abi, 'view'>
+type Result = a.abi.functions.items<typeof erc721Abi, 'view'>
 ```
 
 ## `IsAbi`
@@ -483,7 +483,7 @@ Checks if type is `Abi`.
 #### Example
 
 ```ts twoslash
-import { IsAbi } from 'abitype'
+import type * as a from 'abitype'
 
 const abi = [
   {
@@ -506,7 +506,7 @@ const abi = [
   },
 ] as const
 
-type Result = IsAbi<typeof abi>
+type Result = a.abi.valid<typeof abi>
 //   ^?
 
 ```
@@ -523,7 +523,7 @@ Checks if type is `TypedData`.
 #### Example
 
 ```ts twoslash
-import { IsTypedData } from 'abitype'
+import type * as a from 'abitype'
 
 const types = {
   Person: [
@@ -537,7 +537,7 @@ const types = {
   ],
 } as const
 
-type Result = IsTypedData<typeof types>
+type Result = a.typedData.valid<typeof types>
 //   ^?
 
 ```
@@ -554,7 +554,7 @@ Converts [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-st
 #### Example
 
 ```ts twoslash
-import { TypedDataToPrimitiveTypes } from 'abitype'
+import type * as a from 'abitype'
 
 const types = {
   Person: [
@@ -568,7 +568,7 @@ const types = {
   ],
 } as const
 
-type Result = TypedDataToPrimitiveTypes<typeof types>
+type Result = a.typedData.infer<typeof types>
 //   ^?
 
 
