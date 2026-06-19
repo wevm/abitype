@@ -17,6 +17,9 @@ npm i abitype
 ```bash [yarn]
 yarn add abitype
 ```
+```bash [deno]
+deno add abitype
+```
 :::
 
 :::info[TypeScript Version]
