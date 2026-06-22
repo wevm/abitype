@@ -13,6 +13,9 @@ import type { ParseSignature } from './types/utils.js'
  * @param signatures - Human-readable ABI
  * @returns Parsed {@link Abi}
  *
+ * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
+ * use `Abi.from.ReturnType` instead: `import { Abi } from 'ox'`.
+ *
  * @example
  * type Result = ParseAbi<
  *   // ^? type Result = readonly [{ name: "balanceOf"; type: "function"; stateMutability:...
@@ -48,6 +51,9 @@ export type ParseAbi<signatures extends readonly string[]> =
  *
  * @param signatures - Human-Readable ABI
  * @returns Parsed {@link Abi}
+ *
+ * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
+ * use `Abi.from` instead: `import { Abi } from 'ox'`.
  *
  * @example
  * const abi = parseAbi([

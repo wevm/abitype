@@ -9,6 +9,10 @@ import type { AssertName } from './types/signatures.js'
  * @param abiParameter - ABI parameter
  * @returns Human-readable ABI parameter
  *
+ * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
+ * use `AbiParameter.format.ReturnType` instead: `import { AbiParameter } from
+ * 'ox'`.
+ *
  * @example
  * type Result = FormatAbiParameter<{ type: 'address'; name: 'from'; }>
  * //   ^? type Result = 'address from'
@@ -59,6 +63,9 @@ const tupleRegex = /^tuple(?<array>(\[(\d*)\])*)$/
  *
  * @param abiParameter - ABI parameter
  * @returns Human-readable ABI parameter
+ *
+ * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
+ * use `AbiParameter.format` instead: `import { AbiParameter } from 'ox'`.
  *
  * @example
  * const result = formatAbiParameter({ type: 'address', name: 'from' })

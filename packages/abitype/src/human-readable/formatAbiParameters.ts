@@ -11,6 +11,10 @@ import {
  * @param abiParameters - ABI parameters
  * @returns Human-readable ABI parameters
  *
+ * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
+ * use `AbiParameters.format.ReturnType` instead: `import { AbiParameters } from
+ * 'ox'`.
+ *
  * @example
  * type Result = FormatAbiParameters<[
  *   // ^? type Result = 'address from, uint256 tokenId'
@@ -35,6 +39,9 @@ export type FormatAbiParameters<
  *
  * @param abiParameters - ABI parameters
  * @returns Human-readable ABI parameters
+ *
+ * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
+ * use `AbiParameters.format` instead: `import { AbiParameters } from 'ox'`.
  *
  * @example
  * const result = formatAbiParameters([
