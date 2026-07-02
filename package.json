@@ -3,13 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "bench": "vitest bench",
-    "bench:types": "TYPES=true vitest bench-d.ts",
+    "bench": "vp test bench",
+    "bench:types": "TYPES=true vp test bench-d.ts",
     "build": "pnpm run --r --filter \"./packages/**\" build",
     "changeset:prepublish": "pnpm version:update && pnpm build && node scripts/formatPackageJson.ts && node scripts/generateProxyPackages.ts",
     "changeset:publish": "pnpm changeset:prepublish && changeset publish",
     "changeset:version": "changeset version && pnpm version:update && pnpm format",
-    "check": "biome check --write",
+    "check": "vp check --fix",
     "check:repo": "sherif",
     "check:types": "pnpm run --r --parallel check:types && tsc --noEmit",
     "check:types:propertyTypes": "pnpm run --r --parallel check:types --exactOptionalPropertyTypes false && tsc --noEmit --exactOptionalPropertyTypes false",
@@ -18,37 +18,36 @@
     "deps": "pnpx taze -r",
     "deps:ci": "pnpx actions-up",
     "docs:dev": "pnpm -r --filter docs dev",
-    "format": "biome format --write",
+    "format": "vp fmt",
     "postinstall": "pnpm preconstruct",
     "preconstruct": "node scripts/preconstruct.ts",
     "preinstall": "pnpx only-allow pnpm",
-    "prepare": "pnpm simple-git-hooks",
-    "test": "vitest",
+    "prepare": "vp config",
+    "test": "vp test",
     "test:build": "pnpm run --r --parallel test:build",
-    "test:cov": "vitest run --coverage",
-    "test:update": "vitest --update",
+    "test:cov": "vp test run --coverage",
+    "test:update": "vp test --update",
     "trace": "tsc --noEmit --generateTrace ./playgrounds/performance/out --incremental false --project playgrounds/performance/tsconfig.json && echo \"Open playgrounds/performance/out/trace.json in https://ui.perfetto.dev\"",
     "typeperf": "pnpm run --r --parallel typeperf",
     "version:update": "node scripts/updateVersion.ts"
   },
   "devDependencies": {
     "@ark/attest": "^0.56.0",
-    "@biomejs/biome": "1.9.4",
     "@changesets/cli": "^3.0.0-next.0",
     "@ethersproject/abi": "^5.7.0",
     "@svitejs/changesets-changelog-github-compact": "^1.2.0",
     "@types/node": "^24.10.1",
-    "@vitest/coverage-v8": "^4.0.10",
+    "@vitest/coverage-v8": "catalog:",
     "ethers": "^6.13.1",
     "glob": "^10.4.2",
     "knip": "^5.22.3",
     "publint": "^0.2.12",
     "sherif": "^0.9.0",
-    "simple-git-hooks": "^2.11.1",
     "typescript": "5.9.3",
-    "vitest": "^4.0.10"
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
   },
-  "packageManager": "pnpm@10.33.0",
   "devEngines": {
     "runtime": {
       "name": "node",
@@ -56,22 +55,34 @@
       "onFail": "download"
     }
   },
-  "simple-git-hooks": {
-    "pre-commit": "pnpm check"
-  },
+  "packageManager": "pnpm@10.33.0",
   "knip": {
-    "ignoreBinaries": ["dev", "only-allow"],
-    "ignoreWorkspaces": ["packages/register-tests/**", "playgrounds/**"],
+    "ignoreBinaries": [
+      "dev",
+      "only-allow"
+    ],
+    "ignoreWorkspaces": [
+      "packages/register-tests/**",
+      "playgrounds/**"
+    ],
     "workspaces": {
       ".": {
         "project": "scripts/*.ts"
       },
       "docs": {
-        "project": ["**/*.ts", "**/*.tsx"]
+        "project": [
+          "**/*.ts",
+          "**/*.tsx"
+        ]
       },
       "packages/abitype": {
-        "entry": ["src/exports/{abis,index,zod}.ts!"],
-        "project": ["src/**/*.ts", "test/**/*.ts"]
+        "entry": [
+          "src/exports/{abis,index,zod}.ts!"
+        ],
+        "project": [
+          "src/**/*.ts",
+          "test/**/*.ts"
+        ]
       }
     }
   }

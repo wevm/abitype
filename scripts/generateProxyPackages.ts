@@ -34,7 +34,7 @@ for await (const packagePath of packagePaths) {
 
   for (const [key, exports] of Object.entries(packageJson.exports)) {
     // Skip `package.json` export
-    if (/package\.json$/.test(key)) continue
+    if (key.endsWith('package.json')) continue
     if (key === '.') continue
     if (typeof exports === 'string') continue
     if (!exports.default) continue

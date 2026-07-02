@@ -54,7 +54,7 @@ for await (const packagePath of packagePaths) {
   // Link exports to dist locations
   for (const [key, exports] of Object.entries(packageJson.exports)) {
     // Skip `package.json` exports
-    if (/package\.json$/.test(key)) continue
+    if (key.endsWith('package.json')) continue
     if (typeof exports === 'string') continue
 
     // Link exports to dist locations

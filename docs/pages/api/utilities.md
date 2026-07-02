@@ -2,7 +2,6 @@
 description: 'Utility types for working with ABIs and EIP-712 Typed Data.'
 ---
 
-
 # Utilities
 
 Utility types for working with ABIs and EIP-712 Typed Data.
@@ -11,11 +10,11 @@ Utility types for working with ABIs and EIP-712 Typed Data.
 
 Converts `AbiParameter` to corresponding TypeScript primitive type.
 
-| Name                | Description                                        | Type                          |
-| ------------------- | -------------------------------------------------- | ----------------------------- |
-| `abiParameter`      | Parameter to convert to TypeScript representation. | `AbiParameter`                |
-| `abiParameterKind`  | Kind to narrow by parameter type.                  | `AbiParameterKind` (optional) |
-| returns             | TypeScript primitive type.                         | `type`  (inferred)            |
+| Name               | Description                                        | Type                          |
+| ------------------ | -------------------------------------------------- | ----------------------------- |
+| `abiParameter`     | Parameter to convert to TypeScript representation. | `AbiParameter`                |
+| `abiParameterKind` | Kind to narrow by parameter type.                  | `AbiParameterKind` (optional) |
+| returns            | TypeScript primitive type.                         | `type` (inferred)             |
 
 #### Example
 
@@ -25,7 +24,6 @@ import { AbiParameterToPrimitiveType } from 'abitype'
 type Result = AbiParameterToPrimitiveType<{
   // ^?
 
-  
   name: 'owner'
   type: 'address'
 }>
@@ -35,11 +33,11 @@ type Result = AbiParameterToPrimitiveType<{
 
 Converts array of `AbiParameter` to corresponding TypeScript primitive types.
 
-| Name                | Description                                          | Type                          |
-| ------------------- | ---------------------------------------------------- | ----------------------------- |
-| `abiParameters`     | Parameters to convert to TypeScript representations. | `readonly AbiParameter[]`     |
-| `abiParameterKind`  | Kind to narrow by parameter type.                    | `AbiParameterKind` (optional) |
-| returns             | TypeScript primitive types.                          | `type[]` (inferred)           |
+| Name               | Description                                          | Type                          |
+| ------------------ | ---------------------------------------------------- | ----------------------------- |
+| `abiParameters`    | Parameters to convert to TypeScript representations. | `readonly AbiParameter[]`     |
+| `abiParameterKind` | Kind to narrow by parameter type.                    | `AbiParameterKind` (optional) |
+| returns            | TypeScript primitive types.                          | `type[]` (inferred)           |
 
 #### Example
 
@@ -49,10 +47,7 @@ import { AbiParametersToPrimitiveTypes } from 'abitype'
 type Result = AbiParametersToPrimitiveTypes<
   // ^?
 
-  [
-    { name: 'to'; type: 'address'; },
-    { name: 'tokenId'; type: 'uint256'; },
-  ]
+  [{ name: 'to'; type: 'address' }, { name: 'tokenId'; type: 'uint256' }]
 >
 ```
 
@@ -60,11 +55,11 @@ type Result = AbiParametersToPrimitiveTypes<
 
 Converts `AbiType` to corresponding TypeScript primitive type.
 
-| Name                | Description                                       | Type                          |
-| ------------------- | ------------------------------------------------- | ----------------------------- |
-| `abiType`           | ABI type to convert to TypeScript representation. | `AbiType`                     |
-| `abiParameterKind`  | Kind to narrow by parameter type.                 | `AbiParameterKind` (optional) |
-| returns             | TypeScript primitive type.                        | `type` (inferred)             |
+| Name               | Description                                       | Type                          |
+| ------------------ | ------------------------------------------------- | ----------------------------- |
+| `abiType`          | ABI type to convert to TypeScript representation. | `AbiType`                     |
+| `abiParameterKind` | Kind to narrow by parameter type.                 | `AbiParameterKind` (optional) |
+| returns            | TypeScript primitive type.                        | `type` (inferred)             |
 
 :::info[NOTE]
 Does not include full array or tuple conversion. Use [`AbiParameterToPrimitiveType`](#abiparametertoprimitivetype) to fully convert array and tuple types.
@@ -77,18 +72,17 @@ import { AbiTypeToPrimitiveType } from 'abitype'
 
 type Result = AbiTypeToPrimitiveType<'address'>
 //   ^?
-
 ```
 
 ## `ExtractAbiError`
 
 Extracts `AbiError` with name from `Abi`.
 
-| Name         | Description    | Type                |
-| ------------ | -------------- | ------------------- |
-| `abi`        | ABI.           | `Abi`               |
-| `errorName`  | Name of error. | `string` (inferred) |
-| returns      | ABI Error.     | `AbiError`          |
+| Name        | Description    | Type                |
+| ----------- | -------------- | ------------------- |
+| `abi`       | ABI.           | `Abi`               |
+| `errorName` | Name of error. | `string` (inferred) |
+| returns     | ABI Error.     | `AbiError`          |
 
 #### Example
 
@@ -101,12 +95,7 @@ const abi = [
 ] as const
 
 type Result = ExtractAbiError<typeof abi, 'FooError'>
-  //   ^?
-
-
-
-
-
+//   ^?
 ```
 
 ## `ExtractAbiErrorNames`
@@ -130,7 +119,6 @@ const abi = [
 
 type Result = ExtractAbiErrorNames<typeof abi>
 //   ^?
-
 ```
 
 ## `ExtractAbiErrors`
@@ -154,26 +142,17 @@ const abi = [
 
 type Result = ExtractAbiErrors<typeof abi>
 //   ^?
-
-
-
-
-
-
-
-
-
 ```
 
 ## `ExtractAbiEvent`
 
 Extracts `AbiEvent` with name from `Abi`.
 
-| Name         | Description    | Type                |
-| ------------ | -------------- | ------------------- |
-| `abi`        | ABI.           | `Abi`               |
-| `eventName`  | Name of event. | `string` (inferred) |
-| returns      | ABI Event.     | `AbiEvent`          |
+| Name        | Description    | Type                |
+| ----------- | -------------- | ------------------- |
+| `abi`       | ABI.           | `Abi`               |
+| `eventName` | Name of event. | `string` (inferred) |
+| returns     | ABI Event.     | `AbiEvent`          |
 
 #### Example
 
@@ -205,21 +184,6 @@ const abi = [
 
 type Result = ExtractAbiEvent<typeof abi, 'Transfer'>
 //   ^?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
 
 ## `ExtractAbiEventNames`
@@ -261,7 +225,6 @@ const abi = [
 
 type Result = ExtractAbiEventNames<typeof abi>
 //   ^?
-
 ```
 
 ## `ExtractAbiEvents`
@@ -303,31 +266,18 @@ const abi = [
 
 type Result = ExtractAbiEvents<typeof abi>
 //   ^?
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
 
 ## `ExtractAbiFunction`
 
 Extracts `AbiFunction` with name from `Abi`.
 
-| Name                  | Description           | Type                            |
-| --------------------- | --------------------- | ------------------------------- |
-| `abi`                 | ABI.                  | `Abi`                           |
-| `functionName`        | Name of function.     | `string` (inferred)             |
-| `abiStateMutability`  | ABI state mutability. | `AbiStateMutability` (optional) |
-| returns               | ABI Function.         | `AbiFunction`                   |
+| Name                 | Description           | Type                            |
+| -------------------- | --------------------- | ------------------------------- |
+| `abi`                | ABI.                  | `Abi`                           |
+| `functionName`       | Name of function.     | `string` (inferred)             |
+| `abiStateMutability` | ABI state mutability. | `AbiStateMutability` (optional) |
+| returns              | ABI Function.         | `AbiFunction`                   |
 
 #### Example
 
@@ -357,29 +307,17 @@ const abi = [
 
 type Result = ExtractAbiFunction<typeof abi, 'balanceOf'>
 //   ^?
-
-
-
-
-
-
-
-
-
-
-
-
 ```
 
 ## `ExtractAbiFunctionNames`
 
 Extracts all `AbiFunction` names from `Abi`.
 
-| Name                  | Description           | Type                            |
-| --------------------- | --------------------- | ------------------------------- |
-| `abi`                 | ABI.                  | `Abi`                           |
-| `abiStateMutability`  | ABI state mutability. | `AbiStateMutability` (optional) |
-| returns               | ABI Event names.      | `string` (inferred)             |
+| Name                 | Description           | Type                            |
+| -------------------- | --------------------- | ------------------------------- |
+| `abi`                | ABI.                  | `Abi`                           |
+| `abiStateMutability` | ABI state mutability. | `AbiStateMutability` (optional) |
+| returns              | ABI Event names.      | `string` (inferred)             |
 
 #### Example
 
@@ -409,7 +347,6 @@ const abi = [
 
 type Result = ExtractAbiFunctionNames<typeof abi>
 //   ^?
-
 ```
 
 ## `ExtractAbiFunctions`
@@ -449,20 +386,6 @@ const abi = [
 
 type Result = ExtractAbiFunctions<typeof abi>
 //   ^?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
 
 By default, extracts all functions, but you can also filter by `AbiStateMutability`:
@@ -508,17 +431,16 @@ const abi = [
 
 type Result = IsAbi<typeof abi>
 //   ^?
-
 ```
 
 ## `IsTypedData`
 
 Checks if type is `TypedData`.
 
-| Name         | Description                                                 | Type        |
-| ------------ | ----------------------------------------------------------- | ----------- |
-| `typedData`  | EIP-712 Typed Data schema.                                  | `TypedData` |
-| returns      | Boolean value. `true` if valid `TypedData`, `false` if not. | `boolean`   |
+| Name        | Description                                                 | Type        |
+| ----------- | ----------------------------------------------------------- | ----------- |
+| `typedData` | EIP-712 Typed Data schema.                                  | `TypedData` |
+| returns     | Boolean value. `true` if valid `TypedData`, `false` if not. | `boolean`   |
 
 #### Example
 
@@ -539,17 +461,16 @@ const types = {
 
 type Result = IsTypedData<typeof types>
 //   ^?
-
 ```
 
 ## `TypedDataToPrimitiveTypes`
 
 Converts [EIP-712](https://eips.ethereum.org/EIPS/eip-712#definition-of-typed-structured-data-%F0%9D%95%8A) `TypedData` to corresponding TypeScript primitive type.
 
-| Name         | Description                          | Type                                   |
-| ------------ | ------------------------------------ | -------------------------------------- |
-| `typedData`  | EIP-712 Typed Data schema.           | `TypedData`                            |
-| returns      | TypeScript representation of schema. | `{ [name: string]: type }` (inferred)  |
+| Name        | Description                          | Type                                  |
+| ----------- | ------------------------------------ | ------------------------------------- |
+| `typedData` | EIP-712 Typed Data schema.           | `TypedData`                           |
+| returns     | TypeScript representation of schema. | `{ [name: string]: type }` (inferred) |
 
 #### Example
 
@@ -570,18 +491,4 @@ const types = {
 
 type Result = TypedDataToPrimitiveTypes<typeof types>
 //   ^?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```

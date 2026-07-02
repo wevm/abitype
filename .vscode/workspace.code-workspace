@@ -2,15 +2,15 @@
   "folders": [
     {
       "name": "docs",
-      "path": "../docs"
+      "path": "../docs",
     },
     {
       "name": "packages",
-      "path": "../packages"
+      "path": "../packages",
     },
     {
       "name": "playground",
-      "path": "../playground"
-    }
-  ]
+      "path": "../playground",
+    },
+  ],
 }

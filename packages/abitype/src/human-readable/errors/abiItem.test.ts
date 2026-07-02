@@ -7,9 +7,8 @@ import {
 } from './abiItem.js'
 
 test('InvalidAbiItemError', () => {
-  expect(
-    new InvalidAbiItemError({ signature: 'address' }),
-  ).toMatchInlineSnapshot(`
+  expect(new InvalidAbiItemError({ signature: 'address' }))
+    .toMatchInlineSnapshot(`
     [InvalidAbiItemError: Failed to parse ABI item.
 
     Docs: https://abitype.dev/api/human#parseabiitem-1

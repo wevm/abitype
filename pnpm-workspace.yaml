@@ -6,3 +6,34 @@ packages:
   - packages/register-tests/*
   - playgrounds/*
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  - semver
+  - rehype-pretty-code
+  - ua-parser-js
+  - undici-types
+catalog:
+  vite: npm:@voidzero-dev/vite-plus-core@0.2.2
+  vitest: 4.1.9
+  vite-plus: 0.2.2
+  '@vitest/coverage-v8': 4.1.9
+overrides:
+  vite: 'catalog:'
+  vitest: 'catalog:'
+peerDependencyRules:
+  allowAny:
+    - vite
+    - vitest
+  allowedVersions:
+    vite: '*'
+    vitest: '*'
+minimumReleaseAgeExclude:
+  - vite-plus
+  - '@voidzero-dev/*'
+  - oxlint
+  - '@oxlint/*'
+  - oxlint-tsgolint
+  - '@oxlint-tsgolint/*'
+  - oxfmt
+  - '@oxfmt/*'
+  - vitest
+  - '@vitest/*'

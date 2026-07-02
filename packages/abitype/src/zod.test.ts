@@ -722,9 +722,8 @@ test('EIP-712 TypedData', () => {
     ]]
   `)
 
-  expect(() =>
-    TypedData.parse(circularReference),
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => TypedData.parse(circularReference))
+    .toThrowErrorMatchingInlineSnapshot(`
     [ZodError: [
       {
         "code": "custom",
@@ -751,9 +750,8 @@ test('EIP-712 TypedData', () => {
     ]]
   `)
 
-  expect(() =>
-    TypedData.parse({ Foo: [{ name: 'owner', type: '' }] }),
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => TypedData.parse({ Foo: [{ name: 'owner', type: '' }] }))
+    .toThrowErrorMatchingInlineSnapshot(`
     [ZodError: [
       {
         "code": "custom",
@@ -763,9 +761,8 @@ test('EIP-712 TypedData', () => {
     ]]
   `)
 
-  expect(() =>
-    TypedData.parse({ café: [{ name: 'owner', type: 'address' }] }),
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => TypedData.parse({ café: [{ name: 'owner', type: 'address' }] }))
+    .toThrowErrorMatchingInlineSnapshot(`
     [ZodError: [
       {
         "validation": "regex",
@@ -778,9 +775,8 @@ test('EIP-712 TypedData', () => {
     ]]
   `)
 
-  expect(() =>
-    TypedData.parse({ '2g': [{ name: 'owner', type: 'address' }] }),
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => TypedData.parse({ '2g': [{ name: 'owner', type: 'address' }] }))
+    .toThrowErrorMatchingInlineSnapshot(`
     [ZodError: [
       {
         "validation": "regex",

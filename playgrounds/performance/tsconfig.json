@@ -2,7 +2,6 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "moduleResolution": "NodeNext",
-    "baseUrl": ".",
     "paths": {
       "abitype": ["../../packages/abitype/src"],
       "abitype/*": ["../../packages/abitype/src/*"]

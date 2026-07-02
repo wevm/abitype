@@ -58,9 +58,8 @@ test('execEventSignature', () => {
       "parameters": "string",
     }
   `)
-  expect(
-    execEventSignature('event Name(string indexed foo)'),
-  ).toMatchInlineSnapshot(`
+  expect(execEventSignature('event Name(string indexed foo)'))
+    .toMatchInlineSnapshot(`
       {
         "name": "Name",
         "parameters": "string indexed foo",
@@ -111,9 +110,8 @@ test('execFunctionSignature', () => {
       "stateMutability": undefined,
     }
   `)
-  expect(
-    execFunctionSignature('function foo() view returns (uint256)'),
-  ).toMatchInlineSnapshot(`
+  expect(execFunctionSignature('function foo() view returns (uint256)'))
+    .toMatchInlineSnapshot(`
     {
       "name": "foo",
       "parameters": "",
@@ -122,9 +120,8 @@ test('execFunctionSignature', () => {
       "stateMutability": "view",
     }
   `)
-  expect(
-    execFunctionSignature('function foo() view returns(uint256)'),
-  ).toMatchInlineSnapshot(`
+  expect(execFunctionSignature('function foo() view returns(uint256)'))
+    .toMatchInlineSnapshot(`
     {
       "name": "foo",
       "parameters": "",

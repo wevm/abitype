@@ -9,9 +9,8 @@ test('BaseError', () => {
     Version: abitype@x.y.z]
   `)
 
-  expect(
-    new BaseError('An error occurred.', { details: 'details' }),
-  ).toMatchInlineSnapshot(`
+  expect(new BaseError('An error occurred.', { details: 'details' }))
+    .toMatchInlineSnapshot(`
       [AbiTypeError: An error occurred.
 
       Details: details

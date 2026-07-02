@@ -30,12 +30,13 @@ export type ParseStructs<signatures extends readonly string[]> =
 export type ParseStruct<
   signature extends string,
   structs extends StructLookup | unknown = unknown,
-> = signature extends StructSignature<infer name, infer properties>
-  ? {
-      readonly name: Trim<name>
-      readonly components: ParseStructProperties<properties, structs>
-    }
-  : never
+> =
+  signature extends StructSignature<infer name, infer properties>
+    ? {
+        readonly name: Trim<name>
+        readonly components: ParseStructProperties<properties, structs>
+      }
+    : never
 
 export type ResolveStructs<
   abiParameters extends readonly (AbiParameter & { type: string })[],
@@ -77,10 +78,11 @@ export type ParseStructProperties<
   signature extends string,
   structs extends StructLookup | unknown = unknown,
   result extends any[] = [],
-> = Trim<signature> extends `${infer head};${infer tail}`
-  ? ParseStructProperties<
-      tail,
-      structs,
-      [...result, ParseAbiParameter<head, { structs: structs }>]
-    >
-  : result
+> =
+  Trim<signature> extends `${infer head};${infer tail}`
+    ? ParseStructProperties<
+        tail,
+        structs,
+        [...result, ParseAbiParameter<head, { structs: structs }>]
+      >
+    : result

@@ -285,7 +285,6 @@ export function splitParameters(
   depth = 0,
 ): readonly string[] {
   const length = params.trim().length
-  // biome-ignore lint/correctness/noUnreachable: recursive
   for (let i = 0; i < length; i++) {
     const char = params[i]
     const tail = params.slice(i + 1)

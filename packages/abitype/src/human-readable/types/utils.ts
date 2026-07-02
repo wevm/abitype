@@ -250,9 +250,7 @@ export type _ParseFunctionParametersAndStateMutability<
   : signature extends `function ${string}(${infer parameters})`
     ? { Inputs: parameters; StateMutability: 'nonpayable' }
     : signature extends `function ${string}(${infer parameters}) ${infer scopeOrStateMutability extends
-          | Scope
-          | AbiStateMutability
-          | `${Scope} ${AbiStateMutability}`}`
+          Scope | AbiStateMutability | `${Scope} ${AbiStateMutability}`}`
       ? {
           Inputs: parameters
           StateMutability: _ParseStateMutability<scopeOrStateMutability>
@@ -286,97 +284,101 @@ type _ParseConstructorParametersAndStateMutability<signature extends string> =
 export type _ParseTuple<
   signature extends `(${string})${string}`,
   options extends ParseOptions = DefaultParseOptions,
-> = /** Tuples without name or modifier (e.g. `(string)`, `(string foo)`) */
-signature extends `(${infer parameters})`
-  ? {
-      readonly type: 'tuple'
-      readonly components: ParseAbiParameters<
-        SplitParameters<parameters>,
-        Omit<options, 'modifier'>
-      >
-    }
-  : // Array or fixed-length array tuples (e.g. `(string)[]`, `(string)[5]`)
-    signature extends `(${infer head})[${'' | `${SolidityFixedArrayRange}`}]`
-    ? signature extends `(${head})[${infer size}]`
-      ? {
-          readonly type: `tuple[${size}]`
-          readonly components: ParseAbiParameters<
-            SplitParameters<head>,
-            Omit<options, 'modifier'>
-          >
-        }
-      : never
-    : // Array or fixed-length array tuples with name and/or modifier attached (e.g. `(string)[] foo`, `(string)[5] foo`)
-      signature extends `(${infer parameters})[${
-          | ''
-          | `${SolidityFixedArrayRange}`}] ${infer nameOrModifier}`
-      ? signature extends `(${parameters})[${infer size}] ${nameOrModifier}`
-        ? nameOrModifier extends `${string}) ${string}`
-          ? _UnwrapNameOrModifier<nameOrModifier> extends infer parts extends {
-              nameOrModifier: string
-              End: string
-            }
-            ? {
-                readonly type: 'tuple'
+> =
+  /** Tuples without name or modifier (e.g. `(string)`, `(string foo)`) */
+  signature extends `(${infer parameters})`
+    ? {
+        readonly type: 'tuple'
+        readonly components: ParseAbiParameters<
+          SplitParameters<parameters>,
+          Omit<options, 'modifier'>
+        >
+      }
+    : // Array or fixed-length array tuples (e.g. `(string)[]`, `(string)[5]`)
+      signature extends `(${infer head})[${'' | `${SolidityFixedArrayRange}`}]`
+      ? signature extends `(${head})[${infer size}]`
+        ? {
+            readonly type: `tuple[${size}]`
+            readonly components: ParseAbiParameters<
+              SplitParameters<head>,
+              Omit<options, 'modifier'>
+            >
+          }
+        : never
+      : // Array or fixed-length array tuples with name and/or modifier attached (e.g. `(string)[] foo`, `(string)[5] foo`)
+        signature extends `(${infer parameters})[${
+            | ''
+            | `${SolidityFixedArrayRange}`}] ${infer nameOrModifier}`
+        ? signature extends `(${parameters})[${infer size}] ${nameOrModifier}`
+          ? nameOrModifier extends `${string}) ${string}`
+            ? _UnwrapNameOrModifier<nameOrModifier> extends infer parts extends
+                {
+                  nameOrModifier: string
+                  End: string
+                }
+              ? {
+                  readonly type: 'tuple'
+                  readonly components: ParseAbiParameters<
+                    SplitParameters<`${parameters})[${size}] ${parts['End']}`>,
+                    Omit<options, 'modifier'>
+                  >
+                } & _SplitNameOrModifier<parts['nameOrModifier'], options>
+              : never
+            : {
+                readonly type: `tuple[${size}]`
                 readonly components: ParseAbiParameters<
-                  SplitParameters<`${parameters})[${size}] ${parts['End']}`>,
+                  SplitParameters<parameters>,
                   Omit<options, 'modifier'>
                 >
-              } & _SplitNameOrModifier<parts['nameOrModifier'], options>
-            : never
-          : {
-              readonly type: `tuple[${size}]`
-              readonly components: ParseAbiParameters<
-                SplitParameters<parameters>,
-                Omit<options, 'modifier'>
-              >
-            } & _SplitNameOrModifier<nameOrModifier, options>
-        : never
-      : // Tuples with name and/or modifier attached (e.g. `(string) foo`, `(string bar) foo`)
-        signature extends `(${infer parameters}) ${infer nameOrModifier}`
-        ? // Check that `nameOrModifier` didn't get matched to `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)
-          nameOrModifier extends `${string}) ${string}`
-          ? _UnwrapNameOrModifier<nameOrModifier> extends infer parts extends {
-              nameOrModifier: string
-              End: string
-            }
-            ? {
+              } & _SplitNameOrModifier<nameOrModifier, options>
+          : never
+        : // Tuples with name and/or modifier attached (e.g. `(string) foo`, `(string bar) foo`)
+          signature extends `(${infer parameters}) ${infer nameOrModifier}`
+          ? // Check that `nameOrModifier` didn't get matched to `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)
+            nameOrModifier extends `${string}) ${string}`
+            ? _UnwrapNameOrModifier<nameOrModifier> extends infer parts extends
+                {
+                  nameOrModifier: string
+                  End: string
+                }
+              ? {
+                  readonly type: 'tuple'
+                  readonly components: ParseAbiParameters<
+                    SplitParameters<`${parameters}) ${parts['End']}`>,
+                    Omit<options, 'modifier'>
+                  >
+                } & _SplitNameOrModifier<parts['nameOrModifier'], options>
+              : never
+            : {
                 readonly type: 'tuple'
                 readonly components: ParseAbiParameters<
-                  SplitParameters<`${parameters}) ${parts['End']}`>,
+                  SplitParameters<parameters>,
                   Omit<options, 'modifier'>
                 >
-              } & _SplitNameOrModifier<parts['nameOrModifier'], options>
-            : never
-          : {
-              readonly type: 'tuple'
-              readonly components: ParseAbiParameters<
-                SplitParameters<parameters>,
-                Omit<options, 'modifier'>
-              >
-            } & _SplitNameOrModifier<nameOrModifier, options>
-        : never
+              } & _SplitNameOrModifier<nameOrModifier, options>
+          : never
 
 // Split name and modifier (e.g. `indexed foo` => `{ name: 'foo', indexed: true }`)
 export type _SplitNameOrModifier<
   signature extends string,
   options extends ParseOptions = DefaultParseOptions,
-> = Trim<signature> extends infer trimmed
-  ? options extends { modifier: Modifier }
-    ? // TODO: Check that modifier is allowed
-      trimmed extends `${infer mod extends options['modifier']} ${infer name}`
-      ? Pretty<
-          { readonly name: Trim<name> } & (mod extends 'indexed'
+> =
+  Trim<signature> extends infer trimmed
+    ? options extends { modifier: Modifier }
+      ? // TODO: Check that modifier is allowed
+        trimmed extends `${infer mod extends options['modifier']} ${infer name}`
+        ? Pretty<
+            { readonly name: Trim<name> } & (mod extends 'indexed'
+              ? { readonly indexed: true }
+              : object)
+          >
+        : trimmed extends options['modifier']
+          ? trimmed extends 'indexed'
             ? { readonly indexed: true }
-            : object)
-        >
-      : trimmed extends options['modifier']
-        ? trimmed extends 'indexed'
-          ? { readonly indexed: true }
-          : object
-        : { readonly name: trimmed }
-    : { readonly name: trimmed }
-  : never
+            : object
+          : { readonly name: trimmed }
+      : { readonly name: trimmed }
+    : never
 
 // `baz) bar) foo` (e.g. `(((string) baz) bar) foo`)
 export type _UnwrapNameOrModifier<

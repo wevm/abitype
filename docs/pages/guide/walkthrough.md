@@ -184,7 +184,6 @@ const res = readContract({
   functionName: 'balanceOf',
   // ^?
 
-
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
 })
 ```
@@ -250,7 +249,7 @@ declare function readContract<
 // ---cut---
 const res = readContract({
   abi,
-  functionName: ' 
+  functionName: '
 //               ^|
 })
 ```
@@ -326,12 +325,11 @@ const res = readContract({
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
   // ^?
 })
-
 ```
 
 Since `args`'s type can be completely defined inline, we import [`ExtractAbiFunction`](/api/utilities#extractabifunction) and [`AbiParametersToPrimitiveTypes`](/api/utilities#abiparameterstoprimitivetypes) and wire them up. First, we use `ExtractAbiFunction` to get the function from the ABI that matches `functionName`. Then, we use `AbiParametersToPrimitiveTypes` to convert the function's inputs to their TypeScript primitive types.
 
-For `abi`, you'll notice there are two `'balanceOf'` functions. This means `'balanceOf'` is overloaded on the contract. The cool thing about TypeScript is that we can still infer the correct types for overloaded functions (e.g. union like `` readonly [`0x${string}`] | readonly [`0x${string}`, bigint] ``)! This uses a TypeScript feature called [distributivity](https://jser.dev/typescript/2023/01/22/distributiveness-in-ts.html) and is worth learning more about if you're interested.
+For `abi`, you'll notice there are two `'balanceOf'` functions. This means `'balanceOf'` is overloaded on the contract. The cool thing about TypeScript is that we can still infer the correct types for overloaded functions (e.g. union like ``readonly [`0x${string}`] | readonly [`0x${string}`, bigint]``)! This uses a TypeScript feature called [distributivity](https://jser.dev/typescript/2023/01/22/distributiveness-in-ts.html) and is worth learning more about if you're interested.
 
 ## 4. Adding the return type
 
@@ -390,10 +388,7 @@ import { abi } from './abi'
 declare function readContract<
   abi extends Abi,
   functionName extends ExtractAbiFunctionNames<abi, 'pure' | 'view'>,
-  abiFunction extends AbiFunction = ExtractAbiFunction<
-    abi,
-    functionName
-  >,
+  abiFunction extends AbiFunction = ExtractAbiFunction<abi, functionName>,
 >(config: {
   abi: abi
   functionName: functionName | ExtractAbiFunctionNames<abi, 'pure' | 'view'>
@@ -403,7 +398,6 @@ declare function readContract<
 const res = readContract({
   //  ^?
 
-  
   abi,
   functionName: 'balanceOf',
   args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
@@ -425,6 +419,9 @@ There are a few other ways to improve the typing that are out of scope for this 
 The preceding points are all implemented in throughout the [examples](https://github.com/wevm/abitype/tree/main/playgrounds) in this directory so check them out if you're interested.
 
 [^1]: We use the `declare` keyword so we don't need to worry about the implementation. In this case, the implementation would look something like encoding arguments and sending with the [`eth_call`](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call) RPC method.
+
 [^2]: If this was a real function that read via RPC, we'd likely want to make it `async` and return a `Promise`, but we'll leave that out for simplicity.
+
 [^3]: We could add or change this to `'nonpayable' | 'payable'` to allow write functions.
+
 [^4]: Try removing `| ExtractAbiFunctionNames<abi, 'pure' | 'view'>` from `functionName`, hover over `functionName` in your editor, and see what happens. You'll notice that the only `functionName` that shows up in the current value.
