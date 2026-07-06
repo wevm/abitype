@@ -3,6 +3,7 @@
 Human-Readable ABIs compress [JSON ABIs](https://docs.soliditylang.org/en/latest/abi-spec.html#json) into signatures that are nicer to read and less verbose to write. For example:
 
 :::code-group
+
 ```ts [human-readable.ts]
 const abi = [
   'constructor()',
@@ -46,6 +47,7 @@ const abi = [
   { inputs: [], name: 'ApprovalCallerNotOwnerNorApproved', type: 'error' },
 ] as const
 ```
+
 :::
 
 ABIType contains parallel [type-level](/api/human#types) and [runtime](/api/human#utilities) utilities for parsing and formatting human-readable ABIs, ABI items, and ABI parameters.
@@ -213,26 +215,14 @@ Parses human-readable ABI into JSON [`Abi`](/api/types#abi).
 ```ts twoslash
 import { ParseAbi } from 'abitype'
 
-type Result = ParseAbi<[
-  'function balanceOf(address owner) view returns (uint256)',
-  'event Transfer(address indexed from, address indexed to, uint256 amount)',
-]>
+type Result = ParseAbi<
+  [
+    'function balanceOf(address owner) view returns (uint256)',
+    'event Transfer(address indexed from, address indexed to, uint256 amount)',
+  ]
+>
 let result: Result
-//  ^? 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//  ^?
 ```
 
 ### `ParseAbiItem`
@@ -249,44 +239,16 @@ Parses human-readable ABI item (e.g. error, event, function) into ABI item.
 ```ts twoslash
 import { ParseAbiItem } from 'abitype'
 
-type Result = ParseAbiItem<
-  'function balanceOf(address owner) view returns (uint256)'
->
+type Result =
+  ParseAbiItem<'function balanceOf(address owner) view returns (uint256)'>
 let result: Result
-//  ^? 
+//  ^?
 
-
-
-
-
-
-
-
-
-
-
-
-
-type ResultStruct = ParseAbiItem<[
-  'function foo(Baz bar) view returns (string)',
-  'struct Baz { string name; }',
-]>
+type ResultStruct = ParseAbiItem<
+  ['function foo(Baz bar) view returns (string)', 'struct Baz { string name; }']
+>
 let resultStruct: ResultStruct
-//  ^? 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//  ^?
 ```
 
 ### `ParseAbiParameter`
@@ -304,27 +266,16 @@ Parses human-readable ABI parameter into [`AbiParameter`](/api/types#abiparamete
 import { ParseAbiParameter } from 'abitype'
 
 type Result = ParseAbiParameter<'address from'>
-//   ^? 
+//   ^?
 
+type ResultStruct = ParseAbiParameter<
+  [
+    // ^?
 
-
-
-
-
-type ResultStruct = ParseAbiParameter<[
-  // ^? 
-
-
-
-
-
-
-
-
-
-  'Baz bar',
-  'struct Baz { string name; }',
-]>
+    'Baz bar',
+    'struct Baz { string name; }',
+  ]
+>
 ```
 
 ### `ParseAbiParameters`
@@ -342,31 +293,16 @@ Parses human-readable ABI parameters into [`AbiParameter`s](/api/types#abiparame
 import { ParseAbiParameters } from 'abitype'
 
 type Result = ParseAbiParameters<'address from, uint256 amount'>
-//   ^? 
+//   ^?
 
+type ResultStruct = ParseAbiParameters<
+  [
+    // ^?
 
-
-
-
-
-
-
-
-
-type ResultStruct = ParseAbiParameters<[
-  // ^? 
-
-
-
-
-
-
-
-
-
-  'Baz bar',
-  'struct Baz { string name; }',
-]>
+    'Baz bar',
+    'struct Baz { string name; }',
+  ]
+>
 ```
 
 ### `FormatAbi`
@@ -383,28 +319,28 @@ Formats [`Abi`](/api/types#abi) into human-readable ABI.
 ```ts twoslash
 import { FormatAbi } from 'abitype'
 
-type Result = FormatAbi<[
-//   ^? 
+type Result = FormatAbi<
+  [
+    //   ^?
 
-
-
-  {
-    name: 'balanceOf'
-    type: 'function'
-    stateMutability: 'view'
-    inputs: [{ type: 'address'; name: 'owner' }]
-    outputs: [{ type: 'uint256' }]
-  },
-  {
-    name: 'Transfer'
-    type: 'event'
-    inputs: [
-      { type: 'address'; name: 'from'; indexed: true },
-      { type: 'address'; name: 'to'; indexed: true },
-      { type: 'uint256'; name: 'amount' },
-    ]
-  },
-]>
+    {
+      name: 'balanceOf'
+      type: 'function'
+      stateMutability: 'view'
+      inputs: [{ type: 'address'; name: 'owner' }]
+      outputs: [{ type: 'uint256' }]
+    },
+    {
+      name: 'Transfer'
+      type: 'event'
+      inputs: [
+        { type: 'address'; name: 'from'; indexed: true },
+        { type: 'address'; name: 'to'; indexed: true },
+        { type: 'uint256'; name: 'amount' },
+      ]
+    },
+  ]
+>
 ```
 
 ### `FormatAbiItem`
@@ -422,9 +358,7 @@ Formats Abi item (e.g. error, event, function) into human-readable ABI parameter
 import { FormatAbiItem } from 'abitype'
 
 type Result = FormatAbiItem<{
-//   ^? 
-
-
+  //   ^?
 
   name: 'balanceOf'
   type: 'function'
@@ -449,7 +383,7 @@ Formats [`AbiParameter`](/api/types#abiparameter) into human-readable ABI parame
 import { FormatAbiParameter } from 'abitype'
 
 type Result = FormatAbiParameter<{ type: 'address'; name: 'from' }>
-//   ^? 
+//   ^?
 ```
 
 ### `FormatAbiParameters`
@@ -466,13 +400,14 @@ Formats [`AbiParameter`s](/api/types#abiparameter) into human-readable ABI param
 ```ts twoslash
 import { FormatAbiParameters } from 'abitype'
 
-type Result = FormatAbiParameters<[
-//   ^? 
+type Result = FormatAbiParameters<
+  [
+    //   ^?
 
-
-  { type: 'address'; name: 'from' },
-  { type: 'uint256'; name: 'tokenId' },
-]>
+    { type: 'address'; name: 'from' },
+    { type: 'uint256'; name: 'tokenId' },
+  ]
+>
 ```
 
 ## Utilities
@@ -503,19 +438,6 @@ const abi = parseAbi([
 ])
 abi
 //^?
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
 
 ### `parseAbiItem`
@@ -536,20 +458,7 @@ const abiItem = parseAbiItem(
   'function balanceOf(address owner) view returns (uint256)',
 )
 abiItem
-// ^? 
-
-
-
-
-
-
-
-
-
-
-
-
-
+// ^?
 
 const abiItemStruct = parseAbiItem([
   'function foo(Baz bar) view returns (string)',
@@ -557,20 +466,6 @@ const abiItemStruct = parseAbiItem([
 ])
 abiItemStruct
 // ^?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
 
 ### `parseAbiParameter`
@@ -588,27 +483,14 @@ Parses human-readable ABI parameter into [`AbiParameter`](/api/types#abiparamete
 import { parseAbiParameter } from 'abitype'
 
 const abiParameter = parseAbiParameter('address from')
-//    ^? 
-
-
-
-
+//    ^?
 
 const abiParameterStruct = parseAbiParameter([
   'Baz bar',
   'struct Baz { string name; }',
 ])
 abiParameterStruct
-//  ^? 
-
-
-
-
-
-
-
-
-
+//  ^?
 ```
 
 ### `parseAbiParameters`
@@ -631,41 +513,22 @@ const abiParameters = parseAbiParameters(
 abiParameters
 //  ^?
 
-
-
-
-
-
-
-
-
-
-
 const abiParametersStruct = parseAbiParameters([
   'Baz bar',
   'struct Baz { string name; }',
 ])
 abiParametersStruct
 // ^?
-
-
-
-
-
-
-
-
-
 ```
 
 ### `formatAbi`
 
 Formats [`Abi`](/api/types#abi) into human-readable ABI.
 
-| Name        | Description         | Type                    |
-| ----------- | ------------------- | ----------------------- |
-| `abi`       | ABI                 | [`Abi`](/api/types#abi) |
-| returns     | Human-Readable ABI. | `string[]` (inferred)   |
+| Name    | Description         | Type                    |
+| ------- | ------------------- | ----------------------- |
+| `abi`   | ABI                 | [`Abi`](/api/types#abi) |
+| returns | Human-Readable ABI. | `string[]` (inferred)   |
 
 #### Example
 
@@ -673,9 +536,7 @@ Formats [`Abi`](/api/types#abi) into human-readable ABI.
 import { formatAbi } from 'abitype'
 
 const result = formatAbi([
-//    ^? 
-
-
+  //    ^?
 
   {
     name: 'balanceOf',
@@ -700,10 +561,10 @@ const result = formatAbi([
 
 Formats Abi item (e.g. error, event, function) into human-readable ABI parameter.
 
-| Name            | Description              | Type                            |
-| --------------- | ------------------------ | ------------------------------- |
-| `abiItem`       | ABI item                 | [`Abi[number]`](/api/types#abi) |
-| returns         | Human-Readable ABI item. | `string` (inferred)             |
+| Name      | Description              | Type                            |
+| --------- | ------------------------ | ------------------------------- |
+| `abiItem` | ABI item                 | [`Abi[number]`](/api/types#abi) |
+| returns   | Human-Readable ABI item. | `string` (inferred)             |
 
 #### Example
 
@@ -711,9 +572,7 @@ Formats Abi item (e.g. error, event, function) into human-readable ABI parameter
 import { formatAbiItem } from 'abitype'
 
 const result = formatAbiItem({
-//    ^? 
-
-
+  //    ^?
 
   name: 'balanceOf',
   type: 'function',
@@ -738,17 +597,17 @@ Formats [`AbiParameter`](/api/types#abiparameter) into human-readable ABI parame
 import { formatAbiParameter } from 'abitype'
 
 const result = formatAbiParameter({ type: 'address', name: 'from' })
-//    ^? 
+//    ^?
 ```
 
 ### `formatAbiParameters`
 
 Formats [`AbiParameter`s](/api/types#abiparameter) into human-readable ABI parameters.
 
-| Name             | Description                   | Type                                        |
-| ---------------- | ----------------------------- | ------------------------------------------- |
-| `abiParameters`  | ABI parameters                | [`AbiParameter[]`](/api/types#abiparameter) |
-| returns          | Human-Readable ABI parameter. | `string` (inferred)                         |
+| Name            | Description                   | Type                                        |
+| --------------- | ----------------------------- | ------------------------------------------- |
+| `abiParameters` | ABI parameters                | [`AbiParameter[]`](/api/types#abiparameter) |
+| returns         | Human-Readable ABI parameter. | `string` (inferred)                         |
 
 #### Example
 
@@ -756,14 +615,12 @@ Formats [`AbiParameter`s](/api/types#abiparameter) into human-readable ABI param
 import { formatAbiParameters } from 'abitype'
 
 const result = formatAbiParameters([
-//    ^? 
-
+  //    ^?
 
   { type: 'address', name: 'from' },
   { type: 'uint256', name: 'tokenId' },
 ])
 ```
-
 
 ## Errors
 

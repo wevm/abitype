@@ -41,19 +41,6 @@ const abi = parseAbi([
 ])
 abi
 //^?
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
 
 ```ts [abitype (struct)] twoslash
@@ -66,22 +53,9 @@ const abi = parseAbi([
 ])
 abi
 //^?
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
 
-```ts [ethers@5] twoslash 
+```ts [ethers@5] twoslash
 import { Interface } from '@ethersproject/abi'
 
 const iface = new Interface([
@@ -90,10 +64,9 @@ const iface = new Interface([
 ])
 const abi = iface.fragments
 //    ^?
-
 ```
 
-```ts [ethers@6] twoslash 
+```ts [ethers@6] twoslash
 import { Interface } from 'ethers'
 
 const iface = new Interface([
@@ -102,7 +75,6 @@ const iface = new Interface([
 ])
 const abi = iface.fragments
 //    ^?
-
 ```
 
 :::
@@ -124,40 +96,26 @@ import { parseAbiItem } from 'abitype'
 const abiItem = parseAbiItem(
   //  ^?
 
-
-
-
-
-
-
-
-
-
-
-
-
   'function name((string name, uint256 age) foo, uint256 tokenId)',
 )
 ```
 
-```ts [ethers@5] twoslash 
+```ts [ethers@5] twoslash
 import { Fragment } from '@ethersproject/abi'
 
 const abiItem = Fragment.from(
   //  ^?
 
-
   'function name(tuple(string name, uint256 age) foo, uint256 tokenId)',
 )
 ```
 
-```ts [ethers@6] twoslash 
+```ts [ethers@6] twoslash
 import { Fragment } from 'ethers'
 
 const abiItem = Fragment.from(
   //  ^?
 
-  
   'function name(tuple(string name, uint256 age) foo, uint256 tokenId)',
 )
 ```
@@ -175,7 +133,7 @@ const abiItem = Fragment.from(
 ✓ Parse ABI item (3) 1716ms
   name              hz     min     max    mean     p75     p99    p995    p999     rme  samples
 · abitype   597,815.38  0.0015  0.3760  0.0017  0.0016  0.0022  0.0022  0.0031  ±0.58%   298908   fastest
-· ethers@5   83,313.74  0.0114  0.2662  0.0120  0.0119  0.0130  0.0141  0.0401  ±0.45%    41657  
+· ethers@5   83,313.74  0.0114  0.2662  0.0120  0.0119  0.0130  0.0141  0.0401  ±0.45%    41657
 · ethers@6   39,887.50  0.0233  0.3942  0.0251  0.0248  0.0308  0.0365  0.1979  ±0.43%    19944   slowest
 
 Summary
@@ -194,25 +152,21 @@ Parses a human-readable ABI parameter into a JSON ABI parameter.
 import { parseAbiParameter } from 'abitype'
 
 const abiParameter = parseAbiParameter('string foo')
-//    ^? 
-
-
-
-
+//    ^?
 ```
 
 ```ts [ethers@5] twoslash
 import { ParamType } from '@ethersproject/abi'
 
 const abiParameter = ParamType.from('string foo')
-//    ^? 
+//    ^?
 ```
 
 ```ts [ethers@6] twoslash
 import { ParamType } from 'ethers'
 
 const abiParameter = ParamType.from('string foo')
-//    ^? 
+//    ^?
 ```
 
 :::
@@ -229,7 +183,7 @@ const abiParameter = ParamType.from('string foo')
   name                hz     min     max    mean     p75     p99    p995    p999     rme  samples
 · abitype   4,073,274.42  0.0001  1.0815  0.0002  0.0003  0.0003  0.0003  0.0005  ±0.52%  2036638   fastest
 · ethers@6    288,007.56  0.0032  1.5593  0.0035  0.0034  0.0039  0.0058  0.0082  ±0.75%   144004   slowest
-· ethers@5    507,627.43  0.0018  0.6730  0.0020  0.0020  0.0022  0.0023  0.0027  ±0.43%   253814  
+· ethers@5    507,627.43  0.0018  0.6730  0.0020  0.0020  0.0022  0.0023  0.0027  ±0.43%   253814
 
 Summary
 abitype - src/human-readable/parseAbiParameter.bench.ts > Parse basic ABI Parameter
@@ -272,9 +226,6 @@ const abi = formatAbi([
 ])
 abi
 //^?
-
-
-
 ```
 
 ```ts [ethers@5] twoslash
@@ -306,8 +257,6 @@ const iface = new Interface([
 ])
 const abi = iface.format('minimal')
 //    ^?
-
-
 ```
 
 ```ts [ethers@6] twoslash
@@ -339,8 +288,6 @@ const iface = new Interface([
 ])
 const abi = iface.format(true)
 //    ^?
-
-
 ```
 
 :::
@@ -384,8 +331,6 @@ const abiItem = formatAbiItem({
 })
 abiItem
 //^?
-
-
 ```
 
 ```ts [ethers@5] twoslash
@@ -403,8 +348,6 @@ const iface = Fragment.from({
 })
 const abiItem = iface.format('minimal')
 //    ^?
-
-
 ```
 
 ```ts [ethers@6] twoslash
@@ -422,8 +365,6 @@ const iface = Fragment.from({
 })
 const abiItem = iface.format('minimal')
 //    ^?
-
-
 ```
 
 :::
@@ -457,27 +398,21 @@ Formats JSON ABI parameter to human-readable ABI parameter.
 import { formatAbiParameter } from 'abitype'
 
 const result = formatAbiParameter({ type: 'string', name: 'foo' })
-//    ^? 
-
-
+//    ^?
 ```
 
 ```ts [ethers@5] twoslash
 import { ParamType } from '@ethersproject/abi'
 
 const result = ParamType.from({ type: 'string', name: 'foo' }).format('minimal')
-//    ^? 
-
-
+//    ^?
 ```
 
 ```ts [ethers@6] twoslash
 import { ParamType } from 'ethers'
 
 const result = ParamType.from({ type: 'string', name: 'foo' }).format('minimal')
-//    ^? 
-
-
+//    ^?
 ```
 
 :::

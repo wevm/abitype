@@ -101,13 +101,14 @@ export type IsSignature<type extends string> =
 export type Signature<
   string1 extends string,
   string2 extends string | unknown = unknown,
-> = IsSignature<string1> extends true
-  ? string1
-  : string extends string1 // if exactly `string` (not narrowed), then pass through as valid
+> =
+  IsSignature<string1> extends true
     ? string1
-    : Error<`Signature "${string1}" is invalid${string2 extends string
-        ? ` at position ${string2}`
-        : ''}.`>
+    : string extends string1 // if exactly `string` (not narrowed), then pass through as valid
+      ? string1
+      : Error<`Signature "${string1}" is invalid${string2 extends string
+          ? ` at position ${string2}`
+          : ''}.`>
 
 export type Signatures<signatures extends readonly string[]> = {
   [key in keyof signatures]: Signature<signatures[key], key>
@@ -223,7 +224,7 @@ export type IsValidCharacter<character extends string> =
       : IsValidCharacter<tail>
     : false
 
-// biome-ignore format: no formatting
+// oxfmt-ignore
 type ValidCharacters =
   // uppercase letters
   | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'

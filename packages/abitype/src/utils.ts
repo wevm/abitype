@@ -38,9 +38,7 @@ export type AbiTypeToPrimitiveType<
   : PrimitiveTypeLookup[abiType]
 
 interface PrimitiveTypeLookup
-  extends SolidityIntMap,
-    SolidityByteMap,
-    SolidityArrayMap {
+  extends SolidityIntMap, SolidityByteMap, SolidityArrayMap {
   address: ResolvedRegister['addressType']
   bool: boolean
   function: `${ResolvedRegister['addressType']}${string}`
@@ -190,8 +188,8 @@ export type AbiParametersToPrimitiveTypes<
   abiParameters extends readonly AbiParameter[],
   abiParameterKind extends AbiParameterKind = AbiParameterKind,
   ///
-  experimental_namedTuples extends
-    boolean = ResolvedRegister['experimental_namedTuples'],
+  experimental_namedTuples extends boolean =
+    ResolvedRegister['experimental_namedTuples'],
 > = experimental_namedTuples extends true
   ? AbiParametersToPrimitiveTypes_named<abiParameters, abiParameterKind>
   : AbiParametersToPrimitiveTypes_mapped<abiParameters, abiParameterKind>

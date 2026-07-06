@@ -32,7 +32,6 @@ export type {
   TypedDataType,
 } from '../abi.js'
 
-// biome-ignore lint/performance/noBarrelFile: <explanation>
 export { BaseError } from '../errors.js'
 
 export type { Narrow } from '../narrow.js'
@@ -65,10 +64,7 @@ export type {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Human-Readable
 
-export {
-  formatAbi,
-  type FormatAbi,
-} from '../human-readable/formatAbi.js'
+export { formatAbi, type FormatAbi } from '../human-readable/formatAbi.js'
 
 export {
   formatAbiItem,

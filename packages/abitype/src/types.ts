@@ -55,14 +55,15 @@ export type Filter<
  * type Result = IsNarrowable<'foo', string>
  * //   ^? true
  */
-export type IsNarrowable<type, type2> = IsUnknown<type> extends true
-  ? false
-  : IsNever<
-        (type extends type2 ? true : false) &
-          (type2 extends type ? false : true)
-      > extends true
+export type IsNarrowable<type, type2> =
+  IsUnknown<type> extends true
     ? false
-    : true
+    : IsNever<
+          (type extends type2 ? true : false) &
+            (type2 extends type ? false : true)
+        > extends true
+      ? false
+      : true
 
 /**
  * Checks if {@link type} is `never`

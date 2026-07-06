@@ -5,18 +5,23 @@ This section will help you start using ABIType in your TypeScript project. You c
 ## Install
 
 :::code-group
+
 ```bash [pnpm]
 pnpm add abitype
 ```
+
 ```bash [bun]
 bun add abitype
 ```
+
 ```bash [npm]
 npm i abitype
 ```
+
 ```bash [yarn]
 yarn add abitype
 ```
+
 :::
 
 :::info[TypeScript Version]
@@ -45,8 +50,6 @@ import { erc20Abi } from 'abitype/abis'
 
 type Result = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
 //   ^?
-
-
 ```
 
 ## What's next?

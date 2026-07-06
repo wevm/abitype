@@ -20,9 +20,6 @@ declare module 'abitype' {
 import { ResolvedRegister } from 'abitype'
 type Result = ResolvedRegister['bigIntType']
 //   ^?
-
-
-
 ```
 
 :::info[Extending Config from third-party packages]
@@ -35,6 +32,7 @@ declare module 'viem/node_modules/abitype' {
   }
 }
 ```
+
 :::
 
 ## Options
@@ -95,7 +93,7 @@ declare module 'abitype' {
 TypeScript type to use for `bytes<M>` values.
 
 - Type `{ inputs: any; outputs: any }`
-- Default `` { inputs: `0x${string}` | Uint8Array; outputs: `0x${string}` } ``
+- Default ``{ inputs: `0x${string}` | Uint8Array; outputs: `0x${string}` }``
 
 ```ts twoslash
 declare module 'abitype' {

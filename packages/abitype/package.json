@@ -1,18 +1,25 @@
 {
   "name": "abitype",
-  "description": "Strict TypeScript types for Ethereum ABIs",
   "version": "1.2.4",
+  "description": "Strict TypeScript types for Ethereum ABIs",
+  "keywords": [
+    "abi",
+    "eth",
+    "ethereum",
+    "types",
+    "typescript",
+    "viem",
+    "wagmi",
+    "web3",
+    "wevm"
+  ],
   "license": "MIT",
+  "contributors": [
+    "awkweb.eth <t@wevm.dev>",
+    "jxom.eth <j@wevm.dev>"
+  ],
   "repository": "wevm/abitype",
-  "scripts": {
-    "build": "pnpm run clean && pnpm run build:cjs && pnpm run build:esm+types",
-    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --moduleResolution node10 --outDir ./dist/cjs --removeComments --verbatimModuleSyntax false && echo > ./dist/cjs/package.json '{\"type\":\"commonjs\"}'",
-    "build:esm+types": "tsc --project tsconfig.build.json --module nodenext --outDir ./dist/esm --declaration --declarationMap --declarationDir ./dist/types && echo > ./dist/esm/package.json '{\"type\":\"module\",\"sideEffects\":false}'",
-    "check:types": "tsc --noEmit",
-    "clean": "rm -rf dist tsconfig.tsbuildinfo abis zod",
-    "test:build": "publint --strict",
-    "typeperf": "tsc --noEmit --extendedDiagnostics --composite false --incremental false"
-  },
+  "funding": "https://github.com/sponsors/wevm",
   "files": [
     "dist",
     "/abis",
@@ -24,12 +31,22 @@
     "!src/**/*.test.ts",
     "!src/**/*.test-d.ts"
   ],
-  "sideEffects": false,
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/cjs/exports/index.js",
   "module": "./dist/esm/exports/index.js",
   "types": "./dist/types/exports/index.d.ts",
   "typings": "./dist/types/exports/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "abis": [
+        "./dist/types/exports/abis.d.ts"
+      ],
+      "zod": [
+        "./dist/types/exports/zod.d.ts"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "types": "./dist/types/exports/index.d.ts",
@@ -48,11 +65,17 @@
     },
     "./package.json": "./package.json"
   },
-  "typesVersions": {
-    "*": {
-      "abis": ["./dist/types/exports/abis.d.ts"],
-      "zod": ["./dist/types/exports/zod.d.ts"]
-    }
+  "scripts": {
+    "build": "pnpm run clean && pnpm run build:cjs && pnpm run build:esm+types",
+    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --moduleResolution node10 --outDir ./dist/cjs --removeComments --verbatimModuleSyntax false && echo > ./dist/cjs/package.json '{\"type\":\"commonjs\"}'",
+    "build:esm+types": "tsc --project tsconfig.build.json --module nodenext --outDir ./dist/esm --declaration --declarationMap --declarationDir ./dist/types && echo > ./dist/esm/package.json '{\"type\":\"module\",\"sideEffects\":false}'",
+    "check:types": "tsc --noEmit",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo abis zod",
+    "test:build": "publint --strict",
+    "typeperf": "tsc --noEmit --extendedDiagnostics --composite false --incremental false"
+  },
+  "devDependencies": {
+    "zod": "^3.23.8"
   },
   "peerDependencies": {
     "typescript": ">=5.0.4",
@@ -65,21 +88,5 @@
     "zod": {
       "optional": true
     }
-  },
-  "devDependencies": {
-    "zod": "^3.23.8"
-  },
-  "contributors": ["awkweb.eth <t@wevm.dev>", "jxom.eth <j@wevm.dev>"],
-  "funding": "https://github.com/sponsors/wevm",
-  "keywords": [
-    "abi",
-    "eth",
-    "ethereum",
-    "types",
-    "typescript",
-    "viem",
-    "wagmi",
-    "web3",
-    "wevm"
-  ]
+  }
 }
