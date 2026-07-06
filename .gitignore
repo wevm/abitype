@@ -10,6 +10,7 @@ bench
 cache
 coverage
 dist
+docs/pages.gen.ts
 node_modules
 packages/abitype/abis
 packages/abitype/zod

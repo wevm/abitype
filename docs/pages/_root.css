@@ -1,0 +1,29 @@
+[data-light] {
+  display: none !important;
+}
+
+@media (prefers-color-scheme: light) {
+  [data-light] {
+    display: inline !important;
+  }
+
+  [data-dark] {
+    display: none !important;
+  }
+}
+
+html[data-vocs-theme='light'] [data-light],
+html:not(.dark) [data-light] {
+  display: inline !important;
+}
+
+html[data-vocs-theme='light'] [data-dark],
+html[data-vocs-theme='dark'] [data-light],
+html.dark [data-light] {
+  display: none !important;
+}
+
+html[data-vocs-theme='dark'] [data-dark],
+html.dark [data-dark] {
+  display: inline !important;
+}

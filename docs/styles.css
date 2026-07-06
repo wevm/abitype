@@ -1,7 +1,0 @@
-.dark [data-light] {
-  display: none;
-}
-
-html:not(.dark) [data-dark] {
-  display: none;
-}
