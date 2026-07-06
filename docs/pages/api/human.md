@@ -216,13 +216,12 @@ Parses human-readable ABI into JSON [`Abi`](/api/types#abi).
 import { ParseAbi } from 'abitype'
 
 type Result = ParseAbi<
+  // ^?
   [
     'function balanceOf(address owner) view returns (uint256)',
     'event Transfer(address indexed from, address indexed to, uint256 amount)',
   ]
 >
-let result: Result
-//  ^?
 ```
 
 ### `ParseAbiItem`
@@ -241,14 +240,12 @@ import { ParseAbiItem } from 'abitype'
 
 type Result =
   ParseAbiItem<'function balanceOf(address owner) view returns (uint256)'>
-let result: Result
-//  ^?
+//   ^?
 
 type ResultStruct = ParseAbiItem<
+  //   ^?
   ['function foo(Baz bar) view returns (string)', 'struct Baz { string name; }']
 >
-let resultStruct: ResultStruct
-//  ^?
 ```
 
 ### `ParseAbiParameter`
@@ -269,12 +266,8 @@ type Result = ParseAbiParameter<'address from'>
 //   ^?
 
 type ResultStruct = ParseAbiParameter<
-  [
-    // ^?
-
-    'Baz bar',
-    'struct Baz { string name; }',
-  ]
+  //   ^?
+  ['Baz bar', 'struct Baz { string name; }']
 >
 ```
 
@@ -296,12 +289,8 @@ type Result = ParseAbiParameters<'address from, uint256 amount'>
 //   ^?
 
 type ResultStruct = ParseAbiParameters<
-  [
-    // ^?
-
-    'Baz bar',
-    'struct Baz { string name; }',
-  ]
+  //   ^?
+  ['Baz bar', 'struct Baz { string name; }']
 >
 ```
 
@@ -320,9 +309,8 @@ Formats [`Abi`](/api/types#abi) into human-readable ABI.
 import { FormatAbi } from 'abitype'
 
 type Result = FormatAbi<
+  //   ^?
   [
-    //   ^?
-
     {
       name: 'balanceOf'
       type: 'function'
@@ -401,12 +389,8 @@ Formats [`AbiParameter`s](/api/types#abiparameter) into human-readable ABI param
 import { FormatAbiParameters } from 'abitype'
 
 type Result = FormatAbiParameters<
-  [
-    //   ^?
-
-    { type: 'address'; name: 'from' },
-    { type: 'uint256'; name: 'tokenId' },
-  ]
+  //   ^?
+  [{ type: 'address'; name: 'from' }, { type: 'uint256'; name: 'tokenId' }]
 >
 ```
 

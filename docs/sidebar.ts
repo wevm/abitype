@@ -1,4 +1,4 @@
-import type { Sidebar } from 'vocs'
+import type { Config } from 'vocs/config'
 
 export const sidebar = {
   '/': [
@@ -58,4 +58,4 @@ export const sidebar = {
       ],
     },
   ],
-} satisfies Sidebar
+} satisfies Config['sidebar']

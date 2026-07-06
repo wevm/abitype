@@ -1,6 +1,3 @@
-import { createRequire } from 'node:module'
-
-const require = createRequire(import.meta.url)
-const pkg = require('../packages/abitype/package.json')
+import pkg from '../packages/abitype/package.json' with { type: 'json' }
 
 export const version = pkg.version
