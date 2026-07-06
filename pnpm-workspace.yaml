@@ -7,6 +7,7 @@ packages:
   - playgrounds/*
 trustPolicy: no-downgrade
 trustPolicyExclude:
+  - vite
   - semver
   - rehype-pretty-code
   - ua-parser-js
@@ -19,6 +20,8 @@ catalog:
 overrides:
   vite: 'catalog:'
   vitest: 'catalog:'
+  # Vocs is not compatible with the Vite+ `vite` alias yet.
+  vocs>vite: ^5.0.2
 peerDependencyRules:
   allowAny:
     - vite
