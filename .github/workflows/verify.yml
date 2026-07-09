@@ -79,6 +79,7 @@ jobs:
         run: pnpm preconstruct
 
       - name: Bench types
+        # TODO: Re-enable for `latest` once @ark/attest supports TypeScript 7.
         if: matrix.version != 'latest'
         run: pnpm bench:types
 
