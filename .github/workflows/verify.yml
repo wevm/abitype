@@ -62,6 +62,7 @@ jobs:
             '5.8.3',
             '5.9.3',
             '6.0.3',
+            'latest',
           ]
 
     steps:
@@ -78,6 +79,7 @@ jobs:
         run: pnpm preconstruct
 
       - name: Bench types
+        if: matrix.version != 'latest'
         run: pnpm bench:types
 
       - name: Check types
