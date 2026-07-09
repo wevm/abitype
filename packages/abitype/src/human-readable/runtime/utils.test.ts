@@ -256,9 +256,8 @@ test('empty string', () => {
 })
 
 test('Invalid solidity type', () => {
-  expect(() =>
-    parseAbiParameter('strings'),
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => parseAbiParameter('strings'))
+    .toThrowErrorMatchingInlineSnapshot(`
     [UnknownSolidityTypeError: Unknown type.
 
     Type "strings" is not a valid ABI type.
@@ -268,9 +267,8 @@ test('Invalid solidity type', () => {
 })
 
 test('Invalid solidity type in tuple', () => {
-  expect(() =>
-    parseAbiParameter('(strings)'),
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => parseAbiParameter('(strings)'))
+    .toThrowErrorMatchingInlineSnapshot(`
     [UnknownSolidityTypeError: Unknown type.
 
     Type "strings" is not a valid ABI type.
@@ -280,9 +278,8 @@ test('Invalid solidity type in tuple', () => {
 })
 
 test('Invalid solidity type in nested tuple', () => {
-  expect(() =>
-    parseAbiParameter('((strings))'),
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => parseAbiParameter('((strings))'))
+    .toThrowErrorMatchingInlineSnapshot(`
     [UnknownSolidityTypeError: Unknown type.
 
     Type "strings" is not a valid ABI type.
@@ -292,9 +289,8 @@ test('Invalid solidity type in nested tuple', () => {
 })
 
 test('Struct type without context', () => {
-  expect(() =>
-    parseAbiParameter('Demo demo'),
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => parseAbiParameter('Demo demo'))
+    .toThrowErrorMatchingInlineSnapshot(`
     [UnknownSolidityTypeError: Unknown type.
 
     Type "Demo" is not a valid ABI type.

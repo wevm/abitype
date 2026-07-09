@@ -1,5 +1,7 @@
-export interface AbiParameterTupleNameLookup<type>
-  extends Record<string, [type]> {
+export interface AbiParameterTupleNameLookup<type> extends Record<
+  string,
+  [type]
+> {
   _a: [_a: type]
   _acceptablePrice: [_acceptablePrice: type]
   _account: [_account: type]

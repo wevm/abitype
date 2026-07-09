@@ -50,7 +50,20 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        version: ['5.0.4', '5.2.2', '5.3.3', '5.4.5', '5.5.4', '5.6.3', '5.7.3', '5.8.3', '5.9.3', '6.0.3', 'latest']
+        version:
+          [
+            '5.0.4',
+            '5.2.2',
+            '5.3.3',
+            '5.4.5',
+            '5.5.4',
+            '5.6.3',
+            '5.7.3',
+            '5.8.3',
+            '5.9.3',
+            '6.0.3',
+            'latest',
+          ]
 
     steps:
       - name: Clone repository
@@ -64,7 +77,7 @@ jobs:
 
       - name: Link packages
         run: pnpm preconstruct
-        
+
       - name: Bench types
         run: pnpm bench:types
 

@@ -67,9 +67,7 @@ export type ContractReturnType<
   args extends readonly unknown[] | undefined = readonly unknown[] | undefined,
   ///
   abiFunction extends AbiFunction = (
-    abi extends Abi
-      ? ExtractAbiFunction<abi, functionName>
-      : AbiFunction
+    abi extends Abi ? ExtractAbiFunction<abi, functionName> : AbiFunction
   ) extends infer abiFunction_ extends AbiFunction
     ? IsUnion<abiFunction_> extends true // narrow overloads by `args` by converting to tuple and filtering out overloads that don't match
       ? UnionToTuple<abiFunction_> extends infer abiFunctions extends
@@ -100,8 +98,7 @@ export type ContractReturnType<
   : readonly unknown[] extends primitiveTypes
     ? unknown // `abiFunction` was not inferrable (e.g. `abi` not const-asserted)
     : primitiveTypes extends readonly [] // unwrap `primitiveTypes`
-      ? // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
-        void // no outputs
+      ? void // no outputs
       : primitiveTypes extends readonly [infer primitiveType]
         ? primitiveType // single output
         : primitiveTypes
@@ -113,15 +110,14 @@ type IsUnion<T, C = T> = T extends C ? ([C] extends [T] ? false : true) : never
 type UnionToTuple<U, Last = LastInUnion<U>> = [U] extends [never]
   ? []
   : [...UnionToTuple<Exclude<U, Last>>, Last]
-type LastInUnion<U> = UnionToIntersection<
-  U extends unknown ? (x: U) => 0 : never
-> extends (x: infer L) => 0
-  ? L
-  : never
-type UnionToIntersection<U> = (
-  U extends unknown
-    ? (arg: U) => 0
+type LastInUnion<U> =
+  UnionToIntersection<U extends unknown ? (x: U) => 0 : never> extends (
+    x: infer L,
+  ) => 0
+    ? L
     : never
+type UnionToIntersection<U> = (
+  U extends unknown ? (arg: U) => 0 : never
 ) extends (arg: infer I) => 0
   ? I
   : never

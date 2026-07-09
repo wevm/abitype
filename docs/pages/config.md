@@ -11,6 +11,8 @@ How to configure ABIType in userland or as a library author.
 ABIType's types are customizable using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). Just install `abitype` (make sure versions match) and extend the `Register` interface either directly in your code or in a `d.ts` file (e.g. `abi.d.ts`):
 
 ```ts twoslash
+import 'abitype'
+// ---cut---
 declare module 'abitype' {
   export interface Register {
     bigIntType: bigint & { foo: 'bar' }
@@ -20,9 +22,6 @@ declare module 'abitype' {
 import { ResolvedRegister } from 'abitype'
 type Result = ResolvedRegister['bigIntType']
 //   ^?
-
-
-
 ```
 
 :::info[Extending Config from third-party packages]
@@ -35,6 +34,7 @@ declare module 'viem/node_modules/abitype' {
   }
 }
 ```
+
 :::
 
 ## Options
@@ -53,6 +53,8 @@ TypeScript type to use for `address` values.
 - Default `` `0x${string}` ``
 
 ```ts twoslash
+import 'abitype'
+// ---cut---
 declare module 'abitype' {
   export interface Register {
     addressType: `0x${string}`
@@ -68,6 +70,8 @@ Maximum depth for nested array types (e.g. `string[][]`). When `false`, there is
 - Default `false`
 
 ```ts twoslash
+import 'abitype'
+// ---cut---
 declare module 'abitype' {
   export interface Register {
     ArrayMaxDepth: false
@@ -83,6 +87,8 @@ TypeScript type to use for `int<M>` and `uint<M>` values, where `M > 48`.
 - Default `bigint`
 
 ```ts twoslash
+import 'abitype'
+// ---cut---
 declare module 'abitype' {
   export interface Register {
     bigIntType: bigint
@@ -95,9 +101,11 @@ declare module 'abitype' {
 TypeScript type to use for `bytes<M>` values.
 
 - Type `{ inputs: any; outputs: any }`
-- Default `` { inputs: `0x${string}` | Uint8Array; outputs: `0x${string}` } ``
+- Default ``{ inputs: `0x${string}` | Uint8Array; outputs: `0x${string}` }``
 
 ```ts twoslash
+import 'abitype'
+// ---cut---
 declare module 'abitype' {
   export interface Register {
     bytesType: {
@@ -116,6 +124,8 @@ Lower bound for fixed-length arrays.
 - Default `1`
 
 ```ts twoslash
+import 'abitype'
+// ---cut---
 declare module 'abitype' {
   export interface Register {
     FixedArrayMinLength: 1
@@ -131,6 +141,8 @@ Upper bound for fixed-length arrays.
 - Default `99`
 
 ```ts twoslash
+import 'abitype'
+// ---cut---
 declare module 'abitype' {
   export interface Register {
     FixedArrayMinLength: 99
@@ -146,6 +158,8 @@ TypeScript type to use for `int<M>` and `uint<M>` values, where `M <= 48`.
 - Default `number`
 
 ```ts twoslash
+import 'abitype'
+// ---cut---
 declare module 'abitype' {
   export interface Register {
     intType: number
@@ -161,6 +175,8 @@ Enables named tuple generation in [`AbiParametersToPrimitiveTypes`](/api/utiliti
 - Default `false`
 
 ```ts twoslash
+import 'abitype'
+// ---cut---
 declare module 'abitype' {
   export interface Register {
     experimental_namedTuples: false
@@ -176,6 +192,8 @@ When set, validates `AbiParameter`'s `type` against `AbiType`.
 - Default `false`
 
 ```ts twoslash
+import 'abitype'
+// ---cut---
 declare module 'abitype' {
   export interface Register {
     strictAbiType: false

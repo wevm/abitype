@@ -32,7 +32,7 @@ jobs:
           pnpm changeset:prepublish
           pnpx pkg-pr-new publish --pnpm --compact './packages/abitype'
         env:
-          PKG_PR_NEW: true 
+          PKG_PR_NEW: true
 
   bench:
     name: Benchmark

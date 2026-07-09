@@ -184,9 +184,8 @@ test('no properties', () => {
 })
 
 test('struct does not exist when resolving', () => {
-  expect(() =>
-    parseStructs(['struct Foo { Bar bar; }']),
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => parseStructs(['struct Foo { Bar bar; }']))
+    .toThrowErrorMatchingInlineSnapshot(`
     [UnknownTypeError: Unknown type.
 
     Type "Bar" is not a valid ABI type. Perhaps you forgot to include a struct signature?

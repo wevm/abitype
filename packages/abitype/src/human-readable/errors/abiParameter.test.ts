@@ -11,9 +11,8 @@ import {
 } from './abiParameter.js'
 
 test('InvalidAbiParamterError', () => {
-  expect(
-    new InvalidAbiParameterError({ param: 'address owner' }),
-  ).toMatchInlineSnapshot(`
+  expect(new InvalidAbiParameterError({ param: 'address owner' }))
+    .toMatchInlineSnapshot(`
     [InvalidAbiParameterError: Failed to parse ABI parameter.
 
     Docs: https://abitype.dev/api/human#parseabiparameter-1
@@ -23,9 +22,8 @@ test('InvalidAbiParamterError', () => {
 })
 
 test('InvalidAbiParamtersError', () => {
-  expect(
-    new InvalidAbiParametersError({ params: 'address owner' }),
-  ).toMatchInlineSnapshot(`
+  expect(new InvalidAbiParametersError({ params: 'address owner' }))
+    .toMatchInlineSnapshot(`
     [InvalidAbiParametersError: Failed to parse ABI parameters.
 
     Docs: https://abitype.dev/api/human#parseabiparameters-1
