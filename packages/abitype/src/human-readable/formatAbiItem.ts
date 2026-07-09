@@ -22,8 +22,9 @@ import type { AssertName } from './types/signatures.js'
  * @param abiItem - ABI item
  * @returns Human-readable ABI item
  *
- * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
- * use `AbiItem.format.ReturnType` instead: `import { AbiItem } from 'ox'`.
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`AbiItem.format.ReturnType`](https://oxlib.sh/api/AbiItem/format#return-type) instead:
+ * `import { AbiItem } from 'ox'`.
  */
 export type FormatAbiItem<abiItem extends Abi[number]> =
   Abi[number] extends abiItem
@@ -98,8 +99,9 @@ type FormatAbiParameters<
  * @param abiItem - ABI item
  * @returns Human-readable ABI item
  *
- * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
- * use `AbiItem.format` instead: `import { AbiItem } from 'ox'`.
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`AbiItem.format`](https://oxlib.sh/api/AbiItem/format) instead:
+ * `import { AbiItem } from 'ox'`.
  */
 export function formatAbiItem<const abiItem extends Abi[number]>(
   abiItem: abiItem,

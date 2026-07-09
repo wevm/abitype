@@ -11,9 +11,9 @@ import {
  * @param abiParameters - ABI parameters
  * @returns Human-readable ABI parameters
  *
- * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
- * use `AbiParameters.format.ReturnType` instead: `import { AbiParameters } from
- * 'ox'`.
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`AbiParameters.format.ReturnType`](https://oxlib.sh/api/AbiParameters/format#return-type) instead:
+ * `import { AbiParameters } from 'ox'`.
  *
  * @example
  * type Result = FormatAbiParameters<[
@@ -40,8 +40,9 @@ export type FormatAbiParameters<
  * @param abiParameters - ABI parameters
  * @returns Human-readable ABI parameters
  *
- * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
- * use `AbiParameters.format` instead: `import { AbiParameters } from 'ox'`.
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`AbiParameters.format`](https://oxlib.sh/api/AbiParameters/format) instead:
+ * `import { AbiParameters } from 'ox'`.
  *
  * @example
  * const result = formatAbiParameters([

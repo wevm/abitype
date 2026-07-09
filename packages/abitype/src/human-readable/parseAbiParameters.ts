@@ -17,9 +17,9 @@ import type { ParseAbiParameters as ParseAbiParameters_ } from './types/utils.js
  * @param params - Human-readable ABI parameters
  * @returns Parsed {@link AbiParameter}s
  *
- * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
- * use `AbiParameters.from.ReturnType` instead: `import { AbiParameters } from
- * 'ox'`.
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`AbiParameters.from.ReturnType`](https://oxlib.sh/api/AbiParameters/from#return-type) instead:
+ * `import { AbiParameters } from 'ox'`.
  *
  * @example
  * type Result = ParseAbiParameters('address from, address to, uint256 amount')
@@ -92,8 +92,9 @@ type DeepFlatten<
  * @param params - Human-readable ABI parameters
  * @returns Parsed {@link AbiParameter}s
  *
- * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
- * use `AbiParameters.from` instead: `import { AbiParameters } from 'ox'`.
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`AbiParameters.from`](https://oxlib.sh/api/AbiParameters/from) instead:
+ * `import { AbiParameters } from 'ox'`.
  *
  * @example
  * const abiParameters = parseAbiParameters('address from, address to, uint256 amount')

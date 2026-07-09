@@ -15,9 +15,9 @@ import type { ParseAbiParameter as ParseAbiParameter_ } from './types/utils.js'
  * @param param - Human-readable ABI parameter
  * @returns Parsed {@link AbiParameter}
  *
- * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
- * use `AbiParameter.from.ReturnType` instead: `import { AbiParameter } from
- * 'ox'`.
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`AbiParameter.from.ReturnType`](https://oxlib.sh/api/AbiParameter/from#return-type) instead:
+ * `import { AbiParameter } from 'ox'`.
  *
  * @example
  * type Result = ParseAbiParameter<'address from'>
@@ -68,8 +68,9 @@ export type ParseAbiParameter<
  * @param param - Human-readable ABI parameter
  * @returns Parsed {@link AbiParameter}
  *
- * @deprecated Human-readable ABI utilities are moving to Ox. Install `ox` and
- * use `AbiParameter.from` instead: `import { AbiParameter } from 'ox'`.
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`AbiParameter.from`](https://oxlib.sh/api/AbiParameter/from) instead:
+ * `import { AbiParameter } from 'ox'`.
  *
  * @example
  * const abiParameter = parseAbiParameter('address from')

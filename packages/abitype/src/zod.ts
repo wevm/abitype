@@ -196,12 +196,6 @@ export const AbiItemType = z.union([
   z.literal('receive'),
 ])
 
-/**
- * Zod Schema for Contract [ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html#json)
- *
- * @example
- * const parsedAbi = Abi.parse([…])
- */
 export const Abi = z
   .array(
     z.union([
