@@ -74,7 +74,7 @@ import 'abitype'
 // ---cut---
 declare module 'abitype' {
   export interface Register {
-    ArrayMaxDepth: false
+    arrayMaxDepth: false
   }
 }
 ```
@@ -128,7 +128,7 @@ import 'abitype'
 // ---cut---
 declare module 'abitype' {
   export interface Register {
-    FixedArrayMinLength: 1
+    fixedArrayMinLength: 1
   }
 }
 ```
@@ -145,7 +145,7 @@ import 'abitype'
 // ---cut---
 declare module 'abitype' {
   export interface Register {
-    FixedArrayMinLength: 99
+    fixedArrayMaxLength: 99
   }
 }
 ```
