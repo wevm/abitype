@@ -15,6 +15,10 @@ import type { ParseSignature } from './types/utils.js'
  * @param signature - Human-readable ABI item
  * @returns Parsed {@link Abi} item
  *
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`AbiItem.from.ReturnType`](https://oxlib.sh/api/AbiItem/from#return-type) instead:
+ * `import { AbiItem } from 'ox'`.
+ *
  * @example
  * type Result = ParseAbiItem<'function balanceOf(address owner) view returns (uint256)'>
  * //   ^? type Result = { name: "balanceOf"; type: "function"; stateMutability: "view";...
@@ -62,6 +66,10 @@ export type ParseAbiItem<
  *
  * @param signature - Human-readable ABI item
  * @returns Parsed {@link Abi} item
+ *
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`AbiItem.from`](https://oxlib.sh/api/AbiItem/from) instead:
+ * `import { AbiItem } from 'ox'`.
  *
  * @example
  * const abiItem = parseAbiItem('function balanceOf(address owner) view returns (uint256)')

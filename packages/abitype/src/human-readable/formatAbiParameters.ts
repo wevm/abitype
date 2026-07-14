@@ -11,6 +11,10 @@ import {
  * @param abiParameters - ABI parameters
  * @returns Human-readable ABI parameters
  *
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`AbiParameters.format.ReturnType`](https://oxlib.sh/api/AbiParameters/format#return-type) instead:
+ * `import { AbiParameters } from 'ox'`.
+ *
  * @example
  * type Result = FormatAbiParameters<[
  *   // ^? type Result = 'address from, uint256 tokenId'
@@ -35,6 +39,10 @@ export type FormatAbiParameters<
  *
  * @param abiParameters - ABI parameters
  * @returns Human-readable ABI parameters
+ *
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`AbiParameters.format`](https://oxlib.sh/api/AbiParameters/format) instead:
+ * `import { AbiParameters } from 'ox'`.
  *
  * @example
  * const result = formatAbiParameters([

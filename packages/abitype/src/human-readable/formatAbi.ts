@@ -6,6 +6,10 @@ import { type FormatAbiItem, formatAbiItem } from './formatAbiItem.js'
  *
  * @param abi - ABI
  * @returns Human-readable ABI
+ *
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`Abi.format.ReturnType`](https://oxlib.sh/api/Abi/format#return-type) instead:
+ * `import { Abi } from 'ox'`.
  */
 export type FormatAbi<abi extends Abi | readonly unknown[]> = Abi extends abi
   ? readonly string[]
@@ -22,6 +26,10 @@ export type FormatAbi<abi extends Abi | readonly unknown[]> = Abi extends abi
  *
  * @param abi - ABI
  * @returns Human-readable ABI
+ *
+ * @deprecated Human-readable ABI utilities are moving to Ox.
+ * Install [`ox`](https://oxlib.sh) and use [`Abi.format`](https://oxlib.sh/api/Abi/format) instead:
+ * `import { Abi } from 'ox'`.
  */
 export function formatAbi<const abi extends Abi | readonly unknown[]>(
   abi: abi,
