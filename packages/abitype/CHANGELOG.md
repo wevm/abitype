@@ -1,5 +1,13 @@
 # abitype
 
+## 1.3.0
+
+### Minor Changes
+
+- Deprecated human-readable ABI utilities in favor of Ox's `Abi`, `AbiItem`, `AbiParameter`, and `AbiParameters` modules. ([#309](https://github.com/wevm/abitype/pull/309))
+
+  Deprecated `abitype/zod` schemas in favor of Ox's ABI and EIP-712 Typed Data schemas from `ox/zod`.
+
 ## 1.2.4
 
 ### Patch Changes
