@@ -17,10 +17,6 @@ export const sidebar = {
           text: 'Walkthrough',
           link: '/guide/walkthrough',
         },
-        {
-          text: 'Comparisons',
-          link: '/guide/comparisons',
-        },
       ],
     },
     {
@@ -35,16 +31,8 @@ export const sidebar = {
           link: '/api/utilities',
         },
         {
-          text: 'Human-Readable',
-          link: '/api/human',
-        },
-        {
           text: 'ABIs',
           link: '/api/abis',
-        },
-        {
-          text: 'Zod',
-          link: '/api/zod',
         },
       ],
     },

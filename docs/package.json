@@ -8,11 +8,9 @@
     "preview": "vocs preview"
   },
   "devDependencies": {
-    "@ethersproject/abi": "^5.7.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "abitype": "workspace:*",
-    "ethers": "^6.13.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "vocs": "2.3.3",

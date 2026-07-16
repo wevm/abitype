@@ -73,9 +73,6 @@ importers:
 
   docs:
     devDependencies:
-      '@ethersproject/abi':
-        specifier: ^5.7.0
-        version: 5.7.0
       '@types/react':
         specifier: ^19.2.17
         version: 19.2.17
@@ -85,9 +82,6 @@ importers:
       abitype:
         specifier: workspace:*
         version: link:../packages/abitype
-      ethers:
-        specifier: ^6.13.1
-        version: 6.13.1
       react:
         specifier: ^19.2.7
         version: 19.2.7

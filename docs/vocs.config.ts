@@ -52,6 +52,18 @@ export default defineConfig({
   markdown: {
     rehypePlugins: [rehypeTwoslashGeneratedLinks],
   },
+  redirects: [
+    {
+      source: '/api/human',
+      destination: 'https://oxlib.sh/guides/abi#human-readable-abis',
+      status: 308,
+    },
+    {
+      source: '/api/zod',
+      destination: 'https://oxlib.sh/zod/schemas/Abi',
+      status: 308,
+    },
+  ],
   ogImageUrl: '/og.png',
   iconUrl: '/favicon.png',
   logoUrl: {
