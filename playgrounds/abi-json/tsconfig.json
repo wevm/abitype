@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "module": "nodenext",
+    "target": "es2022",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "types": []
+  },
+  "files": ["index.ts"],
+  "contentMappers": [
+    {
+      "package": "@abitype/abi-json-content-mapper",
+      "extensions": [".abi"]
+    }
+  ]
+}

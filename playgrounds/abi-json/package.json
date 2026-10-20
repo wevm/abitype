@@ -1,0 +1,16 @@
+{
+  "name": "abi-json",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check:types": "node node_modules/typescript-beta/bin/tsc --noEmit --runExternalCode",
+    "test": "node test.mjs"
+  },
+  "dependencies": {
+    "abitype": "workspace:*"
+  },
+  "devDependencies": {
+    "@abitype/abi-json-content-mapper": "workspace:*",
+    "typescript-beta": "npm:typescript@7.1.0-beta"
+  }
+}

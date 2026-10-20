@@ -30,6 +30,8 @@ peerDependencyRules:
     vite: '*'
     vitest: '*'
 minimumReleaseAgeExclude:
+  - typescript@7.1.0-beta
+  - '@typescript/typescript-*'
   - vocs
   - vite-plus
   - '@voidzero-dev/*'

@@ -75,6 +75,11 @@
           "**/*.tsx"
         ]
       },
+      "packages/abi-json-content-mapper": {
+        "entry": [
+          "mapper.mjs"
+        ]
+      },
       "packages/abitype": {
         "entry": [
           "src/exports/{abis,index,zod}.ts!"

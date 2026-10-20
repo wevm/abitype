@@ -1,0 +1,35 @@
+[
+  {
+    "type": "function",
+    "name": "balanceOf",
+    "stateMutability": "view",
+    "inputs": [{ "name": "owner", "type": "address" }],
+    "outputs": [{ "name": "balance", "type": "uint256" }]
+  },
+  {
+    "type": "function",
+    "name": "transfer",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "to", "type": "address" },
+      { "name": "amount", "type": "uint256" }
+    ],
+    "outputs": [{ "name": "success", "type": "bool" }]
+  },
+  {
+    "type": "function",
+    "name": "quote",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "order",
+        "type": "tuple",
+        "components": [
+          { "name": "recipient", "type": "address" },
+          { "name": "amounts", "type": "uint256[2]" }
+        ]
+      }
+    ],
+    "outputs": [{ "name": "label 🪙", "type": "string" }]
+  }
+]
