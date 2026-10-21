@@ -40,7 +40,7 @@ jobs:
       - name: Install dependencies
         uses: wevm/actions/.github/actions/pnpm@f95dc1dadcba18fe3f02b8205e653e98e4a93516
         with:
-          node-version: 24.5
+          node-version: 24.22.1
           skip-cache: true # avoid cache poisoning attacks
 
       - name: Create version pull request
@@ -73,7 +73,7 @@ jobs:
       - name: Install dependencies
         uses: wevm/actions/.github/actions/pnpm@f95dc1dadcba18fe3f02b8205e653e98e4a93516
         with:
-          node-version: 24.5
+          node-version: 24.22.1
           skip-cache: true # avoid cache poisoning attacks
 
       - name: Publish to npm
@@ -103,7 +103,7 @@ jobs:
       - name: Install dependencies
         uses: wevm/actions/.github/actions/pnpm@f95dc1dadcba18fe3f02b8205e653e98e4a93516
         with:
-          node-version: 24.5
+          node-version: 24.22.1
           skip-cache: true # avoid cache poisoning attacks
 
       - name: Publish prerelease
