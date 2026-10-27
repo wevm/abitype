@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-      hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
+      hasChangesets: ${{ steps.changesets.outputs.has-changesets }}
 
     steps:
       - name: Clone repository
@@ -47,9 +47,9 @@ jobs:
         id: changesets
         uses: wevm/actions/vendor/changesets/action/abitype@817c9008b1112c1d61003f2f155687c30601de97 # upstream v2.1.2
         with:
-          title: 'chore: version packages'
-          commit: 'chore: version packages'
-          version: pnpm changeset:version
+          pr-title: 'chore: version packages'
+          commit-message: 'chore: version packages'
+          version-script: pnpm changeset:version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -80,8 +80,8 @@ jobs:
         id: publish
         uses: wevm/actions/vendor/changesets/action/abitype@817c9008b1112c1d61003f2f155687c30601de97 # upstream v2.1.2
         with:
-          createGithubReleases: true
-          publish: pnpm changeset:publish
+          create-github-releases: true
+          publish-script: pnpm changeset:publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
