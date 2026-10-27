@@ -1,0 +1,13 @@
+# Only the isolated publisher in this reviewed workflow can mint a token.
+# PR code runs in a different job without OIDC or write permissions.
+subject: repo:wevm/abitype:pull_request
+claim_pattern:
+  repository_id: '520970312'
+  repository_owner_id: '109633172'
+  event_name: pull_request
+  workflow_ref: 'wevm/abitype/\.github/workflows/autofix\.yml@refs/pull/[1-9][0-9]*/merge'
+  job_workflow_ref: 'wevm/actions/\.github/workflows/autofix\.yml@e7e7cfb7fcb3a6e6db894c6b784aa4515f19d2fa'
+permissions:
+  contents: write
+  pull_requests: read
+max_ttl: 5m
