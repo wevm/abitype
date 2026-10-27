@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@f7ad7f00e16e73322562922c241f21f0c7ffbbec
+        uses: wevm/actions/.github/actions/pnpm-v4@67ad93da5866fc6ad24c25e49e5e8efabc08c718
 
       - name: Check code
         run: pnpm check
