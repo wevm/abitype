@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm-v4@67ad93da5866fc6ad24c25e49e5e8efabc08c718
+        uses: wevm/actions/.github/actions/pnpm@67ad93da5866fc6ad24c25e49e5e8efabc08c718
 
       - name: Check repo
         run: pnpm check:repo
@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm-v4@67ad93da5866fc6ad24c25e49e5e8efabc08c718
+        uses: wevm/actions/.github/actions/pnpm@67ad93da5866fc6ad24c25e49e5e8efabc08c718
 
       - name: Build
         run: pnpm build
@@ -70,7 +70,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm-v4@67ad93da5866fc6ad24c25e49e5e8efabc08c718
+        uses: wevm/actions/.github/actions/pnpm@67ad93da5866fc6ad24c25e49e5e8efabc08c718
 
       - name: Use `typescript@${{ matrix.version }}`
         run: pnpm add -D -w typescript@${{ matrix.version }}
@@ -99,7 +99,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm-v4@67ad93da5866fc6ad24c25e49e5e8efabc08c718
+        uses: wevm/actions/.github/actions/pnpm@67ad93da5866fc6ad24c25e49e5e8efabc08c718
 
       - name: Run tests
         run: pnpm test:cov
