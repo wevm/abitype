@@ -105,6 +105,6 @@ jobs:
         run: pnpm test:cov
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+        uses: wevm/actions/vendor/codecov/codecov-action/v7.1.1@73e899a58d51092d694fbaf94b7a1d8c09bfea28 # v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
