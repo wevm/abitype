@@ -30,7 +30,7 @@ jobs:
         run: pnpm version:update
 
       - name: Apply fixes
-        uses: autofix-ci/action@635ffb0c9798bd160680f18fd73371e355b85f27 # v1.3.2
+        uses: wevm/actions/vendor/autofix-ci/action/v1.3.2@73e899a58d51092d694fbaf94b7a1d8c09bfea28
         with:
           fail-fast: false
           commit-message: 'ci: apply automated fixes'
