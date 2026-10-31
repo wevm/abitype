@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@28b5093e040885467b40d0a5cf0164f8be0fc038
+        uses: wevm/actions/.github/actions/pnpm@8963daf30237417f873c8e2f17e3bf9415e3a7b9
 
       - name: Publish preview
         run: |
@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@28b5093e040885467b40d0a5cf0164f8be0fc038
+        uses: wevm/actions/.github/actions/pnpm@8963daf30237417f873c8e2f17e3bf9415e3a7b9
 
       - name: Run benchmarks
         run: pnpm bench
@@ -59,10 +59,10 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@28b5093e040885467b40d0a5cf0164f8be0fc038
+        uses: wevm/actions/.github/actions/pnpm@8963daf30237417f873c8e2f17e3bf9415e3a7b9
 
       - name: Report build size
-        uses: wevm/actions/vendor/preactjs/compressed-size-action/2.8.0@73e899a58d51092d694fbaf94b7a1d8c09bfea28
+        uses: wevm/actions/vendor/preactjs/compressed-size-action/2.8.0@8963daf30237417f873c8e2f17e3bf9415e3a7b9
         with:
           pattern: 'packages/**/dist/**'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
