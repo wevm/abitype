@@ -38,14 +38,14 @@ jobs:
           fetch-depth: 0
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@28b5093e040885467b40d0a5cf0164f8be0fc038
+        uses: wevm/actions/.github/actions/pnpm@8963daf30237417f873c8e2f17e3bf9415e3a7b9
         with:
           node-version: 24.5
           skip-cache: true # avoid cache poisoning attacks
 
       - name: Create version pull request
         id: changesets
-        uses: wevm/actions/vendor/changesets/action/abitype@817c9008b1112c1d61003f2f155687c30601de97 # upstream v2.1.2
+        uses: wevm/actions/vendor/changesets/action/abitype@8963daf30237417f873c8e2f17e3bf9415e3a7b9 # upstream v2.1.2
         with:
           pr-title: 'chore: version packages'
           commit-message: 'chore: version packages'
@@ -71,14 +71,14 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@28b5093e040885467b40d0a5cf0164f8be0fc038
+        uses: wevm/actions/.github/actions/pnpm@8963daf30237417f873c8e2f17e3bf9415e3a7b9
         with:
           node-version: 24.5
           skip-cache: true # avoid cache poisoning attacks
 
       - name: Publish to npm
         id: publish
-        uses: wevm/actions/vendor/changesets/action/abitype@817c9008b1112c1d61003f2f155687c30601de97 # upstream v2.1.2
+        uses: wevm/actions/vendor/changesets/action/abitype@8963daf30237417f873c8e2f17e3bf9415e3a7b9 # upstream v2.1.2
         with:
           create-github-releases: true
           publish-script: pnpm changeset:publish
@@ -101,7 +101,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@28b5093e040885467b40d0a5cf0164f8be0fc038
+        uses: wevm/actions/.github/actions/pnpm@8963daf30237417f873c8e2f17e3bf9415e3a7b9
         with:
           node-version: 24.5
           skip-cache: true # avoid cache poisoning attacks
