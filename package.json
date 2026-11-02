@@ -5,16 +5,16 @@
   "scripts": {
     "bench": "vp test bench",
     "bench:types": "TYPES=true vp test bench-d.ts",
-    "build": "pnpm run --r --filter \"./packages/**\" build",
+    "build": "pnpm -r --filter \"./packages/**\" run build",
     "changeset:prepublish": "pnpm version:update && pnpm build && node scripts/formatPackageJson.ts && node scripts/generateProxyPackages.ts",
     "changeset:publish": "pnpm changeset:prepublish && changeset publish",
     "changeset:version": "changeset version && pnpm version:update && pnpm format",
     "check": "vp check --fix",
     "check:repo": "sherif",
-    "check:types": "pnpm run --r --parallel check:types && tsc --noEmit",
-    "check:types:propertyTypes": "pnpm run --r --parallel check:types --exactOptionalPropertyTypes false && tsc --noEmit --exactOptionalPropertyTypes false",
+    "check:types": "pnpm -r --parallel run check:types && tsc --noEmit",
+    "check:types:propertyTypes": "pnpm -r --parallel run check:types --exactOptionalPropertyTypes false && tsc --noEmit --exactOptionalPropertyTypes false",
     "check:unused": "pnpm clean && knip",
-    "clean": "pnpm run --r --parallel clean && rm -rf packages/**/*.json.tmp",
+    "clean": "pnpm -r --parallel run clean && rm -rf packages/**/*.json.tmp",
     "deps": "pnpx taze -r",
     "deps:ci": "pnpx actions-up",
     "docs:dev": "pnpm -r --filter docs dev",
@@ -24,11 +24,11 @@
     "preinstall": "pnpx only-allow pnpm",
     "prepare": "vp config",
     "test": "vp test",
-    "test:build": "pnpm run --r --parallel test:build",
+    "test:build": "pnpm -r --parallel run test:build",
     "test:cov": "vp test run --coverage",
     "test:update": "vp test --update",
     "trace": "tsc --noEmit --generateTrace ./playgrounds/performance/out --incremental false --project playgrounds/performance/tsconfig.json && echo \"Open playgrounds/performance/out/trace.json in https://ui.perfetto.dev\"",
-    "typeperf": "pnpm run --r --parallel typeperf",
+    "typeperf": "pnpm -r --parallel run typeperf",
     "version:update": "node scripts/updateVersion.ts"
   },
   "devDependencies": {
@@ -55,7 +55,7 @@
       "onFail": "download"
     }
   },
-  "packageManager": "pnpm@10.34.6",
+  "packageManager": "pnpm@12.16.1",
   "knip": {
     "ignoreBinaries": [
       "dev",

@@ -475,7 +475,7 @@ describe('AbiParametersToPrimitiveTypes', () => {
       true
     >
     expectTypeOf<r2>().toEqualTypeOf<
-      readonly [to: `0x${string}`, tokenId: bigint, readonly string[]]
+      readonly [to: `0x${string}`, tokenId: bigint, trait: readonly string[]]
     >()
   })
 
