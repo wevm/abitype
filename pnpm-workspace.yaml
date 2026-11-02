@@ -1,4 +1,8 @@
 minimumReleaseAge: 1440
+allowBuilds:
+  es5-ext: false
+  esbuild: false
+  vue-demi: false
 packages:
   - docs
   - packages/*
