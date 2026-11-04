@@ -45,7 +45,7 @@ jobs:
 
       - name: Create version pull request
         id: changesets
-        uses: wevm/actions/vendor/changesets/action/abitype@8963daf30237417f873c8e2f17e3bf9415e3a7b9 # upstream v2.1.2
+        uses: wevm/actions/vendor/changesets/action/v2@6d24d44bb98809270f8d2a19d584f29aeb384be5 # upstream v2.1.2
         with:
           pr-title: 'chore: version packages'
           commit-message: 'chore: version packages'
@@ -78,7 +78,7 @@ jobs:
 
       - name: Publish to npm
         id: publish
-        uses: wevm/actions/vendor/changesets/action/abitype@8963daf30237417f873c8e2f17e3bf9415e3a7b9 # upstream v2.1.2
+        uses: wevm/actions/vendor/changesets/action/v2@6d24d44bb98809270f8d2a19d584f29aeb384be5 # upstream v2.1.2
         with:
           create-github-releases: true
           publish-script: pnpm changeset:publish
