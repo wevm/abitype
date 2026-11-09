@@ -32,20 +32,20 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
           fetch-depth: 0
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@8963daf30237417f873c8e2f17e3bf9415e3a7b9
+        uses: wevm/actions/.github/actions/pnpm@b518cf981b50a4c745a8b7335fc693f34b108a75
         with:
           node-version: 24.5
           skip-cache: true # avoid cache poisoning attacks
 
       - name: Create version pull request
         id: changesets
-        uses: wevm/actions/vendor/changesets/action/v2@6d24d44bb98809270f8d2a19d584f29aeb384be5 # upstream v2.1.2
+        uses: wevm/actions/vendor/changesets/action/v2@31d7c5bc5f75932a367cf341ca5e26818eb9ec9d # upstream v2.1.2
         with:
           pr-title: 'chore: version packages'
           commit-message: 'chore: version packages'
@@ -68,17 +68,17 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@8963daf30237417f873c8e2f17e3bf9415e3a7b9
+        uses: wevm/actions/.github/actions/pnpm@b518cf981b50a4c745a8b7335fc693f34b108a75
         with:
           node-version: 24.5
           skip-cache: true # avoid cache poisoning attacks
 
       - name: Publish to npm
         id: publish
-        uses: wevm/actions/vendor/changesets/action/v2@6d24d44bb98809270f8d2a19d584f29aeb384be5 # upstream v2.1.2
+        uses: wevm/actions/vendor/changesets/action/v2@31d7c5bc5f75932a367cf341ca5e26818eb9ec9d # upstream v2.1.2
         with:
           create-github-releases: true
           publish-script: pnpm changeset:publish
@@ -98,10 +98,10 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@8963daf30237417f873c8e2f17e3bf9415e3a7b9
+        uses: wevm/actions/.github/actions/pnpm@b518cf981b50a4c745a8b7335fc693f34b108a75
         with:
           node-version: 24.5
           skip-cache: true # avoid cache poisoning attacks
