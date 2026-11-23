@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@b518cf981b50a4c745a8b7335fc693f34b108a75
+        uses: wevm/actions/.github/actions/pnpm@e0e99cfdac7c74eadc3ee7281015c0bf0496d6ac
 
       - name: Check code
         run: pnpm check
@@ -30,7 +30,7 @@ jobs:
         run: pnpm version:update
 
       - name: Apply fixes
-        uses: wevm/actions/vendor/autofix-ci/action/v1.3.2@b518cf981b50a4c745a8b7335fc693f34b108a75
+        uses: wevm/actions/vendor/autofix-ci/action/v1.3.2@e0e99cfdac7c74eadc3ee7281015c0bf0496d6ac
         with:
           fail-fast: false
           commit-message: 'ci: apply automated fixes'

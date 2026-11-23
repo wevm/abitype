@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@b518cf981b50a4c745a8b7335fc693f34b108a75
+        uses: wevm/actions/.github/actions/pnpm@e0e99cfdac7c74eadc3ee7281015c0bf0496d6ac
 
       - name: Check repo
         run: pnpm check:repo
@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@b518cf981b50a4c745a8b7335fc693f34b108a75
+        uses: wevm/actions/.github/actions/pnpm@e0e99cfdac7c74eadc3ee7281015c0bf0496d6ac
 
       - name: Build
         run: pnpm build
@@ -70,7 +70,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@b518cf981b50a4c745a8b7335fc693f34b108a75
+        uses: wevm/actions/.github/actions/pnpm@e0e99cfdac7c74eadc3ee7281015c0bf0496d6ac
 
       - name: Use `typescript@${{ matrix.version }}`
         run: pnpm add -D -w typescript@${{ matrix.version }}
@@ -99,12 +99,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install dependencies
-        uses: wevm/actions/.github/actions/pnpm@b518cf981b50a4c745a8b7335fc693f34b108a75
+        uses: wevm/actions/.github/actions/pnpm@e0e99cfdac7c74eadc3ee7281015c0bf0496d6ac
 
       - name: Run tests
         run: pnpm test:cov
 
       - name: Upload coverage reports to Codecov
-        uses: wevm/actions/vendor/codecov/codecov-action/v7.1.1@b518cf981b50a4c745a8b7335fc693f34b108a75
+        uses: wevm/actions/vendor/codecov/codecov-action/v7.1.1@e0e99cfdac7c74eadc3ee7281015c0bf0496d6ac
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
